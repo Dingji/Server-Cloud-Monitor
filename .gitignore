@@ -10,3 +10,17 @@ runtime/
 node_modules/
 .env
 cloud-monitor.env
+
+# Kotlin / Gradle client (client/)
+client/.gradle/
+client/**/build/
+client/.kotlin/
+client/local.properties
+client/.toolchain/
+client/**/*.apk
+client/**/*.aab
+client/**/*.msi
+client/**/*.deb
+client/**/*.dmg
+client/captures/
+client/*.log
