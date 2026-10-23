@@ -1,0 +1,12 @@
+# Never commit live server secrets or runtime state
+config.json
+keys/
+*.pem
+*.key
+backups/
+logs/
+tmp/
+runtime/
+node_modules/
+.env
+cloud-monitor.env

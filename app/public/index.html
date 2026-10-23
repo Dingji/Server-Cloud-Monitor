@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Monitor · 服务器监控与配置面板</title>
+<link rel="stylesheet" href="css/app.css?v=20261016-06">
+<link rel="stylesheet" href="../vendor/xterm.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='7' rx='1.5'/%3E%3Crect x='3' y='13' width='18' height='7' rx='1.5'/%3E%3C/svg%3E">
+</head>
+<body>
+<div id="login-overlay" class="login-overlay hidden">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01M11 7.5h6M11 16.5h6"/></svg>
+    </div>
+    <div class="login-logo-text">CLOUD MONITOR</div>
+    <div class="login-sub">服务器实时监控与配置控制台</div>
+    <input type="password" id="login-password" placeholder="访问密码" autocomplete="current-password">
+    <div id="login-error" class="login-error"></div>
+    <button id="login-btn" class="btn btn-primary btn-block">登 录</button>
+    <div class="login-hint">所有操作均被审计记录</div>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-icon" id="brand-icon"></span>
+      <div class="brand-text">
+        <div class="brand-name">CLOUD MONITOR</div>
+        <div class="brand-host" id="brand-host">—</div>
+      </div>
+    </div>
+    <nav id="nav"></nav>
+    <div class="sidebar-foot">
+      <div class="conn-dot" id="conn-dot"></div>
+      <span id="conn-text">连接中</span>
+      <button class="btn btn-ghost btn-sm" id="logout-btn" title="退出登录"></button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" aria-label="菜单"></button>
+      <div id="page-title" class="page-title">仪表盘</div>
+      <div class="topbar-right">
+        <span class="chip hide-sm" id="top-uptime">—</span>
+        <span class="chip hide-sm" id="top-load">—</span>
+        <span class="chip" id="top-clock">—</span>
+        <div class="bell" id="alert-bell" title="告警中心"><span id="bell-icon"></span><span class="bell-count hidden" id="alert-count">0</span></div>
+      </div>
+      <div class="bell-menu hidden" id="alert-menu" style="position:fixed;right:18px;top:58px"></div>
+    </header>
+    <div id="view" class="view"></div>
+  </main>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast-root" class="toast-root"></div>
+
+<script src="../vendor/chart.js" defer></script>
+<script src="../vendor/xterm.js" defer></script>
+<script src="../vendor/addon-fit.js" defer></script>
+<script src="js/icons.js?v=20261016-06" defer></script>
+<script src="js/core.js?v=20261016-06" defer></script>
+<script src="js/ui.js?v=20261016-06" defer></script>
+<script src="js/app.js?v=20261016-06" defer></script>
+</body>
+</html>
