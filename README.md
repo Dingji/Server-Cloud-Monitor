@@ -1,11 +1,12 @@
 # Server Cloud Monitor
 
-This repository ships two related pieces of the **Cloud Monitor** stack:
+This repository ships the **Cloud Monitor** stack end to end:
 
-1. **Panel server** (repository root) — Node/Express application that runs on Linux hosts under `/opt/cloud-monitor`, exposes the HTTP API and browser UI at `/panel/`, and includes nine ops extensions (uptime checks, alert rules, notification channels, managed hosts, file browser, security baseline scans, disk cleanup, service watchdog, remote metrics).
-2. **Native client** (`client/`) — Kotlin Multiplatform + Compose Multiplatform app for **Android** and **desktop** (Windows, Linux, macOS). It talks to the same panel API as the web UI; no WebView shell.
+1. **Panel server** (repository root) — Node/Express under `/opt/cloud-monitor`, API and browser UI at `/panel/`, plus nine ops extensions (uptime checks, alert rules, notification channels, managed hosts, file browser, security baseline scans, disk cleanup, service watchdog, remote metrics).
+2. **NoteBox** (`notebox/`) — Flask + SQLite notes and todos on port **13345** by default: Python service, browser UI (`notebox/app/notebox/static/`), and API used by the native client’s Notes section.
+3. **Native client** (`client/`) — Kotlin Multiplatform + Compose Multiplatform for **Android** and **desktop**. Implements the panel UI and NoteBox UI against the HTTP APIs above (no WebView for the panel shell).
 
-Default reference deployment: Ubuntu, panel behind nginx at `http://<host>/panel`, process bound to `127.0.0.1:9000`.
+Typical deployment: Ubuntu; panel on `127.0.0.1:9000` behind nginx at `/panel`; NoteBox on `0.0.0.0:13345` (restrict in firewall); clients configured at runtime.
 
 Repository: <https://github.com/Dingji/Server-Cloud-Monitor>
 
@@ -15,24 +16,30 @@ Repository: <https://github.com/Dingji/Server-Cloud-Monitor>
 
 ```
 Server-Cloud-Monitor/
-├── install.sh, uninstall.sh, deploy-remote.sh   # server install (run from repo root)
+├── install.sh, uninstall.sh, deploy-remote.sh   # panel install (repo root)
 ├── app/, vendor/                                 # panel code + offline node_modules
-├── MANIFEST.*                                    # last sync fingerprint vs reference host
-├── client/                                       # KMP client (Gradle project root)
-│   ├── composeApp/                               # application sources (commonMain + android + desktop)
+├── MANIFEST.*                                    # panel sync fingerprint
+├── notebox/
+│   ├── install.sh, uninstall.sh                  # NoteBox install
+│   ├── app/                                      # Flask app → /opt/notebox/app
+│   │   ├── run.py, requirements.txt
+│   │   └── notebox/                              # routes, db, static web client
+│   └── client/README.md                          # where web vs KMP clients live
+├── client/                                       # KMP app (panel + NoteBox screens)
+│   ├── composeApp/
 │   ├── gradle/, gradlew, gradlew.bat
-│   ├── settings.gradle.kts, gradle.properties
-│   └── build.ps1                                 # Windows helper (JDK / Android SDK paths)
-└── README.md                                     # this file
+│   └── build.ps1
+└── README.md
 ```
 
 | Path | Role |
 |------|------|
-| `app/server/` | Express app, collectors, `ops/` modules |
-| `app/public/` | Static web UI (optional; client does not use it) |
-| `client/composeApp/src/commonMain/` | Shared UI, API client, navigation |
-| `client/composeApp/src/androidMain/` | Android entry, platform hooks |
-| `client/composeApp/src/desktopMain/` | Desktop entry, window chrome, tray |
+| `app/server/` | Panel Express app, collectors, `ops/` |
+| `app/public/` | Panel browser UI |
+| `notebox/app/` | NoteBox WSGI app and static web UI |
+| `notebox/app/notebox/db.py` | SQLite schema, settings, `NB_DATA_DIR` |
+| `client/composeApp/.../core/NoteBox.kt` | NoteBox HTTP client (session cookie) |
+| `client/composeApp/.../pages/Note*.kt` | Native NoteBox screens |
 
 ---
 
@@ -184,6 +191,88 @@ See `MANIFEST.env.txt` and `MANIFEST.remote-md5.txt`.
 
 ---
 
+## NoteBox (`notebox/`)
+
+NoteBox is a **separate service** from the panel: multi-user notes, folders, todos, sharing, public links, SMTP reminders, and digests. It does not use the panel login token.
+
+| | Panel | NoteBox |
+|---|--------|---------|
+| URL | `http://<host>/panel` | `http://<host>:13345` (default) |
+| Auth | `POST /panel/api/login` → bearer token | `POST /api/login` → `session` cookie |
+| Account | Single access password | Email + password per user; admin role |
+| Data | `/var/lib/cloud-panel` | `/opt/notebox/data/notebox.db` (default) |
+
+### What is in the tree
+
+- **`notebox/app/`** — Python package (Flask, Waitress, scheduler). Static files under `notebox/static/` are the **browser client** (`index.html`, `app.js`, markdown helpers).
+- **`notebox/client/`** — Index of clients: web static files live inside `app/`; native UI is in [`client/`](../client/) (Compose).
+- **Not packaged:** live `data/`, `venv/`, SQLite files, uploaded media under `data/uploads/` (created on the host).
+
+### Install NoteBox
+
+On the target host (root):
+
+```bash
+cd notebox
+chmod +x install.sh uninstall.sh
+./install.sh
+```
+
+Options: `--prefix /opt/notebox`, `--port 13345`, `--host 0.0.0.0`, `--service notebox`, `--user notebox`, `--no-start`, `--dry-run`.
+
+The script creates user `notebox`, copies `app/` to `/opt/notebox/app`, creates `/opt/notebox/data`, builds `/opt/notebox/venv`, installs `requirements.txt`, and enables systemd unit `notebox.service`.
+
+```bash
+systemctl status notebox
+journalctl -u notebox -f
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:13345/
+```
+
+Open firewall if clients reach the host directly, e.g. `ufw allow 13345/tcp`.
+
+### First-time setup
+
+1. Browse to `http://<host>:13345/` and register (email verification flow depends on SMTP settings).
+2. In **admin** settings, set **base URL** to the public URL (used in email and share links). Fresh installs ship with an empty default in code.
+3. In the KMP app, open any **Notes** sidebar page and sign in with the same NoteBox URL (`http://<host>:13345`) and credentials.
+
+SMTP-related keys live in SQLite settings (`smtp_host`, `smtp_user`, …). Configure via admin API or the native **NoteBox settings** / **Mail** pages when logged in as admin.
+
+### NoteBox API (summary)
+
+| Area | Examples |
+|------|-----------|
+| Auth | `POST /api/login`, `POST /api/logout`, `POST /api/register`, `GET /api/me` |
+| Notes | CRUD under `/api/notes`, folders `/api/folders`, uploads `/api/upload` |
+| Todos | `/api/todos` |
+| Sharing | `/api/shares`, public `/s/<code>` |
+| Admin | `/api/admin/settings`, users, mail test |
+
+Full behavior is defined in `notebox/app/notebox/routes_*.py`. The KMP client mirrors these in `client/composeApp/.../core/NoteBox.kt`.
+
+### Upgrade and uninstall
+
+Re-run `./install.sh` to refresh code; `data/` is preserved.
+
+```bash
+./uninstall.sh                  # stop unit, keep /opt/notebox
+./uninstall.sh --purge-data     # remove SQLite and uploads tree
+```
+
+### NoteBox development
+
+```bash
+cd notebox/app
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+export NB_DATA_DIR=./data NB_PORT=13345
+python run.py
+```
+
+Optional tests: `cd notebox/app && pip install pytest && python -m pytest tests`
+
+---
+
 ## Native client (`client/`)
 
 ### Purpose
@@ -204,7 +293,7 @@ The client reimplements the panel’s feature set with **Compose Multiplatform**
 | Tools | Web terminal |
 | System | Panel settings |
 
-NoteBox uses a **separate** HTTP service (default port **13345**), not the panel under `/panel`. This repository does **not** include the NoteBox server; deploy it on the host if you use the Notes section. NoteBox login is email/password with session cookies, independent of the panel access password.
+NoteBox screens call the service in [`notebox/`](#notebox-notebox) (default `http://<host>:13345`). Configure URL and email/password on first use in the Notes section; session is stored separately from the panel token (`notebox_*` keys). See [NoteBox clients](notebox/client/README.md).
 
 ### Toolchain
 
@@ -292,7 +381,7 @@ Persistence:
 | Android | `SharedPreferences` `cm_panel` | `server_url`, `server_token`, `remember_password`, `password` |
 | Desktop | `java.util.prefs` | same keys |
 
-NoteBox keys use the `notebox_` prefix in the same stores.
+NoteBox URL, email, password, and session cookie use the `notebox_` prefix in the same stores.
 
 Common mistakes:
 
@@ -340,17 +429,19 @@ First build downloads dependencies from Maven Central and Google Maven; allow ne
 ## End-to-end deployment sketch
 
 ```
-┌─────────────────┐     HTTPS or SSH tunnel      ┌──────────────────────────┐
-│  KMP client     │ ───────────────────────────► │  nginx :443 / :80        │
-│  (Android/      │      /panel/api, /panel/ws   │  proxy → 127.0.0.1:9000  │
-│   desktop)      │                              │  cloud-monitor.service   │
-└─────────────────┘                              └──────────────────────────┘
-         │ optional :13345
+┌─────────────────┐   /panel/api, /panel/ws     ┌─────────────────────────┐
+│  KMP client     │ ──────────────────────────► │ nginx → cloud-monitor   │
+│  + browser      │                             │ (127.0.0.1:9000)        │
+└────────┬────────┘                             └─────────────────────────┘
+         │  :13345 /api/ + session cookie
          ▼
-   NoteBox server (not in this repo)
+┌─────────────────┐
+│ notebox.service │  Flask + SQLite (/opt/notebox/data)
+│  web UI at /    │
+└─────────────────┘
 ```
 
-Typical order: install the panel on the server (`install.sh`) → configure nginx/TLS → install or build the client → point the client at `https://your-host/panel` → change the default password.
+Typical order: `install.sh` (panel) at repo root → `notebox/install.sh` → nginx/TLS and firewall for `/panel` and port 13345 → build or install KMP client → set panel URL and NoteBox URL → change default panel password and create NoteBox users.
 
 ---
 

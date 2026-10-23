@@ -24,3 +24,10 @@ client/**/*.deb
 client/**/*.dmg
 client/captures/
 client/*.log
+
+# NoteBox server runtime
+notebox/**/__pycache__/
+notebox/**/*.pyc
+notebox/**/venv/
+notebox/**/data/
+notebox/**/*.db
