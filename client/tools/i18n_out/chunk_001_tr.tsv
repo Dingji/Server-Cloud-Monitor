@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label Kurulum tamamlandı, yenileniyor…
+label_安装日志_13ce1b1029	$label Kurulum günlüğü
+label_实现中_70505f7ef8	“$label” uygulanıyor…
+llm_api_中继的请求量_token_用量_6b89d708ea	LLM API aktarımının istek hacmi, Token kullanımı, anahtar havuzu kotası, model kullanılabilirliği ve kalite analizi
+location_块_不要停用该站点以免面板与_4ae164b62b	location bloğu), bu siteyi devre dışı bırakmayın; yoksa panel ve aktarım servisi birlikte kapanır.
+login.access_token	Erişim jetonu
+login.advanced	Gelişmiş
+login.audit_notice	Tüm işlemler denetim kaydına alınır
+login.connect_failed	Bağlantı başarısız:
+login.failed	Giriş başarısız
+login.normalized_url	Normalize edilmiş adres
+login.not_logged_in	Oturum açık değil
+login.password_required	Lütfen parola girin
+login.remember_password	Parolayı hatırla
+login.restore_default_url	Varsayılan adresi geri yükle
+login.save_on_test_hint	Adresi değiştirdikten sonra kalıcı hale getirmek için “Bağlantıyı Test Et”e tıklayın
+login.server_config	Sunucu bağlantı ayarları
+login.sign_in	Giriş yap
+login.signing_in	Giriş yapılıyor…
+login.subtitle	Sunucu gerçek zamanlı izleme ve yapılandırma konsolu
+login.test_connection	Bağlantıyı test et
+login.testing	Test ediliyor…
+login_可登录_0e617ada9b	LOGIN (giriş mümkün)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(önceki tur baytları, bu tur baytları) daha önceki turlarda zaten gönderilmiş içeriktir — önbelleğin ulaşması gereken üst sınır budur; sağlayıcı raporuna bağlı değildir.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB alan geri kazanmaz; validate/reindex sıradan bir bakım işlemidir.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB mongodump ile gzip arşivi oluşturur (mongodump gerekir).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB veritabanını bir koleksiyona ilk yazımında gerçekten oluşturur; burada yer tutucu _cm_init koleksiyonu oluşturulur.
+mongodb_的过滤条件支持_字段_值_558264a7d8	MongoDB filtreleri {"alan":değer} biçimini (dahili olarak sorgu koşuluna dönüşür) veya alan=değer kısayolunu destekler. Belgeler JSON olarak gösterilir; _id belge tanımlayıcısıdır.
+mongodb_维护结果_aaeb39f907	MongoDB bakım sonuçları
+ms_毫秒_7ade5ab3a4	$ms ms
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (varsayılan root + socket)
+mysql_语法_8200e34cb7	MySQL sözdizimi
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a istatistik
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c doğrulama
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o optimizasyon
+name_ver_连接正常_33d0a44ec7	$name $ver bağlantı normal
+name_关闭_c8e887ebc0	$name: Kapalı
+name_开启_54ce939603	$name: Açık
+nav.audit	Denetim günlüğü
+nav.backups	Yedekleme merkezi
+nav.cron	Zamanlanmış görevler
+nav.dashboard	Gösterge paneli
+nav.databases	Veritabanları
+nav.disks	Disk yönetimi
+nav.docker	Docker kapsayıcıları
+nav.health_alerts	Sağlık uyarıları
+nav.logs	Günlük merkezi
+nav.memory	Bellek yönetimi
+nav.network	Ağ yönetimi
+nav.note_mail	E-posta bildirimleri
+nav.note_settings	NoteBox ayarları
+nav.note_transfer	İçe / Dışa aktar
+nav.note_users	Kullanıcı yönetimi
+nav.notes	Notlar
+nav.ops_channels	Bildirim kanalları
+nav.ops_disk	Disk yönetişimi
+nav.ops_files	Dosya yönetimi
+nav.ops_hosts	Yönetilen ana bilgisayarlar
+nav.ops_remote	Uzak ana bilgisayar metrikleri
+nav.ops_rules	Uyarı kuralları
+nav.ops_sec	Güvenlik temel çizgisi denetimi
+nav.ops_uptime	Çalışma süresi ölçümü
+nav.ops_watch	Hizmet gözetimi
+nav.packages	Paket yönetimi
+nav.page_placeholder	“{0}” sayfası uygulanıyor…
+nav.pinned_hint	(sabitlendi, kaldırmak için uzun basın)
+nav.processes	Süreç yönetimi
+nav.relay	OpenCode aktarımı
+nav.section.app	Uygulamalar
+nav.section.monitor	İzleme
+nav.section.notes	Notlar
+nav.section.server	Sunucu
+nav.section.system	Sistem
+nav.section.tools	Araçlar
+nav.security	Güvenlik yönetimi
+nav.services	Sistem hizmetleri
+nav.settings	Panel ayarları
+nav.slo	SLO ve kullanım
+nav.terminal	Web terminali
+nav.todos	Yapılacaklar listesi
+nav.web	Web siteleri / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf Nginx yapılandırması · sshd_config SSH yapılandırması · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	nginx/sshd/fstab yapılandırmaları kaydedildikten sonra otomatik doğrulanır
+nginx_站点_0_6bcfddef71	Nginx siteleri ({0})
+nginx_站点_sites_size_2db3c2b5be	Nginx siteleri (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP ve uyarı kuralları
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox bulut notları (çok düzeyli sınıflandırma · geri dönüşüm kutusu · Markdown · paylaşım)
+notebox_地址未配置_3d37258011	NoteBox adresi yapılandırılmamış
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox görevleri (son teslim tarihi ve e-posta hatırlatmaları destekli)
+notebox_数据迁移_362725f18e	NoteBox veri taşıma
+notebox_服务可达_6a7506d6ac	NoteBox hizmeti erişilebilir
+notebox_服务可达_未登录_e023d68cad	NoteBox hizmeti erişilebilir (oturum açık değil)
+notebox_服务地址_默认端口_13345_e0880dfda6	NoteBox hizmet adresi (varsayılan port 13345). Değiştirdikten sonra yeniden giriş yapmanız gerekir.
+notebox_登录成功_013138644f	NoteBox girişi başarılı
+notebox_设置_efb5a47b98	NoteBox ayarları
+notebox_账号_仅管理员_81b8d4ca26	NoteBox hesabı (yalnızca yöneticiler)
+online_台有近期数据_1fefff8cdc	$online ana bilgisayarda güncel veri var
+opencode_中继_2e021ee797	OpenCode aktarımı
+p95_延迟_57d63f8b46	P95 gecikme
+p95_延迟_ba65a873bc	p95 gecikme
+palette.accent_hint	Görünüm · şu an {0}
+palette.open_page	Sayfa aç {0}
+palette.pin	“{0}” sabitle
+palette.pin_hint	Çalışma alanı · kenar çubuğu öğesine uzun basarak da değiştirebilirsiniz
+palette.reload_hint	F5 / Ctrl+R · Yeniden yükle
+palette.theme_hint	Görünüm · şu an {0}
+palette.unpin	“{0}” sabitlemeyi kaldır
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (parola değiştirmeye zorlar)
+pg_自定义格式_0cc41d0ea4	PG özel biçim
+postgresql_mysql_sql_42e513fca9	PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB için veritabanı/tablo yönetimi, SQL konsolu, performans içgörüleri ve yedekleme/geri yükleme
+postgresql_自定义格式_fc_更快恢_080c860e81	PostgreSQL özel biçim -Fc (daha hızlı geri yükleme)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (varsayılan olarak peer kimlik doğrulaması kullanır: su - postgres)
+rdb_快照_62f218ed40	RDB anlık görüntüsü
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis BGSAVE çalıştırır ve RDB dosyasını kopyalar; geri yükleme veri dizinini ezar ve geçerli olması için Redis'i yeniden başlatmanız gerekir.
+redis_命令控制台_fa42019a53	Redis komut konsolu
+redis_维护_d2a01bfbd3	Redis bakımı
+reindex_全部库_90545e1eeb	REINDEX tüm veritabanları
+reindex_重建索引_256956f94e	REINDEX / dizinleri yeniden oluştur
+reindex_重建索引_d81fcbf8d0	REINDEX (dizinleri yeniden oluştur)
+relay_alert_py_检查_smtp_告_012aaa3373	relay_alert.py denetimi, SMTP uyarı kanalı, eşikler ve uyarı kayıtları

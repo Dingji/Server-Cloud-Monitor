@@ -1,0 +1,120 @@
+分析_9c00c951b8	Analisar
+分析数据库_27120f4e22	Analisar banco de dados
+分类_435c5259e4	Categoria
+分组_97d8a6c05b	Grupo
+分节_0_72a336b550	Seção {0}
+分节_cc61ad798e	Seção
+分节_i_1_f0d1636fb2	Seção ${i + 1}
+切换使用_440dcd4a60	Alternar uso
+切换到_dcfa6ff76a	Alternar para
+切换到此源_6a51392f3d	Alternar para esta fonte
+切换到浅色主题_68c147dbb8	Alternar para o tema claro
+切换到深色主题_81f29dbac3	Alternar para o tema escuro
+切换告警中心_6ee18893d6	Alternar centro de alertas
+切换失败_9e2fdc4fee	Falha ao alternar
+切换失败_已回滚_c0cfb2c6b5	Falha ao alternar (revertido)
+切换并刷新索引_90b6357c92	Alternar e atualizar índice
+切换强调色_750952d685	Alternar cor de destaque
+切换成功后会清理旧镜像残留索引_避免搜索结果_3a16b0a93b	· Após uma alternância bem-sucedida, os índices residuais do espelho antigo são limpos para que os resultados de pesquisa não misturem fontes.
+切换数据库_a1ab00957c	Alternar banco de dados
+切换率_0_5f66fea7ee	Taxa de alternância {0}%
+切换率_0_尝试_请求_1_549548a929	Taxa de alternância {0}% · Tentativas/solicitações {1}
+切换软件源_1d685b5c20	Alternar fonte de software
+切换镜像会先备份源文件_改写后立即执行_ap_b31cb7b626	· Ao alternar de espelho, o arquivo de origem é copiado primeiro e o apt-get update é executado logo após a reescrita; se a atualização falhar, há reversão automática para o espelho original.
+列_ad3ee64830	Coluna
+列_逗号分隔_e6b76472d6	Coluna (separada por vírgulas)
+列a_列b_276b732289	\n| Coluna A | Coluna B |\n| --- | --- |\n|  |  |\n
+列列表_逗号分隔_3fbb861c18	Lista de colunas (separada por vírgulas)
+列名_56dc7e14b9	Nome da coluna
+列名_目标列_93b57e8329	Nome da coluna / coluna de destino
+列注释_9f54addfdc	Comentário da coluna
+列目录中_1d7fe661c3	Listando diretório…
+列结构_d6bcf00979	Estrutura de colunas
+列表_7d9b515037	• Lista
+刚刚_9e636642d6	Agora
+创建_0_b962ace170	Criar {0}
+创建_0_f7fa88a48a	Criar {0}?
+创建_acl_用户_cd96ef0588	Criar usuário ACL
+创建_fcbd093292	Criar
+创建_notebox_账号并分配角色_2911541ceb	Criar conta NoteBox e atribuir funções
+创建_替换_c8d121c449	Criar/Substituir
+创建于_f3b01f3f1a	Criado em
+创建任务_cf42fd678f	Criar tarefa
+创建备份_f4587bf8b2	Criar backup
+创建失败_deb3990191	Falha ao criar
+创建定时任务_cc992174ac	Criar tarefa agendada
+创建数据库_1bf70a1209	Criar banco de dados
+创建时间_84e3802f60	Data de criação
+创建每日自动备份_7c94d434a4	Criar backup automático diário
+创建用户_315315d695	Criar usuário
+创建用户_name_sudosuffix_423f11e860	Criar usuário $name$sudoSuffix?
+创建用户_角色_87bba5f559	Criar usuário/função
+创建的用户拥有_all_全部键_全_2da1a3462f	O usuário criado tem ~* +@all (todas as teclas + todos os comandos); refine as permissões com ACL SETUSER.
+创建索引_39988166a9	Criar índice
+创建维护计划_04a82258e7	Criar plano de manutenção
+创建角色_24cf247879	Criar função
+创建计划_bddda94d14	Criar plano
+删_38cadf487e	Excl.
+删凭据_578de9d115	Excluir credenciais
+删除_0_1fbd66c221	Excluir {0}?
+删除_0_a1ee4b1af0	Excluir {0} ?
+删除_0_c27e726e6d	Excluir “{0}”?
+删除_0_on_1_fb3815f989	Excluir {0} on {1} ?
+删除_0_不可恢复_122855ffb8	Excluir {0}? Isso não pode ser desfeito.
+删除_0_不可恢复_935f255ade	Excluir {0} ? Isso não pode ser desfeito!
+删除_0_其中的待办与子清单会移动到上一级_a7634c43e7	Excluir “{0}”? As tarefas e sublistas dentro dela serão movidas um nível acima, não excluídas.
+删除_0_其中的笔记与子归类会移动到上一级_327496c4d8	Excluir “{0}”? As notas e subcategorias dentro dela serão movidas um nível acima, não excluídas.
+删除_0_历史事件仍保留_d3e46884f0	Excluir “{0}”? Os eventos históricos serão mantidos.
+删除_0_及其全部集合_不可恢复_27bf2aa4e3	Excluir {0} e todas as suas coleções? Isso não pode ser desfeito!
+删除_0_及其后续统计_已归档的按日数据仍保_79a549e6e8	Excluir “{0}” e suas estatísticas seguintes? Os dados diários arquivados serão mantidos.
+删除_0_引用它的规则将不再向该渠道推送_2a68290638	Excluir “{0}”? As regras que a referenciam deixarão de enviar para este canal.
+删除_0_该角色拥有的对象可能变为无主_81db941aef	Excluir {0} ? Os objetos pertencentes a esta função podem ficar órfãos.
+删除_3755f56f2f	Excluir
+删除_c_name_引用它的规则将不再向_a15854651b	Excluir “${c.name}”? As regras que a referenciam deixarão de enviar para este canal.
+删除_e_name_历史事件仍保留_7c4f97a765	Excluir “${e.name}”? Os eventos históricos serão mantidos.
+删除_folder_name_其中的待办_8acd8d3681	Excluir “${folder.name}”? As tarefas e sublistas dentro dela serão movidas um nível acima, não excluídas.
+删除_folder_name_其中的笔记_02f00181b7	Excluir “${folder.name}”? As notas e subcategorias dentro dela serão movidas um nível acima, não excluídas.
+删除_h_label_的_ssh_凭据_采_714dcba255	Excluir as credenciais SSH de “{0}”? A coleta será interrompida até a reconfiguração.
+删除_id_0_5757172d9f	Excluir _id = {0} ?
+删除_id_id_9f0c4ee411	Excluir _id = $id ?
+删除_it_name_不可恢复_2e58b9d314	Excluir ${it.name}? Isso não pode ser desfeito.
+删除_item_name_不可恢复_196f667e1b	Excluir ${item.name}? Isso não pode ser desfeito.
+删除_job_file_0df6f1b1c0	Excluir ${job.file}?
+删除_k_不可恢复_7f04e8d988	Excluir $k ? Isso não pode ser desfeito!
+删除_n_447134e66a	Excluir $n ?
+删除_n_及其全部集合_不可恢复_75c0387e71	Excluir $n e todas as suas coleções? Isso não pode ser desfeito!
+删除_name_该角色拥有的对象可能变为无主_444ea2ccd8	Excluir $name ? Os objetos pertencentes a esta função podem ficar órfãos.
+删除_r_name_历史事件仍保留_d216275bef	Excluir “${r.name}”? Os eventos históricos serão mantidos.
+删除_s_name_62446c983c	Excluir “${s.name}”?
+删除_tgname_trim_on_61b891ec54	Excluir ${tgName.trim()} on ${tgTable.trim()} ?
+删除_ufw_规则_n_969e18703f	Excluir regra UFW #$n?
+删除_var_cache_apt_archiv_4cd0531496	Excluir pacotes baixados em /var/cache/apt/archives
+删除_x_name_及其后续统计_已归档的_f9923c3d24	Excluir “${x.name}” e suas estatísticas seguintes? Os dados diários arquivados serão mantidos.
+删除主机_643f7d4bb9	Excluir host
+删除事项_0_fd51d58bcb	Excluir o item “{0}”?
+删除事项_baf69ed21f	Excluir item
+删除事项_t_title_86546066a3	Excluir o item “${t.title}”?
+删除全部_0_条已完成事项_edea779a77	Excluir todos os {0} itens concluídos?
+删除全部_n_条已完成事项_c6c82b6be8	Excluir todos os $n itens concluídos?
+删除公钥_b83efa4dbe	Excluir chave pública
+删除凭据_35bc7d6ff1	Excluir credenciais
+删除列_16f1347814	Excluir coluna
+删除到回收站_f418fcf1e6	Mover para a lixeira
+删除后持有该密钥的客户端将无法登录_1d472813e0	Após a exclusão, clientes com esta chave não poderão mais entrar.
+删除后无法恢复_确认删除该密钥_68e3c91b1d	Isso não pode ser desfeito. Excluir esta chave?
+删除告警规则_fb9b26e21f	Excluir regra de alerta
+删除备份_749438d2de	Excluir backup
+删除备份文件_df6543f316	Excluir arquivo de backup
+删除失败_72250c5922	Falha ao excluir
+删除子任务_165f2995e1	Excluir subtarefa
+删除定时任务_cbbfd7d59d	Excluir tarefa agendada
+删除容器_c1cbe14e79	Excluir contêiner
+删除密钥_8017614a47	Excluir chave
+删除已下载的_deb_安装包_释放_0_不_dc8e1f42c6	Excluir os pacotes .deb baixados para liberar {0}. O software instalado não é afetado.
+删除归类_f282b52e6b	Excluir categoria
+删除拨测任务_2193297dfe	Excluir tarefa de sondagem
+删除数据库_f0f7b49980	Excluir banco de dados
+删除文档_e7adbd575b	Excluir documento
+删除时间_8d55c8d894	Data de exclusão
+删除模式_0_及其全部对象_cascade_6336954e53	Excluir o esquema {0} e todos os seus objetos (CASCADE)?
+删除模式_77bed2385b	Excluir esquema

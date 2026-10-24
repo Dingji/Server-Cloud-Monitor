@@ -1,0 +1,166 @@
+{
+ "/history?range=1h": {
+  "status": 200,
+  "file": "history_range-1h.json",
+  "bytes": 7177
+ },
+ "/history?range=24h": {
+  "status": 200,
+  "file": "history_range-24h.json",
+  "bytes": 7178
+ },
+ "/metrics/history?range=7d": {
+  "status": 200,
+  "file": "metrics_history_range-7d.json",
+  "bytes": 36726
+ },
+ "/metrics/history?range=24h&compare=1": {
+  "status": 200,
+  "file": "metrics_history_range-24h_compare-1.json",
+  "bytes": 36772
+ },
+ "/metrics/trend?days=30": {
+  "status": 200,
+  "file": "metrics_trend_days-30.json",
+  "bytes": 429
+ },
+ "/pkg/detail?name=nginx": {
+  "status": 200,
+  "file": "pkg_detail_name-nginx.json",
+  "bytes": 1412
+ },
+ "/pkg/installed?q=ngi&limit=3&offset=0&sort=name&dir=asc": {
+  "status": 200,
+  "file": "pkg_installed_q-ngi_limit-3_offset-0_sort-name_dir-asc.json",
+  "bytes": 641
+ },
+ "/pkg/installed?section=net&limit=3": {
+  "status": 200,
+  "file": "pkg_installed_section-net_limit-3.json",
+  "bytes": 768
+ },
+ "/pkg/search-in-source?q=nginx&limit=3": {
+  "status": 400,
+  "file": "pkg_search-in-source_q-nginx_limit-3.json",
+  "bytes": 18
+ },
+ "/pkg/test-mirror?url=http://archive.ubuntu.com/ubuntu": {
+  "status": 200,
+  "file": "pkg_test-mirror_url-http-__archive.ubuntu.com_ubuntu.json",
+  "bytes": 202
+ },
+ "/db/status?engine=mysql": {
+  "status": 400,
+  "file": "db_status_engine-mysql.json",
+  "bytes": 112
+ },
+ "/db/databases?engine=mysql": {
+  "status": 400,
+  "file": "db_databases_engine-mysql.json",
+  "bytes": 112
+ },
+ "/db/tables?engine=postgres&database=postgres": {
+  "status": 400,
+  "file": "db_tables_engine-postgres_database-postgres.json",
+  "bytes": 406
+ },
+ "/db/tables?engine=mysql&database=mysql": {
+  "status": 400,
+  "file": "db_tables_engine-mysql_database-mysql.json",
+  "bytes": 112
+ },
+ "/db/tables?engine=sqlite&database=x": {
+  "status": 400,
+  "file": "db_tables_engine-sqlite_database-x.json",
+  "bytes": 56
+ },
+ "/db/table/schema?engine=postgres&database=postgres&table=pg_class": {
+  "status": 400,
+  "file": "db_table_schema_engine-postgres_database-postgres_table-pg_class.json",
+  "bytes": 406
+ },
+ "/db/roles?engine=mysql": {
+  "status": 400,
+  "file": "db_roles_engine-mysql.json",
+  "bytes": 112
+ },
+ "/db/insights?engine=postgres": {
+  "status": 200,
+  "file": "db_insights_engine-postgres.json",
+  "bytes": 2114
+ },
+ "/db/insights?engine=mysql": {
+  "status": 200,
+  "file": "db_insights_engine-mysql.json",
+  "bytes": 933
+ },
+ "/db/objects?engine=postgres": {
+  "status": 200,
+  "file": "db_objects_engine-postgres.json",
+  "bytes": 1814
+ },
+ "/db/statements?engine=postgres": {
+  "status": 200,
+  "file": "db_statements_engine-postgres.json",
+  "bytes": 102
+ },
+ "/db/schemas?engine=postgres": {
+  "status": 400,
+  "file": "db_schemas_engine-postgres.json",
+  "bytes": 406
+ },
+ "/db/table/storage?engine=postgres&database=postgres&table=pg_class": {
+  "status": 400,
+  "file": "db_table_storage_engine-postgres_database-postgres_table-pg_class.json",
+  "bytes": 406
+ },
+ "/db/missing-indexes?engine=postgres": {
+  "status": 400,
+  "file": "db_missing-indexes_engine-postgres.json",
+  "bytes": 406
+ },
+ "/db/extra-monitor?engine=postgres": {
+  "status": 200,
+  "file": "db_extra-monitor_engine-postgres.json",
+  "bytes": 2749
+ },
+ "/db/kv/keys?database=0&pattern=*&limit=10": {
+  "status": 200,
+  "file": "db_kv_keys_database-0_pattern--_limit-10.json",
+  "bytes": 47
+ },
+ "/db/kv/value?database=0&key=foo": {
+  "status": 200,
+  "file": "db_kv_value_database-0_key-foo.json",
+  "bytes": 45
+ },
+ "/file?path=/etc/nginx/nginx.conf": {
+  "status": 200,
+  "file": "file_path-_etc_nginx_nginx.conf.json",
+  "bytes": 1855
+ },
+ "/files?dir=/etc/nginx/": {
+  "status": 200,
+  "file": "files_dir-_etc_nginx.json",
+  "bytes": 2034
+ },
+ "/files?dir=/var/www/": {
+  "status": 200,
+  "file": "files_dir-_var_www.json",
+  "bytes": 287
+ },
+ "/db/backups?engine=postgres": {
+  "status": 200,
+  "file": "db_backups_engine-postgres.json",
+  "bytes": 217
+ },
+ "/pkg/job?id=nonexistent": {
+  "status": 404,
+  "file": "pkg_job_id-nonexistent.json",
+  "bytes": 22
+ },
+ "POST /login (wrong password)": {
+  "status": 500,
+  "body": "{\"error\":\"服务器内部错误\"}"
+ }
+}

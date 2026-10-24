@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages.db
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,7 +50,7 @@ fun PreBox(text: String, modifier: Modifier = Modifier, maxHeight: Int = 360) {
             .padding(horizontal = 11.dp, vertical = 10.dp)
             .verticalScroll(rememberScrollState()),
     ) {
-        Text(text.ifEmpty { "(无输出)" }, style = dbMono, fontSize = 12.sp)
+        Text(text.ifEmpty { L["无输出_66e9bdf63b"] }, style = dbMono, fontSize = 12.sp)
     }
 }
 
@@ -56,7 +58,7 @@ fun PreBox(text: String, modifier: Modifier = Modifier, maxHeight: Int = 360) {
 fun KvEntries(obj: JsonObject?, take: Int = 80) {
     val entries = obj?.entries?.map { it.key to it.value.asText() } ?: emptyList()
     if (entries.isEmpty()) {
-        Text("暂无信息", style = dbMuted)
+        Text(L["暂无信息_2f186ec435"], style = dbMuted)
         return
     }
     Column {
@@ -75,7 +77,7 @@ fun DynamicTable(
     rows: List<JsonObject>,
     maxHeight: Int = 380,
     extra: TableCol<JsonObject>? = null,
-    empty: String = "暂无数据",
+    empty: String = L["暂无数据_b246458f20"],
 ) {
     val cols = buildList {
         columns.forEach { c ->
@@ -110,31 +112,31 @@ fun DynamicTable(
 @Composable
 fun SectionsCards(sections: List<JsonElement>, cardPrefix: String = "sec") {
     if (sections.isEmpty()) {
-        PanelCard(title = "分节", cardKey = "$cardPrefix-empty", collapsible = false) {
-            Text("无数据", style = dbMuted)
+        PanelCard(title = L["分节_cc61ad798e"], cardKey = "$cardPrefix-empty", collapsible = false) {
+            Text(L["无数据_6ffa7e6d35"], style = dbMuted)
         }
         return
     }
     sections.filterIsInstance<JsonObject>().forEachIndexed { i, s ->
-        val title = s.str("title").ifEmpty { "分节 ${i + 1}" }
+        val title = s.str("title").ifEmpty { trf("分节_0_72a336b550", i + 1) }
         val rows = s.arr("rows").filterIsInstance<JsonObject>()
         val cols = s.arr("columns").map { (it as? JsonPrimitive)?.content.orEmpty() }.filter { it.isNotEmpty() }
         val err = s.str("error")
         val note = s.str("note")
         PanelCard(
             title = title,
-            cardKey = "$cardPrefix-$i-$title",
+            cardKey = L["cardprefix_i_title_963a74d3c1"],
             right = {
-                if (rows.isNotEmpty()) Chip("${rows.size} 行")
+                if (rows.isNotEmpty()) Chip(trf("0_行_2b07d26538", rows.size))
                 if (note.isNotEmpty()) Text(note, style = dbMuted, fontSize = 11.sp, modifier = Modifier.padding(start = 6.dp))
             },
         ) {
             when {
                 err.isNotEmpty() -> Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    LevelBadge("不可用", Level.Muted)
+                    LevelBadge(L["不可用_beff4a1cd1"], Level.Muted)
                     Text(err, style = dbMuted, fontSize = 12.sp)
                 }
-                rows.isEmpty() -> Text("无数据", style = dbMuted)
+                rows.isEmpty() -> Text(L["无数据_6ffa7e6d35"], style = dbMuted)
                 else -> DynamicTable(cols.ifEmpty { rows.first().keys.toList() }, rows, maxHeight = 280)
             }
         }
@@ -150,10 +152,10 @@ fun ConsoleResult(r: JsonObject?) {
     val out = r.str("output")
     val meta = buildList {
         val ms = r.str("durationMs")
-        if (ms.isNotEmpty()) add("耗时 ${ms}ms")
-        if (cols.isNotEmpty()) add("${rows.size} 行")
-        if (r.str("dryRun").isNotEmpty() && r.str("dryRun") != "false") add("已回滚")
-    }.joinToString(" · ")
+        if (ms.isNotEmpty()) add(trf("耗时_0_ms_33425ec157", ms))
+        if (cols.isNotEmpty()) add(trf("0_行_2b07d26538", rows.size))
+        if (r.str("dryRun").isNotEmpty() && r.str("dryRun") != "false") add(L["已回滚_c4ab8c16f8"])
+    }.joinToString(L["s_d3dacf895c"])
     if (meta.isNotEmpty()) Text(meta, style = dbMuted, fontSize = 11.sp, modifier = Modifier.padding(bottom = 8.dp))
     if (cols.isNotEmpty()) DynamicTable(cols, rows, maxHeight = 420)
     else PreBox(out)

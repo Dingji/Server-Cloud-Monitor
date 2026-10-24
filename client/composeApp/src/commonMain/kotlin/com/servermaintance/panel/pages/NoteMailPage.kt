@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -87,7 +89,7 @@ private fun MailInner() {
             throw e
         } catch (e: Exception) {
             if ((e as? com.servermaintance.panel.core.ApiException)?.isAuth != true) {
-                logError = e.message ?: "加载失败"
+                logError = e.message ?: L["加载失败_f6b7a41e56"]
             }
         }
     }
@@ -123,56 +125,56 @@ private fun MailInner() {
     )
 
     PageScaffold(
-        title = "邮件通知",
-        desc = "NoteBox SMTP 与提醒规则",
+        title = L["邮件通知_22a119343a"],
+        desc = L["notebox_smtp_与提醒规则_cd81b4ede4"],
         actions = {
             LevelBadge(
-                if (smtpReady) "SMTP 已配置" else "SMTP 未配置（先填账号授权码）",
+                if (smtpReady) L["smtp_已配置_70f40873a7"] else L["smtp_未配置_先填账号授权码_c97b712442"],
                 if (smtpReady) Level.Ok else Level.Warn,
             )
             Spacer(Modifier.size(10.dp))
             NoteUserChip()
         },
     ) {
-        PanelCard(title = "SMTP 账号（163 邮箱）", collapsible = false) {
+        PanelCard(title = L["smtp_账号_163_邮箱_4bbcd0b1d0"], collapsible = false) {
             Text(
-                "163 邮箱：设置 → POP3/SMTP → 开启并生成「授权码」，填入下方（不是登录密码）。",
+                L["163_邮箱_设置_pop3_smtp_2cd036d08b"],
                 color = com.servermaintance.panel.ui.Palette.muted, fontSize = 12.sp, lineHeight = 18.sp,
             )
             Spacer(Modifier.size(10.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Field(host, { host = it }, Modifier.weight(1.5f), label = "SMTP 主机", hint = "smtp.163.com", singleLine = true)
-                Field(port, { port = it }, Modifier.weight(1f), label = "端口", hint = "465", mono = true, singleLine = true)
+                Field(host, { host = it }, Modifier.weight(1.5f), label = L["smtp_主机_9cb2a0f9f3"], hint = "smtp.163.com", singleLine = true)
+                Field(port, { port = it }, Modifier.weight(1f), label = L["端口_6cbb7335b5"], hint = "465", mono = true, singleLine = true)
             }
             Spacer(Modifier.size(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Toggle(ssl, { ssl = it }, label = "使用 SSL（465 端口勾选）")
+                Toggle(ssl, { ssl = it }, label = L["使用_ssl_465_端口勾选_316a136e99"])
             }
             Spacer(Modifier.size(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Field(user, { user = it }, Modifier.weight(1f), label = "邮箱账号", hint = "you@163.com", singleLine = true)
-                Field(pass, { pass = it }, Modifier.weight(1f), label = "授权码", hint = "SMTP 授权码", password = true, singleLine = true)
+                Field(user, { user = it }, Modifier.weight(1f), label = L["邮箱账号_fa8cbad280"], hint = L["you_163_com_ca1e042c87"], singleLine = true)
+                Field(pass, { pass = it }, Modifier.weight(1f), label = L["授权码_886b52b1db"], hint = L["smtp_授权码_273299a5a3"], password = true, singleLine = true)
             }
             Spacer(Modifier.size(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Field(from, { from = it }, Modifier.weight(1f), label = "发件人地址", hint = "留空则用邮箱账号", singleLine = true)
-                Field(to, { to = it }, Modifier.weight(1f), label = "收件人", hint = "留空发给自己；多个用逗号分隔", singleLine = true)
+                Field(from, { from = it }, Modifier.weight(1f), label = L["发件人地址_e83d394caa"], hint = L["留空则用邮箱账号_878dd6ff26"], singleLine = true)
+                Field(to, { to = it }, Modifier.weight(1f), label = L["收件人_529414cfe5"], hint = L["留空发给自己_多个用逗号分隔_cb0371264d"], singleLine = true)
             }
             Spacer(Modifier.size(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                PrimaryBtn(text = "保存 SMTP 设置", onClick = {
+                PrimaryBtn(text = L["保存_smtp_设置_31e1de2129"], onClick = {
                     scope.launch {
                         try {
                             val s = withContext(Dispatchers.IO) { NoteBoxState.api.putSettings(smtpPayload()) }
                             NoteBoxState.applySettings(s)
-                            NoteBoxState.toast("SMTP 设置已保存", ToastKind.Ok)
+                            NoteBoxState.toast(tr("smtp_设置已保存_e5e2238754"), ToastKind.Ok)
                         } catch (e: Exception) {
-                            NoteBoxState.toast(e.message ?: "保存失败", ToastKind.Err)
+                            NoteBoxState.toast(e.message ?: tr("保存失败_40525a7328"), ToastKind.Err)
                         }
                     }
                 })
                 PrimaryBtn(
-                    text = if (testing) "发送中…" else "发送测试邮件",
+                    text = if (testing) L["发送中_c1b894480d"] else L["发送测试邮件_1eace6fb59"],
                     enabled = !testing,
                     onClick = {
                         scope.launch {
@@ -182,10 +184,10 @@ private fun MailInner() {
                                     NoteBoxState.api.putSettings(smtpPayload())
                                     NoteBoxState.api.testEmail()
                                 }
-                                NoteBoxState.toast("测试邮件已发送，请查收", ToastKind.Ok)
+                                NoteBoxState.toast(tr("测试邮件已发送_请查收_bb593d799c"), ToastKind.Ok)
                                 loadLog()
                             } catch (e: Exception) {
-                                NoteBoxState.toast(e.message ?: "发送失败", ToastKind.Err, 6000)
+                                NoteBoxState.toast(e.message ?: tr("发送失败_e767d34c78"), ToastKind.Err, 6000)
                                 loadLog()
                             } finally {
                                 testing = false
@@ -196,24 +198,24 @@ private fun MailInner() {
             }
         }
 
-        PanelCard(title = "通知规则", collapsible = false) {
+        PanelCard(title = L["通知规则_5229b0abf4"], collapsible = false) {
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                Toggle(notify, { notify = it }, label = "启用邮件通知")
-                Toggle(digest, { digest = it }, label = "启用每日摘要")
+                Toggle(notify, { notify = it }, label = L["启用邮件通知_25c29ea9b4"])
+                Toggle(digest, { digest = it }, label = L["启用每日摘要_0a9df7843b"])
             }
             Spacer(Modifier.size(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Field(before, { before = it }, Modifier.widthIn(max = 160.dp), label = "提前提醒（分钟）", mono = true, singleLine = true)
-                Field(digestTime, { digestTime = it }, Modifier.widthIn(max = 160.dp), label = "摘要发送时间", hint = "08:30", mono = true, singleLine = true)
+                Field(before, { before = it }, Modifier.widthIn(max = 160.dp), label = L["提前提醒_分钟_0c4a512c91"], mono = true, singleLine = true)
+                Field(digestTime, { digestTime = it }, Modifier.widthIn(max = 160.dp), label = L["摘要发送时间_0eccc15130"], hint = L["08_30_c46cf95d73"], mono = true, singleLine = true)
                 com.servermaintance.panel.ui.SelectField(
                     tz, listOf("Asia/Shanghai", "Asia/Hong_Kong", "Asia/Tokyo", "UTC"), { tz = it },
-                    Modifier.widthIn(max = 220.dp), label = "时区",
+                    Modifier.widthIn(max = 220.dp), label = L["时区_fb2a23dc16"],
                 )
             }
             Spacer(Modifier.size(8.dp))
-            Field(baseUrl, { baseUrl = it }, Modifier.fillMaxWidth(), label = "站点地址（邮件跳转链接）", hint = "http://8.153.153.176:13345", singleLine = true)
+            Field(baseUrl, { baseUrl = it }, Modifier.fillMaxWidth(), label = L["站点地址_邮件跳转链接_062727b23d"], hint = "http://8.153.153.176:13345", singleLine = true)
             Spacer(Modifier.size(10.dp))
-            PrimaryBtn(text = "保存通知规则", onClick = {
+            PrimaryBtn(text = L["保存通知规则_81afc138cf"], onClick = {
                 scope.launch {
                     try {
                         val s = withContext(Dispatchers.IO) {
@@ -224,21 +226,21 @@ private fun MailInner() {
                             ))
                         }
                         NoteBoxState.applySettings(s)
-                        NoteBoxState.toast("通知规则已保存", ToastKind.Ok)
+                        NoteBoxState.toast(tr("通知规则已保存_47bd518d21"), ToastKind.Ok)
                     } catch (e: Exception) {
-                        NoteBoxState.toast(e.message ?: "保存失败", ToastKind.Err)
+                        NoteBoxState.toast(e.message ?: tr("保存失败_40525a7328"), ToastKind.Err)
                     }
                 }
             })
             Spacer(Modifier.size(8.dp))
             Text(
-                "到期提醒：截止前 N 分钟发送；每日摘要：在设定时间汇总「已过期 + 今天到期」的事项。" +
-                    "每个事项的提醒开关在事项编辑弹窗里。",
+                L["到期提醒_截止前_n_分钟发送_每日摘要_在设定_0805f20d0d"] +
+                    L["每个事项的提醒开关在事项编辑弹窗里_e97512b037"],
                 color = com.servermaintance.panel.ui.Palette.muted, fontSize = 11.5.sp, lineHeight = 17.sp,
             )
         }
 
-        PanelCard(title = "发送记录", collapsible = false) {
+        PanelCard(title = L["发送记录_90ed819b22"], collapsible = false) {
             when {
                 log == null && logError == null -> LoadingState()
                 logError != null -> ErrorState(message = logError!!, onRetry = {
@@ -248,21 +250,21 @@ private fun MailInner() {
                     val rows = log.orEmpty().filterIsInstance<JsonObject>()
                     DataTable(
                         columns = listOf(
-                            TableCol("时间", 1.6f) { l -> Text(fmtDateTimeSec(l.long("sent_at")), mono = true) },
-                            TableCol("类型", 0.8f) { l -> Text(l.str("kind")) },
-                            TableCol("主题", 2.4f) { l -> Text(l.str("subject")) },
-                            TableCol("状态", 1.2f) { l ->
+                            TableCol(L["时间_89b4aa6364"], 1.6f) { l -> Text(fmtDateTimeSec(l.long("sent_at")), mono = true) },
+                            TableCol(L["类型_e4e46c7235"], 0.8f) { l -> Text(l.str("kind")) },
+                            TableCol(L["主题_e848ddd482"], 2.4f) { l -> Text(l.str("subject")) },
+                            TableCol(L["状态_62e951a692"], 1.2f) { l ->
                                 val st = l.str("status")
                                 when (st) {
-                                    "ok" -> LevelBadge("成功", Level.Ok)
-                                    "skipped" -> LevelBadge("跳过", Level.Muted)
-                                    else -> LevelBadge(l.str("error").ifEmpty { "失败" }, Level.Bad)
+                                    "ok" -> LevelBadge(L["成功_51991a5d11"], Level.Ok)
+                                    "skipped" -> LevelBadge(L["跳过_31a98593f1"], Level.Muted)
+                                    else -> LevelBadge(l.str("error").ifEmpty { L["失败_3e3c8068bb"] }, Level.Bad)
                                 }
                             },
                         ),
                         rows = rows,
                         rowKey = { it.int("id") },
-                        emptyText = "还没有发送记录",
+                        emptyText = L["还没有发送记录_8ec160d4de"],
                     )
                 }
             }

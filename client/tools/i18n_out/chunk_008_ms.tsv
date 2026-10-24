@@ -1,0 +1,120 @@
+变化_0713c8939f	Perubahan
+变更取自_auditd_文件完整性事件_配置_edc7e5af44	Perubahan diambil daripada peristiwa integriti fail auditd (konfig / kunci / nginx / sshd dsb.), jumlah $changeCount.
+变更预览_241ab41868	 · Pratonton perubahan
+变量_b418ca60d4	Pemboleh ubah
+口径说明_53a989d8cc	Takrifan
+只告警_20b82131f2	Amaran sahaja
+只读_ffc1d065fb	Baca sahaja
+只读_仅查看_可编辑_可修改_管理_可修_7350c52b3d	Baca sahaja = lihat sahaja · Boleh sunting = boleh ubah · Urus = boleh ubah, buang dan urus perkongsian
+只选目录_bc8b48ee0e	Pilih direktori sahaja
+可上传_rdb_文件名_内容_0e9334cab9	Boleh muat naik nama fail .rdb + kandungan.
+可修复_r_checks_count_e4b6314c85	Boleh dibaiki: {0}
+可升级_546591fd74	Boleh naik taraf
+可升级_total_12792da8ef	Boleh naik taraf ($total)
+可复用_ec5baa1975	Boleh guna semula
+可复用_缓存上限_96e0d3a181	Boleh guna semula (had cache)
+可复用上下文_9727f037bf	Konteks guna semula
+可安全清理_099dfd0be8	Boleh bersihkan dengan selamat
+可清理的孤立依赖_apt_get_s_auto_25a43a9abb	Pergantungan yatim yang boleh dibersihkan (apt-get -s autoremove)
+可用_e91365cf9e	Tersedia
+可用性拨测_64f61a3d7a	Sonding ketersediaan
+可用空间_4981f67ab1	Ruang tersedia
+可空_b3563bf06a	Boleh null
+可粘贴_mongodump_归档内容或上传后在列_40fb6a2727	Tampal kandungan arkib mongodump di sini, atau muat naik dan pulihkan daripada senarai; tampal teks di sini dan nyatakan nama fail.
+可编辑_bff55f2cd9	Boleh sunting
+可达_3705c6f323	Boleh dicapai
+可达性_765d9ffdc9	Kebolehcapaian
+可选_2f3b613ff2	Pilihan…
+可选_53e32830a5	Pilihan
+可选镜像_67237d63bf	Imej pilihan
+台账主机_acb80f963e	Hos inventori
+台账条目_a9bb9bd8ce	Item inventori
+台账还是空的_登记机器的用途_环境_负责人与备注_4aebfb8210	Inventori masih kosong: rekod tujuan, persekitaran, pemilik dan nota setiap mesin supaya pemeriksaan dan amaran mempunyai objek yang jelas
+台账里还没有主机_先到_纳管主机_登记_再回来配_cdc9d74097	Belum ada hos dalam inventori: daftarkan dahulu di «Hos Diurus», kemudian kembali untuk konfigurasi kelayakan SSH
+各套餐命中率_rangelabel_cb1ad2971f	Kadar hit mengikut pelan $rangeLabel
+合并_保留现有数据_01a4d7c1d8	Gabung (kekalkan data sedia ada)
+合并导入_保留现有对象_5693e46162	Import dengan gabungan (kekalkan objek sedia ada)
+合规_540bc8b761	Pematuhan
+合规_r_counts_93f6bd5eb9	Mematuhi: {0}
+合计_0_03a6ed19a9	Jumlah {0}
+合计_92bcbf71cb	Jumlah
+同主仓库_01a7130455	Sama dengan repo utama
+同名文件已存在_19c091cec7	Fail dengan nama yang sama sudah wujud
+同时复制数据_d0295acd86	Salin data juga
+名称_1be7ae4fc2	Nama
+名称_值_576e23fba3	Nama / Nilai
+名称_可带模式_99f761c6de	Nama (boleh mengandungi corak)
+后台运行_d8478a3802	Jalankan di latar belakang
+后天_639e8f00b7	Lusa
+向_pid_pid_args_发送_si_1e664241d5	Hantar SIGTERM kepada PID $pid ($args)?
+否_8bf5c10ad9	Tidak
+含成本估算_c3584df84d	Termasuk anggaran kos
+含数据_6aedaad68f	(termasuk data)
+含规则_拨测与手动广播_6fd5d428e5	Termasuk peraturan, sonding dan siaran manual
+含轮转历史_e8a206c9bc	Termasuk sejarah penggiliran
+启动_0_5c677d444c	Mulakan {0}
+启动_0_服务_16fc9bfc5e	▶ Mulakan perkhidmatan {0}
+启动_ebd26da421	Mulakan
+启动_engine_name_服务_47b4573f31	▶ Mulakan perkhidmatan ${engine.name}
+启动_label_d5cb754f2b	Mulakan $label
+启动_容器_76c73301e8	Mulakan container
+启动引擎_193b25d8af	Mulakan enjin
+启动服务_f5f2a0dd6f	Mulakan perkhidmatan
+启用_0_并重载_nginx_cec5f2e46f	Dayakan {0} dan muat semula nginx?
+启用_d4e9ca3dd4	Dayakan
+启用_pg_stat_statements_扩展_a1da4a0b69	Dayakan ekstensi pg_stat_statements
+启用_r_site_并重载_nginx_6f9eb4ba9b	Dayakan ${r.site} dan muat semula nginx?
+启用中的探测项_06452808ea	Sonding yang didayakan
+启用告警_d6b9351330	Dayakan amaran
+启用方式_script_由_relay_ale_ef278b0211	Cara mendayakan: $script, dijalankan setiap 5 minit oleh relay-alert.timer.
+启用方法_9260bb76c1	Kaedah mendayakan
+启用每日摘要_0a9df7843b	Dayakan ringkasan harian
+启用网卡_name_b24324d7d4	Dayakan antara muka rangkaian $name?
+启用邮件通知_25c29ea9b4	Dayakan pemberitahuan e-mel
+启用防火墙_32fbb16291	Dayakan firewall
+告警_5078424f7e	Amaran
+告警中_265d5de4c9	Dalam amaran
+告警中心_ba945698e9	Pusat amaran
+告警事件流_7910b238b1	Strim peristiwa amaran
+告警历史_c507274d75	Sejarah amaran
+告警就会推送到群里而不只是停在面板上_cb3d792064	Amaran akan dihantar ke kumpulan dan bukan sekadar kekal di panel.
+告警已关闭_a1c9fab7d6	Amaran dimatikan
+告警日志_0_a892400684	Log amaran ({0})
+告警规则_0_条触发中_86ea51451b	{0} peraturan amaran sedang mencetus
+告警规则_de497c4e56	Peraturan amaran
+告警规则_o_rulefiring_条触发_3296034214	${o.ruleFiring} peraturan amaran sedang mencetus
+告警通道_复用_relay_每日报告的_smtp_c02c260a95	Saluran amaran (guna semula SMTP laporan harian relay)
+告警阈值_仪表盘右上角铃铛_c7224212dd	Ambang amaran (ikon lonceng di penjuru kanan atas papan pemuka)
+告警阈值已保存_f6ed6094c3	Ambang amaran disimpan
+告警防护开启_c43dfbff06	Perlindungan amaran didayakan
+周_0_1_2_78c92bdbef	Minggu {0} {1}–{2}
+周期_0_天_已消耗_1_4364d28c73	Kitaran {0} hari · {1}% digunakan
+周期_8a12b12125	Kitaran
+周期内消耗_cdd79a773a	Penggunaan dalam kitaran
+命中_0_bc8f08b9ae	Hit {0}
+命中_0_未命中_1_994cc4fd62	Hit {0} · terlepas {1}
+命中_0_未命中_1_tok_0170ee1dc6	Hit {0} / terlepas {1} tok · 
+命中_0_未命中_1_tok_覆_e84c124898	Hit {0} / terlepas {1} tok · liputan 
+命中_7a130d7fde	Hit
+命中_上游返回_2xx_真正拿到了模型响应_479b4a776d	· Hit: huluan memulangkan 2xx, benar-benar mendapat balasan model.
+命中事件_5a9f9753fc	Peristiwa hit
+命中率趋势_rangelabel_gra_4543952724	Trend kadar hit $rangeLabel · $gran
+命令_b114b91547	Arahan
+命令控制台_3e37a06e5f	Konsol arahan
+命令输出_0_1eb07b8f1f	Output arahan: {0}
+命令输出_c_evidence_take_1_2639edb6ee	Output arahan: ${c.evidence.take(160)}
+响应解析失败_0_2b68ffa3e9	Gagal hurai balasan: {0}
+响应解析失败_text_take_300_e68936f4c8	Gagal hurai balasan: ${text.take(300)}
+响应需包含关键字_8194b1499c	Balasan mesti mengandungi kata kunci
+唯一_e805014aa5	Unik
+唯一索引_eea282cf7b	Indeks unik
+四_4f88740b34	Empat
+回收_6eda6254dd	Pulih balik
+回收站_0_c62b3efd3d	Tong sampah{0}
+回收站_64ea8751fb	Tong sampah
+回收站_保留_0_天_38b488832e	Tong sampah (disimpan {0} hari)
+回收站_保留_filestore_trash_9bbe7572c0	Tong sampah (disimpan ${FileStore.trashDays.value} hari)
+回收站已清空_226ab2d716	Tong sampah dikosongkan
+回收站是空的_e872522628	Tong sampah kosong
+回调_url_8685de50ca	URL panggil balik
+图片_0_b8121a43e1	[Gambar: {0}]

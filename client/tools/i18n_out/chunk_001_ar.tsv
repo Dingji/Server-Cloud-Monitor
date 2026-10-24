@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label اكتملت التثبيت، جارٍ التحديث…
+label_安装日志_13ce1b1029	$label سجل التثبيت
+label_实现中_70505f7ef8	جارٍ تنفيذ «$label»…
+llm_api_中继的请求量_token_用量_6b89d708ea	حجم الطلبات واستخدام Token وحصة تجمع المفاتيح وتوافر النماذج وتحليل الجودة لـ LLM API relay
+location_块_不要停用该站点以免面板与_4ae164b62b	location)، لا تعطّل هذا الموقع وإلا توقف لوحة التحكم وخدمة النقل معًا.
+login.access_token	رمز الوصول
+login.advanced	متقدّم
+login.audit_notice	يُسجَّل جميع الإجراءات لأغراض التدقيق
+login.connect_failed	فشل الاتصال:
+login.failed	فشل تسجيل الدخول
+login.normalized_url	العنوان المعياري
+login.not_logged_in	غير مسجَّل الدخول
+login.password_required	يرجى إدخال كلمة المرور
+login.remember_password	تذكر كلمة المرور
+login.restore_default_url	استعادة العنوان الافتراضي
+login.save_on_test_hint	بعد تغيير العنوان، انقر «اختبار الاتصال» لحفظه
+login.server_config	إعدادات اتصال الخادم
+login.sign_in	تسجيل الدخول
+login.signing_in	جارٍ تسجيل الدخول…
+login.subtitle	وحدة تحكم للمراقبة الفورية وتهيئة الخادم
+login.test_connection	اختبار الاتصال
+login.testing	جارٍ الاختبار…
+login_可登录_0e617ada9b	LOGIN (يمكن تسجيل الدخول)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(بايتات الجولة السابقة، بايتات الجولة الحالية) هو المحتوى الذي أُرسل بالفعل في الجولات السابقة — هذا هو الحد الأقصى الذي يجب أن تصل إليه الذاكرة المؤقتة، بصرف النظر عمّا تُبلّغه الشركة المورّدة.\n
+mongodb_不做空间回收_validate_634509e00a	لا يستعيد MongoDB المساحة؛ تُعد validate/reindex صيانة دورية شائعة.
+mongodb_使用_mongodump_生_c5b1c88a48	· يستخدم MongoDB أداة mongodump لإنشاء أرشيف gzip (يتطلب mongodump).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	ينشئ MongoDB قاعدة البيانات فعليًا عند أول عملية كتابة في مجموعة، وسيتم هنا إنشاء مجموعة بديلة _cm_init.
+mongodb_的过滤条件支持_字段_值_558264a7d8	تدعم مرشحات MongoDB شكل {"الحقل":قيمة} (يُحوَّل داخليًا إلى شرط استعلام) أو الاختصار حقل=قيمة. تُعرض المستندات بتنسيق JSON و _id هو معرّف المستند.
+mongodb_维护结果_aaeb39f907	نتائج صيانة MongoDB
+ms_毫秒_7ade5ab3a4	$ms ms
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (الافتراضي root + socket)
+mysql_语法_8200e34cb7	صياغة MySQL
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a إحصاءات
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c تحقق
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o تحسين
+name_ver_连接正常_33d0a44ec7	$name $ver الاتصال سليم
+name_关闭_c8e887ebc0	$name: إيقاف
+name_开启_54ce939603	$name: تشغيل
+nav.audit	سجل التدقيق
+nav.backups	مركز النسخ الاحتياطي
+nav.cron	المهام المجدولة
+nav.dashboard	لوحة المعلومات
+nav.databases	قواعد البيانات
+nav.disks	إدارة الأقراص
+nav.docker	حاويات Docker
+nav.health_alerts	تنبيهات الصحة
+nav.logs	مركز السجلات
+nav.memory	إدارة الذاكرة
+nav.network	إدارة الشبكة
+nav.note_mail	إشعارات البريد الإلكتروني
+nav.note_settings	إعدادات NoteBox
+nav.note_transfer	استيراد / تصدير
+nav.note_users	إدارة المستخدمين
+nav.notes	الملاحظات
+nav.ops_channels	قنوات الإشعارات
+nav.ops_disk	حوكمة الأقراص
+nav.ops_files	إدارة الملفات
+nav.ops_hosts	المضيفون المُدارة
+nav.ops_remote	مقاييس المضيفين البعيدين
+nav.ops_rules	قواعد التنبيه
+nav.ops_sec	فحص خط الأساس الأمني
+nav.ops_uptime	قياس التوافر
+nav.ops_watch	مراقبة الخدمات
+nav.packages	إدارة الحزم
+nav.page_placeholder	جارٍ تنفيذ صفحة «{0}»…
+nav.pinned_hint	(مثبَّت، اضغط مطولًا لإلغاء التثبيت)
+nav.processes	إدارة العمليات
+nav.relay	OpenCode relay
+nav.section.app	التطبيقات
+nav.section.monitor	المراقبة
+nav.section.notes	الملاحظات
+nav.section.server	الخادم
+nav.section.system	النظام
+nav.section.tools	الأدوات
+nav.security	إدارة الأمان
+nav.services	خدمات النظام
+nav.settings	إعدادات اللوحة
+nav.slo	SLO والاستخدام
+nav.terminal	طرفيقة ويب
+nav.todos	قائمة المهام
+nav.web	المواقع / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf تهيئة Nginx · sshd_config تهيئة SSH · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	تُتحقق تهيئة nginx/sshd/fstab تلقائيًا بعد الحفظ
+nginx_站点_0_6bcfddef71	مواقع Nginx ({0})
+nginx_站点_sites_size_2db3c2b5be	مواقع Nginx (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP وقواعد التنبيه
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox الملاحظات السحابية (تصنيفات متعددة المستويات · سلة المحذوفات · Markdown · المشاركة)
+notebox_地址未配置_3d37258011	عنوان NoteBox غير مهيّأ
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	مهام NoteBox (تدعم المواعيد النهائية وتذكيرات البريد)
+notebox_数据迁移_362725f18e	ترحيل بيانات NoteBox
+notebox_服务可达_6a7506d6ac	خدمة NoteBox متاحة
+notebox_服务可达_未登录_e023d68cad	خدمة NoteBox متاحة (غير مسجَّل الدخول)
+notebox_服务地址_默认端口_13345_e0880dfda6	عنوان خدمة NoteBox (المنفذ الافتراضي 13345). يلزم تسجيل الدخول مجددًا بعد التغيير.
+notebox_登录成功_013138644f	تم تسجيل الدخول إلى NoteBox بنجاح
+notebox_设置_efb5a47b98	إعدادات NoteBox
+notebox_账号_仅管理员_81b8d4ca26	حساب NoteBox (للمسؤولين فقط)
+online_台有近期数据_1fefff8cdc	$online مضيفًا لديها بيانات حديثة
+opencode_中继_2e021ee797	OpenCode relay
+p95_延迟_57d63f8b46	زمن الاستجابة P95
+p95_延迟_ba65a873bc	زمن الاستجابة p95
+palette.accent_hint	المظهر · الحالي {0}
+palette.open_page	فتح الصفحة {0}
+palette.pin	تثبيت «{0}»
+palette.pin_hint	مساحة العمل · اضغط مطولًا على عنصر الشريط الجانبي للتبديل أيضًا
+palette.reload_hint	F5 / Ctrl+R · إعادة التحميل
+palette.theme_hint	المظهر · الحالي {0}
+palette.unpin	إلغاء تثبيت «{0}»
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (تغيير كلمة المرور إجباريًا)
+pg_自定义格式_0cc41d0ea4	صيغة PG مخصّصة
+postgresql_mysql_sql_42e513fca9	إدارة قواعد البيانات/الجداول ووحدة SQL ورؤى الأداء والنسخ الاحتياطي والاستعادة لـ PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	الصيغة المخصّصة PostgreSQL -Fc (استعادة أسرع)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (يستخدم مصادقة peer افتراضيًا: su - postgres)
+rdb_快照_62f218ed40	لقطة RDB
+redis_会执行_bgsave_并复制_r_86e2019f6b	· ينفّذ Redis أمر BGSAVE وينسخ ملف RDB؛ تستعيد الاستعادة دليل البيانات ويتطلب إعادة تشغيل Redis لتطبيقها.
+redis_命令控制台_fa42019a53	وحدة أوامر Redis
+redis_维护_d2a01bfbd3	صيانة Redis
+reindex_全部库_90545e1eeb	REINDEX لجميع قواعد البيانات
+reindex_重建索引_256956f94e	REINDEX / إعادة بناء الفهارس
+reindex_重建索引_d81fcbf8d0	REINDEX (إعادة بناء الفهارس)
+relay_alert_py_检查_smtp_告_012aaa3373	فحص relay_alert.py وقناة تنبيهات SMTP وقيم العتبة وسجلات التنبيهات

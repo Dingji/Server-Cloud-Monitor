@@ -1,0 +1,120 @@
+0_6_每6小时_任务写入_e_369a8da904	0 */6 * * * 6시간마다. 작업은 /etc/cron.d/cm-<이름>에 기록되고 root로 실행됩니다.
+0_个文件_81d82139e8	 · 파일 {0}개
+0_将进入回收站_保留_1_天_0a8a244509	“{0}”이(가) 휴지통으로 이동되며 {1}일간 보관됩니다.
+0_条展示_命中_1_条_0e114bc461	({0}개 표시 / {1}개 일치)
+0_表示立即_189b797c4f	0은 즉시 실행을 의미합니다
+10分钟_b82d31194e	10분
+14_4_表示约_2_天烧完_sre_常用告_681c4dc86d	≥14.4×는 약 2일 후 예산이 소진됨을 의미합니다(SRE에서 흔히 쓰는 알림 임계값). 4xx는 클라이언트 문제이므로 예산에 포함되지 않습니다.
+163_邮箱_设置_pop3_smtp_2cd036d08b	163 메일: 설정 → POP3/SMTP → 활성화 후 “인증 코드”를 생성하여 아래에 입력하세요(로그인 비밀번호 아님).
+1_列表_522d9cc510	1. 목록
+1小时_3a9a579a96	1시간
+24_小时发送_8e6d358b2e	24시간 발송
+24_小时失败_f23fa2b0e3	24시간 실패
+24_小时拉起次数_8c19db84c7	24시간 기동 횟수
+24_小时通知_ed50056bf1	24시간 알림
+24小时_45a2727884	24시간
+2_秒_5198950435	2초
+30_天_9401eee769	30일
+30_天后自动清除_b6c489a29c	30일 후 자동 삭제
+33m_会话已关闭_be33fffa31	[33m[세션 종료됨]
+402_额度_fbd56d7158	402 한도
+403_权限_bd93595602	403 권한
+429_拦截_0_7a460e2aa8	429 차단 {0}
+429_拦截_563bec273d	429 차단
+429_次数_9333e8c60f	429 횟수
+429_限流_5bd5af3cd2	429 속도 제한
+499_中断_8a0629ae88	499 중단
+4xx_0_499_中断_1_817ee52e07	4xx {0} · 499 중단 {1}
+4xx_0_5xx_1_未授权_4116249143	4xx {0} · 5xx {1} · 미승인 {2}
+4xx_0_无响应_1_cd8a2943ad	4xx {0} · 무응답 {1}
+4xx_错误_2368d2493d	4xx 오류
+500_毫秒_cc7da43bcf	500 ms
+5xx_无响应_2355276e0d	5xx/무응답
+5xx_错误_6ed859ac67	5xx 오류
+6小时_57937ccefc	6시간
+7_天_e45a81074f	7일
+account_lock_锁定_bbeaf242af	ACCOUNT LOCK(잠금)
+account_unlock_解锁_b001d58ec0	ACCOUNT UNLOCK(잠금 해제)
+acl_用户_0_b7e2c3ae45	ACL 사용자 ({0})
+acl_用户_roles_size_8df0ffb733	ACL 사용자 (${roles.size})
+act_服务_a3ebd5a4a1	$act 서비스
+analyze_会真实执行该语句以采集实际行数与_7e2c3ab4f2	ANALYZE은(는) 해당 문을 실제로 실행하여 실제 행 수와 소요 시간을 수집합니다. 읽기 전용 쿼리인지 확인하세요. 쓰기가 포함된 문은 SQL 콘솔에서 실행하세요.
+analyze_更新统计_ae3c35e60c	ANALYZE(통계 갱신)
+api_地址_acd8a50431	API 주소
+api_基础地址_走代理时填_5c7aa1a51e	API 기본 주소(프록시 사용 시 입력)
+app.description	서버 모니터링 및 구성 패널 클라이언트
+app_连接的_cloud_monitor_面板_0ee7660770	앱이 연결하는 Cloud Monitor 패널 주소. 기본값은 http://8.153.153.176/panel이며 배포된 임의의 패널 주소로 변경할 수 있습니다.
+apt_任务进行中_0_6028d2fbd3	apt 작업 진행 중: {0}
+apt_缓存_c1fb672ce3	APT 캐시
+auditd_未启用_2ca17006e2	auditd 비활성화됨
+auditd_记录的敏感文件变更_谁_用什么命令_de2731982f	auditd가 기록한 민감한 파일 변경: 누가 어떤 명령으로 어느 파일을 변경했는지
+badprov_个供应商配额耗尽_363bea5ae6	$badProv개 공급자 한도 소진
+banner_能顺带看到对端_openssh_版_6a7382b65e	배너를 보면 상대의 OpenSSH 버전도 알 수 있어 업그레이드 필요 여부 확인에 유용합니다
+bgsave_会在后台生成_rdb_文件_flu_221d58038d	BGSAVE는 백그라운드에서 RDB 파일을 생성합니다. FLUSHDB/ALL은 모든 데이터를 삭제하므로 재확인이 필요합니다.
+bgsave_后台快照_7679d32e01	BGSAVE(백그라운드 스냅샷)
+bilibili_视频_7fcd50c628	Bilibili 동영상
+certbot_安装日志_1bf087319a	certbot 설치 로그
+certbot_已安装_7690d6f09a	certbot 설치됨
+certbot_未安装_b2dd3df63b	certbot 미설치
+chat_id_或_频道名_beb6893b9b	Chat ID 또는 @채널명
+check_校验_8a646f2a85	CHECK(검증)
+common.loading	불러오는 중…
+corecount_核高负载_cores_afc43a96da	코어 $coreCount개 과부하 · 전체 $coresTotal개
+cpu_使用率_35b17729e2	CPU 사용률 %
+cpu_使用率_bdf91f384b	CPU 사용률
+cpu_占用_89f8a08e80	CPU 점유율
+cpu_占用_top_52d0789676	CPU 점유율 Top
+cpu_核数_2a5bc46dd3	CPU 코어 수
+cron_表达式_6859f82ab2	Cron 표현식
+crontab_l_条目_6be8b3d177	crontab -l 항목
+csv_内容_粘贴_17c5b7dbff	CSV 내용(붙여넣기)
+csv_导入结果_3a4d7db0d7	CSV 가져오기 결과
+ctrl_shift_c_v_复制粘贴_会话_7c3872ffae	Ctrl+Shift+C/V 복사/붙여넣기 · 이 페이지를 떠나도 세션은 2분간 유지됩니다(server/shell.js GRACE_MS)· 
+curlabel_按天_12556e7b0c	$curLabel · 일별
+curlabel_按天_可复用_vs_8cc7c3562a	$curLabel · 일별 · 재사용 vs 신규
+days_天_a6409fc14f	$days일
+db2_sql_以实例用户执行_51f6dbcefb	Db2 SQL(인스턴스 사용자로 실행)
+db2_授权_grant_revoke_eb50e06ee0	Db2 권한(GRANT / REVOKE)
+db2_用_grant_revoke_管理权限_209a33078b	Db2는 GRANT/REVOKE로 권한을 관리합니다. 사용자는 먼저 인스턴스에 만들어져 있어야 합니다(db2 CREATE USER 또는 OS 계정).
+ddl_定义_可编辑后执行_20bea6e0ac	DDL 정의(실행 전 편집 가능)
+ddl_执行结果_d203cf40d4	DDL 실행 결과
+dirty_待写盘_a3b33885f4	Dirty(디스크 기록 대기)
+docker_system_prune_af_ead57cbf4c	docker system prune -af: 사용하지 않는 이미지/네트워크/중지된 컨테이너 삭제
+docker_安装日志_08ccdea4e9	Docker 설치 로그
+docker_容器_4372ba1200	Docker 컨테이너
+docker_引擎_755076c561	Docker 엔진
+docker_清理_795b9faf02	Docker 정리
+drop_table_删除表_0a38c31f25	DROP TABLE(테이블 삭제)
+du_尚未返回结果_0af775f143	du가 아직 결과를 반환하지 않았습니다
+e_name_将进入回收站_保留_f_b07c62be90	“${e.name}”이(가) 휴지통으로 이동되며 ${FileStore.trashDays.value}일간 보관됩니다.
+else_dat_3b7177d8b6	\n            else -> dateTime(t)\n        }\n    }\n\n    /** 백분율 표시: `99.1%`(정밀도 ≤0.1, 불필요한 0 제거). */\n    fun pct(p: Number?, suffix: String = 
+error_log_累计_40739fb64e	error.log 누계
+etc_cron_d_其它任务_1075d72b5f	/etc/cron.d 기타 작업
+etc_cron_daily_cron_h_0b91b3ac69	· /etc/cron.daily, cron.hourly 스크립트:
+explain_分析_5739bed548	EXPLAIN 분석
+fail2ban_未启用_dba20ac8ac	fail2ban 비활성화됨
+fail2ban_未安装_未运行_006151f653	fail2ban 미설치/미실행
+fail2ban_监狱_fd16fed272	fail2ban jail
+fail2ban_运行中_401151de3a	fail2ban 실행 중
+fail2ban_防爆破_e5d811ec15	Fail2ban 무차별 대입 방지
+failedcount_个服务失败_4bb48044cc	$failedCount개 서비스 실패
+failing_项失败_c0f4c9b479	$failing건 실패
+flushall_清空全部_d122dc5ecd	FLUSHALL(전체 비우기)
+flushdb_清空当前库_4587c55eaa	FLUSHDB(현재 DB 비우기)
+gzip_归档_39fcde3a7b	gzip 아카이브
+h_label_采集完成_a374e6c968	{0} 수집 완료
+hmac_签名密钥_可空_d93d6e2984	HMAC 서명 키(선택)
+http_方法_b1d337493c	HTTP 메서드
+inode_使用_0_小文件过多时会先耗尽_241698504d	inode 사용 {0}%(작은 파일이 많으면 inode가 먼저 소진됩니다)
+inode_使用_m_inodeusedpc_cd43f1cf53	inode 사용 ${m.inodeUsedPct}%(작은 파일이 많으면 inode가 먼저 소진됩니다)
+inode_使用率_5279b4b61c	inode 사용률
+ip_或域名_6ebd1799de	IP 또는 도메인 이름
+ip_来源_f387b79f3d	IP 출처
+journal_apt_轮转日志_093250e13f	journal + APT + 로테이션 로그
+journal_上限_0_1_天_d18e51fc4e	journal 상한 {0} / {1}일
+journal_上限_1f54a3217f	journal 상한
+journal_上限_s_journalsi_1ef09f8f8d	journal 상한 ${s.journalSize} / ${s.journalDays}일
+journal_保留天数_e74cafd94c	journal 보존 일수
+journal_日志_b4bd477c2c	journal 로그
+json_文档_e422afa510	JSON 문서
+label_失败_4c06e7d781	<label> 실패

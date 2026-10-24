@@ -1,4 +1,8 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
@@ -83,12 +87,12 @@ import kotlinx.serialization.json.JsonObject
  *  S12 限流配置（zones / applied / 状态码分布 / fail2ban / 原始配置）
  * ===================================================================== */
 
-private val RANGES = listOf(
-    "1h" to "最近 1 小时",
-    "6h" to "最近 6 小时",
-    "24h" to "最近 24 小时",
-    "7d" to "最近 7 天",
-    "all" to "全部",
+private val RANGES  get() = listOf(
+    "1h" to L["最近_1_小时_92e6814bba"],
+    "6h" to L["最近_6_小时_5a6f35c4fd"],
+    "24h" to L["最近_24_小时_eb9f889d6a"],
+    "7d" to L["最近_7_天_2a0a052cea"],
+    "all" to L["全部_778fc8f994"],
 )
 
 /** 双精度按 JS Number.toString 口径（整数不带 .0）。 */
@@ -107,31 +111,31 @@ private fun rateLevel(r: Double?): Level = when {
 
 private fun rateText(r: Double?): String = when {
     r == null -> "—"
-    r >= 99.9 -> "优秀"
-    r >= 99 -> "良好"
-    r >= 95 -> "关注"
-    else -> "劣化"
+    r >= 99.9 -> L["优秀_3e61f36792"]
+    r >= 99 -> L["良好_9d2c3d1616"]
+    r >= 95 -> L["关注_7ac0d5c9c3"]
+    else -> L["劣化_07f00d1b46"]
 }
 
 private fun riskLevel(v: String): Level = when (v) {
-    "正常" -> Level.Ok
-    "紧张" -> Level.Warn
-    "耗尽" -> Level.Bad
+    com.servermaintance.panel.i18n.apiTag("正常_f78d037abc") -> Level.Ok
+    com.servermaintance.panel.i18n.apiTag("紧张_168469b0ba") -> Level.Warn
+    com.servermaintance.panel.i18n.apiTag("耗尽_f67eb4df89") -> Level.Bad
     else -> Level.Muted
 }
 
 private fun riskText(v: String): String = when (v) {
-    "正常" -> "正常"
-    "紧张" -> "紧张"
-    "耗尽" -> "预计耗尽"
+    com.servermaintance.panel.i18n.apiTag("正常_f78d037abc") -> L["正常_f78d037abc"]
+    com.servermaintance.panel.i18n.apiTag("紧张_168469b0ba") -> L["紧张_168469b0ba"]
+    com.servermaintance.panel.i18n.apiTag("耗尽_f67eb4df89") -> L["预计耗尽_4605a4ef8b"]
     else -> "—"
 }
 
 private fun burnText(s: String): String = when (s) {
-    "ok" -> "正常"
-    "slipping" -> "偏快"
-    "warn" -> "告警"
-    "critical" -> "紧急"
+    "ok" -> L["正常_f78d037abc"]
+    "slipping" -> L["偏快_8900d928c6"]
+    "warn" -> L["告警_5078424f7e"]
+    "critical" -> L["紧急_27429f465b"]
     else -> s.ifEmpty { "—" }
 }
 
@@ -167,7 +171,7 @@ private fun deltaRow(
     val pct = diff / prv * 100
     val up = diff >= 0
     val good = if (goodDown) !up else up
-    val text = (if (up) "↑" else "↓") + " " + MonFmt.fixed(kotlin.math.abs(pct), 1) + "%"
+    val text = (if (up) L["s_9555ffd723"] else L["s_fc486696ad"]) + " " + MonFmt.fixed(kotlin.math.abs(pct), 1) + "%"
     return DeltaRow(k, curStr, fmt(prv), text, if (good) Level.Ok else Level.Warn)
 }
 
@@ -202,7 +206,7 @@ fun SloPage() {
     var rateLimit by remember { mutableStateOf<JsonObject?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(true) }
-    var range by remember { mutableStateOf("24h") }
+    var range by remember { mutableStateOf(L["24h_0277959611"]) }
     var auto by remember { mutableStateOf(true) }
     var targetText by remember { mutableStateOf("") }
     var periodText by remember { mutableStateOf("") }
@@ -263,22 +267,22 @@ fun SloPage() {
     val u = usg
     /* 「错误分布」等卡片要用请求总数，放在页面作用域 */
     val calls = s?.num("calls") ?: 0.0
-    val curLabel = RANGES.firstOrNull { it.first == range }?.second ?: "最近 24 小时"
+    val curLabel = RANGES.firstOrNull { it.first == range }?.second ?: L["最近_24_小时_eb9f889d6a"]
     /* CM.refreshLabel(auto.ms()) —— 配额窗口标题上的刷新间隔 */
     val refreshLabel = ((me?.long("refreshMs") ?: 30000L).coerceIn(5000L, 60000L)).let { ms ->
-        if (ms >= 1000) "${ms / 1000.0} 秒" else "$ms 毫秒"
+        if (ms >= 1000) trf("0_秒_99598b798a", ms / 1000.0) else trf("0_毫秒_dd9d131b83", ms)
     }
 
     PageScaffold(
-        title = "SLO 与用量",
-        desc = "成功率、延迟分位、错误分布、配额消耗与 token 用量归集",
+        title = L["slo_与用量_a308fd44ff"],
+        desc = L["成功率_延迟分位_错误分布_配额消耗与_toke_9c60795c78"],
         actions = {
-            GhostBtn(text = "刷新", onClick = { scope.launch { load() } })
+            GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { load() } })
         },
     ) {
-        if (loading && s == null) Text("加载中…", color = Palette.muted, fontSize = 13.sp)
+        if (loading && s == null) Text(L["common.loading"], color = Palette.muted, fontSize = 13.sp)
         if (error != null && s == null) {
-            ErrorState(message = error ?: "加载失败", onRetry = { scope.launch { load() } })
+            ErrorState(message = error ?: L["加载失败_f6b7a41e56"], onRetry = { scope.launch { load() } })
         }
 
         if (s != null) {
@@ -288,10 +292,10 @@ fun SloPage() {
             /* ---- S1 四个磁贴 ---- */
             GridLayout(columns = 4, spacing = 12.dp) {
                 StatTile(
-                    label = "成功率",
+                    label = L["成功率_df9dc72f2d"],
                     value = numStr(s.num("successRate")) + "%",
-                    sub = "服务可用性 ${numStr(s.num("availability"))}% · " +
-                        "${MonFmt.tok(s.long("ok"))}/${MonFmt.tok(s.long("calls"))} 请求",
+                    sub = trf("服务可用性_0_2496bf90f9", numStr(s.num("availability"))) +
+                        trf("0_1_请求_963d2142bd", MonFmt.tok(s.long("ok")), MonFmt.tok(s.long("calls"))),
                     valueColor = when {
                         s.num("successRate") >= 99 -> Color(0xFF10B981)
                         s.num("successRate") >= 95 -> Color(0xFFFACC15)
@@ -300,22 +304,22 @@ fun SloPage() {
                     icon = "gauge",
                 )
                 StatTile(
-                    label = "p95 延迟",
+                    label = L["p95_延迟_ba65a873bc"],
                     value = MonFmt.secs(latency?.num("p95")),
                     sub = "p50 ${MonFmt.secs(latency?.num("p50"))} · p99 ${MonFmt.secs(latency?.num("p99"))}",
                     icon = "clock",
                 )
                 StatTile(
-                    label = "5xx 错误",
+                    label = L["5xx_错误_6ed859ac67"],
                     value = MonFmt.tok(s.long("e5")),
-                    sub = "4xx ${MonFmt.tok(s.long("e4"))} · 无响应 ${MonFmt.tok(s.long("e0"))}",
+                    sub = trf("4xx_0_无响应_1_cd8a2943ad", MonFmt.tok(s.long("e4")), MonFmt.tok(s.long("e0"))),
                     valueColor = if (s.long("e5") > 0) Color(0xFFF87171) else null,
                     icon = "warning",
                 )
                 StatTile(
-                    label = "上行重试",
+                    label = L["上行重试_9f9056e5e6"],
                     value = MonFmt.tok(s.long("retried")),
-                    sub = "平均 ${MonFmt.secs(s.num("avgRt"))} · TTFB ${MonFmt.secs(s.num("avgTtfb"))}",
+                    sub = trf("平均_0_ttfb_1_08d238b10f", MonFmt.secs(s.num("avgRt")), MonFmt.secs(s.num("avgTtfb"))),
                     icon = "refresh",
                 )
             }
@@ -326,23 +330,23 @@ fun SloPage() {
         if (p != null && p.long("calls") > 0) {
             val c = s ?: JsonObject(emptyMap())
             val rows = listOf(
-                deltaRow("请求数", c.num("calls"), p.num("calls"), { MonFmt.tok(it) }, goodDown = false),
-                deltaRow("成功率", c.num("successRate"), p.num("successRate"), { numStr(it) + "%" }, goodDown = false),
-                deltaRow("服务可用性", c.num("availability"), p.num("availability"), { numStr(it) + "%" }, goodDown = false),
-                deltaRow("5xx 错误", c.num("e5"), p.num("e5"), { MonFmt.tok(it) }, goodDown = true),
-                deltaRow("4xx 错误", c.num("e4"), p.num("e4"), { MonFmt.tok(it) }, goodDown = true),
-                deltaRow("上游重试", c.num("retried"), p.num("retried"), { MonFmt.tok(it) }, goodDown = true),
-                deltaRow("平均耗时", c.num("avgRt"), p.num("avgRt"), { MonFmt.secs(it) }, goodDown = true),
+                deltaRow(L["请求数_b28376ff80"], c.num("calls"), p.num("calls"), { MonFmt.tok(it) }, goodDown = false),
+                deltaRow(L["成功率_df9dc72f2d"], c.num("successRate"), p.num("successRate"), { numStr(it) + "%" }, goodDown = false),
+                deltaRow(L["服务可用性_9f4b8967df"], c.num("availability"), p.num("availability"), { numStr(it) + "%" }, goodDown = false),
+                deltaRow(L["5xx_错误_6ed859ac67"], c.num("e5"), p.num("e5"), { MonFmt.tok(it) }, goodDown = true),
+                deltaRow(L["4xx_错误_2368d2493d"], c.num("e4"), p.num("e4"), { MonFmt.tok(it) }, goodDown = true),
+                deltaRow(L["上游重试_dd1d3e5ff3"], c.num("retried"), p.num("retried"), { MonFmt.tok(it) }, goodDown = true),
+                deltaRow(L["平均耗时_397236acf6"], c.num("avgRt"), p.num("avgRt"), { MonFmt.secs(it) }, goodDown = true),
             )
-            PanelCard(title = "环比上一周期", cardKey = "slo-prev") {
+            PanelCard(title = L["环比上一周期_787f54131c"], cardKey = "slo-prev") {
                 DataTable(
                     columns = listOf(
-                        TableCol<DeltaRow>(title = "指标", weight = 1.4f) { Text(it.k, fontSize = 12.5.sp) },
-                        TableCol<DeltaRow>(title = "当前", weight = 1.4f, mono = true) { Text(it.cur, fontSize = 12.5.sp) },
-                        TableCol<DeltaRow>(title = "上一周期", weight = 1.4f, mono = true) {
+                        TableCol<DeltaRow>(title = L["指标_1dfc810a7b"], weight = 1.4f) { Text(it.k, fontSize = 12.5.sp) },
+                        TableCol<DeltaRow>(title = L["当前_25e74dceac"], weight = 1.4f, mono = true) { Text(it.cur, fontSize = 12.5.sp) },
+                        TableCol<DeltaRow>(title = L["上一周期_c2b701fd24"], weight = 1.4f, mono = true) {
                             Text(it.prv, fontSize = 12.5.sp, color = Palette.muted)
                         },
-                        TableCol<DeltaRow>(title = "变化", weight = 1f, align = TextAlign.Center) {
+                        TableCol<DeltaRow>(title = L["变化_0713c8939f"], weight = 1f, align = TextAlign.Center) {
                             if (it.level == Level.Muted) Text("—", color = Palette.muted, fontSize = 12.sp)
                             else LevelBadge(it.badge, it.level)
                         },
@@ -351,7 +355,7 @@ fun SloPage() {
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "上一周期 = 紧邻的同等长度窗口，用于判断趋势在改善还是恶化。",
+                    L["上一周期_紧邻的同等长度窗口_用于判断趋势在_1a2626a827"],
                     color = Palette.muted,
                     fontSize = 12.sp,
                 )
@@ -363,13 +367,13 @@ fun SloPage() {
         if (b != null) {
             val bp = b.obj("period")
             PanelCard(
-                title = "SLO 错误预算",
+                title = L["slo_错误预算_47d719e135"],
                 cardKey = "slo-budget",
                 right = {
                     Field(
                         value = targetText,
                         onValueChange = { targetText = it },
-                        label = "目标",
+                        label = L["目标_941f08313a"],
                         mono = true,
                         modifier = Modifier.width(96.dp),
                     )
@@ -378,24 +382,24 @@ fun SloPage() {
                     Field(
                         value = periodText,
                         onValueChange = { periodText = it.filter(Char::isDigit) },
-                        label = "周期",
+                        label = L["周期_8a12b12125"],
                         mono = true,
                         modifier = Modifier.width(76.dp),
                     )
-                    Text(" 天", color = Palette.muted, fontSize = 12.sp)
+                    Text(L["天_f8bb0516cc"], color = Palette.muted, fontSize = 12.sp)
                     Spacer(Modifier.width(8.dp))
                     PrimaryBtn(
-                        text = "应用",
+                        text = L["nav.section.app"],
                         onClick = {
                             scope.launch {
                                 val t = targetText.toDoubleOrNull()
                                 val dy = periodText.toIntOrNull()
                                 if (t == null || t <= 0 || t > 100) {
-                                    AppState.toast("SLO 目标应为 0~100 之间的百分数")
+                                    AppState.toast(tr("slo_目标应为_0_100_之间的百分数_254085fd3b"))
                                     return@launch
                                 }
                                 if (dy == null || dy < 1 || dy > 365) {
-                                    AppState.toast("预算周期应为 1~365 天")
+                                    AppState.toast(tr("预算周期应为_1_365_天_065d52fe4e"))
                                     return@launch
                                 }
                                 Actions.run(
@@ -404,7 +408,7 @@ fun SloPage() {
                                         "sloTarget" to MonFmt.fixed(t / 100, 6).toDouble(),
                                         "sloPeriodDays" to dy,
                                     ),
-                                    successToast = "SLO 目标已更新为 $t% ／ $dy 天",
+                                    successToast = trf("slo_目标已更新为_0_1_天_41ec05d358", t, dy),
                                 )
                                 load()
                             }
@@ -415,9 +419,9 @@ fun SloPage() {
                 val remaining = bp?.num("remainingPct") ?: 0.0
                 GridLayout(columns = 3, spacing = 12.dp) {
                     StatTile(
-                        label = "预算剩余",
+                        label = L["预算剩余_139fdaa6f2"],
                         value = numStr(remaining) + "%",
-                        sub = "周期 ${b.int("periodDays")} 天 · 已消耗 ${numStr(bp?.num("consumedPct") ?: 0.0)}%",
+                        sub = trf("周期_0_天_已消耗_1_4364d28c73", b.int("periodDays"), numStr(bp?.num("consumedPct") ?: 0.0)),
                         pct = (bp?.num("consumedPct") ?: 0.0).coerceAtMost(100.0),
                         valueColor = when {
                             remaining > 50 -> Color(0xFF10B981)
@@ -427,39 +431,39 @@ fun SloPage() {
                         icon = "shield",
                     )
                     StatTile(
-                        label = "允许错误率",
+                        label = L["允许错误率_b1b11f31c6"],
                         value = numStr(b.num("allowedErrorRatePct")) + "%",
-                        sub = "目标 ${MonFmt.fixed(b.num("target") * 100, 3)}%",
+                        sub = trf("目标_0_43cc737e62", MonFmt.fixed(b.num("target") * 100, 3)),
                         icon = "check",
                     )
                     StatTile(
-                        label = "周期内消耗",
+                        label = L["周期内消耗_cdd79a773a"],
                         value = MonFmt.tok(bp?.long("bad")),
-                        sub = "允许 ${MonFmt.tok(bp?.long("allowedErrors"))} · 4xx ${MonFmt.tok(bp?.long("e4"))}（不计入）",
+                        sub = trf("允许_0_4xx_1_不计入_2c75f2ef75", MonFmt.tok(bp?.long("allowedErrors")), MonFmt.tok(bp?.long("e4"))),
                         icon = "activity",
                     )
                 }
                 Spacer(Modifier.height(10.dp))
                 DataTable(
                     columns = listOf(
-                        TableCol<JsonObject>(title = "窗口", weight = 0.9f, mono = true) { Text(it.str("window"), fontSize = 12.5.sp) },
-                        TableCol<JsonObject>(title = "请求", weight = 1f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["窗口_a70a15135c"], weight = 0.9f, mono = true) { Text(it.str("window"), fontSize = 12.5.sp) },
+                        TableCol<JsonObject>(title = L["请求_926f6b6b6a"], weight = 1f, align = TextAlign.End, mono = true) {
                             Text(MonFmt.tok(it.long("calls")), fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "5xx/无响应", weight = 1.2f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["5xx_无响应_2355276e0d"], weight = 1.2f, align = TextAlign.End, mono = true) {
                             Text(MonFmt.tok(it.long("bad")), fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "错误率", weight = 1f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["错误率_311526689a"], weight = 1f, align = TextAlign.End, mono = true) {
                             Text(numStr(it.num("errorRatePct")) + "%", fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "燃烧率", weight = 1f, align = TextAlign.End, mono = true) {
-                            Text(numStr(it.num("burnRate")) + "×", fontSize = 12.5.sp)
+                        TableCol<JsonObject>(title = L["燃烧率_b7f530cc1b"], weight = 1f, align = TextAlign.End, mono = true) {
+                            Text(numStr(it.num("burnRate")) + L["s_67fba2f357"], fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "按此速率耗尽", weight = 1.3f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["按此速率耗尽_b0a756faa9"], weight = 1.3f, align = TextAlign.End, mono = true) {
                             val ex = if (it.containsKey("exhaustDays") && it["exhaustDays"] != null) it.num("exhaustDays") else null
-                            Text(if (ex == null) "—" else "${numStr(ex)} 天", fontSize = 12.5.sp)
+                            Text(if (ex == null) "—" else trf("0_天_5834f54606", numStr(ex)), fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "状态", weight = 0.9f, align = TextAlign.Center) {
+                        TableCol<JsonObject>(title = L["状态_62e951a692"], weight = 0.9f, align = TextAlign.Center) {
                             val st = it.str("status")
                             LevelBadge(burnText(st), burnLevel(st))
                         },
@@ -468,8 +472,8 @@ fun SloPage() {
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "燃烧率 1× ＝ 正好按预算节奏消耗；≥6× 表示约 5 天烧完整个周期预算；" +
-                        "≥14.4× 表示约 2 天烧完（SRE 常用告警阈值）。4xx 属客户端问题，不计入预算。",
+                    L["燃烧率_1_正好按预算节奏消耗_6_表_9e0d1c9091"] +
+                        L["14_4_表示约_2_天烧完_sre_常用告_681c4dc86d"],
                     color = Palette.muted,
                     fontSize = 12.sp,
                 )
@@ -484,32 +488,32 @@ fun SloPage() {
             val windowMin = co.int("windowMin")
             val changeCount = co.int("changeCount")
             PanelCard(
-                title = "异常与变更关联",
+                title = L["异常与变更关联_ad0cd881a4"],
                 cardKey = "slo-corr",
                 right = {
                     val w = summary?.int("withCauses") ?: 0
                     val a = summary?.int("anomalies") ?: 0
-                    LevelBadge("$w / $a 个异常找到疑似变更", if (w > 0) Level.Warn else Level.Ok)
+                    LevelBadge(trfn("w_a_个异常找到疑似变更_072ff64ee0", "w" to w, "a" to a), if (w > 0) Level.Warn else Level.Ok)
                 },
             ) {
                 DataTable(
                     columns = listOf(
-                        TableCol<JsonObject>(title = "异常时段", weight = 1.2f, mono = true) {
+                        TableCol<JsonObject>(title = L["异常时段_fb93a8934a"], weight = 1.2f, mono = true) {
                             Text(it.obj("anomaly")?.str("bucket") ?: "—", fontSize = 12.sp)
                         },
-                        TableCol<JsonObject>(title = "5xx", weight = 0.7f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["5xx_0749258bd2"], weight = 0.7f, align = TextAlign.End, mono = true) {
                             Text("${it.obj("anomaly")?.long("bad") ?: 0}", fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "请求", weight = 0.7f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["请求_926f6b6b6a"], weight = 0.7f, align = TextAlign.End, mono = true) {
                             Text("${it.obj("anomaly")?.long("calls") ?: 0}", fontSize = 12.5.sp)
                         },
                         TableCol<JsonObject>(
-                            title = "疑似变更（异常前 $windowMin 分钟内）",
+                            title = L["疑似变更_异常前_windowmin_分钟内_dff97ab006"],
                             weight = 4f,
                         ) { link ->
                             val causes = link.arr("causes").filterIsInstance<JsonObject>()
                             if (causes.isEmpty()) {
-                                Text("该时段前无变更记录", color = Palette.muted, fontSize = 12.sp)
+                                Text(L["该时段前无变更记录_23a4785650"], color = Palette.muted, fontSize = 12.sp)
                             } else {
                                 Column {
                                     causes.forEach { c ->
@@ -520,7 +524,7 @@ fun SloPage() {
                                         val anomalyTs = link.obj("anomaly")?.long("ts") ?: 0L
                                         val mins = ((anomalyTs - ts) / 60).coerceAtLeast(0)
                                         Text(
-                                            "${Fmt.ts(ts * 1000)} [${c.str("key")}] ${what.take(58)} ($mins 分钟前)",
+                                            trf("0_1_2_3_分钟前_cd413bbae6", Fmt.ts(ts * 1000), c.str("key"), what.take(58), mins),
                                             fontSize = 12.sp,
                                             fontFamily = FontFamily.Monospace,
                                             color = Palette.text,
@@ -536,8 +540,8 @@ fun SloPage() {
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "变更取自 auditd 文件完整性事件（配置 / 密钥 / nginx / sshd 等），共 $changeCount 条。" +
-                        "这是相关性提示而非因果结论，用于缩小排查范围。",
+                    L["变更取自_auditd_文件完整性事件_配置_edc7e5af44"] +
+                        L["这是相关性提示而非因果结论_用于缩小排查范围_b540a2889c"],
                     color = Palette.muted,
                     fontSize = 12.sp,
                 )
@@ -546,10 +550,10 @@ fun SloPage() {
 
         /* ---- S5 配额窗口 ---- */
         PanelCard(
-            title = "配额窗口",
+            title = L["配额窗口_8683ffb07d"],
             cardKey = "slo-quota",
             right = {
-                Toggle(checked = auto, onCheckedChange = { auto = it }, label = "自动刷新")
+                Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
                 Spacer(Modifier.width(10.dp))
                 Text(refreshLabel, color = Palette.muted, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
                 Spacer(Modifier.width(8.dp))
@@ -569,7 +573,7 @@ fun SloPage() {
             val quota = u?.obj("quota") ?: JsonObject(emptyMap())
             val forecast = u?.obj("forecast") ?: JsonObject(emptyMap())
             if (quota.isEmpty()) {
-                Text("暂无配额数据", color = Palette.muted, fontSize = 12.5.sp)
+                Text(L["暂无配额数据_68af8db72c"], color = Palette.muted, fontSize = 12.5.sp)
             } else {
                 val qRows = listOf("rolling", "weekly", "monthly").filter { quota.containsKey(it) }.map { k ->
                     val q = quota.obj(k) ?: JsonObject(emptyMap())
@@ -588,9 +592,9 @@ fun SloPage() {
                 Spacer(Modifier.height(8.dp))
                 val rates = u?.obj("rates")
                 Text(
-                    "日增量与预测来自每日配额快照（quota-history.jsonl），积累 2 天后开始给出预测。当前 token 速率：" +
-                        "近 1 小时 ${MonFmt.tok(rates?.long("perHour1h"))}／小时 · " +
-                        "近 24 小时 ${MonFmt.tok(rates?.long("perDay"))}",
+                    L["日增量与预测来自每日配额快照_quota_his_119e99916d"] +
+                        trf("近_1_小时_0_小时_defe07fe88", MonFmt.tok(rates?.long("perHour1h"))) +
+                        trf("近_24_小时_0_a874a48e14", MonFmt.tok(rates?.long("perDay"))),
                     color = Palette.muted,
                     fontSize = 12.sp,
                 )
@@ -598,36 +602,36 @@ fun SloPage() {
         }
 
         /* ---- S6 路由可靠性 ---- */
-        PanelCard(title = "路由可靠性", cardKey = "slo-routes") {
+        PanelCard(title = L["路由可靠性_455408ed92"], cardKey = "slo-routes") {
             val routes = s?.arr("byRoute")?.filterIsInstance<JsonObject>() ?: emptyList()
             if (routes.isEmpty()) {
-                Text("无数据", color = Palette.muted, fontSize = 12.5.sp)
+                Text(L["无数据_6ffa7e6d35"], color = Palette.muted, fontSize = 12.5.sp)
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<JsonObject>(title = "路由", weight = 0.9f, mono = true) { Text(it.str("route"), fontSize = 12.5.sp) },
-                        TableCol<JsonObject>(title = "请求数", weight = 0.9f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["路由_19da0c94ef"], weight = 0.9f, mono = true) { Text(it.str("route"), fontSize = 12.5.sp) },
+                        TableCol<JsonObject>(title = L["请求数_b28376ff80"], weight = 0.9f, align = TextAlign.End, mono = true) {
                             Text(MonFmt.tok(it.long("calls")), fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "成功率", weight = 0.9f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["成功率_df9dc72f2d"], weight = 0.9f, align = TextAlign.End, mono = true) {
                             Text(numStr(it.num("successRate")), fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "服务可用性", weight = 1.1f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["服务可用性_9f4b8967df"], weight = 1.1f, align = TextAlign.End, mono = true) {
                             Text("${numStr(it.num("availability"))}%", fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "5xx", weight = 0.6f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["5xx_0749258bd2"], weight = 0.6f, align = TextAlign.End, mono = true) {
                             Text("${it.long("e5")}", fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "4xx", weight = 0.6f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["4xx_0392d44f6f"], weight = 0.6f, align = TextAlign.End, mono = true) {
                             Text("${it.long("e4")}", fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "平均耗时", weight = 1f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["平均耗时_397236acf6"], weight = 1f, align = TextAlign.End, mono = true) {
                             Text(MonFmt.secs(it.num("avgRt")), fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "最慢", weight = 1f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["最慢_df0ee5c8c7"], weight = 1f, align = TextAlign.End, mono = true) {
                             Text(MonFmt.secs(it.num("maxRt")), fontSize = 12.5.sp)
                         },
-                        TableCol<JsonObject>(title = "重试", weight = 0.7f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["重试_e2d53a6d3a"], weight = 0.7f, align = TextAlign.End, mono = true) {
                             Text("${it.long("retried")}", fontSize = 12.5.sp)
                         },
                     ),
@@ -635,7 +639,7 @@ fun SloPage() {
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "成功率 = 2xx 占比；服务可用性 = 非 5xx 占比。两者差距大说明失败主要来自客户端参数或配额，而非上游故障。",
+                    L["成功率_2xx_占比_服务可用性_非_5_a3d7b27e95"],
                     color = Palette.muted,
                     fontSize = 12.sp,
                 )
@@ -644,10 +648,10 @@ fun SloPage() {
 
         /* ---- S7 错误分布 + 分时成功率 ---- */
         GridLayout(columns = 2, spacing = 12.dp) {
-            PanelCard(title = "错误分布", cardKey = "slo-errors") {
+            PanelCard(title = L["错误分布_79b5692f79"], cardKey = "slo-errors") {
                 val errs = s?.arr("errors")?.filterIsInstance<JsonObject>() ?: emptyList()
                 if (errs.isEmpty()) {
-                    Text("该时间范围内无 4xx/5xx", color = Palette.muted, fontSize = 12.5.sp)
+                    Text(L["该时间范围内无_4xx_5xx_38fe9cba85"], color = Palette.muted, fontSize = 12.5.sp)
                 } else {
                     errs.forEach { e ->
                         val n = e.num("n")
@@ -666,23 +670,23 @@ fun SloPage() {
                 }
             }
 
-            PanelCard(title = "分时成功率", cardKey = "slo-timeline") {
+            PanelCard(title = L["分时成功率_ccd648d6f2"], cardKey = "slo-timeline") {
                 val tl = s?.arr("timeline")?.filterIsInstance<JsonObject>() ?: emptyList()
                 if (tl.isEmpty()) {
-                    Text("无数据", color = Palette.muted, fontSize = 12.5.sp)
+                    Text(L["无数据_6ffa7e6d35"], color = Palette.muted, fontSize = 12.5.sp)
                 } else {
                     DataTable(
                         columns = listOf(
-                            TableCol<JsonObject>(title = "时段", weight = 1f, mono = true) { Text(it.str("bucket"), fontSize = 12.sp) },
-                            TableCol<JsonObject>(title = "请求", weight = 0.8f, align = TextAlign.End, mono = true) {
+                            TableCol<JsonObject>(title = L["时段_f453a4b294"], weight = 1f, mono = true) { Text(it.str("bucket"), fontSize = 12.sp) },
+                            TableCol<JsonObject>(title = L["请求_926f6b6b6a"], weight = 0.8f, align = TextAlign.End, mono = true) {
                                 Text("${it.long("calls")}", fontSize = 12.5.sp)
                             },
-                            TableCol<JsonObject>(title = "成功率", weight = 0.9f, align = TextAlign.End, mono = true) {
+                            TableCol<JsonObject>(title = L["成功率_df9dc72f2d"], weight = 0.9f, align = TextAlign.End, mono = true) {
                                 val cl = it.num("calls")
                                 val r = if (cl > 0) MonFmt.fixed(it.num("ok") / cl * 100, 1) else "100"
                                 Text("$r%", fontSize = 12.5.sp)
                             },
-                            TableCol<JsonObject>(title = "5xx", weight = 0.6f, align = TextAlign.End, mono = true) {
+                            TableCol<JsonObject>(title = L["5xx_0749258bd2"], weight = 0.6f, align = TextAlign.End, mono = true) {
                                 Text("${it.long("e5")}", fontSize = 12.5.sp)
                             },
                         ),
@@ -698,60 +702,60 @@ fun SloPage() {
         val byModel = u?.arr("byModel")?.filterIsInstance<JsonObject>() ?: emptyList()
         val totalCost = byModel.sumOf { it.num("cost") }
         PanelCard(
-            title = "Token 用量归集",
+            title = L["token_用量归集_81e6ced52c"],
             cardKey = "slo-usage",
             right = {
-                if (priced) LevelBadge("含成本估算", Level.Warn) else LevelBadge("未配置单价", Level.Muted)
+                if (priced) LevelBadge(L["含成本估算_c3584df84d"], Level.Warn) else LevelBadge(L["未配置单价_40ab5e3e97"], Level.Muted)
             },
         ) {
             GridLayout(columns = 4, spacing = 12.dp) {
                 StatTile(
-                    label = "总 Token",
+                    label = L["总_token_2d5ae33603"],
                     value = MonFmt.tok(u?.long("totalTokens")),
-                    sub = "${MonFmt.tok(u?.long("events"))} 次调用",
+                    sub = trf("0_次调用_162eae0138", MonFmt.tok(u?.long("events"))),
                     icon = "package",
                 )
                 StatTile(
-                    label = "活跃会话",
+                    label = L["活跃会话_42a08c5386"],
                     value = MonFmt.tok(u?.long("sessions")),
-                    sub = "去重 sess",
+                    sub = L["去重_sess_c93d23e294"],
                     icon = "user",
                 )
                 StatTile(
-                    label = "总耗时",
-                    value = "${MonFmt.fixed((u?.num("totalSecs") ?: 0.0) / 3600, 1)} 小时",
-                    sub = "上游处理时间",
+                    label = L["总耗时_2db420d198"],
+                    value = trf("0_小时_5247a4adb7", MonFmt.fixed((u?.num("totalSecs") ?: 0.0) / 3600, 1)),
+                    sub = L["上游处理时间_d40077a964"],
                     icon = "clock",
                 )
                 StatTile(
-                    label = "估算成本",
+                    label = L["估算成本_f05235023c"],
                     value = if (priced) (if (pricing.str("currency") == "USD") "$" else "") + MonFmt.fixed(totalCost, 2) else "—",
-                    sub = if (priced) "按 /etc/relay/pricing.json" else "配置单价后显示",
+                    sub = if (priced) L["按_etc_relay_pricing_jso_a1872b6ad6"] else L["配置单价后显示_02d81cd91f"],
                     icon = "star",
                 )
             }
             Spacer(Modifier.height(10.dp))
             if (byModel.isEmpty()) {
-                Text("无数据", color = Palette.muted, fontSize = 12.5.sp)
+                Text(L["无数据_6ffa7e6d35"], color = Palette.muted, fontSize = 12.5.sp)
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<JsonObject>(title = "模型", weight = 2.2f, mono = true) { Text(it.str("model"), fontSize = 12.sp) },
-                        TableCol<JsonObject>(title = "调用", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("calls")), fontSize = 12.sp) },
-                        TableCol<JsonObject>(title = "会话", weight = 0.8f, align = TextAlign.End, mono = true) { Text("${it.long("sessions")}", fontSize = 12.sp) },
-                        TableCol<JsonObject>(title = "输入", weight = 1.2f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("in_tok")), fontSize = 12.sp) },
-                        TableCol<JsonObject>(title = "输出", weight = 1.1f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("out_tok")), fontSize = 12.sp) },
-                        TableCol<JsonObject>(title = "缓存读", weight = 1.1f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("cache_r")), fontSize = 12.sp) },
-                        TableCol<JsonObject>(title = "合计", weight = 1.2f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("total")), fontSize = 12.sp) },
-                        TableCol<JsonObject>(title = "耗时", weight = 1f, align = TextAlign.End, mono = true) { Text(MonFmt.secs(it.num("secs")), fontSize = 12.sp) },
-                        TableCol<JsonObject>(title = "估算成本", weight = 1.2f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["模型_98fd0cbd9c"], weight = 2.2f, mono = true) { Text(it.str("model"), fontSize = 12.sp) },
+                        TableCol<JsonObject>(title = L["调用_b1fb011bbf"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("calls")), fontSize = 12.sp) },
+                        TableCol<JsonObject>(title = L["会话_836ffe0e10"], weight = 0.8f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("sessions")), fontSize = 12.sp) },
+                        TableCol<JsonObject>(title = L["输入_e8850440f2"], weight = 1.2f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("in_tok")), fontSize = 12.sp) },
+                        TableCol<JsonObject>(title = L["输出_ded698ae1e"], weight = 1.1f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("out_tok")), fontSize = 12.sp) },
+                        TableCol<JsonObject>(title = L["缓存读_37ec7f1ba3"], weight = 1.1f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("cache_r")), fontSize = 12.sp) },
+                        TableCol<JsonObject>(title = L["合计_92bcbf71cb"], weight = 1.2f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("total")), fontSize = 12.sp) },
+                        TableCol<JsonObject>(title = L["耗时_a9704e1997"], weight = 1f, align = TextAlign.End, mono = true) { Text(MonFmt.secs(it.num("secs")), fontSize = 12.sp) },
+                        TableCol<JsonObject>(title = L["估算成本_f05235023c"], weight = 1.2f, align = TextAlign.End, mono = true) {
                             if (it.bool("priced") && priced) {
                                 Text(
                                     (if (pricing.str("currency") == "USD") "$" else "") + MonFmt.fixed(it.num("cost"), 2),
                                     fontSize = 12.sp,
                                 )
                             } else {
-                                Text("未定价", color = Palette.muted, fontSize = 12.sp)
+                                Text(L["未定价_5b0ac749b1"], color = Palette.muted, fontSize = 12.sp)
                             }
                         },
                     ),
@@ -761,7 +765,7 @@ fun SloPage() {
             if (!priced) {
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "单价表：/etc/relay/pricing.json，支持 mimo-* 通配；含 -free 的模型按 0 计。",
+                    L["单价表_etc_relay_pricing_j_2bb5e45a84"],
                     color = Palette.muted,
                     fontSize = 12.sp,
                 )
@@ -770,17 +774,17 @@ fun SloPage() {
 
         /* ---- S9 按天用量 ---- */
         val byDay = u?.arr("byDay")?.filterIsInstance<JsonObject>() ?: emptyList()
-        PanelCard(title = "按天用量", cardKey = "slo-byday") {
+        PanelCard(title = L["按天用量_4fac34d248"], cardKey = "slo-byday") {
             if (byDay.isEmpty()) {
-                Text("无数据", color = Palette.muted, fontSize = 12.5.sp)
+                Text(L["无数据_6ffa7e6d35"], color = Palette.muted, fontSize = 12.5.sp)
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<JsonObject>(title = "日期", weight = 1.4f, mono = true) { Text(it.str("day"), fontSize = 12.5.sp) },
-                        TableCol<JsonObject>(title = "调用", weight = 1f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("calls")), fontSize = 12.5.sp) },
-                        TableCol<JsonObject>(title = "输入", weight = 1.4f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("in_tok")), fontSize = 12.5.sp) },
-                        TableCol<JsonObject>(title = "输出", weight = 1.4f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("out_tok")), fontSize = 12.5.sp) },
-                        TableCol<JsonObject>(title = "合计", weight = 1.4f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("total")), fontSize = 12.5.sp) },
+                        TableCol<JsonObject>(title = L["日期_b6fed9af83"], weight = 1.4f, mono = true) { Text(it.str("day"), fontSize = 12.5.sp) },
+                        TableCol<JsonObject>(title = L["调用_b1fb011bbf"], weight = 1f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("calls")), fontSize = 12.5.sp) },
+                        TableCol<JsonObject>(title = L["输入_e8850440f2"], weight = 1.4f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("in_tok")), fontSize = 12.5.sp) },
+                        TableCol<JsonObject>(title = L["输出_ded698ae1e"], weight = 1.4f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("out_tok")), fontSize = 12.5.sp) },
+                        TableCol<JsonObject>(title = L["合计_92bcbf71cb"], weight = 1.4f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("total")), fontSize = 12.5.sp) },
                     ),
                     rows = byDay,
                 )
@@ -800,8 +804,8 @@ fun SloPage() {
 @Composable
 private fun HitRateCard(hit: JsonObject?, label: String) {
     if (hit == null) {
-        PanelCard(title = "真实命中率", cardKey = "slo-hitrate") {
-            Text("暂无命中率数据", color = Palette.muted, fontSize = 12.5.sp)
+        PanelCard(title = L["真实命中率_d32623c189"], cardKey = "slo-hitrate") {
+            Text(L["暂无命中率数据_9475fb3493"], color = Palette.muted, fontSize = 12.5.sp)
         }
         return
     }
@@ -810,11 +814,11 @@ private fun HitRateCard(hit: JsonObject?, label: String) {
     val series = hit.arr("series").filterIsInstance<JsonObject>()
 
     PanelCard(
-        title = "真实命中率（$label）",
+        title = trfn("真实命中率_label_7df2315c25", "label" to label),
         cardKey = "slo-hitrate",
         right = {
             Text(
-                "共 ${MonFmt.num(totals.long("calls"))} 次请求 · 有效 ${MonFmt.num(totals.long("denominator"))} 次",
+                trf("共_0_次请求_有效_1_次_29c1aa705f", MonFmt.num(totals.long("calls")), MonFmt.num(totals.long("denominator"))),
                 color = Palette.muted,
                 fontSize = 12.sp,
             )
@@ -822,25 +826,25 @@ private fun HitRateCard(hit: JsonObject?, label: String) {
     ) {
         GridLayout(columns = 4, spacing = 12.dp) {
             StatTile(
-                label = "真实命中率",
+                label = L["真实命中率_d32623c189"],
                 value = MonFmt.fixed(totals.num("hitRate"), 2) + "%",
-                sub = "总成功率 ${MonFmt.fixed(totals.num("rawSuccessRate"), 1)}% · 重试 ${MonFmt.num(totals.long("retried"))}",
+                sub = trf("总成功率_0_重试_1_32f597c3de", MonFmt.fixed(totals.num("rawSuccessRate"), 1), MonFmt.num(totals.long("retried"))),
                 pct = totals.num("hitRate"),
             )
             StatTile(
-                label = "有效请求",
+                label = L["有效请求_9f9f7aec83"],
                 value = MonFmt.num(totals.long("denominator")),
-                sub = "命中 ${MonFmt.num(totals.long("hit"))} · 未命中 ${MonFmt.num(totals.long("miss"))}",
+                sub = trf("命中_0_未命中_1_994cc4fd62", MonFmt.num(totals.long("hit")), MonFmt.num(totals.long("miss"))),
             )
             StatTile(
-                label = "未命中",
+                label = L["未命中_786d17cf29"],
                 value = MonFmt.num(totals.long("miss")),
-                sub = "有效请求中未拿到响应的次数",
+                sub = L["有效请求中未拿到响应的次数_b0eba0d9ff"],
             )
             StatTile(
-                label = "客户端 4xx",
+                label = L["客户端_4xx_d966c5f146"],
                 value = MonFmt.num(totals.long("client4xx") + totals.long("abort")),
-                sub = "4xx ${MonFmt.num(totals.long("client4xx"))} · 499 中断 ${MonFmt.num(totals.long("abort"))}",
+                sub = trf("4xx_0_499_中断_1_817ee52e07", MonFmt.num(totals.long("client4xx")), MonFmt.num(totals.long("abort"))),
             )
         }
 
@@ -861,32 +865,32 @@ private fun HitRateCard(hit: JsonObject?, label: String) {
 
         Spacer(Modifier.height(10.dp))
         if (plans.isEmpty()) {
-            Text("该窗口内没有请求记录", color = Palette.muted, fontSize = 12.5.sp)
+            Text(L["该窗口内没有请求记录_d39f782090"], color = Palette.muted, fontSize = 12.5.sp)
         } else {
             DataTable(
                 columns = listOf(
-                    TableCol<JsonObject>(title = "套餐 / 线路", weight = 1.6f, mono = true) { Text(it.str("label"), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "请求", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("calls")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "命中", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("hit")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "未命中", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("miss")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "402 额度", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e402")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "403 权限", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e403")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "429 限流", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e429")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "5xx", weight = 0.7f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e5")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "无响应", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e0")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "客户端4xx", weight = 1f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("client4xx")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "499 中断", weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("abort")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "重试", weight = 0.7f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("retried")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "总成功率", weight = 1f, align = TextAlign.End, mono = true) {
+                    TableCol<JsonObject>(title = L["套餐_线路_36fd12ba05"], weight = 1.6f, mono = true) { Text(it.str("label"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["请求_926f6b6b6a"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("calls")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["命中_7a130d7fde"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("hit")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["未命中_786d17cf29"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("miss")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["402_额度_fbd56d7158"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e402")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["403_权限_bd93595602"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e403")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["429_限流_5bd5af3cd2"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e429")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["5xx_0749258bd2"], weight = 0.7f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e5")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["无响应_585c257481"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("e0")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["客户端4xx_499dc47a60"], weight = 1f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("client4xx")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["499_中断_8a0629ae88"], weight = 0.9f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("abort")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["重试_e2d53a6d3a"], weight = 0.7f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.long("retried")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["总成功率_322a0370e9"], weight = 1f, align = TextAlign.End, mono = true) {
                         val v = if (it.containsKey("rawSuccessRate") && it["rawSuccessRate"] != null) it.num("rawSuccessRate") else null
                         Text(if (v == null) "—" else MonFmt.fixed(v, 1) + "%", fontSize = 12.sp)
                     },
-                    TableCol<JsonObject>(title = "真实命中率", weight = 1.2f, align = TextAlign.End) {
+                    TableCol<JsonObject>(title = L["真实命中率_d32623c189"], weight = 1.2f, align = TextAlign.End) {
                         val v = if (it.containsKey("hitRate") && it["hitRate"] != null) it.num("hitRate") else null
                         if (v == null) Text("—", color = Palette.muted, fontSize = 12.sp)
                         else LevelBadge(MonFmt.fixed(v, 2) + "%", rateLevel(v))
                     },
-                    TableCol<JsonObject>(title = "均延迟", weight = 1f, align = TextAlign.End, mono = true) {
+                    TableCol<JsonObject>(title = L["均延迟_c17351f67e"], weight = 1f, align = TextAlign.End, mono = true) {
                         val v = if (it.containsKey("avgRt") && it["avgRt"] != null) it.num("avgRt") else null
                         Text(if (v == null) "—" else MonFmt.fixed(v, 2) + "s", fontSize = 12.sp)
                     },
@@ -894,7 +898,7 @@ private fun HitRateCard(hit: JsonObject?, label: String) {
                         val v = if (it.containsKey("avgTtfb") && it["avgTtfb"] != null) it.num("avgTtfb") else null
                         Text(if (v == null) "—" else MonFmt.fixed(v, 2) + "s", fontSize = 12.sp)
                     },
-                    TableCol<JsonObject>(title = "模型解析率", weight = 1.1f, align = TextAlign.End, mono = true) {
+                    TableCol<JsonObject>(title = L["模型解析率_4d7c65560a"], weight = 1.1f, align = TextAlign.End, mono = true) {
                         Text(MonFmt.pct1(it.num("modelCoverage")), fontSize = 12.sp)
                     },
                 ),
@@ -902,8 +906,8 @@ private fun HitRateCard(hit: JsonObject?, label: String) {
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "真实命中率 = 命中 ÷（命中 + 未命中）；表中「总成功率」= 命中 ÷ 全部请求，口径更保守。" +
-                    "数据来自 nginx 访问日志写入的 relay.db；套餐按 route 区分：go=OpenCode Go、zen=OpenCode Zen、glm=GLM Coding Plan、mimo=MiMo Token Plan。",
+                L["真实命中率_命中_命中_未命中_表_57f61d4d87"] +
+                    L["数据来自_nginx_访问日志写入的_relay_1cbea10182"],
                 color = Palette.muted,
                 fontSize = 12.sp,
             )
@@ -925,8 +929,8 @@ private fun sessionReuseLevel(v: Double?): Level = when {
 @Composable
 private fun TokenHitCard(th: JsonObject?, label: String) {
     if (th == null) {
-        PanelCard(title = "上下文复用率", cardKey = "slo-tokenhit") {
-            Text("暂无会话数据", color = Palette.muted, fontSize = 12.5.sp)
+        PanelCard(title = L["上下文复用率_0c224f2f15"], cardKey = "slo-tokenhit") {
+            Text(L["暂无会话数据_ea9498e844"], color = Palette.muted, fontSize = 12.5.sp)
         }
         return
     }
@@ -935,11 +939,11 @@ private fun TokenHitCard(th: JsonObject?, label: String) {
     val live = th.obj("live") ?: JsonObject(emptyMap())
 
     PanelCard(
-        title = "上下文复用率（$label）",
+        title = trfn("上下文复用率_label_6df0b75e25", "label" to label),
         cardKey = "slo-tokenhit",
         right = {
             Text(
-                "复用率(估算) vs 真实缓存命中率(厂商)",
+                L["复用率_估算_vs_真实缓存命中率_厂商_76b9b6d5a6"],
                 color = Palette.muted,
                 fontSize = 12.sp,
             )
@@ -947,91 +951,91 @@ private fun TokenHitCard(th: JsonObject?, label: String) {
     ) {
         GridLayout(columns = 4, spacing = 12.dp) {
             StatTile(
-                label = "上下文复用率(估算)",
+                label = L["上下文复用率_估算_88aa6474a4"],
                 value = MonFmt.fixed(ru.num("reuseRate"), 2) + "%",
-                sub = "多轮会话平均 " + (if (ru["avgSessionReuse"] == null) "—" else MonFmt.fixed(ru.num("avgSessionReuse"), 1) + "%") +
-                    " · 多轮 ${MonFmt.num(ru.long("multiTurnSessions"))} / 单轮 ${MonFmt.num(ru.long("singleTurnSessions"))}",
+                sub = L["多轮会话平均_f44e5a3880"] + (if (ru["avgSessionReuse"] == null) "—" else MonFmt.fixed(ru.num("avgSessionReuse"), 1) + "%") +
+                    trf("多轮_0_单轮_1_994729b389", MonFmt.num(ru.long("multiTurnSessions")), MonFmt.num(ru.long("singleTurnSessions"))),
                 pct = ru.num("reuseRate"),
             )
             StatTile(
-                label = "真实缓存命中率",
+                label = L["真实缓存命中率_43aa06a244"],
                 value = MonFmt.fixed(ve.num("hitRate"), 2) + "%",
-                sub = "命中 ${MonFmt.num(ve.long("cacheRead"))} / 未命中 ${MonFmt.num(ve.long("inputNew"))} tok · " +
-                    "覆盖率 ${if (ve["coveragePct"] == null) "—" else MonFmt.fixed(ve.num("coveragePct"), 1) + "%"}",
+                sub = trf("命中_0_未命中_1_tok_0170ee1dc6", MonFmt.num(ve.long("cacheRead")), MonFmt.num(ve.long("inputNew"))) +
+                    trf("覆盖率_0_6f0328f096", if (ve["coveragePct"] == null) "—" else MonFmt.fixed(ve.num("coveragePct"), 1) + "%"),
                 pct = ve.num("hitRate"),
             )
             StatTile(
-                label = "可复用上下文",
+                label = L["可复用上下文_9727f037bf"],
                 value = Fmt.bytes(ru.num("reuseBytes")),
-                sub = "总 ${Fmt.bytes(ru.num("totalBytes"))} · 新增 ${Fmt.bytes(ru.num("newBytes"))}",
+                sub = trf("总_0_新增_1_1fd58b4e12", Fmt.bytes(ru.num("totalBytes")), Fmt.bytes(ru.num("newBytes"))),
             )
             StatTile(
-                label = "两者差距",
+                label = L["两者差距_16481d1166"],
                 value = if (th["gap"] == null) "—" else MonFmt.fixed(th.num("gap"), 2) + " pp",
-                sub = "复用率 − 真实命中率（差距越大越亏）",
+                sub = L["复用率_真实命中率_差距越大越亏_8659217f8a"],
             )
         }
 
         Spacer(Modifier.height(8.dp))
         val lv = MonFmt.num(live.long("turns"))
         Text(
-            "近5分钟 $lv 轮 / ${Fmt.bytes(live.num("bytes"))} / ${MonFmt.num(live.long("events"))} 事件",
+            trf("近5分钟_0_轮_1_2_事_8ce3d0965f", lv, Fmt.bytes(live.num("bytes")), MonFmt.num(live.long("events"))),
             color = Palette.muted,
             fontSize = 12.sp,
         )
 
         val top = ru.arr("top").filterIsInstance<JsonObject>()
         Spacer(Modifier.height(10.dp))
-        SectionTitle("会话排行（按上下文字节）  $label · ${MonFmt.num(ru.long("sessions"))} 个会话 / ${MonFmt.num(ru.long("turns"))} 轮 · 合计 ${Fmt.bytes(ru.num("totalBytes"))}")
+        SectionTitle(trf("会话排行_按上下文字节_0_1_6f0f0e51a3", label, MonFmt.num(ru.long("sessions")), MonFmt.num(ru.long("turns")), Fmt.bytes(ru.num("totalBytes"))))
         if (top.isEmpty()) {
-            Text("该窗口内没有会话数据", color = Palette.muted, fontSize = 12.5.sp)
+            Text(L["该窗口内没有会话数据_ed9d181c42"], color = Palette.muted, fontSize = 12.5.sp)
         } else {
             DataTable(
                 columns = listOf(
-                    TableCol<JsonObject>(title = "会话", weight = 2.4f, mono = true) { Text(it.str("sess"), fontSize = 11.5.sp) },
-                    TableCol<JsonObject>(title = "线路", weight = 0.8f, mono = true) { Text(it.str("route"), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "轮数", weight = 0.7f, align = TextAlign.End, mono = true) { Text("${it.long("turns")}", fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "上下文总量", weight = 1.3f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("totalBytes")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "可复用", weight = 1.2f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("reuseBytes")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "新增", weight = 1.2f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("newBytes")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "复用率", weight = 1f, align = TextAlign.End) {
+                    TableCol<JsonObject>(title = L["会话_836ffe0e10"], weight = 2.4f, mono = true) { Text(it.str("sess"), fontSize = 11.5.sp) },
+                    TableCol<JsonObject>(title = L["线路_5922d95f29"], weight = 0.8f, mono = true) { Text(it.str("route"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["轮数_2a8445ec1c"], weight = 0.7f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.long("turns")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["上下文总量_8957c21723"], weight = 1.3f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("totalBytes")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["可复用_ec5baa1975"], weight = 1.2f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("reuseBytes")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["新增_2cd9e6ce81"], weight = 1.2f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("newBytes")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["复用率_c15d8906d5"], weight = 1f, align = TextAlign.End) {
                         LevelBadge(MonFmt.fixed(it.num("reuseRate"), 2) + "%", sessionReuseLevel(it.num("reuseRate")))
                     },
-                    TableCol<JsonObject>(title = "均/轮", weight = 1.1f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("avgPerTurn")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "峰值轮", weight = 1.1f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("maxTurn")), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "模型", weight = 2f) { Text(it.str("models"), fontSize = 11.5.sp) },
-                    TableCol<JsonObject>(title = "最近", weight = 1.1f, mono = true) { Text(it.str("lastDay"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["均_轮_401ebb3923"], weight = 1.1f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("avgPerTurn")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["峰值轮_4cecb849cf"], weight = 1.1f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.num("maxTurn")), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["模型_98fd0cbd9c"], weight = 2f) { Text(it.str("models"), fontSize = 11.5.sp) },
+                    TableCol<JsonObject>(title = L["最近_8c73d90eca"], weight = 1.1f, mono = true) { Text(it.str("lastDay"), fontSize = 12.sp) },
                 ),
                 rows = top,
             )
         }
 
         Spacer(Modifier.height(10.dp))
-        SectionTitle("按模型：复用率 vs 真实命中率")
+        SectionTitle(L["按模型_复用率_vs_真实命中率_c4c8c68680"])
         val vendorByModel = ve.arr("byModel").filterIsInstance<JsonObject>().associateBy { it.str("model") }
         val modelRows = ru.arr("byModel").filterIsInstance<JsonObject>().map { m ->
             val v = vendorByModel[m.str("model")]
             Triple(m, v?.num("hitRate"), v?.long("cacheRead") ?: 0L)
         }
         if (modelRows.isEmpty()) {
-            Text("无数据", color = Palette.muted, fontSize = 12.5.sp)
+            Text(L["无数据_6ffa7e6d35"], color = Palette.muted, fontSize = 12.5.sp)
         } else {
             DataTable(
                 columns = listOf(
-                    TableCol<Triple<JsonObject, Double?, Long>>(title = "模型", weight = 2f, mono = true) { Text(it.first.str("model"), fontSize = 12.sp) },
-                    TableCol<Triple<JsonObject, Double?, Long>>(title = "会话", weight = 0.8f, align = TextAlign.End, mono = true) { Text("${it.first.long("sessions")}", fontSize = 12.sp) },
-                    TableCol<Triple<JsonObject, Double?, Long>>(title = "轮数", weight = 0.7f, align = TextAlign.End, mono = true) { Text("${it.first.long("turns")}", fontSize = 12.sp) },
-                    TableCol<Triple<JsonObject, Double?, Long>>(title = "上下文总量", weight = 1.3f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.first.num("totalBytes")), fontSize = 12.sp) },
-                    TableCol<Triple<JsonObject, Double?, Long>>(title = "可复用", weight = 1.2f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.first.num("reuseBytes")), fontSize = 12.sp) },
-                    TableCol<Triple<JsonObject, Double?, Long>>(title = "复用率", weight = 1f, align = TextAlign.End) {
+                    TableCol<Triple<JsonObject, Double?, Long>>(title = L["模型_98fd0cbd9c"], weight = 2f, mono = true) { Text(it.first.str("model"), fontSize = 12.sp) },
+                    TableCol<Triple<JsonObject, Double?, Long>>(title = L["会话_836ffe0e10"], weight = 0.8f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.first.long("sessions")), fontSize = 12.sp) },
+                    TableCol<Triple<JsonObject, Double?, Long>>(title = L["轮数_2a8445ec1c"], weight = 0.7f, align = TextAlign.End, mono = true) { Text(MonFmt.tok(it.first.long("turns")), fontSize = 12.sp) },
+                    TableCol<Triple<JsonObject, Double?, Long>>(title = L["上下文总量_8957c21723"], weight = 1.3f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.first.num("totalBytes")), fontSize = 12.sp) },
+                    TableCol<Triple<JsonObject, Double?, Long>>(title = L["可复用_ec5baa1975"], weight = 1.2f, align = TextAlign.End, mono = true) { Text(Fmt.bytes(it.first.num("reuseBytes")), fontSize = 12.sp) },
+                    TableCol<Triple<JsonObject, Double?, Long>>(title = L["复用率_c15d8906d5"], weight = 1f, align = TextAlign.End) {
                         LevelBadge(MonFmt.fixed(it.first.num("reuseRate"), 2) + "%", sessionReuseLevel(it.first.num("reuseRate")))
                     },
-                    TableCol<Triple<JsonObject, Double?, Long>>(title = "真实命中率", weight = 1.2f, align = TextAlign.End, mono = true) {
+                    TableCol<Triple<JsonObject, Double?, Long>>(title = L["真实命中率_d32623c189"], weight = 1.2f, align = TextAlign.End, mono = true) {
                         val v = it.second
-                        if (v == null) Text("未上报", color = Palette.muted, fontSize = 12.sp)
+                        if (v == null) Text(L["未上报_af807e32e8"], color = Palette.muted, fontSize = 12.sp)
                         else Text(MonFmt.pct1(v), fontSize = 12.sp)
                     },
-                    TableCol<Triple<JsonObject, Double?, Long>>(title = "缓存读 tok", weight = 1.2f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.third), fontSize = 12.sp) },
+                    TableCol<Triple<JsonObject, Double?, Long>>(title = L["缓存读_tok_941fe28661"], weight = 1.2f, align = TextAlign.End, mono = true) { Text(MonFmt.num(it.third), fontSize = 12.sp) },
                 ),
                 rows = modelRows,
             )
@@ -1039,10 +1043,10 @@ private fun TokenHitCard(th: JsonObject?, label: String) {
 
         Spacer(Modifier.height(8.dp))
         Text(
-            "· 上下文复用率（估算）：编码代理每轮都会把整个会话上下文重发一遍，第 N 轮里至少有 " +
-                "min(上一轮字节, 本轮字节) 是前面轮次已发过的内容 —— 这就是缓存本该命中的上限，不依赖厂商上报。\n" +
-                "· 真实缓存命中率（厂商上报）：上游响应 usage 里的 cache_read ÷（未命中输入 + cache_read）。\n" +
-                "· 上报覆盖率：多少比例的事件真的带了缓存字段。覆盖率为 0 时「真实命中率 0%」表示厂商没上报，不能断定没有命中。",
+            L["上下文复用率_估算_编码代理每轮都会把整个_0bfad70f24"] +
+                L["min_上一轮字节_本轮字节_是前面轮次已发_15048744a9"] +
+                L["真实缓存命中率_厂商上报_上游响应_usa_d3414e9814"] +
+                L["上报覆盖率_多少比例的事件真的带了缓存字段_a90e61b6ba"],
             color = Palette.muted,
             fontSize = 12.sp,
             lineHeight = 18.sp,
@@ -1057,8 +1061,8 @@ private fun TokenHitCard(th: JsonObject?, label: String) {
 @Composable
 private fun RateLimitCard(rl: JsonObject?) {
     if (rl == null) {
-        PanelCard(title = "限流配置", cardKey = "slo-ratelimit") {
-            Text("暂无限流配置数据", color = Palette.muted, fontSize = 12.5.sp)
+        PanelCard(title = L["限流配置_cbc1540b56"], cardKey = "slo-ratelimit") {
+            Text(L["暂无限流配置数据_9258ebf5d0"], color = Palette.muted, fontSize = 12.5.sp)
         }
         return
     }
@@ -1069,33 +1073,33 @@ private fun RateLimitCard(rl: JsonObject?) {
     val logFiles = rl.obj("logFiles")
 
     PanelCard(
-        title = "限流配置（nginx + fail2ban）",
+        title = L["限流配置_nginx_fail2ban_e86c77863d"],
         cardKey = "slo-ratelimit",
         right = {
-            if (rl.bool("fail2banActive")) LevelBadge("fail2ban 运行中", Level.Ok)
-            else LevelBadge("fail2ban 未启用", Level.Bad)
+            if (rl.bool("fail2banActive")) LevelBadge(L["fail2ban_运行中_401151de3a"], Level.Ok)
+            else LevelBadge(L["fail2ban_未启用_dba20ac8ac"], Level.Bad)
         },
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
         ) {
-            Chip("窗口日志 ${Fmt.count(rl.long("windowLines"))} 行", tone = Level.Muted)
-            Chip("429 拦截 ${Fmt.count(rl.long("limited429"))}", tone = if (rl.long("limited429") > 0) Level.Warn else Level.Ok)
-            Chip("错误日志限流 ${Fmt.count(rl.long("errorLimitCount"))}", tone = Level.Muted)
+            Chip(trf("窗口日志_0_行_c680d6f56e", Fmt.count(rl.long("windowLines"))), tone = Level.Muted)
+            Chip(trf("429_拦截_0_7a460e2aa8", Fmt.count(rl.long("limited429"))), tone = if (rl.long("limited429") > 0) Level.Warn else Level.Ok)
+            Chip(trf("错误日志限流_0_751648f504", Fmt.count(rl.long("errorLimitCount"))), tone = Level.Muted)
         }
 
         Spacer(Modifier.height(10.dp))
-        SectionTitle("限流区域（limit_req / limit_conn zone）")
+        SectionTitle(L["限流区域_limit_req_limit_c_736ec91bec"])
         if (zones.isEmpty()) {
-            Text("未配置限流区域", color = Palette.muted, fontSize = 12.5.sp)
+            Text(L["未配置限流区域_bb373a4d06"], color = Palette.muted, fontSize = 12.5.sp)
         } else {
             DataTable(
                 columns = listOf(
-                    TableCol<JsonObject>(title = "类型", weight = 0.9f, mono = true) { Text(it.str("type"), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "名称", weight = 1.8f, mono = true) { Text(it.str("name"), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "窗口", weight = 1.2f, mono = true) { Text(it.str("size").trim(), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "速率", weight = 1.2f, mono = true) {
+                    TableCol<JsonObject>(title = L["类型_e4e46c7235"], weight = 0.9f, mono = true) { Text(it.str("type"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["名称_1be7ae4fc2"], weight = 1.8f, mono = true) { Text(it.str("name"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["窗口_a70a15135c"], weight = 1.2f, mono = true) { Text(it.str("size").trim(), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["速率_8ec7c4ba74"], weight = 1.2f, mono = true) {
                         Text(it.str("rate").trim().ifEmpty { "—" }, fontSize = 12.sp, color = Palette.muted)
                     },
                 ),
@@ -1104,16 +1108,16 @@ private fun RateLimitCard(rl: JsonObject?) {
         }
 
         Spacer(Modifier.height(10.dp))
-        SectionTitle("生效位置（applied）")
+        SectionTitle(L["生效位置_applied_8b922ae94b"])
         if (applied.isEmpty()) {
-            Text("无生效配置", color = Palette.muted, fontSize = 12.5.sp)
+            Text(L["无生效配置_e4ffb2c454"], color = Palette.muted, fontSize = 12.5.sp)
         } else {
             DataTable(
                 columns = listOf(
-                    TableCol<JsonObject>(title = "上下文", weight = 2f, mono = true) { Text(it.str("context"), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "种类", weight = 0.8f, mono = true) { Text(it.str("kind"), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "区域", weight = 1.4f, mono = true) { Text(it.str("zone"), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "值", weight = 1f, align = TextAlign.End, mono = true) {
+                    TableCol<JsonObject>(title = L["上下文_d9aa9fe0d6"], weight = 2f, mono = true) { Text(it.str("context"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["种类_2da1825912"], weight = 0.8f, mono = true) { Text(it.str("kind"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["区域_17fc93c9cd"], weight = 1.4f, mono = true) { Text(it.str("zone"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["值_321b955840"], weight = 1f, align = TextAlign.End, mono = true) {
                         Text(it.str("value").ifEmpty { "—" }, fontSize = 12.sp)
                     },
                     TableCol<JsonObject>(title = "burst", weight = 1f, align = TextAlign.End, mono = true) {
@@ -1126,15 +1130,15 @@ private fun RateLimitCard(rl: JsonObject?) {
 
         if (dist.isNotEmpty()) {
             Spacer(Modifier.height(10.dp))
-            SectionTitle("状态码分布（近期访问日志）")
+            SectionTitle(L["状态码分布_近期访问日志_0405a22fb0"])
             val labels = dist.map { it.str("code") }
             val values = dist.map { it.long("count").toFloat() }
             BarChart(values = values, labels = labels, yFormat = { MonFmt.num(it.toLong()) })
             Spacer(Modifier.height(6.dp))
             DataTable(
                 columns = listOf(
-                    TableCol<JsonObject>(title = "状态码", weight = 1f, mono = true) { Text(it.str("code"), fontSize = 12.5.sp) },
-                    TableCol<JsonObject>(title = "次数", weight = 1f, align = TextAlign.End, mono = true) {
+                    TableCol<JsonObject>(title = L["状态码_2fd51d31a7"], weight = 1f, mono = true) { Text(it.str("code"), fontSize = 12.5.sp) },
+                    TableCol<JsonObject>(title = L["次数_d4a97e7577"], weight = 1f, align = TextAlign.End, mono = true) {
                         Text(MonFmt.num(it.long("count")), fontSize = 12.5.sp)
                     },
                 ),
@@ -1145,15 +1149,15 @@ private fun RateLimitCard(rl: JsonObject?) {
 
         if (jails.isNotEmpty()) {
             Spacer(Modifier.height(10.dp))
-            SectionTitle("fail2ban 监狱")
+            SectionTitle(L["fail2ban_监狱_fd16fed272"])
             DataTable(
                 columns = listOf(
-                    TableCol<JsonObject>(title = "监狱", weight = 2f, mono = true) { Text(it.str("name"), fontSize = 12.sp) },
-                    TableCol<JsonObject>(title = "当前封禁", weight = 1f, align = TextAlign.End, mono = true) {
+                    TableCol<JsonObject>(title = L["监狱_c385558318"], weight = 2f, mono = true) { Text(it.str("name"), fontSize = 12.sp) },
+                    TableCol<JsonObject>(title = L["当前封禁_4f4e3ab4f7"], weight = 1f, align = TextAlign.End, mono = true) {
                         val n = it.long("currentlyBanned")
                         if (n > 0) LevelBadge("$n", Level.Bad) else Text("0", fontSize = 12.sp, color = Palette.muted)
                     },
-                    TableCol<JsonObject>(title = "累计封禁", weight = 1f, align = TextAlign.End, mono = true) {
+                    TableCol<JsonObject>(title = L["累计封禁_27b6c8449a"], weight = 1f, align = TextAlign.End, mono = true) {
                         Text("${it.long("totalBanned")}", fontSize = 12.5.sp)
                     },
                 ),
@@ -1164,7 +1168,7 @@ private fun RateLimitCard(rl: JsonObject?) {
         if (logFiles != null) {
             Spacer(Modifier.height(8.dp))
             Text(
-                "访问日志 ${logFiles.str("access")} · 错误日志 ${logFiles.str("error")} · 配置 ${logFiles.str("conf")}",
+                trf("访问日志_0_错误日志_1_配置_17439127f4", logFiles.str("access"), logFiles.str("error"), logFiles.str("conf")),
                 color = Palette.muted,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
@@ -1179,8 +1183,8 @@ private fun QuotaTable(rows: List<Map<String, Any?>>) {
     @Suppress("UNCHECKED_CAST")
     DataTable(
         columns = listOf(
-            TableCol<Map<String, Any?>>(title = "窗口", weight = 1f, mono = true) { Text("${it["k"]}", fontSize = 12.5.sp) },
-            TableCol<Map<String, Any?>>(title = "已用", weight = 2f) {
+            TableCol<Map<String, Any?>>(title = L["窗口_a70a15135c"], weight = 1f, mono = true) { Text("${it["k"]}", fontSize = 12.5.sp) },
+            TableCol<Map<String, Any?>>(title = L["已用_4c9426f3cb"], weight = 2f) {
                 val pct = (it["percent"] as? Double) ?: 0.0
                 Column {
                     PctBar(pct = pct, showLabel = false)
@@ -1193,34 +1197,34 @@ private fun QuotaTable(rows: List<Map<String, Any?>>) {
                     )
                 }
             },
-            TableCol<Map<String, Any?>>(title = "状态", weight = 1f, align = TextAlign.Center) {
+            TableCol<Map<String, Any?>>(title = L["状态_62e951a692"], weight = 1f, align = TextAlign.Center) {
                 val st = (it["status"] as? String) ?: "—"
                 LevelBadge(st, when (st) { "ok" -> Level.Ok; "exhausted" -> Level.Bad; else -> Level.Warn })
             },
-            TableCol<Map<String, Any?>>(title = "重置倒计时", weight = 1.2f, align = TextAlign.End, mono = true) {
+            TableCol<Map<String, Any?>>(title = L["重置倒计时_e479a6cf2c"], weight = 1.2f, align = TextAlign.End, mono = true) {
                 val r = it["resetIn"] as? Double
                 Text(
                     when {
                         r == null -> "—"
-                        r < 0 -> "已到期"
-                        else -> "${numStr(r)} 小时"
+                        r < 0 -> L["已到期_75e6c9fb6f"]
+                        else -> trf("0_小时_5247a4adb7", numStr(r))
                     },
                     fontSize = 12.5.sp,
                 )
             },
-            TableCol<Map<String, Any?>>(title = "日增量", weight = 1.2f, align = TextAlign.End, mono = true) {
+            TableCol<Map<String, Any?>>(title = L["日增量_e7ce94b3ff"], weight = 1.2f, align = TextAlign.End, mono = true) {
                 val d = it["deltaPerDay"] as? Double
                 Text(
-                    if (d == null) "需 2 天历史" else (if (d >= 0) "+" else "") + numStr(d) + "%/天",
+                    if (d == null) L["需_2_天历史_decb0825e3"] else (if (d >= 0) L["s_a979ef10cc"] else "") + numStr(d) + L["天_26abf68dec"],
                     fontSize = 12.5.sp,
                     color = if (d == null) Palette.muted else Palette.text,
                 )
             },
-            TableCol<Map<String, Any?>>(title = "重置前预测", weight = 1.2f, align = TextAlign.End, mono = true) {
+            TableCol<Map<String, Any?>>(title = L["重置前预测_34c06dab29"], weight = 1.2f, align = TextAlign.End, mono = true) {
                 val p = it["projected"] as? Double
                 Text(if (p == null) "—" else "${numStr(p)}%", fontSize = 12.5.sp)
             },
-            TableCol<Map<String, Any?>>(title = "风险", weight = 1.1f, align = TextAlign.Center) {
+            TableCol<Map<String, Any?>>(title = L["风险_96a9697379"], weight = 1.1f, align = TextAlign.Center) {
                 val risk = (it["risk"] as? String) ?: ""
                 LevelBadge(riskText(risk), riskLevel(risk))
             },

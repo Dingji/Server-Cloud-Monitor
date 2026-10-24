@@ -1,0 +1,120 @@
+健康_28ff5ffe95	Gesund
+健康告警_a3932fd7ea	Gesundheits-Alarm
+健康警告_36e38f0344	Gesundheitswarnung
+僵尸_0_350f669b6a	Zombie {0}
+允许_0_4xx_1_不计入_2c75f2ef75	Erlaubt {0} · 4xx {1} (nicht gezählt)
+允许_null_613ffb2b0f	NULL erlauben
+允许搜索的根目录_冒号分隔_9f54070414	Erlaubte Such-Stammverzeichnisse (durch Doppelpunkt getrennt)
+允许范围由服务器的_cm_files_roots_1e4f0369fa	Erlaubter Bereich wird durch CM_FILES_ROOTS des Servers festgelegt (standardmäßig das gesamte Dateisystem); das Panel hat bereits ein Web-Terminal (entspricht einer root-Shell),
+允许错误率_b1b11f31c6	Erlaubte Fehlerrate
+先配私钥路径或密码才能采集_1c4899bb70	Zuerst Private-Key-Pfad oder Passwort konfigurieren
+入库_0_1_运行_2_6103dc0494	Gespeichert {0}/{1} · Läuft {2}
+入站_0_均值_请求_1_406a6865d4	Eingehend {0} · Ø/Anfrage {1}
+入站_1057bbf420	Eingehend
+全局_a5644f4bbf	Global
+全库备份_db2_backup_3a9089df6c	Vollständige Sicherung (db2 backup)
+全库备份_db_sql_gz_acafceba07	Vollständige Sicherung (.db -> sql.gz)
+全库备份_mysqldump_1ed22a1def	Vollständige Sicherung (mysqldump)
+全库备份_pg_dumpall_1bd23a039b	Vollständige Sicherung (pg_dumpall)
+全库数据搜索_beda6555aa	Datensuche in der gesamten Datenbank
+全选_3e44b2a933	Alle auswählen
+全选本页_b82f2ebbd9	Alle auf dieser Seite auswählen
+全部_0_33a02d8846	Alle {0}
+全部_0_910e2f37bc	Alle ({0})
+全部_2_e5060e9fe1	Alle (2)
+全部_778fc8f994	Alle
+全部_alerts_size_83c38547e2	Alle ${alerts.size}
+全部_仅显示有规则标记的事件_c50328c4bb	Alle (nur Ereignisse mit Regelmarkierung anzeigen)
+全部分组_eb8d23fedf	Alle Gruppen
+全部发送成功_66de2386e0	Alle erfolgreich gesendet
+全部合规_59b806d265	Alle konform
+全部在线_44e9a836b2	Alle online
+全部在阈值内_3b9654881f	Alle innerhalb des Schwellenwerts
+全部安全升级_31ec522e55	Alle Sicherheits-Updates
+全部探测_ccb06057e1	Alle Sonden
+全部数据库_服务器级全量_488b444221	Alle Datenbanken (serverweit vollständig)
+全部标签_ffd92f5524	Alle Tags
+全部标记已读_5645f09d67	Alle als gelesen markieren
+全部检查一次_0a5f08235e	Alle einmal prüfen
+全部正常_d02882ad7e	Alle normal
+全部清单_54e487ccc0	Alle Inventare
+全部源_全局搜索_252f184452	Alle Quellen (globale Suche)
+全部状态_1a4c26d92d	Alle Status
+全部立即采集_49af47e239	Alle jetzt erfassen
+全部笔记_be5bc30cf8	Alle Notizen
+全部规则_33c1cd2c36	Alle Regeln
+全部角色_9adaf88c6d	Alle Rollen
+全部解除锁定_fc0465ac55	Alle entsperren
+全部通过_3b6e5a1267	Alle bestanden
+公开链接_093bb537a9	Öffentlicher Link
+公开链接已开启_已复制_url_519f2b78bb	Öffentlicher Link aktiviert, kopiert: $url
+公网ip_de8bbe24d6	Öffentliche IP
+公钥_b6965e119c	Öffentlicher Schlüssel
+六_3d72c724e0	Sechs
+共_0_6de8606170	Gesamt {0}
+共_0_个常用包_已装_1_2_e967a843a6	{0} gängige Pakete gesamt · {1} installiert · {2} Kategorien
+共_0_字符_f3f4105419	{0} Zeichen gesamt
+共_0_条_c3ba901cd9	{0} Einträge gesamt
+共_0_条记录_41eef6780b	{0} Datensätze gesamt
+共_0_次请求_有效_1_次_29c1aa705f	{0} Anfragen gesamt · {1} gültig
+共_0_行_a4e8522340	{0} Zeilen gesamt
+共_alerts_size_条_560bb53bad	${alerts.size} Einträge gesamt
+共_editdraft_length_字符_7c1eadf347	${editDraft.length} Zeichen gesamt
+共_fmt_count_totaln_c03f4c77be	${Fmt.count(totalN ?: 0)} Zeilen gesamt
+共_services_size_71096c72f6	${services.size} gesamt
+共享_9a236964e8	Geteilt
+共享给我_6863118293	Mit mir geteilt
+共享给用户_f0425c626f	Für Benutzer teilen
+关于_bed172efc9	Über
+关注_7ac0d5c9c3	Folgen
+关自启_b871a656d2	Autostart aus
+关闭_0_9aa50629e4	Geschlossen (0)
+关闭_0_9d7b014ef2	Geschlossen {0}
+关闭_6c14bd7f6f	Schließen
+关闭_tab_title_43b16ac3b7	${tab.title} schließen
+关闭网卡_62663eaa23	Netzwerkschnittstelle deaktivieren
+关闭跟随或离开本页会自动退订_72c6084027	Das Deaktivieren des Folgens oder das Verlassen dieser Seite abbestellt automatisch.
+其中_0_条失败_c5eef2f155	davon {0} fehlgeschlagen
+其中_0_项已触发重启仍失败_9b68a5e334	davon {0} nach Neustart weiterhin fehlgeschlagen
+其中_s_failing_项已触发重启仍_f01141d4a9	davon ${s?.failing} nach Neustart weiterhin fehlgeschlagen
+其中_t_failed24h_条失败_42b755439b	davon ${t?.failed24h} fehlgeschlagen
+其他用户共享给你的笔记会出现在这里_864edb3def	Notizen, die andere Benutzer mit Ihnen geteilt haben, erscheinen hier
+其它_295c71ff98	Sonstige
+内存_a8fa8ac31a	Speicher %
+内存_ba57ca4da5	Speicher ≥ %
+内存_d014ab7703	Speicher
+内存_交换_mb_69caca4bab	Speicher / Swap (MB)
+内存与交换分区用量_进程占用与维护操作_a12dd4174d	Speicher- und Swap-Nutzung, Prozessauslastung und Wartungsvorgänge
+内存使用_c5281dc2e1	Speichernutzung
+内存使用率_51cc7e4578	Speichernutzungsrate
+内存占用_871ca4fff4	Speicherbelegung
+内存占用_top_15_rss_180f27c927	Speichernutzung Top 15 (RSS)
+内存管理_dd6f618330	Speicherverwaltung
+内存维护_4a93296df5	Speicherwartung
+内存详情_proc_meminfo_6fc684a759	Speicherdetails (/proc/meminfo)
+内容_163aec9194	Inhalt
+内核_8f190c51d6	Kernel
+内核_系统安全参数_sysctl_1d74700ad7	Kernel-/Systemsicherheitsparameter (sysctl)
+写入_9e93bdccb2	Schreiben
+写入_drop_caches_3_清空页缓存_目_545feeaf1e	drop_caches=3 schreiben, um Seiten-/Verzeichnis-/Inode-Caches zu leeren (kurzzeitig langsamer)
+写入_iops_c0257973a8	Schreib-IOPS
+写入_p_f48e1e9bc1	$p schreiben?
+写入系统定时任务_etc_cron_d_cm_7b1a14bf5a	In System-Cron-Jobs schreiben (/etc/cron.d/cm-dbmaint-*). Beispiel: 0 4 * * * = täglich um 4 Uhr. Auf der Seite „Cron-Jobs" ansehen/löschen.
+写入速率_2836adc578	Schreibrate
+冷却_分钟_c84b0ae919	Abklingzeit (Min.)
+凭据_131caf7289	Zugangsdaten
+凭据已保存_只存服务器_ef4af72acf	Zugangsdaten gespeichert (nur auf dem Server)
+凭据已删除_7546bc5222	Zugangsdaten gelöscht
+出于安全考虑_必须至少指定_数据库_用户_f479eba94a	Aus Sicherheitsgründen muss mindestens Datenbank / Benutzer / Dauer angegeben sein; ein Vorgang trifft höchstens 200 Sitzungen.
+出口带宽上限_mbps_0_不限_333a869c1c	Ausgehende Bandbreitenbegrenzung (Mbps, 0 = unbegrenzt)
+出口带宽上限已设为_0_mbps_8e30001052	Ausgehende Bandbreitenbegrenzung auf {0} Mbps gesetzt
+出口带宽上限已设为_mbps_mbps_1643606623	Ausgehende Bandbreitenbegrenzung auf $mbps Mbps gesetzt
+出站_c9b439d70a	Ausgehend
+分_decb3b3262	 Min.
+分割线_985282b3aa	— Trennlinie
+分区_016c7a3b77	/ Partition
+分区与挂载点_f1ca26a5e8	Partitionen und Mountpunkte
+分区容量_6a3c635ae9	Partitionskapazität
+分区容量_块设备与磁盘维护操作_80c0745041	Partitionskapazität, Blockgeräte und Datenträger-Wartungsvorgänge
+分区数量_0933d5f9ce	Anzahl der Partitionen
+分时成功率_ccd648d6f2	Erfolgsquote nach Stunde

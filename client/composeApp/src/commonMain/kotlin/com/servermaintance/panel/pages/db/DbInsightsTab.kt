@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.db
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -62,9 +65,9 @@ fun DbInsightsTab(st: DbState, scope: CoroutineScope) {
         },
     ) {
         val names = dbs.map { it.str("name") }
-        PanelCard(title = "性能洞察", cardKey = "in-bar", collapsible = false, right = { DbBtn("刷新分析") { st.bump() } }) {
+        PanelCard(title = L["性能洞察_71fa3a4ff8"], cardKey = "in-bar", collapsible = false, right = { DbBtn(L["刷新分析_6a65ab904e"]) { st.bump() } }) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("分析数据库", style = dbMuted, fontSize = 11.sp)
+                Text(L["分析数据库_27120f4e22"], style = dbMuted, fontSize = 11.sp)
                 if (names.isNotEmpty()) {
                     SelectField(dbSel.ifEmpty { names.first() }, names, { dbSel = it; st.database = it; st.bump() }, Modifier.width(200.dp))
                 }
@@ -74,22 +77,22 @@ fun DbInsightsTab(st: DbState, scope: CoroutineScope) {
         val stt = stmts
         if (stt != null && !stt.bool("available")) {
             PanelCard(
-                title = "慢查询 / 热点语句",
+                title = L["慢查询_热点语句_e4c8bb10fe"],
                 cardKey = "in-stmts",
-                right = { LevelBadge("未启用", Level.Warn) },
+                right = { LevelBadge(L["未启用_8bb38ef00c"], Level.Warn) },
             ) {
-                Text(stt.str("hint").ifEmpty { "统计功能未启用" }, style = dbMuted, fontSize = 12.sp)
+                Text(stt.str("hint").ifEmpty { L["统计功能未启用_6be0d6457c"] }, style = dbMuted, fontSize = 12.sp)
                 if (st.isPg) {
                     Spacer(Modifier.size(8.dp))
-                    DbBtn("启用 pg_stat_statements 扩展", tone = DbBtnTone.Ok) {
+                    DbBtn(L["启用_pg_stat_statements_扩展_a1da4a0b69"], tone = DbBtnTone.Ok) {
                         scope.launch {
                             val okc = Modal.confirm(
-                                "安装扩展",
-                                "执行 CREATE EXTENSION pg_stat_statements？启用后还需将其加入 shared_preload_libraries 并重启数据库才会开始统计。",
-                                okText = "安装",
+                                L["安装扩展_354d80ae67"],
+                                L["执行_create_extension_pg_s_6d03312f5d"],
+                                okText = L["安装_087db63ab1"],
                             )
                             if (!okc) return@launch
-                            runDb("/db/extension", jsonObjectOf("engine" to "postgres", "name" to "pg_stat_statements"), outputTitle = "扩展安装")
+                            runDb("/db/extension", jsonObjectOf("engine" to "postgres", "name" to "pg_stat_statements"), outputTitle = L["扩展安装_3587656bb2"])
                         }
                     }
                 }
@@ -97,7 +100,7 @@ fun DbInsightsTab(st: DbState, scope: CoroutineScope) {
         } else if (stt != null) {
             val cols = stt.arr("columns").map { (it as? JsonPrimitive)?.content.orEmpty() }.filter { it.isNotEmpty() }
             val rows = stt.arr("rows").filterIsInstance<JsonObject>()
-            PanelCard(title = "慢查询 / 热点语句", cardKey = "in-stmts", right = { Chip("${rows.size} 条") }) {
+            PanelCard(title = L["慢查询_热点语句_e4c8bb10fe"], cardKey = "in-stmts", right = { Chip(trf("0_条_1932375aa5", rows.size)) }) {
                 DynamicTable(cols, rows, maxHeight = 320)
             }
         }
@@ -129,18 +132,18 @@ fun DbObjectsTab(st: DbState, scope: CoroutineScope) {
         },
     ) {
         val names = dbs.map { it.str("name") }
-        PanelCard(title = "对象浏览器", cardKey = "ob-bar", collapsible = false) {
+        PanelCard(title = L["对象浏览器_162b30cd08"], cardKey = "ob-bar", collapsible = false) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("数据库", style = dbMuted, fontSize = 11.sp)
+                Text(L["nav.databases"], style = dbMuted, fontSize = 11.sp)
                 if (names.isNotEmpty()) {
                     SelectField(dbSel.ifEmpty { names.first() }, names, { dbSel = it; st.database = it; st.bump() }, Modifier.width(200.dp))
                 }
                 Spacer(Modifier.weight(1f))
                 if (st.isPg || st.isDb2) {
-                    Field(newSchema, { newSchema = it }, Modifier.width(150.dp), hint = "新模式名", mono = true)
-                    DbBtn("+ 建模式", tone = DbBtnTone.Ok) {
+                    Field(newSchema, { newSchema = it }, Modifier.width(150.dp), hint = L["新模式名_ae42d0691f"], mono = true)
+                    DbBtn(L["建模式_ee3e980d40"], tone = DbBtnTone.Ok) {
                         val n = newSchema.trim()
-                        if (n.isEmpty()) AppState.toast("请输入模式名", ToastKind.Warn)
+                        if (n.isEmpty()) AppState.toast(tr("请输入模式名_ecb41293d4"), ToastKind.Warn)
                         else scope.launch {
                             runDb(
                                 "/db/schema/manage",
@@ -151,22 +154,22 @@ fun DbObjectsTab(st: DbState, scope: CoroutineScope) {
                     }
                 }
                 if (st.isPg) {
-                    Field(extName, { extName = it }, Modifier.width(170.dp), hint = "扩展名 如 pgcrypto", mono = true)
-                    DbBtn("安装扩展", tone = DbBtnTone.Ok) {
+                    Field(extName, { extName = it }, Modifier.width(170.dp), hint = L["扩展名_如_pgcrypto_83ec8b404a"], mono = true)
+                    DbBtn(L["安装扩展_354d80ae67"], tone = DbBtnTone.Ok) {
                         val n = extName.trim()
-                        if (n.isEmpty()) AppState.toast("请输入扩展名", ToastKind.Warn)
+                        if (n.isEmpty()) AppState.toast(tr("请输入扩展名_dc56cdb689"), ToastKind.Warn)
                         else scope.launch {
-                            val okc = Modal.confirm("安装扩展", "执行 CREATE EXTENSION IF NOT EXISTS $n？")
+                            val okc = Modal.confirm(L["安装扩展_354d80ae67"], L["执行_create_extension_if_n_aac00658d4"])
                             if (!okc) return@launch
-                            runDb("/db/extension", jsonObjectOf("engine" to "postgres", "name" to n), outputTitle = "扩展安装", reload = { st.bump() })
+                            runDb("/db/extension", jsonObjectOf("engine" to "postgres", "name" to n), outputTitle = L["扩展安装_3587656bb2"], reload = { st.bump() })
                         }
                     }
                 }
-                DbBtn("刷新") { st.bump() }
+                DbBtn(L["刷新_38108eaa1d"]) { st.bump() }
             }
         }
         if (schemas.isNotEmpty()) {
-            PanelCard(title = "模式 / 命名空间 (${schemas.size})", cardKey = "ob-schemas") {
+            PanelCard(title = trf("模式_命名空间_0_df78aa00e9", schemas.size), cardKey = "ob-schemas") {
                 DynamicTable(
                     columns = listOf("name", "owner", "tables", "views", "functions", "size"),
                     rows = schemas,
@@ -175,9 +178,9 @@ fun DbObjectsTab(st: DbState, scope: CoroutineScope) {
                         val n = row.str("name")
                         val user = row.flag("user_schema")
                         if (user && n != "public") {
-                            DbBtn("删除", tone = DbBtnTone.Danger) {
+                            DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) {
                                 scope.launch {
-                                    val okc = Modal.confirm("删除模式", "删除模式 $n 及其全部对象（CASCADE）？", okText = "删除", danger = true)
+                                    val okc = Modal.confirm(L["删除模式_77bed2385b"], trf("删除模式_0_及其全部对象_cascade_6336954e53", n), okText = L["删除_3755f56f2f"], danger = true)
                                     if (!okc) return@launch
                                     runDb(
                                         "/db/schema/manage",

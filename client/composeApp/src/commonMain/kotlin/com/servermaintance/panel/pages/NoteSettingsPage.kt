@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,8 +71,8 @@ private fun SettingsInner() {
     LaunchedEffect(Unit) { NoteBoxState.refreshStats() }
 
     PageScaffold(
-        title = "NoteBox 设置",
-        desc = "账号与服务器连接",
+        title = L["notebox_设置_efb5a47b98"],
+        desc = L["账号与服务器连接_91b559cbe1"],
         actions = { NoteUserChip() },
     ) {
         Row(
@@ -79,31 +81,31 @@ private fun SettingsInner() {
         ) {
             /* 左：改密码 + 连接配置 */
             Column(Modifier.weight(1f)) {
-                PanelCard(title = "修改登录密码", collapsible = false) {
-                    Field(oldPw, { oldPw = it }, Modifier.fillMaxWidth(), label = "原密码", password = true, singleLine = true)
+                PanelCard(title = L["修改登录密码_321d9d86f6"], collapsible = false) {
+                    Field(oldPw, { oldPw = it }, Modifier.fillMaxWidth(), label = L["原密码_2bd80322a5"], password = true, singleLine = true)
                     Spacer(Modifier.size(8.dp))
-                    Field(newPw, { newPw = it }, Modifier.fillMaxWidth(), label = "新密码（至少 8 位）", password = true, singleLine = true)
+                    Field(newPw, { newPw = it }, Modifier.fillMaxWidth(), label = L["新密码_至少_8_位_0d551cb025"], password = true, singleLine = true)
                     Spacer(Modifier.size(12.dp))
-                    PrimaryBtn(text = "修改密码", onClick = {
+                    PrimaryBtn(text = L["修改密码_0ae20ac3af"], onClick = {
                         scope.launch {
                             if (newPw.length < 8) {
-                                NoteBoxState.toast("新密码至少 8 位", ToastKind.Warn)
+                                NoteBoxState.toast(tr("新密码至少_8_位_695025596e"), ToastKind.Warn)
                                 return@launch
                             }
                             try {
                                 withContext(Dispatchers.IO) { NoteBoxState.api.changePassword(oldPw, newPw) }
                                 oldPw = ""; newPw = ""
-                                NoteBoxState.toast("密码修改成功", ToastKind.Ok)
+                                NoteBoxState.toast(tr("密码修改成功_f0e65f05ad"), ToastKind.Ok)
                             } catch (e: Exception) {
-                                NoteBoxState.toast(e.message ?: "修改失败", ToastKind.Err)
+                                NoteBoxState.toast(e.message ?: tr("修改失败_9abb465039"), ToastKind.Err)
                             }
                         }
                     })
                 }
 
-                PanelCard(title = "服务器连接", collapsible = false) {
+                PanelCard(title = L["服务器连接_20ba55ffe2"], collapsible = false) {
                     Text(
-                        "NoteBox 服务地址（默认端口 13345）。修改后需要重新登录。",
+                        L["notebox_服务地址_默认端口_13345_e0880dfda6"],
                         color = Palette.muted, fontSize = 12.sp, lineHeight = 18.sp,
                     )
                     Spacer(Modifier.size(10.dp))
@@ -115,7 +117,7 @@ private fun SettingsInner() {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         PrimaryBtn(
-                            text = if (testing) "测试中…" else "测试连接",
+                            text = if (testing) L["测试中_49562bf14c"] else L["login.test_connection"],
                             enabled = !testing,
                             onClick = {
                                 scope.launch {
@@ -127,7 +129,7 @@ private fun SettingsInner() {
                                         testOk = true
                                     } catch (e: Exception) {
                                         testOk = false
-                                        testMsg = "连接失败：" + (e.message ?: "未知错误")
+                                        testMsg = L["连接失败_eb93205cb2"] + (e.message ?: L["未知错误_5f76edc5de"])
                                     } finally { testing = false }
                                 }
                             },
@@ -144,7 +146,7 @@ private fun SettingsInner() {
                     }
                     Spacer(Modifier.size(12.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        DangerBtn(text = "退出 NoteBox 登录", onClick = {
+                        DangerBtn(text = L["退出_notebox_登录_7577d0fc9f"], onClick = {
                             scope.launch { NoteBoxState.logout() }
                         })
                     }
@@ -153,23 +155,23 @@ private fun SettingsInner() {
 
             /* 右：服务器信息 */
             Column(Modifier.weight(1f)) {
-                PanelCard(title = "服务器信息", collapsible = false) {
+                PanelCard(title = L["服务器信息_d2e0457697"], collapsible = false) {
                     if (stats == null) {
-                        Text("加载中…", color = Palette.muted, fontSize = 12.sp)
+                        Text(L["common.loading"], color = Palette.muted, fontSize = 12.sp)
                     } else {
                         val s: JsonObject = stats!!
-                        KVRow("版本", "NoteBox 1.0")
-                        KVRow("服务器时间", s.str("server_time").ifEmpty { "-" })
-                        KVRow("数据库大小", Fmt.bytes(s.long("db_bytes")))
-                        KVRow("笔记数", "${s.long("notes")}")
-                        KVRow("待办（未完成 / 已完成）", "${s.long("pending")} / ${s.long("done")}")
-                        KVRow("已过期 / 今天到期", "${s.long("overdue")} / ${s.long("today")}")
-                        KVRow("今日邮件发送成功", "${s.long("mail_ok_today")}")
+                        KVRow(L["版本_989d1affa0"], L["notebox_1_0_2b16f9792f"])
+                        KVRow(L["服务器时间_e76ff2af0c"], s.str("server_time").ifEmpty { "-" })
+                        KVRow(L["数据库大小_ed9a685d54"], Fmt.bytes(s.long("db_bytes")))
+                        KVRow(L["笔记数_c6bb826e1e"], "${s.long("notes")}")
+                        KVRow(L["待办_未完成_已完成_7422fade10"], "${s.long("pending")} / ${s.long("done")}")
+                        KVRow(L["已过期_今天到期_86491fdf75"], "${s.long("overdue")} / ${s.long("today")}")
+                        KVRow(L["今日邮件发送成功_060f80e076"], "${s.long("mail_ok_today")}")
                         KVRow(
-                            "SMTP 状态",
+                            L["smtp_状态_8658366a9a"],
                             if (NoteBoxState.settings.value?.let { (it["smtp_ready"] as? kotlinx.serialization.json.JsonPrimitive)?.content } == "true") {
-                                "已配置"
-                            } else "未配置",
+                                L["已配置_dc7cd22f34"]
+                            } else L["未配置_63595e95b7"],
                         )
                     }
                 }
@@ -192,13 +194,13 @@ private fun KVRow(k: String, v: String) {
 @Composable
 private fun GhostSaveBtn(url: String) {
     val scope = rememberCoroutineScope()
-    com.servermaintance.panel.ui.GhostBtn(text = "保存地址", onClick = {
+    com.servermaintance.panel.ui.GhostBtn(text = L["保存地址_b4507bac53"], onClick = {
         scope.launch {
             try {
                 withContext(Dispatchers.IO) { NoteBoxState.reconfigure(url) }
-                NoteBoxState.toast("地址已保存，请重新登录", ToastKind.Ok)
+                NoteBoxState.toast(tr("地址已保存_请重新登录_f054bd16b1"), ToastKind.Ok)
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "保存失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("保存失败_40525a7328"), ToastKind.Err)
             }
         }
     })

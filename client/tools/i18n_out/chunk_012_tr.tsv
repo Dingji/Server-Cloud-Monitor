@@ -1,0 +1,120 @@
+已添加_57828673c0	Eklendi
+已清屏_刷新可重新加载_01eb7fac6f	(Ekran temizlendi, yeniden yüklemek için yenileyin)
+已清理_deleted_条_4c23a20ddb	$deleted kayıt temizlendi
+已清空_f8a66770bf	Temizlendi
+已用_0_c96f2dd5c9	{0}% kullanıldı
+已用_0_da8610464a	{0} kullanıldı
+已用_11ab4c52e3	Kullanıldı 
+已用_4c9426f3cb	Kullanıldı
+已用_d_pct_2dbf36e2b0	${d.pct} kullanıldı
+已用_m_usedpct_61d820fe07	${m.usedPct}% kullanıldı
+已用内存_5018e93ffc	Kullanılan bellek
+已移入回收站_54e2ac947c	Çöp kutusuna taşındı
+已移动_3bf6e46e2d	Taşındı
+已移动到_label_6617d663be	"$label" konumuna taşındı
+已移除共享_830fcc049b	Paylaşım kaldırıldı
+已置顶_d7d97038a3	Sabitlendi
+已装_3647e1394b	Yüklü
+已装版本_9bdb334d0c	Yüklü sürüm
+已解压到_0_51e4ef2361	{0} konumuna çıkarıldı
+已解压到_l_dir_9244cad0e5	${l.dir} konumuna çıkarıldı
+已过去_745c1695da	Geçti
+已过期_1354374f76	Süresi doldu
+已过期_今天到期_86491fdf75	Süresi doldu / bugün doluyor
+已还原到原位置_88f9ffd058	Özgün konuma geri yüklendi
+已连接_65fe35c45e	Bağlı
+已连接客户端_ce32897c53	Bağlı istemciler
+已送达_da986b8ec5	Gönderildi
+已选_0_项_1a922f0ed8	{0} öğe seçildi
+已选_17f3287f61	Seçili 
+已选_selected_size_项_d7a48434fc	${selected.size} öğe seçildi
+已配凭据_beb6c5256b	Kimlik bilgileri yapılandırıldı
+已配置_dc7cd22f34	Yapılandırıldı
+已采集_2e78019082	Toplandı
+已重命名_dc9fe43fb7	Yeniden adlandırıldı
+已锁定_3cc7a5af4c	Kilitli
+常用_ee2804c36b	Sık kullanılan:
+常用命令_8b3f736710	Sık kullanılan komutlar
+常用推荐_f9420928eb	Popüler öneriler
+平均_0_ttfb_1_08d238b10f	Ort. {0} · TTFB {1}
+平均耗时_397236acf6	Ortalama süre
+并发_09d869d15d	Eşzamanlılık
+并授予_sudo_权限_8b30bef02a	 ve sudo izinleri ver
+序列操作_6b82faed5c	Dizi işlemleri
+序列管理_c7e70c52dd	Dizi yönetimi
+库_87eedee459	Kütüphane
+应用_4562024dde	Uygula
+应用_ssh_配置_6630ee6205	SSH yapılandırmasını uygula
+应用_swappiness_20e25ed211	swappiness uygula
+应用_sysctl_e2dac5275c	sysctl uygula
+应用位置_0_48979a348d	Uygulanan konumlar ({0})
+应用位置_applied_size_3f8bff0c58	Uygulanan konumlar (${applied.size})
+应用带宽_15d87c726e	Uygulanan bant genişliği
+应用并重载_ssh_68c70d62a3	Uygula ve SSH'ı yeniden yükle
+延迟_e9f0921480	Gecikme
+建索引_ba4fa8969d	Dizin oluştur
+建议_c_warn_427c849e3e	Önerilen: $c.warn
+建议先用_web_终端确认现有登录方式可用_12826a1b60	\n\nÖnce Web terminal üzerinden mevcut giriş yönteminin hâlâ çalıştığını doğrulamanızı öneririz.
+建议处理_43d0209c9a	Önerilen işlemler
+建议尽快更新_4434051095	Mümkün olduğunca çabuk güncellemeniz önerilir
+开发_eb3774e356	Geliştirme
+开启公开链接_5594f75324	Genel bağlantıyı etkinleştir
+开启后可用_db_system_profile_439d38a566	Etkinleştirildikten sonra yavaş işlemleri görmek için db.system.profile.find().limit(20) komutunu kullanın.
+开启网卡_e65c5b5c1b	Ağ arayüzünü etkinleştir
+开始写_支持_markdown_标题_加_333c0c0d41	Yazmaya başlayın… Markdown destekli (# başlık, **kalın**, - liste, ``` kod bloğu)
+开始备份_bf05cce62d	Yedeklemeyi başlat
+开始复制_3cd62ecee5	Kopyalamayı başlat
+开始安装_d109e7cc01	Kurulumu başlat
+开始导入_3d04880897	İçe aktarmayı başlat
+开始导出_86c599fe6e	Dışa aktarmayı başlat
+开始恢复_86cc2051a7	Geri yüklemeyi başlat
+开始打包_ec3abb06f3	Arşivlemeyi başlat
+开始搜索_8fdc065eda	Aramayı başlat
+开机启动_b995f88661	Açılışta başlat
+开机自启_e0f2218651	Otomatik başlatma
+开自启_afbb1e3032	Otomatik başlatmayı etkinleştir
+异常_5caf279339	Anormallik
+异常与变更关联_ad0cd881a4	Anormallik-değişiklik ilişkilendirmesi
+异常时段_fb93a8934a	Anormal dönem
+引擎_9413bdc38c	Motor
+引擎状态_fbb8ddd570	Motor durumu
+引擎还没跑完一轮_新建规则后约_15_秒_或服_4db3fea74e	Motor henüz bir turu tamamlamadı (kural oluşturduktan yaklaşık 15 saniye sonra) veya sunucuda toplayıcı dağıtılmamış
+引用_4cfa595c2a	> Alıntı
+引用列_00382a55a7	Atıf sütunları
+引用表_7d6cb137c9	Atıf tabloları
+强制删除_53ddf21fc7	Zorla sil
+强制断开连接_b751ba3828	Bağlantıyı zorla kes?
+强制终止后端进程_0_e49e9c414a	Backend süreci {0} zorla sonlandır?
+强制终止后端进程_pid_eb7db97147	Backend süreci $pid zorla sonlandır?
+强调色_6f67371e05	Vurgu rengi
+归档文件名_2a8d06976b	Arşiv dosya adı
+归类_6a9b5537c6	Kategori
+归类名称不能为空_8aeba11184	Kategori adı boş olamaz
+归类已删除_内容已移到上一级_933faa2f08	Kategori silindi; içerik bir üst seviyeye taşındı
+归类已更新_219432c27a	Kategori güncellendi
+当前_25e74dceac	Mevcut
+当前不可用_bd15b2e133	Şu anda kullanılamıyor
+当前令牌会在切换到不同服务器时自动失效_需重新登_faee75ab2a	Mevcut jeton, farklı bir sunucuya geçtiğinde otomatik olarak geçersiz olur; yeniden giriş yapmanız gerekir.
+当前使用_297318c276	Şu anda kullanılan
+当前值_8b0db67871	Mevcut değer
+当前实例_185db6ac3b	Mevcut instance
+当前密码_33abf70fd5	Mevcut parola
+当前密钥_0_a6dc721288	Mevcut anahtar {0} · 
+当前密钥_0_刷新于_1_b44dce11d6	Mevcut anahtar {0} · yenilendi {1}
+当前密钥_暂不可用_698a7394eb	Mevcut anahtar: kullanılamıyor
+当前封禁_4f4e3ab4f7	Mevcut engellemeler
+当前封禁_ip_c5ccad72be	Şu anda engellenen IP'ler
+当前库_db0_db15_全量_rdb_8e1d4e62b1	Mevcut DB (db0-db15), tam RDB
+当前数据库_df2f4d6c3c	Mevcut veritabanı
+当前日志全部_8615243b08	Tüm mevcut günlükler
+当前服务器未启用运维模块_api_ops_a1afd4f100	Bu sunucuda ops modülü etkin değil (/api/ops/… 404 döndürüyor).\n
+当前未配置私钥_将使用密码认证_修改后新终端会话_e7d9729ea6	Özel anahtar yapılandırılmamış; parola kimlik doğrulaması kullanılacak. Değişiklikler yeni terminal oturumlarında geçerli olur.
+当前条件下没有事件_f37e5eca2a	Mevcut filtrelerle eşleşen olay yok
+当前没有锁定的包_e812929549	Şu anda kilitli paket yok
+当前版本_46e66f6321	Mevcut sürüm
+当前状态_045859e792	Mevcut durum
+当前状态起始_ec8a451989	Mevcut durumdan başlat
+当前用户权限_show_grants_e8e7d7d1e2	Mevcut kullanıcı izinleri (SHOW GRANTS)
+当前窗口占比_903b7cd486	Mevcut pencere oranı
+当前筛选_8936ccc663	Mevcut filtreler
+当前系统不支持软件源切换_718bf56e6b	Bu sistem yazılım kaynağı değiştirmeyi desteklemiyor

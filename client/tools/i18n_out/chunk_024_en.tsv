@@ -1,0 +1,120 @@
+运行模式_340e9a6dff	Run mode
+近5分钟_0_轮_1_2_事_8ce3d0965f	Last 5 min {0} turns / {1} / {2} events
+近_1_小时_0_小时_defe07fe88	Last 1 h {0}/h · 
+近_1_小时_9b122efc5b	Last 1 hour
+近_24_小时_05c6f396a2	Last 24 hours
+近_24_小时_0_a874a48e14	Last 24 hours {0}
+近_30_天可用率_d672bf40c4	Availability, last 30 days
+近_6_小时_72ecdebccc	Last 6 hours
+近_7_天_f297b996de	Last 7 days
+近_7_天可用率_0_d5a7782c4f	Availability, last 7 days · {0}
+近_7_天可用率_row_name_eea313cb9d	Availability, last 7 days · ${row.name}
+近_7_天可用率_全部任务平均_b880984a79	Availability, last 7 days (average of all tasks)
+近_7_日请求与错误_92125f234d	Requests and errors, last 7 days
+返回条数_5ab4faa584	Returned rows
+返回登录_f2fe4ecc0f	Back to sign-in
+返回表列表_1007d2bcb1	← Back to table list
+返回集合列表_6cb3b7faf7	← Back to collection list
+还原_457d449ce1	Restore
+还没有共享给你的笔记_fc493b2671	No notes shared with you yet
+还没有共享给其他用户_dde3059062	Not shared with other users yet
+还没有发送记录_8ec160d4de	No send history yet
+还没有完成的事项_a290b58977	No completed items yet
+还没有归类_点右上角_创建_52dc846a22	No categories yet\nClick + at the top right to create one
+还没有拨测任务_新建一个官网_接口_url_就能_15fdd99609	No probe tasks yet: create a website/API URL to start measuring availability
+还没有清理记录_38c8964a3d	No cleanup history yet
+还没有用户_7e3b44aaac	No users yet
+还没有看护项_常见做法_给_nginx_业务_99a1f7d8c0	No watch items yet. Common setup: add a port or unit liveness check for nginx / business processes; leave startCmd empty to alert only without self-healing.
+还没有笔记_6682d75366	No notes yet
+还没有规则_示例_磁盘使用率_85_持续_12b6541208	No rules yet. Example: disk usage ≥ 85% for 60 s → critical alert and push to WeCom
+还没有账号_1e58e9e7ba	No account yet?
+还没有通知渠道_新建一个企业微信_钉钉机器人或_ad8bca4340	No notification channels yet. Create a WeCom/DingTalk bot or webhook, then bind it under "Alert rules",
+这是二进制文件_不能在线编辑_请下载后用编辑器打_d2f2d93e6e	This is a binary file and cannot be edited online; download it and open it in an editor
+这是相关性提示而非因果结论_用于缩小排查范围_b540a2889c	This is a correlation hint, not a causal conclusion; use it to narrow down the investigation.
+这里空空如也_c631010e57	Nothing here yet
+这里还没有笔记_159b548769	No notes here yet
+进入_0e25578e8f	Open
+进程_4eb4768d27	Processes
+进程_pgrep_匹配_a48733f06a	Processes (pgrep match)
+进程列表_1b896e6456	Process list
+进程列表_资源占用与信号操作_48f58dc1aa	Process list, resource usage and signal actions
+进程匹配关键字_166a4608b8	Process match keyword
+进程总数_4edbd96267	Total processes
+进程管理_ddaa0fd352	Process management
+进行中_a9e306e247	 · in progress
+远程_801947aa9a	Remote
+远程主机指标_6b39758052	Remote host metrics
+远程指标采集与远程命令执行属于下一批功能_多主机_e77ed7a3f1	Remote metric collection and remote command execution are part of the next batch (multi-host management)
+远端推送_69e4125b5a	Remote push
+连接_7328deebb5	Connect
+连接_notebox_2a3eb35dd0	Connecting to NoteBox…
+连接中_699ade1654	Connecting
+连接中_9d02d12157	Connecting…
+连接地址_告警阈值_面板参数_凭据与配置文件编辑_39893de3a4	Connection address, alert thresholds, panel parameters, credentials and config file editing
+连接失败_2c056f182f	Connection failed
+连接失败_eb93205cb2	Connection failed: 
+连接数_7e94aaa397	Connections
+连接数限制_空_不变_1_无限_93c52a151b	Connection limit (blank = unchanged, -1 = unlimited)
+连接断开_3_秒后重连_93086a0db5	Connection lost; reconnecting in 3 s…
+连接的客户端_0_f875571d9f	Connected clients ({0})
+连接的客户端_procs_size_02112d51d3	Connected clients (${procs.size})
+连接统计_6527f81b7c	Connection stats
+连续失败_49a04090b4	Consecutive failures
+连续失败几次算不可用_aecb4e631c	Consecutive failures before marking unavailable
+退出_notebox_登录_7577d0fc9f	Sign out of NoteBox
+选_471c7b464c	Select
+选择_enter_执行_esc_关_dfa5da2532	↑↓ select · Enter run · Esc close · F5 refresh current page
+选择一条笔记开始编辑_ee98f376fb	Select a note to start editing
+选择备份恢复_da323f9941	Choose a backup to restore
+选择归类_a34a4beaca	Select category
+选择数据库_86095a4763	Select database
+选择文件导入_e25b7bbd7f	Choose a file to import
+选择日志源_0af5cd0783	Select log source
+选择目录_0035ee50a9	Choose directory ›
+选择表_07de45d317	Select table
+选择表与权限_3c404e93dc	Select tables and privileges
+选择表后点击_分析_ddc69bf0aa	Select a table, then click "Analyze"
+递归子项_80fb31d52a	Recurse into children
+逗号分隔_c3f6abcdf5	Comma-separated
+逗号分隔标签_如_运维_周报_8871ad8a3f	Comma-separated tags, e.g. ops,weekly
+通知_7a66c0d036	Notifications
+通知发送记录_c308008bc7	Notification send history
+通知失败_0_68f2a78601	{0} notification(s) failed
+通知失败_o_failed24h_ff247b6d6f	${o.failed24h} notification(s) failed
+通知渠道_56807dfa08	Notification channels
+通知规则_5229b0abf4	Notification rules
+通知规则已保存_47bd518d21	Notification rules saved
+通过_dcc4233255	Passed
+速率_8ec7c4ba74	Rate
+逻辑库_db0_db15_1443ce3df5	Logical databases (db0-db15)
+邮件通知_22a119343a	Email notifications
+邮箱_9ed627bcf6	Email
+邮箱_账号_229cd1d954	Email / account
+邮箱注册_79082eeb61	Sign up with email
+邮箱账号_fa8cbad280	Email account
+配置_0_访问日志_1_67aaf6d9b8	Config: {0} · Access log: {1}
+配置与维护_9eaf0997b4	Configuration & maintenance
+配置单价后显示_02d81cd91f	Shown after configuring unit prices
+配置变量_0_2ef4932006	Config variables ({0})
+配置变量_vars_size_5d97abe6b2	Config variables (${vars.size})
+配置文件编辑器_44f49d6269	Config file editor
+配置服务器连接地址_6e9e211f79	Configure the server connection address
+配置校验_9e6b524956	Config validation:
+配置校验通过_574e62b3c4	Config validation passed
+配置检测_7635dbf3bd	Config check
+配额与自愈_9a7dfc8467	Quota & self-heal
+配额窗口_8683ffb07d	Quota window
+配额耗尽_9f8e15153c	Quota exhausted
+采样_0_1_覆盖_2_68982a2499	Samples {0}/{1} · coverage {2}%
+采集_c3f8933d77	Collect
+采集内容固定为一组只读命令_proc_load_916d7aed4f	Collection is a fixed set of read-only commands: /proc/loadavg, free, df, ps top CPU, ss listening ports, uptime, os-release, nproc, key unit status.
+采集到期主机_3f28942b7a	Collect expiring hosts
+采集周期_9b415a3989	Collection interval
+采集器_426884b7c2	Collector
+采集器_异常_1fe6994cc1	Collector error
+采集器_运行中_1008e60763	Collector running
+采集固定只读命令的返回_负载_内存_磁盘_进程_ad08b5dd57	Collects output of fixed read-only commands (load, memory, disk, processes, ports, system); no custom commands are executed
+采集失败_ef06d0b26b	Collection failed
+采集结果_c356b64a0d	Collection result
+释放_0ec9645ed2	Release
+释放内存缓存_f951d508c6	Free memory cache

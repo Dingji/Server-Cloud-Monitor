@@ -1,4 +1,8 @@
 package com.servermaintance.panel.pages.db
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -152,12 +156,12 @@ fun EngineBar(st: DbState, scope: CoroutineScope) {
                 }
             }
             Spacer(Modifier.width(10.dp))
-            Text("引擎", color = Palette.muted, fontSize = 11.sp)
+            Text(L["引擎_9413bdc38c"], color = Palette.muted, fontSize = 11.sp)
             Spacer(Modifier.width(8.dp))
-            DbBtn("＋ 安装引擎", tone = DbBtnTone.Plain) { showInstall = !showInstall }
+            DbBtn(L["安装引擎_e5276cf0a5"], tone = DbBtnTone.Plain) { showInstall = !showInstall }
             Spacer(Modifier.width(6.dp))
             DbBtn(
-                text = if (refreshing) "刷新中…" else "刷新引擎信息",
+                text = if (refreshing) L["刷新中_ea0ab1492c"] else L["刷新引擎信息_022b2c17cd"],
                 enabled = !refreshing,
                 onClick = {
                     scope.launch {
@@ -172,7 +176,7 @@ fun EngineBar(st: DbState, scope: CoroutineScope) {
             Spacer(Modifier.height(12.dp))
             Box(Modifier.fillMaxWidth().height(1.dp).background(Palette.border))
             Spacer(Modifier.height(10.dp))
-            Text("数据库引擎安装", color = Palette.muted, fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.SemiBold)
+            Text(L["数据库引擎安装_1b953ccc06"], color = Palette.muted, fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(8.dp))
             InstallGrid(st, scope)
         }
@@ -195,14 +199,14 @@ private fun EnginePill(st: DbState, e: DbEngineItem, scope: CoroutineScope) {
                 "kv" -> LevelBadge("KV", Level.Info)
                 "doc" -> LevelBadge("DOC", Level.Info)
             }
-            LevelBadge(if (e.active) "运行中" else "未运行", if (e.active) Level.Ok else Level.Bad)
+            LevelBadge(if (e.active) L["运行中_5942497005"] else L["未运行_b2ba9634d9"], if (e.active) Level.Ok else Level.Bad)
         }
         val unit = DbMeta.serviceUnit(e.id, e.service)
         if (unit != null) {
             if (e.active) {
-                DbBtn("停止", tone = DbBtnTone.Plain) { engineService(scope, st, e.id, "stop") }
+                DbBtn(L["停止_a17f70a8d3"], tone = DbBtnTone.Plain) { engineService(scope, st, e.id, "stop") }
             } else {
-                DbBtn("启动", tone = DbBtnTone.Ok) { engineService(scope, st, e.id, "start") }
+                DbBtn(L["启动_ebd26da421"], tone = DbBtnTone.Ok) { engineService(scope, st, e.id, "start") }
             }
         }
     }
@@ -213,15 +217,15 @@ fun engineService(scope: CoroutineScope, st: DbState, engineId: String, action: 
     scope.launch {
         val label = DbMeta.label(engineId)
         val okc = if (action == "stop") {
-            Modal.confirm("停止 $label", "将停止 $label 服务（不会删除数据）。", okText = "停止", danger = true)
+            Modal.confirm(trf("停止_0_e0be2c8b16", label), trf("将停止_0_服务_不会删除数据_3644eaaa47", label), okText = L["停止_a17f70a8d3"], danger = true)
         } else {
-            Modal.confirm("启动 $label", "将启动 $label 服务。", okText = "启动")
+            Modal.confirm(trf("启动_0_5c677d444c", label), trf("将启动_0_服务_1f105846d4", label), okText = L["启动_ebd26da421"])
         }
         if (!okc) return@launch
         runDb(
             "/db/engine/service",
             jsonObjectOf("engine" to engineId, "action" to action),
-            outputTitle = "服务操作",
+            outputTitle = L["服务操作_143b5c61b3"],
         )
         reloadAfterService(st)
     }
@@ -232,9 +236,9 @@ fun installEngine(scope: CoroutineScope, st: DbState, engineId: String, onBusy: 
     scope.launch {
         val label = DbMeta.label(engineId)
         val okc = Modal.confirm(
-            "安装 $label",
-            "在服务器上安装 $label？可能需要数分钟（Db2/MongoDB 更久），安装过程会添加所需软件源并自动启动服务。",
-            okText = "开始安装",
+            trfn("安装_label_0399b4e4de", "label" to label),
+            trfn("在服务器上安装_label_可能需要数分钟_d_7bd49b35e9", "label" to label),
+            okText = L["开始安装_d109e7cc01"],
         )
         if (!okc) return@launch
         onBusy(engineId)
@@ -244,12 +248,12 @@ fun installEngine(scope: CoroutineScope, st: DbState, engineId: String, onBusy: 
             else -> null
         }
         val r = if (pkg != null) {
-            Actions.run("/pkg/install", jsonObjectOf("pkg" to pkg), title = "$label 安装日志")
+            Actions.run("/pkg/install", jsonObjectOf("pkg" to pkg), title = trfn("label_安装日志_13ce1b1029", "label" to label))
         } else {
-            Actions.run("/db/engine/install", jsonObjectOf("engine" to engineId), title = "$label 安装日志")
+            Actions.run("/db/engine/install", jsonObjectOf("engine" to engineId), title = trfn("label_安装日志_13ce1b1029", "label" to label))
         }
         if (r != null) {
-            AppState.toast("$label 安装完成，正在刷新…", ToastKind.Ok, 6000)
+            AppState.toast(trfn("label_安装完成_正在刷新_7df73f0205", "label" to label), ToastKind.Ok, 6000)
             reloadAfterService(st)
         }
         onBusy(null)
@@ -278,13 +282,13 @@ fun InstallGrid(st: DbState, scope: CoroutineScope) {
                     ) {
                         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text(t.label, color = Palette.text, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-                            LevelBadge(if (isInstalled) "已安装" else "未安装", if (isInstalled) Level.Ok else Level.Muted)
+                            LevelBadge(if (isInstalled) L["已安装_eb88ff57c9"] else L["未安装_6f7dc945ae"], if (isInstalled) Level.Ok else Level.Muted)
                         }
                         Spacer(Modifier.size(6.dp))
                         Text(t.hint, color = Palette.muted, fontSize = 11.sp)
                         Spacer(Modifier.size(8.dp))
                         DbBtn(
-                            text = if (busy == t.engine) "安装中…" else "安装 ${t.label}",
+                            text = if (busy == t.engine) L["安装中_b2c6913616"] else trf("安装_0_710b3a3d30", t.label),
                             tone = if (isInstalled) DbBtnTone.Plain else DbBtnTone.Primary,
                             enabled = !isInstalled && busy == null,
                         ) { installEngine(scope, st, t.engine) { busy = it } }
@@ -301,7 +305,7 @@ fun InstallGrid(st: DbState, scope: CoroutineScope) {
 @Composable
 fun InstallAllSection(st: DbState, scope: CoroutineScope) {
     Column {
-        PanelCardLocal("数据库引擎总览", "未检测到任何可用的数据库引擎。可在此一键安装常见数据库（安装后需刷新页面）。")
+        PanelCardLocal(L["数据库引擎总览_8dc625b5ae"], L["未检测到任何可用的数据库引擎_可在此一键安装常见_38b395d313"])
         InstallGrid(st, scope)
     }
 }
@@ -351,15 +355,15 @@ fun EngineErrorCard(st: DbState, failure: DbFailure, scope: CoroutineScope) {
     val unit = DbMeta.serviceUnit(engine.id, engine.service)
 
     com.servermaintance.panel.ui.PanelCard(
-        title = "${engine.name} 无法加载",
+        title = trf("0_无法加载_7b32254619", engine.name),
         cardKey = "db-error",
         collapsible = false,
         right = {
             LevelBadge(
                 text = when {
-                    failure.notInstalled -> "未安装"
-                    failure.notRunning -> "未运行"
-                    else -> "错误"
+                    failure.notInstalled -> L["未安装_6f7dc945ae"]
+                    failure.notRunning -> L["未运行_b2ba9634d9"]
+                    else -> L["错误_b859c7be75"]
                 },
                 level = if (failure.notInstalled) Level.Muted else Level.Bad,
             )
@@ -377,21 +381,21 @@ fun EngineErrorCard(st: DbState, failure: DbFailure, scope: CoroutineScope) {
         Spacer(Modifier.size(10.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             if (failure.notRunning && unit != null) {
-                DbBtn("▶ 启动 ${engine.name} 服务", tone = DbBtnTone.Ok) {
+                DbBtn(trf("启动_0_服务_16fc9bfc5e", engine.name), tone = DbBtnTone.Ok) {
                     engineService(scope, st, engine.id, "start")
                 }
             }
             if (failure.notInstalled) {
-                DbBtn("⬇ 安装 ${engine.name}", tone = DbBtnTone.Primary) {
+                DbBtn(trf("安装_0_340ee35e2a", engine.name), tone = DbBtnTone.Primary) {
                     installEngine(scope, st, engine.id) { }
                 }
             }
-            DbBtn("重新加载") { scope.launch { reloadAfterService(st) } }
+            DbBtn(L["重新加载_5982c44c18"]) { scope.launch { reloadAfterService(st) } }
         }
         Spacer(Modifier.size(8.dp))
         Text(
-            text = unit?.let { "服务单元 $it · 安装/启动都是显式操作，默认不会自动启动。" }
-                ?: "该引擎无 systemd 服务（文件型数据库），安装后即可直接使用。",
+            text = unit?.let { L["服务单元_it_安装_启动都是显式操作_默_902797720d"] }
+                ?: L["该引擎无_systemd_服务_文件型数据库_13948e1a08"],
             color = Palette.muted,
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace,
@@ -444,6 +448,6 @@ fun TabScaffold(
 @Composable
 fun PendingTab(label: String) {
     com.servermaintance.panel.ui.PanelCard(title = label, cardKey = "pending", collapsible = false) {
-        EmptyState("「$label」实现中…")
+        EmptyState(trfn("label_实现中_70505f7ef8", "label" to label))
     }
 }

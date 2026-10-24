@@ -1,0 +1,120 @@
+导出_fmt_uppercase_5fa0136e39	${fmt.uppercase()} dışa aktar
+导出失败_38ab583870	Dışa aktarma başarısız:
+导出数据库_8eb2a58640	Veritabanını dışa aktar
+将_0_1_复制到_2_40d7c9a939	{0}.{1} konumundan {2} konumuna kopyala
+将_0_移入回收站_可随时恢复_b035da26b3	"{0}" çöp kutusuna taşınsın mı? İstediğiniz zaman geri yükleyebilirsiniz.
+将_db_tbl_复制到_target_bfe49531fd	$db.$tbl konumundan $target konumuna kopyala
+将_journald_日志体积限制到_200mb_88b7b48940	journald günlük boyutunu 200MB ile sınırla
+将_name_加入_sudo_组_e6b5bf2823	$name sudo grubuna eklensin mi?
+将_src_打包为_tar_gz_大目录可能耗_0e4d5baded	$src dosyasını tar.gz olarak paketle (büyük dizinler zaman alabilir).
+将_vm_swappiness_设置为_v_并_d6d34ffc96	vm.swappiness değeri $v olarak ayarlanıp kalıcı hale getirilsin mi?
+将停止_0_服务_不会删除数据_3644eaaa47	{0} hizmeti durdurulacak (veriler silinmeyecek).
+将停止_label_服务_不会删除数据_b8004f9ec0	$label hizmeti durdurulacak (veriler silinmeyecek).
+将写入并重载_sshd_body_warn_b8307d441d	sshd'ye yazılıp yeniden yüklenecek:\n$body$warn
+将删除_0_中满足条件的数据_1_此操_6705d19e0e	{0} içindeki koşulları sağlayan veriler silinecek:\n{1}\nBu işlem geri alınamaz.
+将删除_st_table_中满足条件的数据_4e3f9bc4e7	${st.table} içindeki koşulları sağlayan veriler silinecek:\n$w\nBu işlem geri alınamaz.
+将删除用户_name_及其家目录_userde_38f9f46e9a	$name kullanıcısı ve ev dizini silinecek (userdel -r); geri alınamaz!
+将启动_0_服务_1f105846d4	{0} hizmeti başlatılacak.
+将启动_label_服务_b82e5baf55	$label hizmeti başlatılacak.
+将启用_ufw_默认拒绝入站_请确认已允许_2_ebeb8137d3	UFW etkinleştirilecek (gelen bağlantılar varsayılan olarak reddedilir). 22 portuna izin verildiğinden emin olun: ufw allow 22/tcp
+将强制删除容器_0_docker_rm_f_e5e8832e8e	{0} kapsayıcısı zorla silinecek (docker rm -f); kapsayıcı veri birimleri etkilenmez.
+将执行_apt_get_install_fail_e1244066c3	apt-get install fail2ban çalıştırılıp hizmet başlatılacak (İnternet bağlantısı gerekir, 1-2 dakika sürebilir).
+将执行_apt_get_install_y_d_5218b05b7a	apt-get install -y docker.io çalıştırılacak, yaklaşık 1-3 dakika.
+将执行_drop_caches_3_系统可能短暂_6626720ff2	drop_caches=3 çalıştırılacak; sistem kısa süreliğine yavaşlayabilir. Devam edilsin mi?
+将按已保存的计划执行清理项_journal_ap_762e3baf6f	Kayıtlı temizlik öğeleri (journal, APT, döngüsel günlükler vb.) programa göre çalıştırılacak.
+将永久删除_db_及其全部数据_不可恢复_a493b3bdb0	$db ve tüm verileri kalıcı olarak silinecek; geri alınamaz!
+将添加_root_定时任务_每天_03_00_执_0937e4afe4	root için cron görevi eklenecek, her gün 03:00'da çalışır:\n$cmd
+将添加_root_定时任务_每天_03_00_执_e6ee798c58	root için cron görevi eklenecek, her gün 03:00'da çalışır:\n{0}
+将自动备份当前源文件并执行_apt_get_up_0276b8cab1	Mevcut kaynak dosyaları yedeklenip apt-get update çalıştırılacak; yenileme başarısız olursa otomatik geri alma yapılır. Yaklaşık 30-120 saniye sürer.
+小于_7d11896ff4	< Küçük
+小于等于_190834de3e	≤ Küçük veya eşit
+小文件数量占比_e37f172da2	Küçük dosya oranı
+小时_99f6904ff3	Saat
+尚未执行过任何修复动作_fe7c3d4771	Henüz hiçbir onarım işlemi gerçekleştirilmedi
+尚未运行健康检查_ba6dfd78c0	Henüz sağlık kontrolü çalıştırılmadı
+尝试_31d1e44656	Dene
+属主_444fd7bd13	Sahip
+属主已更新_dce00bf89c	Sahip güncellendi
+属性_7d3c35c29b	Özellikler
+峰值时段_6bb7941d45	Yoğun saatler
+峰值轮_4cecb849cf	Yoğun tur
+工作区_保留收藏_b4859ec177	Çalışma alanı · Favorileri koru
+工作数据库_866878eb8f	Çalışma veritabanı
+工作日_27b4a6aed2	İş günü
+工具_f7bb5ad4da	Araçlar:
+已上传_0_62e7aadbe5	{0} yüklendi
+已上传_f_name_06d42217a4	${f.name} yüklendi
+已上传并覆盖_0_56609744b2	{0} yüklenip üzerine yazıldı
+已上传并覆盖_f_name_da9914d31d	${f.name} yüklenip üzerine yazıldı
+已产生不可用事件_a2f7f57fb3	Kullanılamazlık olayı oluştu
+已保存_cdfab96f75	Kaydedildi
+已保存_email_4726a5328b	$email kaydedildi
+已保存_saved_36d870566a	Kaydedildi: $saved
+已保存_下一次重复已自动排期_866a056587	Kaydedildi · sonraki tekrar otomatik planlandı
+已保存到_path_6a5d7deabb	$path konumuna kaydedildi
+已保存到_saved_49bd95c1fb	$saved konumuna kaydedildi
+已停止_75dddf524e	Durduruldu
+已停止公开分享_9a9cf049a9	Herkese açık paylaşım durduruldu
+已停用_0_c934ebc3bd	{0} devre dışı
+已停用_6c7dcbb73a	Devre dışı
+已停用自动维护_836de837e0	Otomatik bakım devre dışı bırakıldı
+已共享给_ev_email_permt_77651d6ed4	${ev.email} (${permText(ev.perm)}) ile paylaşıldı
+已切换为浅色模式_910f7b8537	Açık moda geçildi
+已切换为深色模式_b03918bd9e	Koyu moda geçildi
+已切换到_0_f0c31c31dc	{0} konumuna geçildi
+已切换到_appstate_config_0ccf0355a4	${AppState.config().normalizedUrl()} konumuna geçildi
+已创建归类_name_4dcdef1d04	"$name" kategorisi oluşturuldu
+已创建新终端会话_096edaffb2	Yeni terminal oturumu oluşturuldu
+已创建清单_name_0235b26a57	"$name" listesi oluşturuldu
+已删除_0_a0892ec5c3	{0} silindi
+已删除_0_行_a56ea85604	{0} satır silindi
+已删除_fb5fe1e266	Silindi
+已到期_75e6c9fb6f	Süresi doldu
+已加载的审计规则_575f3a8203	Yüklenmiş denetim kuralları
+已占_028e892f8e	Kullanımda
+已取消保存_1f0e8fda6a	Kaydetme iptal edildi
+已取消带宽上限_4d02387c26	Bant genişliği sınırı kaldırıldı
+已取消置顶_64ca5ea597	Sabitleme kaldırıldı
+已启用_0_29dab49ed0	{0} etkinleştirildi
+已启用_25d2843150	Etkinleştirildi
+已启用的源文件_0_7a8ed113e1	Etkin kaynak dosyaları ({0})
+已启用的源文件_files_size_3ef3f7d5ad	Etkin kaynak dosyaları (${files.size})
+已启用自动维护_26c95d2e69	Otomatik bakım etkinleştirildi
+已回滚_c4ab8c16f8	Geri alındı
+已固定_46f9ebb3cb	(Sabitlendi)
+已复制_e381a5763d	Kopyalandı
+已复制到剪贴板_c2bb6d50ae	Panoya kopyalandı
+已复制笔记_578fe5f530	Not kopyalandı
+已存_it_secretset_jointo_371806c69d	{0} kaydedildi
+已存在_a867d42ddf	Zaten var
+已安装_eb88ff57c9	Yüklendi
+已安装_total_438379cb60	Yüklendi ($total)
+已完成_e99b48a29b	Tamamlandı
+已完成_下一次重复已自动排期_2f89384a29	Tamamlandı · sonraki tekrar otomatik planlandı
+已导入_n_条待办_c3352cbaa8	$n görev içe aktarıldı
+已导入_n_条笔记_09e6db7128	$n not içe aktarıldı
+已建立连接_0_ac05618709	Bağlantı kuruldu ({0})
+已建立连接_established_siz_bb2e6b06da	Bağlantı kuruldu (${established.size})
+已开启实时跟随_b8c950e7d3	Canlı takip etkinleştirildi
+已归档_5cfbea2b76	Arşivlendi
+已彻底删除_21ae7be063	Kalıcı olarak silindi
+已恢复_0_120218aebb	"{0}" geri yüklendi
+已恢复_6aa9ad7241	Geri yüklendi
+已截断_61c54972d5	 · Kırpıldı
+已打开新会话选项卡_b298c97275	Yeni oturum sekmesi açıldı
+已执行计划清理_b29e9620a4	Zamanlanmış temizlik çalıştırıldı
+已扫描_0_个索引文件_9909c34fb8	 · {0} dizin dosyası tarandı
+已扫描_scanned_个索引文件_b6efc4ae77	 · $scanned dizin dosyası tarandı
+已按保留期清理轮转日志_deca9628b4	Döngüsel günlükler saklama süresine göre temizlendi
+已按当前值试跑_结果见发送记录_467ceb202b	Mevcut değerlerle test çalıştırıldı (sonuçlar için gönderim kaydına bakın)
+已推送到铃铛与渠道_336daad702	Zil ve kanallara gönderildi
+已插入_ok_个文件_5032d55e92	$ok dosya eklendi
+已收藏_41f91d9758	 · Favorilere eklendi
+已是最新_5985ee9a3c	Zaten güncel
+已更新_112f98675e	Güncellendi
+已有_apt_任务在执行_请等待完成_52d32c3717	Zaten bir apt görevi çalışıyor; bitmesini bekleyin
+已有账号_c9bc5e7bff	Zaten hesabınız var mı?
+已格式化_简单模式_注意字符串内关键词也会被换行_ff56058a41	Biçimlendirildi (basit mod; dize içindeki anahtar kelimelerin de bölünebileceğini unutmayın)
+已检查全部看护项_7ceab11b1c	Tüm izleme öğeleri denetlendi
+已永久删除_b2e5fd714f	Kalıcı olarak silindi
+已测量_a418169c62	Ölçüldü

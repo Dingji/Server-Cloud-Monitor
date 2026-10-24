@@ -1,0 +1,15 @@
+{
+ "dir": "/var/lib/cloud-panel/backups/db",
+ "items": [
+  {
+   "name": "db-sqlite-testcm.db-full-2026-10-14T05-50.sql.gz",
+   "size": 193,
+   "uploaded": false,
+   "export": false,
+   "engine": "",
+   "database": "",
+   "mode": "full",
+   "mtime": "Oct 14 13:50"
+  }
+ ]
+}

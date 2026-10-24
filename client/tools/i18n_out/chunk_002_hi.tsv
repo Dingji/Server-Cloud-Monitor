@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	relay बैकअप अनुपलब्ध
+relay_备份结果_0cf7f02f06	relay बैकअप परिणाम
+relay_每日状态备份_32dee8ba2b	relay दैनिक स्थिति बैकअप
+reorg_重建索引_2b9d2e3b0e	REORG (अनुक्रमणिका पुनर्निर्माण)
+reorg_重组表_6195b56608	REORG (तालिका पुनर्गठन)
+reorgchk_校验_010830b6a4	REORGCHK (जाँच)
+repair_修复_8dd157c84c	REPAIR (मरम्मत)
+restart_值_77d45b4c24	RESTART मान
+root_密码登录_df671edd13	Root पासवर्ड लॉगिन
+root_权限的交互式_shell_经_ssh_724c53e674	root अधिकार वाला इंटरैक्टिव Shell (SSH PTY द्वारा, मूल ANSI टर्मिनल रेंडरिंग)
+running_运行中_contain_7d4c0797f6	$running चालू · ${containers.size - running} बंद
+runstats_reorg_针对整库或所选表执_d40a81b4e9	RUNSTATS/REORG पूरे डेटाबेस या चुनी हुई तालिकाओं पर चलता है; बड़ी तालिकाओं में समय लग सकता है.
+runstats_全库统计_e9fcb7b8fd	RUNSTATS पूरे डेटाबेस के आँकड़े
+runstats_更新统计_a6a6663709	RUNSTATS (आँकड़े अद्यतन करें)
+save_同步快照_afc91773af	SAVE (स्नैपशॉट सिंक करें)
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\nकार्य नाम: cm-$n
+settings.language.changed	भाषा अद्यतन की गई
+settings.language.hint	बदलते ही प्रभावी हो जाती है और आपका चुनाव याद रखा जाता है. अरबी इंटरफ़ेस लेआउट को स्वचालित रूप से मिरर करता है.
+settings.language.label	भाषा
+settings.language.title	इंटरफ़ेस भाषा
+setval_值_938e9aa8cf	setval मान
+shell_控制台_6f576115f4	Shell कंसोल
+sites_enabled_为空_4516b41170	sites-enabled खाली है
+slo_与用量_a308fd44ff	SLO और उपयोग
+slo_目标已更新为_0_1_天_41ec05d358	SLO लक्ष्य को {0}% / {1} दिन पर अद्यतन किया गया
+slo_目标已更新为_t_dy_天_7716799870	SLO लक्ष्य को $t% / $dy दिन पर अद्यतन किया गया
+slo_目标应为_0_100_之间的百分数_254085fd3b	SLO लक्ष्य 0 से 100 के बीच प्रतिशत होना चाहिए
+slo_错误预算_47d719e135	SLO त्रुटि बजट
+smtp_主机_9cb2a0f9f3	SMTP होस्ट
+smtp_已配置_70f40873a7	SMTP कॉन्फ़िगर्ड
+smtp_授权码_273299a5a3	SMTP प्राधिकरण कोड
+smtp_服务器_941346a5f4	SMTP सर्वर
+smtp_未配置_先填账号授权码_c97b712442	SMTP कॉन्फ़िगर्ड नहीं (पहले खाता और प्राधिकरण कोड भरें)
+smtp_状态_8658366a9a	SMTP स्थिति
+smtp_设置已保存_e5e2238754	SMTP सेटिंग सहेजी गईं
+smtp_账号_163_邮箱_4bbcd0b1d0	SMTP खाता (163 मेल)
+sql_控制台_a3458fb2ad	SQL कंसोल
+sql_文本_gzip_通用_可编辑_48f716760f	SQL टेक्स्ट + gzip (सामान्य, संपादन योग्य)
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	SQLite एक-फ़ाइल डेटाबेस है: फ़ाइल न हो तो नई फ़ाइल बनती है; फ़ाइल का नाम .db/.sqlite पर समाप्त होना चाहिए.
+sqlite_搜索目录_49521cf800	SQLite खोज निर्देशिका
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	SQLite एक-फ़ाइल एम्बेडेड डेटाबेस है, इसमें उपयोगकर्ता/भूमिका की अवधारणा नहीं है; पहुँच नियंत्रण ऑपरेटिंग सिस्टम की फ़ाइल अनुमतियों से तय होता है.
+sqlite_生成_sql_文本_gzi_f960464be7	· SQLite SQL टेक्स्ट + gzip बनाता है, जिसे सीधे नई फ़ाइल में पुनर्स्थापित किया जा सकता है.
+sqlite_语法_支持_tables_sc_41d445ac53	SQLite सिंटैक्स (.tables/.schema जैसे डॉटकमांड समर्थित)
+ssh2_可用_efe0e7bbc7	ssh2 उपलब्ध
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys प्राधिकृत कुंजियाँ · relay_scripts रिले स्क्रिप्ट · ufw_conf फ़ायरवॉल · cron_conf निर्धारित कार्य.
+ssh_凭据_0_527cdbdfec	SSH क्रेडेंशियल · {0}
+ssh_凭据_h_label_24a0886915	SSH क्रेडेंशियल · ${h.label}
+ssh_可达_df28fdb916	SSH पहुँच योग्य
+ssh_密码认证_f22e3cd826	SSH पासवर्ड प्रमाणीकरण
+ssh_授权密钥_authorized_key_4fee36881a	SSH प्राधिकृत कुंजियाँ (authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	SSH एक्सपोज़र, फ़ायरवॉल, खाते व अनुमतियाँ, अपडेट, लॉग और समय सिंक की केवल-पठन जाँच; मरम्मत कार्य सर्वर सुरक्षा सत्यापन के बाद चलते हैं
+ssh_服务配置_sshd_有效配置_b5a2f5733e	SSH सेवा कॉन्फ़िगरेशन (sshd प्रभावी कॉन्फ़िगरेशन)
+ssh_端口_db451b3851	SSH पोर्ट
+ssh_设置已保存_a65c44f49c	SSH सेटिंग सहेजी गईं
+ssh_连接_用于_web_终端的_pty_b26f43db91	SSH कनेक्शन (वेब टर्मिनल के लिए PTY)
+ssh_通道_dbd1043d39	SSH चैनल
+ssh_配置应用_c35c2ef2bf	SSH कॉन्फ़िगरेशन लागू करें
+ssh_防爆破_3e3c79eef0	SSH ब्रूट-फोर्स सुरक्षा
+ssl_证书_let_s_encrypt_332fd65bdb	SSL प्रमाणपत्र (Let's Encrypt)
+sudo_权限_e03e1e61f9	sudo अधिकार
+swap_控制_12c3f63c98	Swap नियंत्रण
+systemd_单元名_c8ea5d11ad	systemd यूनिट नाम
+systemd_定时器_0_dc0dc6e637	Systemd टाइमर ({0})
+systemd_定时器_f8d95995f8	Systemd टाइमर
+systemd_定时器_timers_si_6ade92f31f	Systemd टाइमर (${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· Systemd टाइमर systemd द्वारा प्रबंधित हैं, केवल प्रदर्शन के लिए;
+systemd_日志总占用_f776a05861	systemd लॉग कुल उपयोग
+systemd_服务_fe73189369	systemd सेवाएँ
+tcp_主机_c307455515	TCP होस्ट
+tcp_端口_468daa15c6	TCP पोर्ट
+tcp_端口探活_731f0297a0	TCP पोर्ट लाइवनेस जाँच
+title_names_size_个_acb99452ee	$title · ${names.size} पैकेज
+tls_证书_43af3d4e3c	TLS प्रमाणपत्र
+tmp_保留_0_天_f32c9b5407	/tmp {0} दिन रखें
+tmp_保留_s_tmpdays_天_86426f5281	/tmp ${s.tmpDays} दिन रखें
+tmp_保留天数_0d11396618	/tmp रखने के दिन
+token_命中率_2bfb8e83db	Token हिट दर
+token_总量_3f5fa71b8e	कुल Token
+token_构成_9af64ae64e	Token संरचना
+token_用量归集_81e6ced52c	Token उपयोग संकलन
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	Token आँकड़े रोलिंग विंडो से संकलित हैं · डेटा {0} से
+top_会话_3c40651605	शीर्ष सत्र
+top_进程_17603f0ba3	शीर्ष प्रोसेस
+truncate_清空数据_2b621f28d2	TRUNCATE (डेटा खाली करें)
+ttfb_按线路_dd77200ec0	TTFB लाइन के अनुसार
+ua_族_886e5b0cbd	UA परिवार
+ufwrulescount_条规则_4d66159719	$ufwRulesCount नियम
+user_或_user_group_dab37bbd5c	user या user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE सभी डेटाबेस
+vacuum_full_全部库_7cb397ec45	VACUUM FULL सभी डेटाबेस
+vacuum_full_重写表_6eacd637a2	VACUUM FULL (तालिका पुनर्लेखन)
+vacuum_回收空间_1fab10fe60	VACUUM (स्थान मुक्त करें)
+vacuum_重建文件_7a9b0fc30b	VACUUM (फ़ाइल पुनर्निर्माण)
+w_a_个异常找到疑似变更_072ff64ee0	$w / $a विसंगतियों में संदिग्ध बदलाव मिले
+wal_检查点_2010a0cc44	WAL चेकपॉइंट
+web_终端_7a3963643f	वेब टर्मिनल
+where_条件_如_id_10_211cc8803d	WHERE शर्त, जैसे id > 10
+where_条件_必填_d024e40edd	WHERE शर्त (अनिवार्य)
+where_条件_必填_禁止分号_de5b786116	WHERE शर्त (अनिवार्य, सेमीकॉलन वर्जित)
+win.client.close_label	विंडो बंद करते समय
+win.client.desc_ask	हर बार बंद करने पर पूछें: बैकग्राउंड में रहें या बाहर निकलें.
+win.client.desc_quit	बंद करते ही Cloud Monitor से बाहर निकलें.
+win.client.desc_tray	बंद करने के बाद मुख्य विंडो छिपाएँ और ट्रे में अलर्ट सूचनाएँ प्राप्त करते रहें.
+win.client.desc_tray_no_tray	बंद करने के बाद टास्कबार में न्यूनतम करें और बैकग्राउंड में अलर्ट सूचनाएँ प्राप्त करते रहें.
+win.client.hint	विंडो बंद बटन दबाने पर का व्यवहार. बंद संवाद में पहला चुनाव भी यहाँ स्वचालित रूप से दर्ज होता है.
+win.client.title	Windows क्लाइंट
+win.client.updated_toast	बंद करने का व्यवहार अद्यतन किया गया
+win.close.ask	हर बार पूछें
+win.close.quit	तुरंत प्रोग्राम से बाहर निकलें
+win.close.tray	बंद करने पर सिस्टम ट्रे में रहें
+win.close.tray_taskbar	बंद करने पर टास्कबार में न्यूनतम करें
+win.dialog.body_taskbar	प्रोग्राम से बाहर निकलें, या टास्कबार में न्यूनतम करके बैकग्राउंड में सर्वर अलर्ट प्राप्त करते रहें.
+win.dialog.body_tray	प्रोग्राम से बाहर निकलें, या सिस्टम ट्रे में रहकर बैकग्राउंड में सर्वर अलर्ट प्राप्त करते रहें.
+win.dialog.cancel	रद्द करें
+win.dialog.minimize	टास्कबार में न्यूनतम करें
+win.dialog.quit	बाहर निकलें
+win.dialog.stay_tray	ट्रे में रहें
+win.dialog.title	Cloud Monitor बंद करें
+youtube_视频_70a0be3df0	YouTube वीडियो
+一_d274eee8a1	1

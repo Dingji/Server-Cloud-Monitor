@@ -1,4 +1,6 @@
 package com.servermaintance.panel.screens
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -95,7 +97,9 @@ import com.servermaintance.panel.nav.Navigator
 import com.servermaintance.panel.nav.PageContent
 import com.servermaintance.panel.nav.PageId
 import com.servermaintance.panel.nav.Workspace
+import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.nav.entryOf
+import com.servermaintance.panel.nav.labelText
 import com.servermaintance.panel.nav.groupedNav
 import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.ui.AccentState
@@ -168,7 +172,7 @@ fun Root() {
     LaunchedEffect(hub) {
         hub.alertFeed.collect { a ->
             AppState.toast(
-                text = a.str("message").ifEmpty { "新告警" },
+                text = a.str("message").ifEmpty { tr("新告警_ae1159aaec") },
                 kind = if (a.str("level") == "bad") ToastKind.Err else ToastKind.Warn,
                 ms = 8000,
             )
@@ -365,7 +369,7 @@ private fun Sidebar(
                     Spacer(Modifier.size(10.dp))
                     Column(Modifier.weight(1f)) {
                         Text(
-                            text = "CLOUD MONITOR",
+                            text = L["cloud_monitor_5768a16d7b"],
                             color = Palette.text,
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace,
@@ -408,7 +412,7 @@ private fun Sidebar(
                 }
                 if (!rail && (pinnedEntries.isNotEmpty() || recentEntries.isNotEmpty())) {
                     if (pinnedEntries.isNotEmpty()) {
-                        NavSectionLabel("快捷")
+                        NavSectionLabel(L["快捷_14249f75ba"])
                         pinnedEntries.forEach { e ->
                             NavItem(
                                 entry = e, selected = current == e.id, rail = false,
@@ -417,7 +421,7 @@ private fun Sidebar(
                         }
                     }
                     if (recentEntries.isNotEmpty()) {
-                        NavSectionLabel("最近")
+                        NavSectionLabel(L["最近_8c73d90eca"])
                         recentEntries.take(5).forEach { e ->
                             NavItem(
                                 entry = e, selected = current == e.id, rail = false,
@@ -430,8 +434,8 @@ private fun Sidebar(
                             .height(1.dp).background(Palette.border),
                     )
                 }
-                groupedNav(relayAvailable, isAdmin).forEach { (section, items) ->
-                    if (!rail) NavSectionLabel(section)
+                groupedNav(relayAvailable, isAdmin).forEach { (sectionKey, items) ->
+                    if (!rail) NavSectionLabel(L[sectionKey])
                     items.forEach { e ->
                         NavItem(
                             entry = e,
@@ -520,7 +524,7 @@ private fun NavItem(
                 onLongClick = onTogglePin,
             )
             .semantics {
-                contentDescription = entry.label + if (pinned) "（已收藏，长按取消）" else ""
+                contentDescription = entry.labelText() + if (pinned) L["nav.pinned_hint"] else ""
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -538,7 +542,7 @@ private fun NavItem(
             PanelIcon(entry.icon, 16.dp, fg)
             if (!rail) {
                 Spacer(Modifier.size(11.dp))
-                Text(entry.label, color = fg, fontSize = 13.sp, maxLines = 1)
+                Text(entry.labelText(), color = fg, fontSize = 13.sp, maxLines = 1)
             }
         }
         if (!rail && onTogglePin != null && (pinned || hovered)) {
@@ -583,9 +587,9 @@ private fun ConnDot(state: HubState) {
 }
 
 private fun connText(state: HubState): String = when (state) {
-    HubState.Live -> "实时连接"
-    HubState.Reconnecting -> "重连中…"
-    HubState.Connecting -> "连接中"
+    HubState.Live -> L["实时连接_2e937edd01"]
+    HubState.Reconnecting -> L["重连中_90fd688269"]
+    HubState.Connecting -> L["连接中_699ade1654"]
 }
 
 /* ------------------------------------------------------------------ *
@@ -652,40 +656,40 @@ private fun TopBar(
                     if (!compact || platformHandheld) {
                     opsTotals?.let { o ->
                         if (o.probeDown > 0) {
-                            Chip("拨测 ${o.probeDown} 台不可用", tint = Palette.bad, onClick = { Navigator.go(PageId.OpsUptime) })
+                            Chip(trf("拨测_0_台不可用_faf5bff7d3", o.probeDown), tint = Palette.bad, onClick = { Navigator.go(PageId.OpsUptime) })
                             Spacer(Modifier.size(8.dp))
                         }
                         if (o.ruleFiring > 0) {
-                            Chip("告警规则 ${o.ruleFiring} 条触发中", tint = Palette.warn, onClick = { Navigator.go(PageId.OpsRules) })
+                            Chip(trf("告警规则_0_条触发中_86ea51451b", o.ruleFiring), tint = Palette.warn, onClick = { Navigator.go(PageId.OpsRules) })
                             Spacer(Modifier.size(8.dp))
                         }
                         if (o.failed24h > 0) {
-                            Chip("通知失败 ${o.failed24h}", tint = Palette.warn, onClick = { Navigator.go(PageId.OpsChannels) })
+                            Chip(trf("通知失败_0_68f2a78601", o.failed24h), tint = Palette.warn, onClick = { Navigator.go(PageId.OpsChannels) })
                             Spacer(Modifier.size(8.dp))
                         }
                     }
                     hostStats?.let { hs ->
                         if (hs.unreachable > 0) {
-                            Chip("纳管主机 ${hs.unreachable} 台不通", tint = Palette.warn, onClick = { Navigator.go(PageId.OpsHosts) })
+                            Chip(trf("纳管主机_0_台不通_6d0408c84f", hs.unreachable), tint = Palette.warn, onClick = { Navigator.go(PageId.OpsHosts) })
                             Spacer(Modifier.size(8.dp))
                         }
                     }
                     secReport?.let { sc ->
                         val issues = (sc.counts["bad"] ?: 0) + (sc.counts["warn"] ?: 0)
                         if (issues > 0) {
-                            Chip("基线 ${sc.score} 分 · $issues 项待处理", tint = Palette.warn, onClick = { Navigator.go(PageId.OpsSec) })
+                            Chip(trf("基线_0_分_1_项待处理_ae232d4842", sc.score, issues), tint = Palette.warn, onClick = { Navigator.go(PageId.OpsSec) })
                             Spacer(Modifier.size(8.dp))
                         }
                     }
                     watchStats?.let { ws ->
                         if (ws.down > 0) {
-                            Chip("服务看护 ${ws.down} 项不可用", tint = Palette.bad, onClick = { Navigator.go(PageId.OpsWatch) })
+                            Chip(trf("服务看护_0_项不可用_c20acfd5d7", ws.down), tint = Palette.bad, onClick = { Navigator.go(PageId.OpsWatch) })
                             Spacer(Modifier.size(8.dp))
                         }
                     }
-                    Chip("运行 " + uptimeOf(bundle))
+                    Chip(L["运行_51b0e86fe6"] + uptimeOf(bundle))
                         Spacer(Modifier.size(8.dp))
-                        Chip("负载 " + loadOf(bundle))
+                        Chip(L["负载_a00778c140"] + loadOf(bundle))
                         Spacer(Modifier.size(8.dp))
                     }
                     Chip(clock)
@@ -731,7 +735,7 @@ private fun TopRefreshButton(onClick: () -> Unit) {
                 spins += 1
                 onClick()
             }
-            .semantics { contentDescription = "刷新当前页面" },
+            .semantics { contentDescription = L["刷新当前页面_ea66e5616b"] },
         contentAlignment = Alignment.Center,
     ) {
         Box(Modifier.graphicsLayer { rotationZ = rotation.value }) {
@@ -796,7 +800,7 @@ private fun BellButton(unread: Int, onClick: () -> Unit) {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = if (unread > 99) "99+" else unread.toString(),
+                    text = if (unread > 99) L["99_c34d54846e"] else unread.toString(),
                     color = Color.White,
                     fontSize = 9.5.sp,
                     lineHeight = 11.sp,
@@ -850,14 +854,14 @@ private fun AlertBellMenu(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "告警中心",
+                    text = L["告警中心_ba945698e9"],
                     color = Palette.muted,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f),
                 )
                 Text(
-                    text = "全部标记已读",
+                    text = L["全部标记已读_5645f09d67"],
                     color = AccentState.current.secondary,
                     fontSize = 12.sp,
                     modifier = Modifier.clickable(
@@ -882,15 +886,15 @@ private fun AlertBellMenu(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                AlertFilterChip("全部 ${alerts.size}", level == "all") { level = "all" }
-                AlertFilterChip("错误 $badCount", level == "bad", Palette.bad) { level = "bad" }
-                AlertFilterChip("警告 $warnCount", level == "warn", Palette.warn) { level = "warn" }
+                AlertFilterChip(trf("全部_0_33a02d8846", alerts.size), level == "all") { level = "all" }
+                AlertFilterChip(L["错误_badcount_f4a4bdaa23"], level == "bad", Palette.bad) { level = "bad" }
+                AlertFilterChip(L["警告_warncount_676d0d869c"], level == "warn", Palette.warn) { level = "warn" }
             }
             Spacer(Modifier.size(6.dp))
 
             if (shown.isEmpty()) {
                 Text(
-                    text = if (alerts.isEmpty()) "暂无告警记录" else "没有符合条件的告警",
+                    text = if (alerts.isEmpty()) L["暂无告警记录_805d7ef9cc"] else L["没有符合条件的告警_5585202ce3"],
                     color = Palette.muted,
                     fontSize = 12.sp,
                     modifier = Modifier.fillMaxWidth().padding(14.dp),
@@ -907,12 +911,12 @@ private fun AlertBellMenu(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    "共 ${alerts.size} 条",
+                    trf("共_0_条_c3ba901cd9", alerts.size),
                     color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                     modifier = Modifier.weight(1f),
                 )
                 Text(
-                    "查看健康告警 →",
+                    L["查看健康告警_d870779eae"],
                     color = AccentState.current.secondary,
                     fontSize = 11.5.sp,
                     modifier = Modifier.clickable(

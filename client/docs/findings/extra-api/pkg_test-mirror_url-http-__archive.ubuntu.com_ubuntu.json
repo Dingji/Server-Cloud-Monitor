@@ -1,0 +1,10 @@
+{
+ "id": "custom",
+ "name": "自定义镜像",
+ "url": "http://archive.ubuntu.com/ubuntu",
+ "reachable": true,
+ "http_code": "200",
+ "latency_ms": 1869,
+ "release": "http://archive.ubuntu.com/ubuntu/dists/resolute/Release",
+ "ok": true
+}

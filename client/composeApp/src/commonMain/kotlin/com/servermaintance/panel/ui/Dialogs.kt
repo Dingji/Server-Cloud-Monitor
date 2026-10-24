@@ -1,4 +1,6 @@
 package com.servermaintance.panel.ui
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -128,14 +130,14 @@ object Modal {
     val isOpen: Boolean get() = display.value != null
 
     /** 确认框：确定 true，取消/点遮罩 false。 */
-    suspend fun confirm(title: String, text: String, okText: String = "确认", danger: Boolean = false): Boolean =
+    suspend fun confirm(title: String, text: String, okText: String = L["确认_b56d9ac6c5"], danger: Boolean = false): Boolean =
         show(Request.Confirm(title, text, okText, danger), false) as Boolean
 
     /** 表单弹窗：取消返回 null，确认返回 name -> value 映射。 */
     suspend fun prompt(
         title: String,
         fields: List<FormField>,
-        okText: String = "确认",
+        okText: String = L["确认_b56d9ac6c5"],
         danger: Boolean = false,
     ): Map<String, String>? {
         @Suppress("UNCHECKED_CAST")
@@ -143,7 +145,7 @@ object Modal {
     }
 
     /** 输出弹窗：展示命令输出，关闭后返回。 */
-    suspend fun output(title: String, text: String, isError: Boolean = false, okText: String = "关闭") {
+    suspend fun output(title: String, text: String, isError: Boolean = false, okText: String = L["关闭_6c14bd7f6f"]) {
         show(Request.Output(title, text, isError, okText), Unit)
     }
 
@@ -280,9 +282,9 @@ private fun ModalBody(req: Modal.Request) {
                 if (req is Modal.Request.Output) {
                     Spacer(Modifier.width(8.dp))
                     if (req.isError) {
-                        LevelBadge("失败", Level.Bad)
+                        LevelBadge(L["失败_3e3c8068bb"], Level.Bad)
                     } else {
-                        LevelBadge("成功", Level.Ok)
+                        LevelBadge(L["成功_51991a5d11"], Level.Ok)
                     }
                 }
             }
@@ -343,14 +345,14 @@ private fun ModalBody(req: Modal.Request) {
             ) {
                 when (req) {
                     is Modal.Request.Output -> {
-                        GhostBtn("复制", onClick = {
+                        GhostBtn(L["复制_4edd1d0087"], onClick = {
                             platformClipboard.copy(req.text)
-                            AppState.toast("已复制到剪贴板", ToastKind.Ok)
+                            AppState.toast(tr("已复制到剪贴板_c2bb6d50ae"), ToastKind.Ok)
                         }, icon = "copy")
                         PrimaryBtn(req.okText, onClick = { scope.launch { Modal.resolve(Unit) } })
                     }
                     else -> {
-                        GhostBtn("取消", onClick = { scope.launch { Modal.resolve(Modal.cancelResult(req)) } })
+                        GhostBtn(L["win.dialog.cancel"], onClick = { scope.launch { Modal.resolve(Modal.cancelResult(req)) } })
                         val onOk: () -> Unit = {
                             scope.launch { Modal.resolve(Modal.okResult(req, values.toMap())) }
                         }

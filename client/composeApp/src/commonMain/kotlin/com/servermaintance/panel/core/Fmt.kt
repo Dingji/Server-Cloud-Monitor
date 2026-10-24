@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -64,10 +66,10 @@ object Fmt {
         val m = (total % 3600) / 60
         val s = total % 60
         return when {
-            d > 0 -> "${d}天 ${h}时"
-            h > 0 -> "${h}时 ${m}分"
-            m > 0 -> "${m}分"
-            else -> "${s}秒"
+            d > 0 -> trf("0_天_1_时_06912b75e4", d, h)
+            h > 0 -> trf("0_时_1_分_931e50328b", h, m)
+            m > 0 -> trf("0_分_3f3ebd2c26", m)
+            else -> trf("0_秒_05854e946f", s)
         }
     }
 
@@ -120,11 +122,11 @@ object Fmt {
         if (ms <= 0L) return "--"
         val diff = nowEpochMillis() - ms
         return when {
-            diff < 10_000 -> "刚刚"
-            diff < 60_000 -> "${diff / 1000} 秒前"
-            diff < 3_600_000 -> "${diff / 60_000} 分钟前"
-            diff < 86_400_000 -> "${diff / 3_600_000} 小时前"
-            diff < 7L * 86_400_000 -> "${diff / 86_400_000} 天前"
+            diff < 10_000 -> L["刚刚_9e636642d6"]
+            diff < 60_000 -> trf("0_秒前_4d681dc42c", diff / 1000)
+            diff < 3_600_000 -> trf("0_分钟前_607909447d", diff / 60_000)
+            diff < 86_400_000 -> trf("0_小时前_87a6439b2e", diff / 3_600_000)
+            diff < 7L * 86_400_000 -> trf("0_天前_9094e27946", diff / 86_400_000)
             else -> dateTime(t)
         }
     }

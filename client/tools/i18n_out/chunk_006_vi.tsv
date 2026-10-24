@@ -1,0 +1,120 @@
+分析_9c00c951b8	Phân tích
+分析数据库_27120f4e22	Phân tích cơ sở dữ liệu
+分类_435c5259e4	Danh mục
+分组_97d8a6c05b	Nhóm
+分节_0_72a336b550	Phần {0}
+分节_cc61ad798e	Phần
+分节_i_1_f0d1636fb2	Phần ${i + 1}
+切换使用_440dcd4a60	Chuyển sử dụng
+切换到_dcfa6ff76a	Chuyển tới
+切换到此源_6a51392f3d	Chuyển tới nguồn này
+切换到浅色主题_68c147dbb8	Chuyển sang giao diện sáng
+切换到深色主题_81f29dbac3	Chuyển sang giao diện tối
+切换告警中心_6ee18893d6	Chuyển trung tâm cảnh báo
+切换失败_9e2fdc4fee	Chuyển đổi thất bại
+切换失败_已回滚_c0cfb2c6b5	Chuyển đổi thất bại (đã hoàn tác)
+切换并刷新索引_90b6357c92	Chuyển và làm mới chỉ mục
+切换强调色_750952d685	Đổi màu nhấn
+切换成功后会清理旧镜像残留索引_避免搜索结果_3a16b0a93b	· Sau khi chuyển thành công, chỉ mục còn sót của gương cũ sẽ được dọn sạch để kết quả tìm kiếm không trộn lẫn nguồn.
+切换数据库_a1ab00957c	Chuyển cơ sở dữ liệu
+切换率_0_5f66fea7ee	Tỷ lệ chuyển {0}%
+切换率_0_尝试_请求_1_549548a929	Tỷ lệ chuyển {0}% · Thử/yêu cầu {1}
+切换软件源_1d685b5c20	Đổi nguồn phần mềm
+切换镜像会先备份源文件_改写后立即执行_ap_b31cb7b626	· Khi đổi gương, tệp nguồn sẽ được sao lưu trước và apt-get update chạy ngay sau khi ghi lại; nếu làm mới thất bại, hệ thống tự động hoàn tác về gương gốc.
+列_ad3ee64830	Cột
+列_逗号分隔_e6b76472d6	Cột (phân tách bằng dấu phẩy)
+列a_列b_276b732289	\n| Cột A | Cột B |\n| --- | --- |\n|  |  |\n
+列列表_逗号分隔_3fbb861c18	Danh sách cột (phân tách bằng dấu phẩy)
+列名_56dc7e14b9	Tên cột
+列名_目标列_93b57e8329	Tên cột / cột đích
+列注释_9f54addfdc	Chú thích cột
+列目录中_1d7fe661c3	Đang liệt kê thư mục…
+列结构_d6bcf00979	Cấu trúc cột
+列表_7d9b515037	• Danh sách
+刚刚_9e636642d6	Vừa xong
+创建_0_b962ace170	Tạo {0}
+创建_0_f7fa88a48a	Tạo {0}?
+创建_acl_用户_cd96ef0588	Tạo người dùng ACL
+创建_fcbd093292	Tạo
+创建_notebox_账号并分配角色_2911541ceb	Tạo tài khoản NoteBox và phân vai trò
+创建_替换_c8d121c449	Tạo/Thay thế
+创建于_f3b01f3f1a	Tạo lúc
+创建任务_cf42fd678f	Tạo tác vụ
+创建备份_f4587bf8b2	Tạo bản sao lưu
+创建失败_deb3990191	Tạo thất bại
+创建定时任务_cc992174ac	Tạo tác vụ định kỳ
+创建数据库_1bf70a1209	Tạo cơ sở dữ liệu
+创建时间_84e3802f60	Thời gian tạo
+创建每日自动备份_7c94d434a4	Tạo sao lưu tự động hàng ngày
+创建用户_315315d695	Tạo người dùng
+创建用户_name_sudosuffix_423f11e860	Tạo người dùng $name$sudoSuffix?
+创建用户_角色_87bba5f559	Tạo người dùng/vai trò
+创建的用户拥有_all_全部键_全_2da1a3462f	Người dùng được tạo có ~* +@all (tất cả phím + tất cả lệnh); tinh chỉnh quyền bằng ACL SETUSER.
+创建索引_39988166a9	Tạo chỉ mục
+创建维护计划_04a82258e7	Tạo kế hoạch bảo trì
+创建角色_24cf247879	Tạo vai trò
+创建计划_bddda94d14	Tạo kế hoạch
+删_38cadf487e	Xóa
+删凭据_578de9d115	Xóa thông tin xác thực
+删除_0_1fbd66c221	Xóa {0}?
+删除_0_a1ee4b1af0	Xóa {0} ?
+删除_0_c27e726e6d	Xóa “{0}”?
+删除_0_on_1_fb3815f989	Xóa {0} on {1} ?
+删除_0_不可恢复_122855ffb8	Xóa {0}? Không thể khôi phục.
+删除_0_不可恢复_935f255ade	Xóa {0} ? Không thể khôi phục!
+删除_0_其中的待办与子清单会移动到上一级_a7634c43e7	Xóa “{0}”? Các việc cần làm và danh sách con bên trong sẽ được chuyển lên một cấp, không bị xóa.
+删除_0_其中的笔记与子归类会移动到上一级_327496c4d8	Xóa “{0}”? Các ghi chú và danh mục con bên trong sẽ được chuyển lên một cấp, không bị xóa.
+删除_0_历史事件仍保留_d3e46884f0	Xóa “{0}”? Sự kiện lịch sử vẫn được giữ lại.
+删除_0_及其全部集合_不可恢复_27bf2aa4e3	Xóa {0} và tất cả bộ sưu tập của nó? Không thể khôi phục!
+删除_0_及其后续统计_已归档的按日数据仍保_79a549e6e8	Xóa “{0}” và số liệu thống kê tiếp theo? Dữ liệu theo ngày đã lưu trữ vẫn được giữ lại.
+删除_0_引用它的规则将不再向该渠道推送_2a68290638	Xóa “{0}”? Các quy tắc tham chiếu nó sẽ không còn đẩy vào kênh này.
+删除_0_该角色拥有的对象可能变为无主_81db941aef	Xóa {0} ? Các đối tượng thuộc vai trò này có thể trở thành mồ côi.
+删除_3755f56f2f	Xóa
+删除_c_name_引用它的规则将不再向_a15854651b	Xóa “${c.name}”? Các quy tắc tham chiếu nó sẽ không còn đẩy vào kênh này.
+删除_e_name_历史事件仍保留_7c4f97a765	Xóa “${e.name}”? Sự kiện lịch sử vẫn được giữ lại.
+删除_folder_name_其中的待办_8acd8d3681	Xóa “${folder.name}”? Các việc cần làm và danh sách con bên trong sẽ được chuyển lên một cấp, không bị xóa.
+删除_folder_name_其中的笔记_02f00181b7	Xóa “${folder.name}”? Các ghi chú và danh mục con bên trong sẽ được chuyển lên một cấp, không bị xóa.
+删除_h_label_的_ssh_凭据_采_714dcba255	Xóa thông tin SSH của “{0}”? Thu thập sẽ dừng cho đến khi cấu hình lại.
+删除_id_0_5757172d9f	Xóa _id = {0} ?
+删除_id_id_9f0c4ee411	Xóa _id = $id ?
+删除_it_name_不可恢复_2e58b9d314	Xóa ${it.name}? Không thể khôi phục.
+删除_item_name_不可恢复_196f667e1b	Xóa ${item.name}? Không thể khôi phục.
+删除_job_file_0df6f1b1c0	Xóa ${job.file}?
+删除_k_不可恢复_7f04e8d988	Xóa $k ? Không thể khôi phục!
+删除_n_447134e66a	Xóa $n ?
+删除_n_及其全部集合_不可恢复_75c0387e71	Xóa $n và tất cả bộ sưu tập của nó? Không thể khôi phục!
+删除_name_该角色拥有的对象可能变为无主_444ea2ccd8	Xóa $name ? Các đối tượng thuộc vai trò này có thể trở thành mồ côi.
+删除_r_name_历史事件仍保留_d216275bef	Xóa “${r.name}”? Sự kiện lịch sử vẫn được giữ lại.
+删除_s_name_62446c983c	Xóa “${s.name}”?
+删除_tgname_trim_on_61b891ec54	Xóa ${tgName.trim()} on ${tgTable.trim()} ?
+删除_ufw_规则_n_969e18703f	Xóa quy tắc UFW #$n?
+删除_var_cache_apt_archiv_4cd0531496	Xóa các gói đã tải xuống trong /var/cache/apt/archives
+删除_x_name_及其后续统计_已归档的_f9923c3d24	Xóa “${x.name}” và số liệu thống kê tiếp theo? Dữ liệu theo ngày đã lưu trữ vẫn được giữ lại.
+删除主机_643f7d4bb9	Xóa máy chủ
+删除事项_0_fd51d58bcb	Xóa mục “{0}”?
+删除事项_baf69ed21f	Xóa mục
+删除事项_t_title_86546066a3	Xóa mục “${t.title}”?
+删除全部_0_条已完成事项_edea779a77	Xóa tất cả {0} mục đã hoàn thành?
+删除全部_n_条已完成事项_c6c82b6be8	Xóa tất cả $n mục đã hoàn thành?
+删除公钥_b83efa4dbe	Xóa khóa công khai
+删除凭据_35bc7d6ff1	Xóa thông tin xác thực
+删除列_16f1347814	Xóa cột
+删除到回收站_f418fcf1e6	Chuyển vào thùng rác
+删除后持有该密钥的客户端将无法登录_1d472813e0	Sau khi xóa, các máy khách giữ khóa này sẽ không thể đăng nhập nữa.
+删除后无法恢复_确认删除该密钥_68e3c91b1d	Không thể khôi phục. Xóa khóa này?
+删除告警规则_fb9b26e21f	Xóa quy tắc cảnh báo
+删除备份_749438d2de	Xóa bản sao lưu
+删除备份文件_df6543f316	Xóa tệp sao lưu
+删除失败_72250c5922	Xóa thất bại
+删除子任务_165f2995e1	Xóa tác vụ con
+删除定时任务_cbbfd7d59d	Xóa tác vụ định kỳ
+删除容器_c1cbe14e79	Xóa container
+删除密钥_8017614a47	Xóa khóa
+删除已下载的_deb_安装包_释放_0_不_dc8e1f42c6	Xóa các gói .deb đã tải xuống để giải phóng {0}. Phần mềm đã cài đặt không bị ảnh hưởng.
+删除归类_f282b52e6b	Xóa danh mục
+删除拨测任务_2193297dfe	Xóa tác vụ thăm dò
+删除数据库_f0f7b49980	Xóa cơ sở dữ liệu
+删除文档_e7adbd575b	Xóa tài liệu
+删除时间_8d55c8d894	Thời gian xóa
+删除模式_0_及其全部对象_cascade_6336954e53	Xóa lược đồ {0} và tất cả đối tượng của nó (CASCADE)?
+删除模式_77bed2385b	Xóa lược đồ

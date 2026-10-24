@@ -1,6 +1,9 @@
 @file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
@@ -146,8 +149,8 @@ internal object MonFmt {
     /** slo.js 的 fmtSec。 */
     fun secs(v: Double?): String = when {
         v == null || v.isNaN() -> "—"
-        v >= 60 -> fixed(v / 60, 1) + " 分"
-        else -> fixed(v, 2) + " 秒"
+        v >= 60 -> fixed(v / 60, 1) + L["分_decb3b3262"]
+        else -> fixed(v, 2) + L["秒_d9ad5055c3"]
     }
 
     fun pct1(v: Double): String = fixed(v, 1) + "%"
@@ -213,18 +216,18 @@ private data class HistPt(val label: String, val ts: Long, val c: Double, val m:
 private const val HIST_MAX = 1500
 private const val HIST_STEP_TARGET = 400
 
-private val RANGES = listOf("10m" to "10分钟", "1h" to "1小时", "6h" to "6小时", "24h" to "24小时")
+private val RANGES  get() = listOf("10m" to L["10分钟_b82d31194e"], "1h" to L["1小时_3a9a579a96"], "6h" to L["6小时_57937ccefc"], "24h" to L["24小时_45a2727884"])
 
 /** 仪表盘快捷操作：把高频跨页动作收拢到首屏（横向滚动，双端一致）。 */
 @Composable
 private fun DashQuickActions() {
     val items = listOf(
-        Triple("Web 终端", "terminal", PageId.Terminal),
-        Triple("日志中心", "logs", PageId.Logs),
-        Triple("备份中心", "archive", PageId.Backups),
-        Triple("健康告警", "shieldAlert", PageId.HealthAlerts),
-        Triple("待办清单", "checkSquare", PageId.Todos),
-        Triple("笔记", "note", PageId.Notes),
+        Triple(L["nav.terminal"], "terminal", PageId.Terminal),
+        Triple(L["nav.logs"], "logs", PageId.Logs),
+        Triple(L["nav.backups"], "archive", PageId.Backups),
+        Triple(L["nav.health_alerts"], "shieldAlert", PageId.HealthAlerts),
+        Triple(L["nav.todos"], "checkSquare", PageId.Todos),
+        Triple(L["nav.notes"], "note", PageId.Notes),
     )
     Row(
         Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
@@ -275,7 +278,7 @@ fun DashboardPage() {
     var histBaseTs by remember { mutableLongStateOf(0L) }
     var histGen by remember { mutableLongStateOf(0L) }
     var histError by remember { mutableStateOf<String?>(null) }
-    var histRange by remember { mutableStateOf("1h") }
+    var histRange by remember { mutableStateOf(L["1h_e9c9f7bc39"]) }
 
     suspend fun loadSnapshot() {
         runCatching { overview = AppState.api.get("/overview") as? JsonObject }
@@ -286,7 +289,7 @@ fun DashboardPage() {
             relayHealth = AppState.api.get("/relay/health", 5000) as? JsonObject
             relayProviders = AppState.api.get("/relay/providers", 5000) as? JsonObject
         }
-        relayError = if (relay.isFailure) relay.exceptionOrNull()?.message ?: "中继不可达" else null
+        relayError = if (relay.isFailure) relay.exceptionOrNull()?.message ?: L["中继不可达_007961f659"] else null
     }
 
     suspend fun loadHistory(range: String) {
@@ -313,7 +316,7 @@ fun DashboardPage() {
                 histError = null
             }
         }.onFailure { e ->
-            if (gen == histGen) histError = e.message ?: "历史加载失败"
+            if (gen == histGen) histError = e.message ?: L["历史加载失败_26115dcd28"]
         }
     }
 
@@ -409,21 +412,21 @@ fun DashboardPage() {
     val mounts = (disksNow?.arr("mounts") ?: emptyList())
         .filterIsInstance<JsonObject>().take(6)
 
-    PageScaffold(title = "仪表盘", desc = "服务器与中继的实时运行状态总览") {
+    PageScaffold(title = L["nav.dashboard"], desc = L["服务器与中继的实时运行状态总览_60878a881c"]) {
 
         DashQuickActions()
         Spacer(Modifier.height(10.dp))
 
         /* ---- A1 主机信息头卡 ---- */
-        PanelCard(title = "主机信息", cardKey = "dash-head", collapsible = false) {
+        PanelCard(title = L["主机信息_6077af5546"], cardKey = "dash-head", collapsible = false) {
             val refreshMs = me?.long("refreshMs") ?: 2000L
             if (platformHandheld) {
                 Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    HeadKV("主机", info?.str("hostname") ?: "—")
-                    HeadKV("系统", info?.str("osName") ?: "—")
-                    HeadKV("内核", info?.str("kernel") ?: "—")
+                    HeadKV(L["主机_2e8a0cf711"], info?.str("hostname") ?: "—")
+                    HeadKV(L["nav.section.system"], info?.str("osName") ?: "—")
+                    HeadKV(L["内核_8f190c51d6"], info?.str("kernel") ?: "—")
                     HeadKV("CPU", cpuModelLine(info))
-                    HeadKV("公网IP", info?.str("publicIp")?.ifEmpty { "—" } ?: "—")
+                    HeadKV(L["公网ip_de8bbe24d6"], info?.str("publicIp")?.ifEmpty { "—" } ?: "—")
                     DashRefreshBadge(refreshMs)
                 }
             } else {
@@ -437,11 +440,11 @@ fun DashboardPage() {
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.weight(1f, fill = true),
                 ) {
-                    HeadKV("主机", info?.str("hostname") ?: "—")
-                    HeadKV("系统", info?.str("osName") ?: "—")
-                    HeadKV("内核", info?.str("kernel") ?: "—")
+                    HeadKV(L["主机_2e8a0cf711"], info?.str("hostname") ?: "—")
+                    HeadKV(L["nav.section.system"], info?.str("osName") ?: "—")
+                    HeadKV(L["内核_8f190c51d6"], info?.str("kernel") ?: "—")
                     HeadKV("CPU", cpuModelLine(info))
-                    HeadKV("公网IP", info?.str("publicIp")?.ifEmpty { "—" } ?: "—")
+                    HeadKV(L["公网ip_de8bbe24d6"], info?.str("publicIp")?.ifEmpty { "—" } ?: "—")
                 }
                     DashRefreshBadge(refreshMs)
                 }
@@ -451,9 +454,9 @@ fun DashboardPage() {
         /* ---- A2 四张磁贴 ---- */
         GridLayout(columns = 4, spacing = 12.dp) {
             StatTile(
-                label = "CPU 使用率",
+                label = L["cpu_使用率_bdf91f384b"],
                 value = MonFmt.fixed(cpuPct, 1) + "%",
-                sub = "$coreCount 核高负载 · $coresTotal 核",
+                sub = trfn("corecount_核高负载_cores_afc43a96da", "coreCount" to coreCount, "coresTotal" to coresTotal),
                 pct = cpuPct,
                 icon = "cpu",
                 /* 面板在 CPU≥90 时把数值闪红（dashboard.js flashValue）；Compose 里用
@@ -468,7 +471,7 @@ fun DashboardPage() {
                 },
             )
             StatTile(
-                label = "内存使用率",
+                label = L["内存使用率_51cc7e4578"],
                 value = MonFmt.fixed(memUsedPct, 1) + "%",
                 sub = "${Fmt.bytes(memTotal - memAvail)} / ${Fmt.bytes(memTotal)} · swap ${MonFmt.fixed(swapPct, 0)}%",
                 pct = memUsedPct,
@@ -482,9 +485,9 @@ fun DashboardPage() {
                 },
             )
             StatTile(
-                label = "根分区",
+                label = L["根分区_e2b4769fcd"],
                 value = MonFmt.fixed(rootM?.num("pct") ?: 0.0, 1) + "%",
-                sub = "${Fmt.bytes(rootM?.num("used") ?: 0.0)} / ${Fmt.bytes(rootM?.num("total") ?: 0.0)} · 可用 ${Fmt.bytes(rootM?.num("avail") ?: 0.0)}",
+                sub = trf("0_1_可用_2_c84859c95e", Fmt.bytes(rootM?.num("used") ?: 0.0), Fmt.bytes(rootM?.num("total") ?: 0.0), Fmt.bytes(rootM?.num("avail") ?: 0.0)),
                 pct = rootM?.num("pct"),
                 icon = "disk",
                 tail = {
@@ -496,10 +499,10 @@ fun DashboardPage() {
                 },
             )
             StatTile(
-                label = "网络流量",
+                label = L["网络流量_40150f52d6"],
                 value = Fmt.bps(rx),
-                sub = "上行 ${Fmt.bps(tx)}" +
-                    (if (netLimit > 125000) " · 上限 ${MonFmt.fixed(netLimit / 1e6, 1)} Mbps" else " · 基准 1 Mbps"),
+                sub = trf("上行_0_e7ca85b68b", Fmt.bps(tx)) +
+                    (if (netLimit > 125000) trf("上限_0_mbps_93f67c2890", MonFmt.fixed(netLimit / 1e6, 1)) else L["基准_1_mbps_d5ed3c882d"]),
                 pct = netPct,
                 icon = "activity",
                 tail = {
@@ -517,7 +520,7 @@ fun DashboardPage() {
 
         /* ---- A3 系统健康 + A4 OpenCode 中继 ---- */
         GridLayout(columns = 2, spacing = 12.dp) {
-            PanelCard(title = "系统健康", cardKey = "dash-health") {
+            PanelCard(title = L["系统健康_c628dff7ac"], cardKey = "dash-health") {
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -528,21 +531,21 @@ fun DashboardPage() {
                         verticalArrangement = Arrangement.spacedBy(6.dp),
                         modifier = Modifier.weight(1f, fill = true),
                     ) {
-                        Chip("服务 ${svcCounts?.int("running") ?: 0} 运行", tone = Level.Ok)
-                        if (failedCount > 0) Chip("$failedCount 个服务失败", tone = Level.Bad)
-                        else Chip("无失败服务", tone = Level.Ok)
+                        Chip(trf("服务_0_运行_46e63016be", svcCounts?.int("running") ?: 0), tone = Level.Ok)
+                        if (failedCount > 0) Chip(trfn("failedcount_个服务失败_4bb48044cc", "failedCount" to failedCount), tone = Level.Bad)
+                        else Chip(L["无失败服务_4b73cd3229"], tone = Level.Ok)
                         if (temps.isNotEmpty()) {
                             val t = temps.mapNotNull { p -> p.int("celsius").takeIf { it > 0 } }
-                            if (t.isNotEmpty()) Chip("温度 " + t.joinToString(" / ") { "$it°" }, tone = Level.Info)
+                            if (t.isNotEmpty()) Chip(L["温度_cc6b6c25c5"] + t.joinToString(" / ") { "$it°" }, tone = Level.Info)
                         }
-                        if (alertCfg?.bool("enabled") == true) Chip("告警防护开启", tone = Level.Info)
-                        else Chip("告警已关闭", tone = Level.Muted)
+                        if (alertCfg?.bool("enabled") == true) Chip(L["告警防护开启_c43dfbff06"], tone = Level.Info)
+                        else Chip(L["告警已关闭_a1c9fab7d6"], tone = Level.Muted)
                     }
                     Text(healthClock(m), color = Palette.muted, fontSize = 12.sp)
                 }
                 if (services == null) {
                     Spacer(Modifier.height(6.dp))
-                    Text("检查中", color = Palette.muted, fontSize = 12.sp)
+                    Text(L["检查中_9908c922f2"], color = Palette.muted, fontSize = 12.sp)
                 }
                 alerts.take(3).forEach { a ->
                     val bad = a.str("level") == "bad"
@@ -564,9 +567,9 @@ fun DashboardPage() {
             }
 
             PanelCard(
-                title = "OpenCode 中继",
+                title = L["opencode_中继_2e021ee797"],
                 cardKey = "dash-relay",
-                right = { GhostBtn(text = "详情", onClick = { openRelay() }) },
+                right = { GhostBtn(text = L["详情_4f55ee1e68"], onClick = { openRelay() }) },
             ) {
                 val err = relayError
                 val s = relaySummary
@@ -574,9 +577,9 @@ fun DashboardPage() {
                     err != null -> Row(verticalAlignment = Alignment.CenterVertically) {
                         PanelIcon("warning", 13.dp, Color(0xFFF87171))
                         Spacer(Modifier.width(5.dp))
-                        Text("中继不可达: ${err.take(40)}", color = Color(0xFFF87171), fontSize = 12.sp)
+                        Text(trf("中继不可达_0_2d85034a73", err.take(40)), color = Color(0xFFF87171), fontSize = 12.sp)
                     }
-                    s == null -> Text("加载中", color = Palette.muted, fontSize = 12.sp)
+                    s == null -> Text(L["加载中_ce56f617e4"], color = Palette.muted, fontSize = 12.sp)
                     else -> {
                         val h = relayHealth
                         val providers = relayProviders?.arr("providers")?.filterIsInstance<JsonObject>() ?: emptyList()
@@ -587,15 +590,15 @@ fun DashboardPage() {
                             verticalArrangement = Arrangement.spacedBy(6.dp),
                             modifier = Modifier.fillMaxWidth(),
                         ) {
-                            Chip(if (ok) "采集器 运行中" else "采集器 异常", tone = if (ok) Level.Ok else Level.Bad)
-                            Chip("今日 ${MonFmt.num(s.long("requests_today"))} 请求", tone = Level.Info)
+                            Chip(if (ok) L["采集器_运行中_1008e60763"] else L["采集器_异常_1fe6994cc1"], tone = if (ok) Level.Ok else Level.Bad)
+                            Chip(trf("今日_0_请求_f79a1b4d82", MonFmt.num(s.long("requests_today"))), tone = Level.Info)
                             val sr = s.num("success_rate")
-                            Chip("成功率 ${MonFmt.fixed(sr, 1)}%", tone = if (sr >= 95) Level.Ok else Level.Warn)
+                            Chip(trf("成功率_0_047cd91c6c", MonFmt.fixed(sr, 1)), tone = if (sr >= 95) Level.Ok else Level.Warn)
                             Chip("P95 ${MonFmt.fixed(s.num("p95_latency"), 0)}ms", tone = Level.Muted)
                             providers.forEach { p ->
                                 val ex = p.bool("exhausted")
                                 val name = p.str("label").ifEmpty { p.str("id") }
-                                Chip("$name ${if (ex) "耗尽" else "可用"}", tone = if (ex) Level.Bad else Level.Ok)
+                                Chip(trf("0_1_b245f58149", name, if (ex) L["耗尽_f67eb4df89"] else L["可用_e91365cf9e"]), tone = if (ex) Level.Bad else Level.Ok)
                             }
                         }
                         if (badProv > 0) {
@@ -603,7 +606,7 @@ fun DashboardPage() {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 PanelIcon("warning", 13.dp, Color(0xFFF87171))
                                 Spacer(Modifier.width(5.dp))
-                                Text("$badProv 个供应商配额耗尽", color = Color(0xFFF87171), fontSize = 12.sp)
+                                Text(trfn("badprov_个供应商配额耗尽_363bea5ae6", "badProv" to badProv), color = Color(0xFFF87171), fontSize = 12.sp)
                             }
                         }
                     }
@@ -620,7 +623,11 @@ fun DashboardPage() {
                     mounts, topRows, uptimeText,
                     if (procsObj != null) "${procsObj.int("running")} / ${procsObj.int("total")}" else "—",
                     loadAvgText,
-                    "${Fmt.bps(ioObj?.num("readBps") ?: 0.0)} 读 · ${Fmt.bps(ioObj?.num("writeBps") ?: 0.0)} 写",
+                    trf(
+                        "0_0_读_fmt_bps_b7eb78a0b5",
+                        Fmt.bps(ioObj?.num("readBps") ?: 0.0),
+                        Fmt.bps(ioObj?.num("writeBps") ?: 0.0),
+                    ),
                 )
             } else {
                 Row(Modifier.fillMaxWidth()) {
@@ -633,7 +640,11 @@ fun DashboardPage() {
                             mounts, topRows, uptimeText,
                             if (procsObj != null) "${procsObj.int("running")} / ${procsObj.int("total")}" else "—",
                             loadAvgText,
-                            "${Fmt.bps(ioObj?.num("readBps") ?: 0.0)} 读 · ${Fmt.bps(ioObj?.num("writeBps") ?: 0.0)} 写",
+                            trf(
+                                "0_0_读_fmt_bps_b7eb78a0b5",
+                                Fmt.bps(ioObj?.num("readBps") ?: 0.0),
+                                Fmt.bps(ioObj?.num("writeBps") ?: 0.0),
+                            ),
                         )
                     }
                 }
@@ -661,11 +672,11 @@ private fun DashLeft(
     /* A5 历史趋势 */
     val note = when {
         histError != null -> histError!!
-        histPts.isEmpty() -> "无采样点"
-        else -> "${histPts.size} 个点 · 实时滚动中"
+        histPts.isEmpty() -> L["无采样点_920b2e00a7"]
+        else -> trf("0_个点_实时滚动中_01b91b1d0c", histPts.size)
     }
     PanelCard(
-        title = "历史趋势",
+        title = L["历史趋势_83a53b6a5f"],
         cardKey = "dash-hist",
         right = {
             Text(note, color = Palette.muted, fontSize = 11.sp, modifier = Modifier.padding(end = 8.dp))
@@ -678,8 +689,8 @@ private fun DashLeft(
         MultiLineChart(
             series = listOf(
                 "CPU%" to histPts.map { it.c.toFloat() },
-                "内存%" to histPts.map { it.m.toFloat() },
-                "磁盘%" to histPts.map { it.d.toFloat() },
+                L["内存_a8fa8ac31a"] to histPts.map { it.m.toFloat() },
+                L["磁盘_816293691b"] to histPts.map { it.d.toFloat() },
             ),
             yMin = 0f,
             yMax = 100f,
@@ -688,7 +699,7 @@ private fun DashLeft(
     }
 
     /* A6 CPU 使用率 % */
-    PanelCard(title = "CPU 使用率 %", cardKey = "dash-cpu") {
+    PanelCard(title = L["cpu_使用率_35b17729e2"], cardKey = "dash-cpu") {
         LineChart(
             points = cpuSeries,
             fill = true,
@@ -700,15 +711,15 @@ private fun DashLeft(
 
     /* A7 + A8 */
     GridLayout(columns = 2, spacing = 12.dp) {
-        PanelCard(title = "内存 / 交换 (MB)", cardKey = "dash-mem") {
+        PanelCard(title = L["内存_交换_mb_69caca4bab"], cardKey = "dash-mem") {
             MultiLineChart(
-                series = listOf("内存" to memSeries, "交换" to swapSeries),
+                series = listOf(L["内存_d014ab7703"] to memSeries, L["交换_33295d6781"] to swapSeries),
                 yFormat = { Fmt.bytes(it * 1048576.0).replace(" ", "") },
             )
         }
-        PanelCard(title = "网络吞吐 (KB/s)", cardKey = "dash-net") {
+        PanelCard(title = L["网络吞吐_kb_s_e4170c683f"], cardKey = "dash-net") {
             MultiLineChart(
-                series = listOf("下行" to rxSeries, "上行" to txSeries),
+                series = listOf(L["下行_2cb0afbe5d"] to rxSeries, L["上行_adb863cd70"] to txSeries),
                 yFormat = { "${it.toInt()}K" },
             )
         }
@@ -729,9 +740,9 @@ private fun DashRight(
     ioText: String,
 ) {
     /* A9 磁盘用量 */
-    PanelCard(title = "磁盘用量", cardKey = "dash-disks") {
+    PanelCard(title = L["磁盘用量_240cb16114"], cardKey = "dash-disks") {
         if (mounts.isEmpty()) {
-            Text("暂无挂载点", color = Palette.muted, fontSize = 12.sp)
+            Text(L["暂无挂载点_d25afc47c8"], color = Palette.muted, fontSize = 12.sp)
         }
         mounts.forEach { d ->
             val pct = d.num("pct")
@@ -800,19 +811,19 @@ private fun DashRight(
     }
 
     /* A10 CPU 占用 Top */
-    PanelCard(title = "CPU 占用 Top", cardKey = "dash-top") {
+    PanelCard(title = L["cpu_占用_top_52d0789676"], cardKey = "dash-top") {
         DataTable(
             columns = listOf(
                 TableCol<JsonObject>(title = "PID", weight = 0.7f, align = TextAlign.End, mono = true) {
                     TableText(it.long("pid").toString(), mono = true, textAlign = TextAlign.End)
                 },
-                TableCol<JsonObject>(title = "CPU%", weight = 0.7f, align = TextAlign.End, mono = true) {
+                TableCol<JsonObject>(title = L["cpu_99af5977d6"], weight = 0.7f, align = TextAlign.End, mono = true) {
                     TableText(MonFmt.fixed(it.num("cpu"), 1), mono = true, textAlign = TextAlign.End)
                 },
-                TableCol<JsonObject>(title = "MEM%", weight = 0.7f, align = TextAlign.End, mono = true) {
+                TableCol<JsonObject>(title = L["mem_8c4bf90fbc"], weight = 0.7f, align = TextAlign.End, mono = true) {
                     TableText(MonFmt.fixed(it.num("mem"), 1), mono = true, textAlign = TextAlign.End)
                 },
-                TableCol<JsonObject>(title = "进程", weight = 3f, mono = true) {
+                TableCol<JsonObject>(title = L["进程_4eb4768d27"], weight = 3f, mono = true) {
                     TableText(it.str("args"), mono = true)
                 },
             ),
@@ -822,11 +833,11 @@ private fun DashRight(
     }
 
     /* A11 系统状态 */
-    PanelCard(title = "系统状态", cardKey = "dash-sys") {
-        KVRow("运行时间", uptimeText)
-        KVRow("进程", procsText)
-        KVRow("负载", loadText.ifEmpty { "—" })
-        KVRow("磁盘 I/O", ioText)
+    PanelCard(title = L["系统状态_d27e7c5033"], cardKey = "dash-sys") {
+        KVRow(L["运行时间_8b16a1fc0b"], uptimeText)
+        KVRow(L["进程_4eb4768d27"], procsText)
+        KVRow(L["负载_4d5e4d7797"], loadText.ifEmpty { "—" })
+        KVRow(L["磁盘_i_o_f809bba335"], ioText)
     }
 }
 
@@ -835,9 +846,9 @@ private fun DashRight(
 @Composable
 private fun DashRefreshBadge(refreshMs: Long) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text("实时刷新", color = Palette.muted, fontSize = 12.sp)
+        Text(L["实时刷新_556a3ffff3"], color = Palette.muted, fontSize = 12.sp)
         Spacer(Modifier.width(8.dp))
-        LevelBadge(text = "$refreshMs ms", level = Level.Info)
+        LevelBadge(text = trfn("refreshms_ms_5adb33d965", "refreshMs" to refreshMs), level = Level.Info)
     }
 }
 

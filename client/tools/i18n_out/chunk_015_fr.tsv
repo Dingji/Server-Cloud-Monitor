@@ -1,0 +1,120 @@
+摘要_46d4c1b4e4	Résumé
+摘要发送时间_0eccc15130	Heure d'envoi du résumé
+播放_21925350de	Lire
+操作_f3ea6d345e	Actions
+操作失败_09e424b5e8	Échec de l'opération
+操作失败_0_c81f3f901e	Échec de l'opération : {0}
+操作完成_66c6340147	Opération terminée
+操作成功_3c5be5f2a1	Opération réussie
+操作日志_f4bc877cd2	Journal des opérations
+操作进行中_a31331bbf2	Opération en cours
+支持_csv_有_无表头均可_列名支持_标题_截_564b0aa879	Prend en charge CSV (avec ou sans en-tête ; noms de colonnes : Titre/Échéance/Priorité/Notes/Statut), listes de texte brut (syntaxe - [x]) et tableaux JSON.
+支持_markdown_纯文本_html_305bf19136	Prend en charge Markdown / texte brut / HTML ; le HTML est automatiquement converti en Markdown modifiable. S'il contient plusieurs titres de niveau 1, il est automatiquement découpé en plusieurs notes.
+支持_sql_sql_gz_dum_e07870399d	Prend en charge .sql / .sql.gz / .dump (format personnalisé PostgreSQL). Collez le texte, puis téléchargez-le vers le répertoire de sauvegarde du serveur.
+支持_变量_函数体_0b11a90fd3	Prend en charge les variables $ / les corps de fonction
+收件人_529414cfe5	Destinataires
+收件人_逗号分隔_7352ac40b2	Destinataires (séparés par des virgules)
+收尾_7c151dbd71	Terminer
+收起_5d5815647c	Réduire
+收起完整说明_fedbce873b	Réduire la description complète
+改值_d6c5664772	Modifier la valeur
+改地址后点_测试连接_即持久化生效_71864f6613	Après avoir modifié l'adresse, cliquez sur « Tester la connexion » pour appliquer et enregistrer définitivement
+改密_bb974d3064	Changer le mot de passe
+改属主_962ff54eef	Changer le propriétaire
+改权限_6d524368de	Modifier les autorisations
+改表名_5932b4950c	Renommer la table
+放弃编辑_815725bb66	Abandonner les modifications
+数据_54b8a90b3c	Données
+数据刷新间隔_783b4fd825	Intervalle d'actualisation des données
+数据库_0_38b5c31d37	Base de données ({0})
+数据库_dbs_size_f98d7bbce7	Base de données (${dbs.size})
+数据库_f4dbbc63a5	Base de données
+数据库列表_04a9b8f2c3	Liste des bases de données
+数据库列表_0_fe197e98d3	Liste des bases de données ({0})
+数据库列表_dbs_size_06771422a0	Liste des bases de données (${dbs.size})
+数据库名_8a98ff0618	Nom de la base de données
+数据库大小_ed9a685d54	Taille de la base de données
+数据库引擎安装_1b953ccc06	Installation du moteur de base de données
+数据库引擎总览_8dc625b5ae	Vue d'ensemble des moteurs de base de données
+数据库数量_1c82d51d3e	Nombre de bases de données
+数据库文件路径_名称_fd6bff11f9	Chemin/nom du fichier de la base de données
+数据库管理_9995484fc6	Gestion des bases de données
+数据库级_6e3f81b153	Niveau base de données
+数据库统计_35f181019a	Statistiques des bases de données
+数据库设置_0_8c7ac8f827	Paramètres de la base de données - {0}
+数据库设置_database_882d97c702	Paramètres de la base de données - $database
+数据库连接凭据_6d0ff7df04	Identifiants de connexion à la base de données
+数据库连接已保存_68d2c61647	Connection à la base de données enregistrée
+数据来自_nginx_访问日志_含_ups_a5a09ba2e4	· Les données proviennent de relay.db écrit à partir des journaux d'accès nginx (y compris $upstream_status) ; les offres se distinguent par route : go=OpenCode Go, zen=OpenCode Zen, glm=GLM Coding Plan, mimo=MiMo Token Plan.
+数据来自_nginx_访问日志写入的_relay_1cbea10182	Les données proviennent de relay.db écrit à partir des journaux d'accès nginx ; les offres se distinguent par route : go=OpenCode Go, zen=OpenCode Zen, glm=GLM Coding Plan, mimo=MiMo Token Plan.
+数据每_0_从_proc_实时采集_cf5df3d1ba	 · Données collectées en temps réel depuis /proc toutes les {0}
+数据浏览_5eba898584	Navigateur de données
+数量_b9ae893190	Quantité
+文件_0_超过可编辑上限_1_请用终端或_bf27cf6d14	Le fichier {0} dépasse la limite de modification {1} ; utilisez le terminal ou téléchargez-le pour écraser
+文件_0_超过预览上限_1_请下载或用_62cd65cbf5	Le fichier {0} dépasse la limite d'aperçu {1} ; téléchargez-le ou affichez-le dans le terminal Web.
+文件_49deaf7da2	Fichier
+文件_fmt_bytes_p_size_0f2f020b75	Le fichier ${Fmt.bytes(p.size)} dépasse la limite d'aperçu ${Fmt.bytes(p.limit)} ; téléchargez-le ou affichez-le dans le terminal Web.
+文件_fmt_bytes_p_size_5711488d59	Le fichier ${Fmt.bytes(p.size)} dépasse la limite de modification ${Fmt.bytes(p.limit)} ; utilisez le terminal ou téléchargez-le pour écraser
+文件内容_粘贴_98b4f4a653	Contenu du fichier (coller)
+文件内条目_b4ce600040	Éléments du fichier
+文件名_1275f6feb7	Nom du fichier
+文件回收站_7a008554ce	Corbeille des fichiers
+文件已保存_09f0eaa4ba	Fichier enregistré
+文件已创建_3e2240f609	Fichier créé
+文件管理_3f2244c98f	Gestionnaire de fichiers
+文件管理器不额外扩权_所有写操作都进面板审计日志_9856778584	Le gestionnaire de fichiers n'accorde aucun privilège supplémentaire. Toutes les opérations d'écriture sont consignées dans le journal d'audit du panneau (ops.files.*); les suppressions passent d'abord par la corbeille et peuvent être restaurées dans un délai de 30 jours.
+文件系统_0_0938484ae2	Système de fichiers {0}
+文件系统_42949b7f8f	Système de fichiers
+文件系统_d_filesystem_0b2cd8781e	Système de fichiers ${d.filesystem}
+文件被截断预览_0_在线编辑会丢失内容_建_1d7dde5641	Aperçu du fichier tronqué ({0}) ; la modification en ligne entraînera une perte de contenu. Téléchargez d'abord une sauvegarde.
+文件被截断预览_fmt_bytes_p_si_580f3f9109	Aperçu du fichier tronqué (${Fmt.bytes(p.size)}) ; la modification en ligne entraînera une perte de contenu. Téléchargez d'abord une sauvegarde.
+文本文件_0_69e2147621	Fichier texte ({0})
+斜体_af5a2c8bff	Italique
+断开_28fb7cedb1	Déconnecter
+断开客户端_ff6093dd26	Déconnecter le client
+断开客户端_pid_77a2046256	Déconnecter le client $pid ?
+新会话_db44360cd0	Nouvelle session
+新值_c4f3da96a2	Nouvelle valeur
+新名称_b8659855b0	Nouveau nom
+新名称_索引或约束名_所有者_8779802d2e	Nouveau nom / nom d'index ou de contrainte / propriétaire
+新告警_ae1159aaec	Nouvelle alerte
+新增_2cd9e6ce81	Ajouter
+新增行_cbc8dab8c3	Ajouter une ligne
+新密码_d22c9c0085	Nouveau mot de passe
+新密码_至少_8_位_0d551cb025	Nouveau mot de passe (8 caractères minimum)
+新密码至少_8_位_695025596e	Nouveau mot de passe d'au moins 8 caractères
+新建_0cda8d1c71	Créer
+新建会话_3da224c43d	Nouvelle session
+新建告警规则_4f937923b8	Nouvelle règle d'alerte
+新建备份_导出_e3160cab07	Nouvelle sauvegarde / export
+新建失败_ae047a3e45	Échec de la création :
+新建子归类_fc67a95ee7	Nouvelle sous-catégorie
+新建字符串键_cfff5f4c43	Nouvelle clé de type chaîne
+新建定时任务_root_权限执行_d637db8d7b	Nouvelle tâche planifiée (exécutée avec les droits root)
+新建归类_64cf5b76fb	＋ Nouvelle catégorie…
+新建归类_e4ffdeb063	Nouvelle catégorie
+新建拨测_02d832478b	Nouvelle sonde
+新建拨测任务_cd03f12322	Nouvelle tâche de sonde
+新建数据库_42e4ee46d5	Nouvelle base de données
+新建文件_d4526eb925	Nouveau fichier
+新建清单_0f3d4d8665	Nouvelle liste de contrôle
+新建清单_76f9b5e92e	＋ Nouvelle liste de contrôle…
+新建渠道_0_05cd02b38f	Nouveau canal · {0}
+新建渠道_5c08b54484	Nouveau canal
+新建渠道_typelabel_typek_880e06ee72	Nouveau canal · ${typeLabel(typeKey)}
+新建用户_30416407e5	Nouvel utilisateur
+新建用户需要至少_8_位的密码_59c185c76b	Les nouveaux utilisateurs doivent avoir un mot de passe d'au moins 8 caractères
+新建目录_80e05af6a0	Nouveau répertoire
+新建看护_ae27bee6ea	Nouvelle surveillance
+新建看护项_c8df6a2e03	Nouvel élément de surveillance
+新建笔记_14fd2fe5ca	Nouvelle note
+新建表_ddl_7ef91fdfef	Nouvelle table (DDL)
+新建规则_eae3b2e915	Nouvelle règle
+新建通知渠道_ce4914887a	Nouveau canal de notification
+新建集合_5952f4c234	Nouvelle collection
+新建静默_维护窗口_00c1db257e	Nouveau silence / fenêtre de maintenance
+新建顶层归类_cb49387a03	Nouvelle catégorie de premier niveau
+新模式名_ae42d0691f	Nouveau nom de schéma
+新渠道_fd0cc5a2d3	Nouveau canal
+新表名_aa730ef230	Nouveau nom de table
+方式_af90809619	Méthode

@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -90,7 +93,7 @@ fun WebPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            error = e.message ?: e::class.simpleName ?: "请求失败"
+            error = e.message ?: e::class.simpleName ?: L["请求失败_8fdc4112a4"]
         } finally {
             loading = false
         }
@@ -101,14 +104,14 @@ fun WebPage() {
     /** JS `bind()`：runAction('/web/action', {action, params}, {reload, reloadDelay:1200})。 */
     suspend fun webAction(action: String, params: JsonObject = jsonObjectOf(), danger: Boolean = false) {
         if (danger) {
-            val okc = Modal.confirm(title = "确认操作", text = "执行 $action ？", danger = true)
+            val okc = Modal.confirm(title = L["确认操作_3161d348cc"], text = trfn("执行_action_b272ecea51", "action" to action), danger = true)
             if (!okc) return
         }
         try {
             Actions.run(
                 path = "/web/action",
                 body = jsonObjectOf("action" to action, "params" to params),
-                successToast = "操作成功",
+                successToast = L["操作成功_3c5be5f2a1"],
                 reload = { delay(1200); load() },
             )
         } catch (_: Throwable) {
@@ -117,7 +120,7 @@ fun WebPage() {
         }
     }
 
-    PageScaffold(title = "网站 / Nginx") {
+    PageScaffold(title = L["网站_nginx_62b11c295b"]) {
         when {
             loading && data == null && error == null -> LoadingState()
             error != null && data == null -> ErrorState(message = error!!, onRetry = {
@@ -140,9 +143,9 @@ fun WebPage() {
                     PanelCard(title = "Nginx", collapsible = false) {
                         Text(
                             text = when {
-                                !nInstalled -> "未安装"
-                                nActive -> "运行中"
-                                else -> "已停止"
+                                !nInstalled -> L["未安装_6f7dc945ae"]
+                                nActive -> L["运行中_5942497005"]
+                                else -> L["已停止_75dddf524e"]
                             },
                             color = when {
                                 !nInstalled -> Palette.muted
@@ -157,28 +160,28 @@ fun WebPage() {
                         }
                         Spacer(Modifier.height(8.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            GhostBtn(text = "配置检测", icon = "check", onClick = {
+                            GhostBtn(text = L["配置检测_7635dbf3bd"], icon = "check", onClick = {
                                 scope.launch { webAction("nginx-test") }
                             })
                             if (nInstalled) {
-                                GhostBtn(text = "重载", icon = "restart", onClick = {
+                                GhostBtn(text = L["重载_e7b13a8bf8"], icon = "restart", onClick = {
                                     scope.launch { webAction("nginx-reload") }
                                 })
                             }
                             if (nActive) {
-                                DangerBtn(text = "停止", icon = "stop", onClick = {
+                                DangerBtn(text = L["停止_a17f70a8d3"], icon = "stop", onClick = {
                                     scope.launch { webAction("nginx-stop", danger = true) }
                                 })
                             } else {
-                                GhostBtn(text = "启动", icon = "play", onClick = {
+                                GhostBtn(text = L["启动_ebd26da421"], icon = "play", onClick = {
                                     scope.launch { webAction("nginx-start") }
                                 })
                             }
                         }
                         Spacer(Modifier.height(8.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Muted("配置校验:")
-                            if (nTestOk) LevelBadge("通过", Level.Ok) else LevelBadge("异常", Level.Bad)
+                            Muted(L["配置校验_9e6b524956"])
+                            if (nTestOk) LevelBadge(L["通过_dcc4233255"], Level.Ok) else LevelBadge(L["异常_5caf279339"], Level.Bad)
                         }
                     }
 
@@ -188,9 +191,9 @@ fun WebPage() {
                         val aActive = apache.bool("active")
                         Text(
                             text = when {
-                                !aInstalled -> "未安装"
-                                aActive -> "运行中"
-                                else -> "已停止"
+                                !aInstalled -> L["未安装_6f7dc945ae"]
+                                aActive -> L["运行中_5942497005"]
+                                else -> L["已停止_75dddf524e"]
                             },
                             color = when {
                                 aActive -> Palette.ok
@@ -204,26 +207,26 @@ fun WebPage() {
                     }
 
                     /* —— SSL 证书 —— */
-                    PanelCard(title = "SSL 证书 (Let's Encrypt)", collapsible = false) {
+                    PanelCard(title = L["ssl_证书_let_s_encrypt_332fd65bdb"], collapsible = false) {
                         Text(
                             "${certs.size}",
                             color = Palette.text,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                         )
-                        Muted(if (certbotInstalled) "certbot 已安装" else "certbot 未安装")
+                        Muted(if (certbotInstalled) L["certbot_已安装_7690d6f09a"] else L["certbot_未安装_b2dd3df63b"])
                         Spacer(Modifier.height(8.dp))
                         if (certbotInstalled) {
-                            GhostBtn(text = "续期证书", onClick = {
+                            GhostBtn(text = L["续期证书_bc4865026e"], onClick = {
                                 scope.launch { webAction("cert-renew") }
                             })
                         } else {
-                            GhostBtn(text = "+ 安装 certbot", enabled = !installing, onClick = {
+                            GhostBtn(text = L["安装_certbot_c830445551"], enabled = !installing, onClick = {
                                 scope.launch {
                                     val okc = Modal.confirm(
-                                        title = "安装 certbot",
-                                        text = "执行 apt-get install -y certbot，约 1-3 分钟。",
-                                        okText = "开始安装",
+                                        title = L["安装_certbot_b472f9adf8"],
+                                        text = L["执行_apt_get_install_y_ce_6568cc1ca1"],
+                                        okText = L["开始安装_d109e7cc01"],
                                     )
                                     if (!okc) return@launch
                                     installing = true
@@ -231,7 +234,7 @@ fun WebPage() {
                                         Actions.run(
                                             path = "/pkg/install",
                                             body = jsonObjectOf("pkg" to "certbot"),
-                                            title = "certbot 安装日志",
+                                            title = L["certbot_安装日志_1bf087319a"],
                                         )
                                         load()
                                     } finally {
@@ -254,7 +257,7 @@ fun WebPage() {
                             blocks = listOf(
                                 JsonObject(
                                     mapOf(
-                                        "serverName" to kotlinx.serialization.json.JsonPrimitive("(无法解析)"),
+                                        "serverName" to kotlinx.serialization.json.JsonPrimitive(L["无法解析_9262bec0c8"]),
                                         "listen" to kotlinx.serialization.json.JsonArray(emptyList()),
                                         "root" to kotlinx.serialization.json.JsonNull,
                                         "proxy" to kotlinx.serialization.json.JsonNull,
@@ -283,15 +286,15 @@ fun WebPage() {
                 }
 
                 PanelCard(
-                    title = "Nginx 站点 (${sites.size})",
-                    right = { GhostBtn(text = "刷新", icon = "refresh", onClick = { scope.launch { loading = true; load() } }) },
+                    title = trf("nginx_站点_0_6bcfddef71", sites.size),
+                    right = { GhostBtn(text = L["刷新_38108eaa1d"], icon = "refresh", onClick = { scope.launch { loading = true; load() } }) },
                 ) {
                     if (sites.isEmpty()) {
-                        Muted("sites-enabled 为空")
+                        Muted(L["sites_enabled_为空_4516b41170"])
                     } else {
                         DataTable(
                             columns = listOf(
-                                TableCol<SiteRow>("站点文件", weight = 1.2f, mono = true) { r ->
+                                TableCol<SiteRow>(L["站点文件_6bb8ebce82"], weight = 1.2f, mono = true) { r ->
                                     if (r.first) {
                                         Text(r.site, fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                                     }
@@ -299,21 +302,21 @@ fun WebPage() {
                                 TableCol<SiteRow>("server_name", weight = 1.6f, mono = true) { r ->
                                     Text(r.serverName, fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                                 },
-                                TableCol<SiteRow>("监听", weight = 1.2f, mono = true) { r ->
+                                TableCol<SiteRow>(L["监听_1c30dd2a97"], weight = 1.2f, mono = true) { r ->
                                     Text(r.listen, fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                                 },
-                                TableCol<SiteRow>("根目录 / 代理", weight = 1.8f, mono = true) { r ->
+                                TableCol<SiteRow>(L["根目录_代理_6dc180f179"], weight = 1.8f, mono = true) { r ->
                                     Text(r.rootProxy, fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                                 },
                                 TableCol<SiteRow>("SSL", weight = 0.7f) { r ->
                                     if (r.ssl) LevelBadge("HTTPS", Level.Ok) else Text("—", color = Palette.muted)
                                 },
-                                TableCol<SiteRow>("操作", weight = 1.4f, minWidth = 130.dp) { r ->
-                                    GhostBtn(text = "重新启用+重载", onClick = {
+                                TableCol<SiteRow>(L["操作_f3ea6d345e"], weight = 1.4f, minWidth = 130.dp) { r ->
+                                    GhostBtn(text = L["重新启用_重载_7b7fccf0ec"], onClick = {
                                         scope.launch {
                                             val okc = Modal.confirm(
-                                                title = "重新启用站点",
-                                                text = "启用 ${r.site} 并重载 nginx？",
+                                                title = L["重新启用站点_54c7d8b461"],
+                                                text = trf("启用_0_并重载_nginx_cec5f2e46f", r.site),
                                             )
                                             if (!okc) return@launch
                                             webAction(
@@ -326,26 +329,26 @@ fun WebPage() {
                             ),
                             rows = siteRows,
                             rowKey = { it.site + "#" + it.serverName + "#" + it.listen },
-                            emptyText = "sites-enabled 为空",
+                            emptyText = L["sites_enabled_为空_4516b41170"],
                         )
                     }
                 }
 
                 /* ---------------- 证书详情（JS certs.length 才渲染） ---------------- */
                 if (certs.isNotEmpty()) {
-                    PanelCard(title = "证书详情") {
+                    PanelCard(title = L["证书详情_afc5516b7b"]) {
                         DataTable(
                             columns = listOf(
-                                TableCol<JsonObject>("域名", weight = 1.4f, mono = true) {
+                                TableCol<JsonObject>(L["域名_282d68464d"], weight = 1.4f, mono = true) {
                                     Text(it.str("domain"), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                                 },
-                                TableCol<JsonObject>("到期时间", weight = 1.6f, mono = true) {
+                                TableCol<JsonObject>(L["到期时间_3144a998f0"], weight = 1.6f, mono = true) {
                                     Text(it.str("expiry"), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                                 },
-                                TableCol<JsonObject>("剩余天数", weight = 0.8f) {
+                                TableCol<JsonObject>(L["剩余天数_fb0ca9d4ed"], weight = 0.8f) {
                                     val days = it.int("daysLeft")
                                     LevelBadge(
-                                        "$days 天",
+                                        trfn("days_天_a6409fc14f", "days" to days),
                                         when {
                                             days < 14 -> Level.Bad
                                             days < 30 -> Level.Warn
@@ -361,10 +364,10 @@ fun WebPage() {
                 }
 
                 /* ---------------- 说明（JS 原文） ---------------- */
-                PanelCard(title = "说明") {
+                PanelCard(title = L["说明_26670dda42"]) {
                     Muted(
-                        "本监控面板自身通过 nginx /panel/ 路径反向代理（配置位于 opencode-relay 站点文件中的 " +
-                            "location 块），不要停用该站点以免面板与中继服务同时下线。",
+                        L["本监控面板自身通过_nginx_panel_e67414791d"] +
+                            L["location_块_不要停用该站点以免面板与_4ae164b62b"],
                     )
                 }
             }

@@ -42,6 +42,7 @@ import com.servermaintance.panel.nav.NAV
 import com.servermaintance.panel.nav.Navigator
 import com.servermaintance.panel.nav.PageId
 import com.servermaintance.panel.nav.Workspace
+import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.nav.entryOf
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.Accents
@@ -128,15 +129,15 @@ private fun PaletteOverlay(relayAvailable: Boolean, isAdmin: Boolean, onDismiss:
                 }
                 .padding(12.dp),
         ) {
-            Field(q, { q = it; hi = 0 }, Modifier.fillMaxWidth(), hint = "搜索页面或命令…（Ctrl/Cmd+K）")
+            Field(q, { q = it; hi = 0 }, Modifier.fillMaxWidth(), hint = L["搜索页面或命令_ctrl_cmd_k_84c6582b79"])
             Text(
-                "↑↓ 选择 · Enter 执行 · Esc 关闭 · F5 刷新当前页",
+                L["选择_enter_执行_esc_关_dfa5da2532"],
                 color = Palette.muted, fontSize = 11.sp,
                 modifier = Modifier.padding(top = 6.dp, bottom = 8.dp),
             )
             Column(Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 if (filtered.isEmpty()) {
-                    Text("无匹配", color = Palette.muted, fontSize = 13.sp, modifier = Modifier.padding(12.dp))
+                    Text(L["无匹配_cd8c79d55c"], color = Palette.muted, fontSize = 13.sp, modifier = Modifier.padding(12.dp))
                 }
                 filtered.forEachIndexed { i, c ->
                     val on = i == hi
@@ -173,31 +174,33 @@ private fun paletteCommands(
         .sortedByDescending { it.id in pinned }
         .map { e ->
             val suffix = when {
-                e.id == current -> " · 当前页面"
-                e.id in pinned -> " · 已收藏"
+                e.id == current -> L["当前页面_b7d5886b05"]
+                e.id in pinned -> L["已收藏_41f91d9758"]
                 else -> ""
             }
-            PaletteCmd(e.label, "打开页面$suffix", e.icon) { Navigator.go(e.id) }
+            PaletteCmd(L[e.labelKey], L.fmt("palette.open_page", suffix), e.icon) { Navigator.go(e.id) }
         }
     val dark = ThemeState.isDark
     val accent = AccentState.current
     val extra = listOf(
         PaletteCmd(
-            if (current in pinned) "取消收藏「${entryOf(current).label}」" else "收藏「${entryOf(current).label}」",
-            "工作区 · 长按侧栏项也可切换", "star",
+            if (current in pinned) L.fmt("palette.unpin", L[entryOf(current).labelKey])
+            else L.fmt("palette.pin", L[entryOf(current).labelKey]),
+            L["palette.pin_hint"],
+            "star",
         ) { Workspace.togglePin(current) },
-        PaletteCmd("刷新当前页面", "F5 / Ctrl+R · 重新加载", "refresh") { Navigator.reloadCurrent() },
+        PaletteCmd(L["刷新当前页面_ea66e5616b"], L["palette.reload_hint"], "refresh") { Navigator.reloadCurrent() },
         PaletteCmd(
-            if (dark) "切换到浅色主题" else "切换到深色主题",
-            "外观 · 当前${if (dark) "深色" else "浅色"}",
+            if (dark) L["切换到浅色主题_68c147dbb8"] else L["切换到深色主题_81f29dbac3"],
+            if (dark) L.fmt("palette.theme_hint", L["浅色_80ec9e2b1b"]) else L.fmt("palette.theme_hint", L["深色_30b2c979ac"]),
             if (dark) "sun" else "moon",
         ) { ThemeState.apply(if (dark) ColorTheme.Light else ColorTheme.Dark) },
-        PaletteCmd("切换强调色", "外观 · 当前 ${accent.id}", "sparkle") {
+        PaletteCmd(L["切换强调色_750952d685"], L.fmt("palette.accent_hint", accent.id), "sparkle") {
             val i = Accents.all.indexOfFirst { it.id == accent.id }
             AccentState.apply(Accents.all[((i + 1) % Accents.all.size + Accents.all.size) % Accents.all.size].id)
         },
-        PaletteCmd("清除最近访问", "工作区 · 保留收藏", "trash") { Workspace.clearRecent() },
-        PaletteCmd("切换告警中心", "最近告警", "bell") { Navigator.toggleBell() },
+        PaletteCmd(L["清除最近访问_d3f083d97b"], L["工作区_保留收藏_b4859ec177"], "trash") { Workspace.clearRecent() },
+        PaletteCmd(L["切换告警中心_6ee18893d6"], L["最近告警_fbce4cc6ee"], "bell") { Navigator.toggleBell() },
     )
     return pages + extra
 }

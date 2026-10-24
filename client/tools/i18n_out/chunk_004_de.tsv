@@ -1,0 +1,120 @@
+仅本地_5c28a4b5d1	Nur lokal
+仅结构_15c49958e4	Nur Struktur
+仅结构_8cdf512d85	(Nur Struktur)
+仅结构_不含数据_86341bfbf0	Nur Struktur (ohne Daten)
+仅运行_affb726f94	Nur laufend
+仅面板铃铛_3ecf2a6ea9	Nur Panel-Glocke
+今天_17e83cc25e	Heute
+今天_hm_b5123a00e4	Heute $hm
+今天到期_fb2cb94029	Heute fällig
+今日_0_会话_1_客户端_2_dfa0d41ced	Heute {0} · Sitzungen {1} · Clients {2}
+今日_0_新增_1_e17159d28e	Heute {0} · Neu {1}
+今日_0_请求_f79a1b4d82	{0} Anfragen heute
+今日_24_小时分布_d5b7360f18	Heutige 24-Stunden-Verteilung
+今日_574cd4fb79	Heute
+今日_token_d0b5adbe07	Heute Token
+今日出站_ae22fbbb49	Heute ausgehend
+今日成功率_70d58b9151	Heutige Erfolgsquote
+今日请求_0_8e7833564f	Anfragen heute {0}
+今日请求_731c00a176	Anfragen heute
+今日邮件发送成功_060f80e076	Heute erfolgreich gesendete E-Mails
+今日错误_97f268b84a	Fehler heute
+从_0_切换到_94f8b2509a	Von {0} gewechselt zu:\n\n
+从未发信_d605d91365	Nie gesendet
+从镜像站拉取最新软件包列表_安装新包前建议先刷新_18f22cecb1	Ruft die neueste Paketliste vom Mirror ab; vor der Installation neuer Pakete wird ein Aktualisieren empfohlen.
+代码_21cdbf098d	 〔Code〕 
+代码_33246dda76	Code
+以_0_执行_结果支持多语句_1_052948bd3b	Als {0} ausführen · Ergebnisse unterstützen mehrere Anweisungen · {1}
+以_dbmeta_label_st_engi_c4aac0c4ce	Als ${DbMeta.label(st.engineId)} ausführen · Ergebnisse unterstützen mehrere Anweisungen · $dialect
+以下已安装包依赖它_卸载可能连带移除或导致异常_f26237adcd	Folgende installierte Pakete hängen von ihm ab; beim Entfernen können sie mitentfernt werden oder es kann zu Fehlern kommen:\n
+以后_ac5d03ece3	Später
+仪表盘_2c0ab88554	Dashboard
+任何拿到链接的人_无需登录_可查看_3f77643748	Jeder mit dem Link (ohne Anmeldung) kann ihn ansehen
+任务_3172b317f9	Aufgaben
+任务名_c8d6eeaa4c	Aufgabenname
+任务名称_2e30469899	Aufgabenname
+任务启动失败_服务端未返回任务_id_500799f8a2	Aufgabenstart fehlgeschlagen: Der Server hat keine Aufgaben-id zurückgegeben
+任务执行失败_97312db4c3	Aufgabenausführung fehlgeschlagen
+任务文件_8f4e93dc3d	Aufgabendatei
+任务状态已丢失_服务端可能重启过_请重新发起该_3a4e99bf96	Aufgabenstatus verloren (der Server wurde möglicherweise neu gestartet), bitte Vorgang erneut ausführen
+休眠_0_c11a981edd	Schlummern {0}
+优先级_7cabe771eb	Priorität
+优秀_3e61f36792	Ausgezeichnet
+会自动执行配置校验_d447aa930e	(die Konfigurationsprüfung wird automatisch ausgeführt)
+会话_1_497c4ea2d5	Sitzung 1
+会话_836ffe0e10	Sitzung
+会话_titleseq_33244bea87	Sitzung $titleSeq
+会话上下文明细_内存视图_22c78a29f0	Sitzungskontextdetails (In-Memory-Ansicht)
+会话上下文构成_ce6fae8e45	Sitzungskontextzusammensetzung
+会话内存视图_fcd9415f11	Sitzungsspeicheransicht
+会话分布_按请求数_b85c7c435b	Sitzungsverteilung (nach Anzahl der Anfragen)
+会话已关闭_095a652630	Sitzung geschlossen
+会话已过期_请重新登录_32f89bb43c	Sitzung abgelaufen, bitte erneut anmelden
+会话批量清理_55815972d3	Sitzungen massenweise bereinigen
+会话排行_按上下文字节_0_1_6f0f0e51a3	Sitzungsranking (nach Kontextbytes)  {0} · {1} Sitzungen / {2} Runden · gesamt {3}
+会话排行_按上下文字节_e47849da63	Sitzungsranking (nach Kontextbytes)
+会话数_4d72abd2e9	Sitzungen
+会话数_今日_9cd79de908	Sitzungen (heute)
+估算成本_f05235023c	Geschätzte Kosten
+位置_88c34452cc	Standort
+低_b9ee259b7f	Niedrig
+低于告警线的证书任务_695579ce30	Zertifikataufgaben unter der Warnschwelle
+作用范围_95a5e61424	Geltungsbereich
+使用_ssl_465_端口勾选_316a136e99	SSL verwenden (bei Port 465 aktivieren)
+使用率_8ca02f90d1	Auslastung
+例如_工作_项目资料_190eafea68	z. B. Arbeit, Projektdaten
+供应商状态_ed8f7c5676	Anbieterstatus
+依赖_0_推荐依赖_1_反向依赖_2507ad6a45	Abhängigkeiten {0} · Empfohlene {1} · Umgekehrte {2}
+依赖_2ebf56c207	\n\n--- Abhängigkeiten ---\n
+依赖_depn_推荐依赖_recn_684b03c97f	Abhängigkeiten $depN · Empfohlene $recN · Umgekehrte $revN
+保存_fadf24dbc5	Speichern
+保存_smtp_设置_31e1de2129	SMTP-Einstellungen speichern
+保存中_6644f06197	Wird gespeichert…
+保存地址_b4507bac53	Adresse speichern
+保存失败_40525a7328	Speichern fehlgeschlagen
+保存失败_b12163000c	Speichern fehlgeschlagen:
+保存失败或被取消_7e2bbcfe18	Speichern fehlgeschlagen oder abgebrochen
+保存并重连_a440c33bd4	Speichern und neu verbinden
+保存数据库连接_ccfc22f810	Datenbankverbindung speichern
+保存文件_184adfdabf	Datei speichern
+保存被取消_82f61f25b1	Speichern abgebrochen
+保存通知规则_81afc138cf	Benachrichtigungsregeln speichern
+保存阈值_1a6c3945df	Schwellwert speichern
+保留_0_份_6f62f9cd31	{0} Kopien aufbewahren
+保留_30_份_relay_backup_tim_b625d85371	30 Kopien aufbewahren; relay-backup.timer läuft täglich um 03:30.
+保留最近_n_个_855e3ce9c7	Die letzten N aufbewahren
+修复失败_3d6dfbe1ad	Reparatur fehlgeschlagen
+修复执行记录_2669e0f726	Reparaturprotokoll
+修复未成功_d8d320b456	Reparatur nicht erfolgreich
+修改_c9c77517fe	Bearbeiten
+修改会写入_etc_ssh_sshd_conf_4cb39a7a47	Änderungen werden in /etc/ssh/sshd_config.d/99-cloud-monitor.conf geschrieben; zuerst läuft sshd -t zur Prüfung, bei Fehlern wird die Änderung automatisch verworfen. Schlüssel einrichten, bevor die Passwortauthentifizierung deaktiviert wird.
+修改列_类型_默认值_可空_8bebfff9e5	Spalte bearbeiten (Typ/Standard/nullable)
+修改失败_9abb465039	Bearbeiten fehlgeschlagen
+修改密码_0_1a306d5990	Passwort ändern - {0}
+修改密码_0ae20ac3af	Passwort ändern
+修改密码_n_00b25b96ac	Passwort ändern - $n
+修改密码_name_d9c700cba6	Passwort ändern - $name
+修改所有者_3876d6ab1f	Eigentümer ändern
+修改时间_af71bc5cc4	Änderungszeit
+修改登录密码_321d9d86f6	Anmeldepasswort ändern
+修改端口_路径需编辑_config_json_后_983be325ee	Um Port/Pfad zu ändern, config.json bearbeiten und neu starten
+修改限流阈值_编辑_00_limits_conf_1152af13c3	Ratenlimit ändern: 00-limits.conf bearbeiten, dann nginx -t && systemctl reload nginx.
+修改面板密码_17fc433ccc	Panel-Passwort ändern
+倒计时_80176c18f3	Countdown
+候选_0461e4db19	Kandidaten
+值_321b955840	Wert
+值越小越倾向使用物理内存_数据库服务器常用_10_d669b666d0	Kleinere Werte bevorzugen physischen Speicher; Datenbankserver verwenden üblicherweise 10.
+偏快_8900d928c6	Etwas schnell
+停止_0_e0be2c8b16	{0} stoppen
+停止_a17f70a8d3	Stoppen
+停止_fail2ban_c4775a3abd	Fail2ban stoppen
+停止_label_8f0e06c363	$label stoppen
+停止_容器_c97111b01f	Container stoppen
+停止分享_55c70caa51	Freigabe stoppen
+停止后将失去_ssh_防爆破保护_cf3e594655	Danach ist der SSH-Brute-Force-Schutz nicht mehr aktiv.
+停止引擎_f83e27f9a5	Engine stoppen
+停止自愈_8e53c62499	Selbstheilung stoppen
+停止跟随_72312418e3	Folgen stoppen
+停用_0_其会话将立即失效_bd25e844b8	{0} deaktivieren? Die zugehörigen Sitzungen werden sofort ungültig.
+停用_d989e55188	Deaktivieren
+停用用户_3f2f67ac37	Benutzer deaktivieren

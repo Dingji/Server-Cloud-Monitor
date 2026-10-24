@@ -1,4 +1,5 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.L
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.JsonObject
@@ -127,9 +128,9 @@ object WatchState {
         null
     } catch (e: ApiException) {
         if (e.code == 404) unsupported.value = true
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     } catch (e: Exception) {
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     }
 
     suspend fun save(body: JsonObject): String? = mutate("/ops/watchdog/save", body) { load() }
@@ -211,9 +212,9 @@ object RemoteState {
         load()
         null
     } catch (e: ApiException) {
-        e.message ?: "保存失败"
+        e.message ?: L["保存失败_40525a7328"]
     } catch (e: Exception) {
-        e.message ?: "保存失败"
+        e.message ?: L["保存失败_40525a7328"]
     } finally {
         busy.value = false
     }
@@ -222,7 +223,7 @@ object RemoteState {
         api.post("/ops/remote/cred/delete", jsonObjectOf("id" to id))
         load()
         null
-    } catch (e: Exception) { e.message ?: "删除失败" }
+    } catch (e: Exception) { e.message ?: L["删除失败_72250c5922"] }
 
     /** 采集一台（id=null 表示全部到期主机），返回失败文案或 null。 */
     suspend fun collect(id: String?): String? = try {
@@ -231,9 +232,9 @@ object RemoteState {
         load()
         null
     } catch (e: ApiException) {
-        e.message ?: "采集失败"
+        e.message ?: L["采集失败_ef06d0b26b"]
     } catch (e: Exception) {
-        e.message ?: "采集失败"
+        e.message ?: L["采集失败_ef06d0b26b"]
     } finally {
         busy.value = false
     }

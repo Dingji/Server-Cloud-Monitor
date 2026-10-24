@@ -1,0 +1,120 @@
+更新于_fmt_clock_每_8e4ddc9657<TAB>● Aggiornato ${Fmt.clock()} · ogni 2 secondi
+更新内容_e86c7cc37a<TAB>Contenuto aggiornato
+更新失败_0_97268fd8ec<TAB>● Aggiornamento non riuscito: {0}
+更新失败_err_b59b06121d<TAB>● Aggiornamento non riuscito: $err
+更新密码_2f3ed4c7a4<TAB>Aggiorna password
+更新文档_json_可用_set_a5bcf4c3cb<TAB>Aggiorna documento (JSON, usa $set)
+更新索引_b2ee89ac6d<TAB>Aggiorna indice
+更新软件源索引_ab8e1a3dc1<TAB>Aggiorna indice dei repository software
+最低_0_最高_1_当前_2_70336dd1a0<TAB>Min {0} · Max {1} · Corrente {2}
+最低_trend_minof_it_sc_713d6859d7<TAB>Min ${trend.minOf { it.score }} · Max ${trend.maxOf { it.score }} · Corrente ${trend.last().score}
+最多_0_次_1_分钟_c14665e95f<TAB>Max {0} volte/{1} min
+最多_e_maxrestarts_次_1b0cf4f09e<TAB>Max ${e.maxRestarts} volte/${e.windowMin} min
+最大_0_ms_均值_1_6ebc8829c9<TAB>Max {0} ms · Media {1}
+最大_0_请求_1_635480efa0<TAB>Max {0} · Richieste {1}
+最大上下文_dc3be3e642<TAB>Contesto massimo
+最大消息_3da5316f2b<TAB>Messaggio massimo
+最小尺寸_344803e80b<TAB>Dimensione minima
+最慢_df0ee5c8c7<TAB>Più lento
+最近_0_条请求中_22b35b84eb<TAB>Nelle ultime {0} richieste
+最近_1_小时_92e6814bba<TAB>Ultima ora
+最近_24_小时_eb9f889d6a<TAB>Ultime 24 ore
+最近_6_小时_5a6f35c4fd<TAB>Ultime 6 ore
+最近_7_天_2a0a052cea<TAB>Ultimi 7 giorni
+最近_8c73d90eca<TAB>Recenti
+最近一次状态备份_e5c455f5bf<TAB>Ultimo backup di stato
+最近上下文_7c180451cc<TAB>Contesto recente
+最近切换记录_4e33862ed5<TAB>Cronologia commutazioni recente
+最近发送_2187d92802<TAB>Inviati di recente
+最近告警_fbce4cc6ee<TAB>Avvisi recenti
+最近在看板下方_144f8e8c1f<TAB>Di recente sotto la dashboard
+最近在线_714e30582a<TAB>Online di recente
+最近失败_ec2121fd63<TAB>Fallimenti recenti
+最近封禁_0_073f233150<TAB>Blocco recente: {0}
+最近成功_35b15d3f3f<TAB>Successo recente
+最近按小时的_429_拦截_cd3fc0518c<TAB>Blocchi 429 orari recenti
+最近更新_80920cd667<TAB>Aggiornato di recente
+最近登录与失败尝试_d575d4606c<TAB>Accessi recenti e tentativi falliti
+最近结果_d3d6d2384b<TAB>Risultati recenti
+最近采集_014935526c<TAB>Raccolto di recente
+最近错误_5e8913a82d<TAB>Errori recenti
+有效请求_9f9f7aec83<TAB>Richieste valide
+有效请求中未拿到响应的次数_b0eba0d9ff<TAB>Numero di richieste valide senza risposta
+有新版本_f329c95a7b<TAB>(nuova versione disponibile)
+有问题_ec02351ea3<TAB>Problema
+服务_0_运行_46e63016be<TAB>Servizio {0} in esecuzione
+服务不可达_http_0_6aaaef3706<TAB>Servizio irraggiungibile (HTTP {0})
+服务不可达_http_r_status_v_a9b111f972<TAB>Servizio irraggiungibile (HTTP ${r.status.value})
+服务单元_it_安装_启动都是显式操作_默_902797720d<TAB>Unità di servizio $it · Installazione/avvio sono operazioni esplicite: non avvia automaticamente per impostazione predefinita.
+服务可用性_0_2496bf90f9<TAB>Disponibilità del servizio {0}% · 
+服务可用性_9f4b8967df<TAB>Disponibilità del servizio
+服务响应异常_0_2671b6c611<TAB>Risposta del servizio anomala: {0}
+服务响应异常_text_take_200_0907dcad35<TAB>Risposta del servizio anomala: ${text.take(200)}
+服务器_30d94cb3b9<TAB>Server
+服务器上的私钥路径_eb07b84f1f<TAB>Percorso della chiave privata sul server
+服务器与中继的实时运行状态总览_60878a881c<TAB>Panoramica in tempo reale dello stato di esecuzione di server e relay
+服务器信息_d2e0457697<TAB>Informazioni sul server
+服务器地址已保存_9e2bd5bc83<TAB>Indirizzo del server salvato
+服务器地址未配置_18f3debc5d<TAB>Indirizzo del server non configurato
+服务器实时监控与配置控制台_d1c6f4d56b<TAB>Console di monitoraggio e configurazione in tempo reale del server
+服务器文件打包归档与下载_含_relay_每日状_268e49a95e<TAB>Confezionamento, archiviazione e download dei file del server, inclusi i backup di stato giornalieri di Relay
+服务器文件系统操作_浏览_编辑_上传下载_权限_66f94fd459<TAB>Operazioni sul filesystem del server: sfoglia, modifica, carica/scarica, permessi, pacchetto, cestino (eliminazioni conservate 30 giorni)
+服务器时间_e76ff2af0c<TAB>Orario del server
+服务器未安装_docker_容器引擎_84468c43e1<TAB>Motore contenitori Docker non installato sul server.
+服务器未返回令牌_871c697da3<TAB>Il server non ha restituito token
+服务器未返回会话_cookie_9dc7f14670<TAB>Il server non ha restituito il Cookie di sessione
+服务器监控与配置面板客户端_5595e541d9<TAB>Client del pannello di monitoraggio e configurazione del server
+服务器连接_20ba55ffe2<TAB>Connessione al server
+服务器连接地址_36039bdf94<TAB>Indirizzo di connessione al server
+服务器连接配置_1add197bea<TAB>Configurazione di connessione al server
+服务操作_143b5c61b3<TAB>Azioni sul servizio
+服务看护_0_项不可用_c20acfd5d7<TAB>Vigilanza servizi: {0} non disponibili
+服务看护_1ab82a488c<TAB>Vigilanza servizi
+服务看护_ws_down_项不可用_d805345731<TAB>Vigilanza servizi: ${ws.down} non disponibili
+服务端已阻止该操作_继续执行可能导致系统无法_265cce6378<TAB>\n\nIl server ha bloccato questa operazione. Continuare può impedire l'avvio del sistema, interrompere la connessione SSH o rompere il pannello.
+服务端日志目录_037c3d3cda<TAB>Directory dei log del server
+期望状态码_4bbf3ddcd6<TAB>Codice di stato atteso
+未上报_af807e32e8<TAB>Non riportato
+未发现源文件_371b4f4aa9<TAB>File di origine non trovato
+未发送过_74a0c48b62<TAB>Mai inviato
+未启用_8bb38ef00c<TAB>Disabilitato
+未命中_786d17cf29<TAB>Nessun riscontro
+未命中_套餐_上游原因_402_额度耗尽_e0a313bdcc<TAB>· Mancate corrispondenze (motivi piano/upstream): 402 quota esaurita, 403 permesso o chiave non validi, 429 limite di frequenza, 5xx guasto upstream, 0 nessuna risposta — solo questi contano come "il piano non ha lavorato".
+未命中_套餐原因_5492c99555<TAB>Mancata corrispondenza (motivo piano)
+未命名笔记_044c507dcb<TAB>Nota senza nome
+未安排_0bf49114ad<TAB>Non programmato
+未安装_6f7dc945ae<TAB>Non installato
+未安装_未找到_87cb306b77<TAB>Non installato|Non trovato
+未完成_0_已完成_1_38023d83b8<TAB>Incompleti {0} · Completati {1}
+未完成_b61b08aec3<TAB>Incompleto
+未完成_nbcountup_pending_54ccaeda4f<TAB>Incompleti ${nbCountUp(pending)} · Completati ${nbCountUp(done)}
+未定价_5b0ac749b1<TAB>Prezzo non impostato
+未归类_9af2c7babc<TAB>Non categorizzato
+未成功_dc36695631<TAB>Non riuscito
+未找到匹配_a6a3fa1f09<TAB>Nessuna corrispondenza trovata
+未找到匹配的软件包_f031dea558<TAB>Nessun pacchetto corrispondente trovato
+未找到相关_timer_e957cd4c26<TAB>Timer correlato non trovato
+未探测_f0c3554820<TAB>Non rilevato
+未检测到任何可用的数据库引擎_可在此一键安装常见_38b395d313<TAB>Nessun motore di database utilizzabile rilevato. Qui puoi installare i database comuni con un clic (dopo l'installazione aggiorna la pagina).
+未生效_2ed178b607<TAB>Non in vigore
+未登录_e8041a8c93<TAB>Non autenticato
+未登录或会话过期_ae00c4ba08<TAB>Non autenticato o sessione scaduta
+未知_d9c32a4c3d<TAB>Sconosciuto
+未知目录_9fdfa31d5a<TAB>(directory sconosciuta)
+未知错误_5f76edc5de<TAB>Errore sconosciuto
+未能获取服务器数据目录_请刷新页面后重试_6a4049502d<TAB>Impossibile ottenere la directory dati del server, aggiorna la pagina e riprova
+未覆盖_e3b1d53edc<TAB>Non sovrascritto
+未设置静默窗口_备份_发布等例行操作期间可用它屏_12f1e16155<TAB>Nessuna finestra silenziosa impostata: usala per silenziare gli avvisi durante le operazioni di routine come backup e rilasci
+未读取到_var_log_内容_f715aba45e<TAB>Nessun contenuto letto da /var/log
+未运行_b2ba9634d9<TAB>Non in esecuzione
+未运行_econnrefused_连接失败_无法_b31ae4bd85<TAB>Non in esecuzione|ECONNREFUSED|Connessione non riuscita|Impossibile connettersi|No such file|does not exist.*running|not found
+未选择文件_dbb4430dc0<TAB>Nessun file selezionato
+未配置_63595e95b7<TAB>Non configurato
+未配置单价_40ab5e3e97<TAB>Prezzo unitario non configurato
+未配置限流区域_bb373a4d06<TAB>Aree di rate limit non configurate
+未采集_72a70d0e29<TAB>Non raccolto
+未防护_ba54f04f59<TAB>Non protetto
+本周_e16e8248b1<TAB>Questa settimana
+本周_token_23360d9af4<TAB>Token di questa settimana
+本周请求_441334771a<TAB>Richieste di questa settimana
+本地_e8666c377c<TAB>Locale

@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
@@ -171,24 +174,24 @@ private fun TodoRec.toJson(): JsonObject = com.servermaintance.panel.core.jsonOb
 private fun groupOf(t: TodoRec, f: String): String {
     val info = dueInfo(t.toJson())
     return when {
-        t.status == "done" -> "已完成"
-        info.late -> "已过期"
-        f == FILTER_TODAY -> "今天"
-        info.today -> "今天"
-        !info.hasDue -> "未安排"
+        t.status == "done" -> L["已完成_e99b48a29b"]
+        info.late -> L["已过期_1354374f76"]
+        f == FILTER_TODAY -> L["今天_17e83cc25e"]
+        info.today -> L["今天_17e83cc25e"]
+        !info.hasDue -> L["未安排_0bf49114ad"]
         f == FILTER_UPCOMING -> info.label
-        info.label.startsWith("明天") -> "明天"
-        else -> "以后"
+        info.label.startsWith(L["明天_b76ce230d3"]) -> L["明天_b76ce230d3"]
+        else -> L["以后_ac5d03ece3"]
     }
 }
 
-private val GROUP_ORDER = listOf("已过期", "今天", "明天", "未安排", "以后", "已完成")
+private val GROUP_ORDER  get() = listOf(L["已过期_1354374f76"], L["今天_17e83cc25e"], L["明天_b76ce230d3"], L["未安排_0bf49114ad"], L["以后_ac5d03ece3"], L["已完成_e99b48a29b"])
 
 private fun repeatText(r: String): String = when (r) {
-    "daily" -> "每天"
-    "weekdays" -> "工作日"
-    "weekly" -> "每周"
-    "monthly" -> "每月"
+    "daily" -> L["每天_5e4715ffc0"]
+    "weekdays" -> L["工作日_27b4a6aed2"]
+    "weekly" -> L["每周_a93b55d8bf"]
+    "monthly" -> L["每月_24aedc3608"]
     else -> ""
 }
 
@@ -224,7 +227,7 @@ private fun TodosInner() {
     var qaTitle by remember { mutableStateOf("") }
     var qaDate by remember { mutableStateOf("") }
     var qaTime by remember { mutableStateOf("") }
-    var qaPriority by remember { mutableStateOf("中") }
+    var qaPriority by remember { mutableStateOf(L["中_0869071c92"]) }
     var qaRemind by remember { mutableStateOf(true) }
 
     /* 编辑弹窗 */
@@ -255,7 +258,7 @@ private fun TodosInner() {
         } catch (e: ApiException) {
             if (!e.isAuth) error = e.message
         } catch (e: Exception) {
-            error = e.message ?: "加载失败"
+            error = e.message ?: tr("加载失败_f6b7a41e56")
         } finally {
             loading = false
         }
@@ -272,15 +275,15 @@ private fun TodosInner() {
                 todos = todos.map { if (it.id == rec.id) rec else it }
                 if (rec.status == "done") {
                     if (rec.nextId > 0) {
-                        NoteBoxState.toast("已完成 · 下一次重复已自动排期", ToastKind.Ok)
+                        NoteBoxState.toast(tr("已完成_下一次重复已自动排期_2f89384a29"), ToastKind.Ok)
                         load()
                     } else {
-                        NoteBoxState.toast("已完成", ToastKind.Ok)
+                        NoteBoxState.toast(tr("已完成_e99b48a29b"), ToastKind.Ok)
                     }
                 }
                 NoteBoxState.refreshStats()
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "操作失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("操作失败_09e424b5e8"), ToastKind.Err)
             }
         }
     }
@@ -289,9 +292,9 @@ private fun TodosInner() {
         scope.launch {
             try {
                 withContext(Dispatchers.IO) { NoteBoxState.api.sendTodoMail(t.id) }
-                NoteBoxState.toast("提醒邮件已发送（含详情、子任务与日历邀请）", ToastKind.Ok)
+                NoteBoxState.toast(tr("提醒邮件已发送_含详情_子任务与日历邀请_7359e6549a"), ToastKind.Ok)
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "发送失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("发送失败_e767d34c78"), ToastKind.Err)
             }
         }
     }
@@ -299,32 +302,32 @@ private fun TodosInner() {
     fun createList(parent: Int?) {
         scope.launch {
             val opts = folderParentOptions(folders)
-            val initial = opts.firstOrNull { it.first == parent }?.second ?: "（顶层）"
+            val initial = opts.firstOrNull { it.first == parent }?.second ?: L["顶层_8dcb7af51d"]
             val r = Modal.prompt(
-                "新建清单",
+                L["新建清单_0f3d4d8665"],
                 listOf(
-                    FormField.Text("name", "名称"),
-                    FormField.Select("parent", "上级清单", opts.map { it.second }, initial),
-                    FormField.Select("color", "颜色", folderColorNames, "默认"),
+                    FormField.Text("name", L["名称_1be7ae4fc2"]),
+                    FormField.Select("parent", L["上级清单_9b74e98db5"], opts.map { it.second }, initial),
+                    FormField.Select("color", L["颜色_8ef4886033"], folderColorNames, L["默认_c8d09cf955"]),
                 ),
-                okText = "创建",
+                okText = L["创建_fcbd093292"],
             ) ?: return@launch
             val name = r["name"].orEmpty().trim()
             if (name.isEmpty()) {
-                NoteBoxState.toast("清单名称不能为空", ToastKind.Err)
+                NoteBoxState.toast(tr("清单名称不能为空_6250381cc7"), ToastKind.Err)
                 return@launch
             }
             val pid = opts.firstOrNull { it.second == r["parent"] }?.first
-            val hex = NB_NOTE_COLORS[folderColorNames.indexOf(r["color"] ?: "默认").coerceAtLeast(0)]
+            val hex = NB_NOTE_COLORS[folderColorNames.indexOf(r["color"] ?: L["默认_c8d09cf955"]).coerceAtLeast(0)]
             try {
                 val created = withContext(Dispatchers.IO) {
                     NoteBoxState.api.createFolder(name, "todo", pid, hex)
                 }
                 listSel = "f:" + created.int("id")
-                NoteBoxState.toast("已创建清单「$name」", ToastKind.Ok)
+                NoteBoxState.toast(tr("已创建清单_name_0235b26a57"), ToastKind.Ok)
                 load()
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "创建失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("创建失败_deb3990191"), ToastKind.Err)
             }
         }
     }
@@ -333,31 +336,31 @@ private fun TodosInner() {
         scope.launch {
             val blocked = folderSubtreeIds(folders, folder.id)
             val opts = folderParentOptions(folders).filter { it.first == null || it.first !in blocked }
-            val initial = opts.firstOrNull { it.first == folder.parentId }?.second ?: "（顶层）"
+            val initial = opts.firstOrNull { it.first == folder.parentId }?.second ?: L["顶层_8dcb7af51d"]
             val r = Modal.prompt(
-                "编辑清单",
+                L["编辑清单_b94bb808ea"],
                 listOf(
-                    FormField.Text("name", "名称", folder.name),
-                    FormField.Select("parent", "上级清单", opts.map { it.second }, initial),
-                    FormField.Select("color", "颜色", folderColorNames, colorNameOf(folder.color)),
+                    FormField.Text("name", L["名称_1be7ae4fc2"], folder.name),
+                    FormField.Select("parent", L["上级清单_9b74e98db5"], opts.map { it.second }, initial),
+                    FormField.Select("color", L["颜色_8ef4886033"], folderColorNames, colorNameOf(folder.color)),
                 ),
-                okText = "保存",
+                okText = L["保存_fadf24dbc5"],
             ) ?: return@launch
             val name = r["name"].orEmpty().trim()
             if (name.isEmpty()) {
-                NoteBoxState.toast("清单名称不能为空", ToastKind.Err)
+                NoteBoxState.toast(tr("清单名称不能为空_6250381cc7"), ToastKind.Err)
                 return@launch
             }
             val pid = opts.firstOrNull { it.second == r["parent"] }?.first
-            val hex = NB_NOTE_COLORS[folderColorNames.indexOf(r["color"] ?: "默认").coerceAtLeast(0)]
+            val hex = NB_NOTE_COLORS[folderColorNames.indexOf(r["color"] ?: L["默认_c8d09cf955"]).coerceAtLeast(0)]
             try {
                 withContext(Dispatchers.IO) {
                     NoteBoxState.api.updateFolder(folder.id, name, pid, hex, folder.position)
                 }
-                NoteBoxState.toast("清单已更新", ToastKind.Ok)
+                NoteBoxState.toast(tr("清单已更新_f933c18e79"), ToastKind.Ok)
                 load()
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "保存失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("保存失败_40525a7328"), ToastKind.Err)
             }
         }
     }
@@ -365,9 +368,9 @@ private fun TodosInner() {
     fun removeList(folder: NoteFolder) {
         scope.launch {
             val ok = Modal.confirm(
-                "删除清单",
-                "删除「${folder.name}」？其中的待办与子清单会移动到上一级，不会被删除。",
-                okText = "删除", danger = true,
+                L["删除清单_9ef1393048"],
+                trf("删除_0_其中的待办与子清单会移动到上一级_a7634c43e7", folder.name),
+                okText = L["删除_3755f56f2f"], danger = true,
             )
             if (!ok) return@launch
             try {
@@ -376,50 +379,50 @@ private fun TodosInner() {
                     val selId = listSel.removePrefix("f:").toIntOrNull()
                     if (selId != null && selId in folderSubtreeIds(folders, folder.id)) listSel = ""
                 }
-                NoteBoxState.toast("清单已删除，内容已移到上一级", ToastKind.Ok)
+                NoteBoxState.toast(tr("清单已删除_内容已移到上一级_71c8380991"), ToastKind.Ok)
                 load()
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "删除失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("删除失败_72250c5922"), ToastKind.Err)
             }
         }
     }
 
     fun delete(t: TodoRec) {
         scope.launch {
-            val ok = Modal.confirm("删除事项", "删除事项「${t.title}」？", okText = "删除", danger = true)
+            val ok = Modal.confirm(L["删除事项_baf69ed21f"], trf("删除事项_0_fd51d58bcb", t.title), okText = L["删除_3755f56f2f"], danger = true)
             if (!ok) return@launch
             try {
                 withContext(Dispatchers.IO) { NoteBoxState.api.deleteTodo(t.id) }
                 todos = todos.filterNot { it.id == t.id }
-                NoteBoxState.toast("已删除")
+                NoteBoxState.toast(tr("已删除_fb5fe1e266"))
                 NoteBoxState.refreshStats()
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "删除失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("删除失败_72250c5922"), ToastKind.Err)
             }
         }
     }
 
     PageScaffold(
-        title = "待办清单",
-        desc = "NoteBox 待办事项（支持截止时间与邮件提醒）",
+        title = L["待办清单_febc09d1b1"],
+        desc = L["notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad"],
         actions = { NoteUserChip() },
         scrollBody = false, // 列表区独立滚动、占满剩余高度
     ) {
         val stats = com.servermaintance.panel.core.NoteBoxState.stats.value
         NbStatRow(stats)
 
-        val listLabels = listOf("全部清单", "未归类") + folderFlat(folders).map { folderPathName(folders, it.id) }
+        val listLabels = listOf(L["全部清单_54e487ccc0"], L["未归类_9af2c7babc"]) + folderFlat(folders).map { folderPathName(folders, it.id) }
         val currentListLabel = when {
-            listSel == "none" -> "未归类"
+            listSel == "none" -> L["未归类_9af2c7babc"]
             listSel.startsWith("f:") -> folderPathName(folders, listSel.removePrefix("f:").toIntOrNull())
-            else -> "全部清单"
+            else -> L["全部清单_54e487ccc0"]
         }
         val selectedList = folders.firstOrNull { "f:${it.id}" == listSel }
         fun pickList(label: String) {
             when (label) {
-                "全部清单" -> listSel = ""
-                "未归类" -> listSel = "none"
-                "＋ 新建清单…" -> createList(selectedList?.id)
+                L["全部清单_54e487ccc0"] -> listSel = ""
+                L["未归类_9af2c7babc"] -> listSel = "none"
+                L["新建清单_76f9b5e92e"] -> createList(selectedList?.id)
                 else -> folderFlat(folders).firstOrNull { folderPathName(folders, it.id) == label }
                     ?.let { listSel = "f:${it.id}" }
             }
@@ -466,11 +469,11 @@ private fun TodosInner() {
                 Box(Modifier.weight(1f).onFocusEvent { qaFocused = it.isFocused }) {
                     Field(
                         qaTitle, { qaTitle = it }, Modifier.fillMaxWidth(),
-                        hint = "想到什么，立刻记下来…", singleLine = true,
+                        hint = L["想到什么_立刻记下来_c54f483edc"], singleLine = true,
                     )
                 }
                 Box(Modifier.nbPressScale(0.96f)) {
-                    PrimaryBtn(text = "添加", icon = "plus", onClick = {
+                    PrimaryBtn(text = L["添加_94191ce210"], icon = "plus", onClick = {
                     val title = qaTitle.trim()
                     if (title.isEmpty()) return@PrimaryBtn
                     scope.launch {
@@ -482,23 +485,23 @@ private fun TodosInner() {
                             if (d.isNotEmpty() && t.isNotEmpty()) {
                                 dueAt = epochOf(d, t)
                                 if (dueAt == null) {
-                                    NoteBoxState.toast("日期/时间格式不对（YYYY-MM-DD 与 HH:mm）", ToastKind.Warn)
+                                    NoteBoxState.toast(tr("日期_时间格式不对_yyyy_mm_dd_与_h_8b0d431063"), ToastKind.Warn)
                                     return@launch
                                 }
                             } else if (d.isNotEmpty()) {
-                                if (!Regex("^\\d{4}-\\d{2}-\\d{2}$").containsMatchIn(d)) {
-                                    NoteBoxState.toast("日期格式应为 YYYY-MM-DD", ToastKind.Warn)
+                                if (!Regex("^\\d{4}-\\d{2}-\\d{2}\$").containsMatchIn(d)) {
+                                    NoteBoxState.toast(tr("日期格式应为_yyyy_mm_dd_565fb221c7"), ToastKind.Warn)
                                     return@launch
                                 }
                                 dueDate = d
                             } else if (t.isNotEmpty()) {
                                 // 只给时间 = 今天该时刻
                                 dueAt = epochOf(localDateStr(), t) ?: run {
-                                    NoteBoxState.toast("时间格式应为 HH:mm", ToastKind.Warn)
+                                    NoteBoxState.toast(tr("时间格式应为_hh_mm_8820852ef2"), ToastKind.Warn)
                                     return@launch
                                 }
                             }
-                            val pri = when (qaPriority) { "高" -> 3; "低" -> 1; else -> 2 }
+                            val pri = when (qaPriority) { L["高_b096b3f5ac"] -> 3; L["低_b9ee259b7f"] -> 1; else -> 2 }
                             val n = withContext(Dispatchers.IO) {
                                 NoteBoxState.api.createTodo(
                                     title, priority = pri, dueAt = dueAt, dueDate = dueDate,
@@ -509,7 +512,7 @@ private fun TodosInner() {
                             qaTitle = ""; qaDate = ""; qaTime = ""
                             NoteBoxState.refreshStats()
                         } catch (e: Exception) {
-                            NoteBoxState.toast(e.message ?: "添加失败", ToastKind.Err)
+                            NoteBoxState.toast(e.message ?: tr("添加失败_9d563ebbbd"), ToastKind.Err)
                         }
                     }
                     })
@@ -525,28 +528,28 @@ private fun TodosInner() {
                 val todayStr = localDateStr()
                 val tomorrowStr = localDateStr(1)
                 val dayAfterStr = localDateStr(2)
-                NbQuickChip("今天", qaDate == todayStr) { qaDate = if (qaDate == todayStr) "" else todayStr }
-                NbQuickChip("明天", qaDate == tomorrowStr) { qaDate = if (qaDate == tomorrowStr) "" else tomorrowStr }
-                NbQuickChip("后天", qaDate == dayAfterStr) { qaDate = if (qaDate == dayAfterStr) "" else dayAfterStr }
+                NbQuickChip(L["今天_17e83cc25e"], qaDate == todayStr) { qaDate = if (qaDate == todayStr) "" else todayStr }
+                NbQuickChip(L["明天_b76ce230d3"], qaDate == tomorrowStr) { qaDate = if (qaDate == tomorrowStr) "" else tomorrowStr }
+                NbQuickChip(L["后天_639e8f00b7"], qaDate == dayAfterStr) { qaDate = if (qaDate == dayAfterStr) "" else dayAfterStr }
                 Box(Modifier.widthIn(max = 124.dp)) {
-                    Field(qaDate, { qaDate = it }, label = null, hint = "YYYY-MM-DD", mono = true, singleLine = true)
+                    Field(qaDate, { qaDate = it }, label = null, hint = L["yyyy_mm_dd_d3f8f7b810"], mono = true, singleLine = true)
                 }
                 Box(Modifier.widthIn(max = 92.dp)) {
-                    Field(qaTime, { qaTime = it }, label = null, hint = "HH:mm", mono = true, singleLine = true)
+                    Field(qaTime, { qaTime = it }, label = null, hint = L["hh_mm_9668f5afb0"], mono = true, singleLine = true)
                 }
                 Box(Modifier.widthIn(max = 92.dp)) {
-                    SelectField(qaPriority, listOf("低", "中", "高"), { qaPriority = it })
+                    SelectField(qaPriority, listOf(L["低_b9ee259b7f"], L["中_0869071c92"], L["高_b096b3f5ac"]), { qaPriority = it })
                 }
                 Box(Modifier.widthIn(max = 140.dp)) {
-                    SelectField(currentListLabel, listLabels + "＋ 新建清单…", { pickList(it) }, placeholder = "清单")
+                    SelectField(currentListLabel, listLabels + L["新建清单_76f9b5e92e"], { pickList(it) }, placeholder = L["清单_01af8c6eed"])
                 }
                 if (selectedList != null) {
-                    TodoMiniIcon("edit", "编辑清单") { editList(selectedList) }
-                    TodoMiniIcon("trash", "删除清单", danger = true) { removeList(selectedList) }
+                    TodoMiniIcon("edit", L["编辑清单_b94bb808ea"]) { editList(selectedList) }
+                    TodoMiniIcon("trash", L["删除清单_9ef1393048"], danger = true) { removeList(selectedList) }
                 }
                 if (!platformHandheld) {
                     Spacer(Modifier.weight(1f))
-                    CheckRow(qaRemind, { qaRemind = it }, "到期邮件提醒")
+                    CheckRow(qaRemind, { qaRemind = it }, L["到期邮件提醒_4e76e9fec7"])
                 }
             }
             if (platformHandheld) {
@@ -557,15 +560,15 @@ private fun TodosInner() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Box(Modifier.weight(1f)) {
-                        SelectField(qaPriority, listOf("低", "中", "高"), { qaPriority = it })
+                        SelectField(qaPriority, listOf(L["低_b9ee259b7f"], L["中_0869071c92"], L["高_b096b3f5ac"]), { qaPriority = it })
                     }
-                    CheckRow(qaRemind, { qaRemind = it }, "到期提醒")
+                    CheckRow(qaRemind, { qaRemind = it }, L["到期提醒_ce425cc527"])
                 }
             }
         }
 
         /* 搜索 + tabs（滑动胶囊分段控件，带计数徽标；同 app.js #todo-tabs） */
-        val filterLabels = listOf("今天", "未完成", "即将", "已完成", "全部")
+        val filterLabels = listOf(L["今天_17e83cc25e"], L["未完成_b61b08aec3"], L["即将_f48bcfb627"], L["已完成_e99b48a29b"], L["全部_778fc8f994"])
         val filterKeys = listOf(FILTER_TODAY, FILTER_INBOX, FILTER_UPCOMING, FILTER_DONE, FILTER_ALL)
         val filterCounts = filterKeys.map { f -> todos.count { matchesFilter(it, f) } }
         val selectedFilterIdx = filterKeys.indexOf(filter).coerceAtLeast(0)
@@ -576,13 +579,13 @@ private fun TodosInner() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    SearchField(q, { q = it }, Modifier.weight(1f), placeholder = "搜索事项…")
+                    SearchField(q, { q = it }, Modifier.weight(1f), placeholder = L["搜索事项_a5b34743c2"])
                     Box(Modifier.widthIn(max = 120.dp)) {
                         SelectField(
-                            if (tagFilter.isEmpty()) "全部标签" else "#$tagFilter",
-                            listOf("全部标签") + allTags,
-                            { tagFilter = if (it == "全部标签") "" else it },
-                            placeholder = "标签",
+                            if (tagFilter.isEmpty()) L["全部标签_ffd92f5524"] else "#$tagFilter",
+                            listOf(L["全部标签_ffd92f5524"]) + allTags,
+                            { tagFilter = if (it == L["全部标签_ffd92f5524"]) "" else it },
+                            placeholder = L["标签_ae0a7afece"],
                         )
                     }
                 }
@@ -601,13 +604,13 @@ private fun TodosInner() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                SearchField(q, { q = it }, Modifier.weight(1f), placeholder = "搜索事项…")
+                SearchField(q, { q = it }, Modifier.weight(1f), placeholder = L["搜索事项_a5b34743c2"])
                 Box(Modifier.widthIn(max = 130.dp)) {
                     SelectField(
-                        if (tagFilter.isEmpty()) "全部标签" else "#$tagFilter",
-                        listOf("全部标签") + allTags,
-                        { tagFilter = if (it == "全部标签") "" else it },
-                        placeholder = "标签",
+                        if (tagFilter.isEmpty()) L["全部标签_ffd92f5524"] else "#$tagFilter",
+                        listOf(L["全部标签_ffd92f5524"]) + allTags,
+                        { tagFilter = if (it == L["全部标签_ffd92f5524"]) "" else it },
+                        placeholder = L["标签_ae0a7afece"],
                     )
                 }
                 NbSegmented(
@@ -640,7 +643,7 @@ private fun TodosInner() {
                     Column(Modifier.fillMaxWidth().padding(bottom = 10.dp).nbEnter(6)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                "完成进度",
+                                L["完成进度_722d50c7b4"],
                                 color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.SemiBold, letterSpacing = 0.8.sp,
                             )
@@ -660,8 +663,8 @@ private fun TodosInner() {
                 if (list.isEmpty()) {
                     NbEmptyGlow(
                         icon = "sparkle",
-                        title = if (filter == FILTER_DONE) "还没有完成的事项" else "这里空空如也",
-                        subtitle = "在上方输入框快速添加一条待办",
+                        title = if (filter == FILTER_DONE) L["还没有完成的事项_a290b58977"] else L["这里空空如也_c631010e57"],
+                        subtitle = L["在上方输入框快速添加一条待办_55d72d1b70"],
                         Modifier.padding(top = 24.dp),
                     )
                 } else {
@@ -706,26 +709,26 @@ private fun TodosInner() {
                     val pending = todos.count { it.status == "pending" }
                     val done = todos.count { it.status == "done" }
                     Text(
-                        "未完成 ${nbCountUp(pending)} · 已完成 ${nbCountUp(done)}",
+                        trf("未完成_0_已完成_1_38023d83b8", nbCountUp(pending), nbCountUp(done)),
                         color = Palette.muted, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace,
                         modifier = Modifier.weight(1f),
                     )
-                    GhostBtn(text = "清理已完成", icon = "trash", onClick = {
+                    GhostBtn(text = L["清理已完成_149b3c638f"], icon = "trash", onClick = {
                         scope.launch {
                             val n = todos.count { it.status == "done" }
                             if (n == 0) {
-                                NoteBoxState.toast("没有已完成的事项")
+                                NoteBoxState.toast(tr("没有已完成的事项_2cda631543"))
                                 return@launch
                             }
-                            val ok = Modal.confirm("清理已完成", "删除全部 $n 条已完成事项？", okText = "清理", danger = true)
+                            val ok = Modal.confirm(L["清理已完成_149b3c638f"], trf("删除全部_0_条已完成事项_edea779a77", n), okText = L["清理_907c3945d8"], danger = true)
                             if (!ok) return@launch
                             try {
                                 val deleted = withContext(Dispatchers.IO) { NoteBoxState.api.clearDone() }
                                 todos = todos.filter { it.status != "done" }
-                                NoteBoxState.toast("已清理 $deleted 条")
+                                NoteBoxState.toast(tr("已清理_deleted_条_4c23a20ddb"))
                                 NoteBoxState.refreshStats()
                             } catch (e: Exception) {
-                                NoteBoxState.toast(e.message ?: "清理失败", ToastKind.Err)
+                                NoteBoxState.toast(e.message ?: tr("清理失败_6f2390db7a"), ToastKind.Err)
                             }
                         }
                     })
@@ -755,14 +758,14 @@ private fun TodosInner() {
                         todos = todos.map { if (it.id == rec.id) rec else it }
                         editing = null
                         if (rec.nextId > 0) {
-                            NoteBoxState.toast("已保存 · 下一次重复已自动排期", ToastKind.Ok)
+                            NoteBoxState.toast(tr("已保存_下一次重复已自动排期_866a056587"), ToastKind.Ok)
                             load()
                         } else {
-                            NoteBoxState.toast("已保存")
+                            NoteBoxState.toast(tr("已保存_cdfab96f75"))
                         }
                         NoteBoxState.refreshStats()
                     } catch (e: Exception) {
-                        NoteBoxState.toast(e.message ?: "保存失败", ToastKind.Err)
+                        NoteBoxState.toast(e.message ?: tr("保存失败_40525a7328"), ToastKind.Err)
                     }
                 }
             },
@@ -805,7 +808,7 @@ private fun TodoMiniIcon(icon: String, hint: String, danger: Boolean = false, on
 
 @Composable
 private fun TodoGroupHeader(g: String, count: Int, modifier: Modifier = Modifier) {
-    val overdue = g == "已过期"
+    val overdue = g == L["已过期_1354374f76"]
     val overduePulse by rememberInfiniteTransition(label = "overdue").animateFloat(
         initialValue = 1f,
         targetValue = 0.55f,
@@ -1244,21 +1247,21 @@ private fun TodoEditDialog(
                     PanelIcon("checkSquare", 13.dp, AccentState.current.secondary)
                 }
                 Spacer(Modifier.size(8.dp))
-                Text("编辑事项", color = Palette.text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text(L["编辑事项_6ea6964be4"], color = Palette.text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
             }
             Spacer(Modifier.size(12.dp))
-            Field(title, { title = it }, Modifier.fillMaxWidth().nbEnter(1), label = "标题", singleLine = true)
+            Field(title, { title = it }, Modifier.fillMaxWidth().nbEnter(1), label = L["标题_748d7dc7e3"], singleLine = true)
             Spacer(Modifier.size(8.dp))
-            Field(detail, { detail = it }, Modifier.fillMaxWidth().nbEnter(1), label = "备注", hint = "可选…", singleLine = false)
+            Field(detail, { detail = it }, Modifier.fillMaxWidth().nbEnter(1), label = L["备注_e0361480e3"], hint = L["可选_2f3b613ff2"], singleLine = false)
             Spacer(Modifier.size(8.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Field(tags, { tags = it }, Modifier.weight(1f), label = "标签", hint = "逗号分隔", singleLine = true)
+                Field(tags, { tags = it }, Modifier.weight(1f), label = L["标签_ae0a7afece"], hint = L["逗号分隔_c3f6abcdf5"], singleLine = true)
                 Box(Modifier.weight(1f)) {
-                    val listLabels = listOf("未归类") + folderFlat(folders).map { folderPathName(folders, it.id) }
+                    val listLabels = listOf(L["未归类_9af2c7babc"]) + folderFlat(folders).map { folderPathName(folders, it.id) }
                     val current = folderPathName(folders, folderId)
                     SelectField(current, listLabels, { label ->
                         folderId = folderFlat(folders).firstOrNull { folderPathName(folders, it.id) == label }?.id
-                    }, label = "清单")
+                    }, label = L["清单_01af8c6eed"])
                 }
             }
             Spacer(Modifier.size(8.dp))
@@ -1272,28 +1275,28 @@ private fun TodoEditDialog(
                     val todayStr = localDateStr()
                     val tomorrowStr = localDateStr(1)
                     val dayAfterStr = localDateStr(2)
-                    NbQuickChip("今天", date == todayStr) { date = if (date == todayStr) "" else todayStr }
-                    NbQuickChip("明天", date == tomorrowStr) { date = if (date == tomorrowStr) "" else tomorrowStr }
-                    NbQuickChip("后天", date == dayAfterStr) { date = if (date == dayAfterStr) "" else dayAfterStr }
+                    NbQuickChip(L["今天_17e83cc25e"], date == todayStr) { date = if (date == todayStr) "" else todayStr }
+                    NbQuickChip(L["明天_b76ce230d3"], date == tomorrowStr) { date = if (date == tomorrowStr) "" else tomorrowStr }
+                    NbQuickChip(L["后天_639e8f00b7"], date == dayAfterStr) { date = if (date == dayAfterStr) "" else dayAfterStr }
                     if (date.isNotEmpty() || time.isNotEmpty()) {
-                        NbQuickChip("清除", false) { date = ""; time = "" }
+                        NbQuickChip(L["清除_7b15e5e8e7"], false) { date = ""; time = "" }
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Field(date, { date = it }, Modifier.weight(1f), label = "截止日期", hint = "YYYY-MM-DD", mono = true, singleLine = true)
-                    Field(time, { time = it }, Modifier.weight(1f), label = "截止时间", hint = "HH:mm", mono = true, singleLine = true)
+                    Field(date, { date = it }, Modifier.weight(1f), label = L["截止日期_9b3177f0b7"], hint = L["yyyy_mm_dd_d3f8f7b810"], mono = true, singleLine = true)
+                    Field(time, { time = it }, Modifier.weight(1f), label = L["截止时间_864048b32f"], hint = L["hh_mm_9668f5afb0"], mono = true, singleLine = true)
                 }
             }
             Spacer(Modifier.size(10.dp))
             /* 优先级：滑动胶囊分段选择（替代下拉框，单手可达） */
             Column(Modifier.nbEnter(3)) {
                 Text(
-                    "优先级",
+                    L["优先级_7cabe771eb"],
                     color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold, letterSpacing = 0.8.sp,
                     modifier = Modifier.padding(bottom = 5.dp),
                 )
-                val priOptions = listOf("无", "低", "中", "高")
+                val priOptions = listOf(L["无_72077749f7"], L["低_b9ee259b7f"], L["中_0869071c92"], L["高_b096b3f5ac"])
                 NbSegmented(
                     options = priOptions,
                     selected = priOptions.indexOf(pri).coerceAtLeast(0),
@@ -1305,12 +1308,12 @@ private fun TodoEditDialog(
             /* 重复规则 */
             Column(Modifier.nbEnter(3)) {
                 Text(
-                    "重复",
+                    L["重复_6e708ba759"],
                     color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold, letterSpacing = 0.8.sp,
                     modifier = Modifier.padding(bottom = 5.dp),
                 )
-                val repOptions = listOf("不重复", "每天", "工作日", "每周", "每月")
+                val repOptions = listOf(L["不重复_d081b5aa6a"], L["每天_5e4715ffc0"], L["工作日_27b4a6aed2"], L["每周_a93b55d8bf"], L["每月_24aedc3608"])
                 val repKeys = listOf("none", "daily", "weekdays", "weekly", "monthly")
                 NbSegmented(
                     options = repOptions,
@@ -1323,7 +1326,7 @@ private fun TodoEditDialog(
             /* 子任务清单 */
             Column(Modifier.fillMaxWidth().nbEnter(3)) {
                 Text(
-                    "子任务" + if (subtasks.isNotEmpty()) " · ${subtasks.count { it.done }}/${subtasks.size}" else "",
+                    L["子任务_2a8ce33ff0"] + if (subtasks.isNotEmpty()) " · ${subtasks.count { it.done }}/${subtasks.size}" else "",
                     color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold, letterSpacing = 0.8.sp,
                     modifier = Modifier.padding(bottom = 5.dp),
@@ -1351,7 +1354,7 @@ private fun TodoEditDialog(
                             maxLines = 1, overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.weight(1f),
                         )
-                        TodoMiniIcon("close", "删除子任务") {
+                        TodoMiniIcon("close", L["删除子任务_165f2995e1"]) {
                             subtasks = subtasks.filterNot { it.id == s.id }
                         }
                     }
@@ -1364,16 +1367,16 @@ private fun TodoEditDialog(
                     Box(Modifier.weight(1f)) {
                         Field(
                             newSub, { newSub = it }, Modifier.fillMaxWidth(),
-                            hint = "添加子任务…", singleLine = true,
+                            hint = L["添加子任务_bcec5e13ad"], singleLine = true,
                         )
                     }
-                    TodoMiniIcon("plus", "添加子任务") { addSubtask() }
+                    TodoMiniIcon("plus", L["添加子任务_1f50119c5b"]) { addSubtask() }
                 }
             }
             Spacer(Modifier.size(10.dp))
             Column(Modifier.nbEnter(4)) {
-                CheckRow(remind, { remind = it }, "到期邮件提醒")
-                CheckRow(done, { done = it }, "已完成")
+                CheckRow(remind, { remind = it }, L["到期邮件提醒_4e76e9fec7"])
+                CheckRow(done, { done = it }, L["已完成_e99b48a29b"])
             }
             Spacer(Modifier.size(14.dp))
             Row(
@@ -1382,14 +1385,14 @@ private fun TodoEditDialog(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (onNotify != null && todo.status != "done") {
-                    GhostBtn(text = "发送详情邮件", onClick = onNotify)
+                    GhostBtn(text = L["发送详情邮件_ad8277f7a5"], onClick = onNotify)
                     Spacer(Modifier.weight(1f))
                 }
-                GhostBtn(text = "取消", onClick = onClose)
+                GhostBtn(text = L["win.dialog.cancel"], onClick = onClose)
                 Spacer(Modifier.size(8.dp))
-                DangerBtn(text = "删除", onClick = onDelete)
+                DangerBtn(text = L["删除_3755f56f2f"], onClick = onDelete)
                 Spacer(Modifier.size(8.dp))
-                PrimaryBtn(text = "保存", onClick = {
+                PrimaryBtn(text = L["保存_fadf24dbc5"], onClick = {
                     val d = date.trim()
                     val tm = time.trim()
                     var dueAt: Long? = null
@@ -1397,19 +1400,19 @@ private fun TodoEditDialog(
                     if (d.isNotEmpty() && tm.isNotEmpty()) {
                         dueAt = epochOf(d, tm) ?: dueAtInit.takeIf { d == dueDateInit }
                         if (dueAt == null) {
-                            NoteBoxState.toast("日期/时间格式不对（YYYY-MM-DD 与 HH:mm）", ToastKind.Warn)
+                            NoteBoxState.toast(tr("日期_时间格式不对_yyyy_mm_dd_与_h_8b0d431063"), ToastKind.Warn)
                             return@PrimaryBtn
                         }
                     } else if (d.isNotEmpty()) {
                         dueDate = d
                     }
-                    val p = when (pri) { "高" -> 3; "中" -> 2; "低" -> 1; else -> 0 }
+                    val p = when (pri) { L["高_b096b3f5ac"] -> 3; L["中_0869071c92"] -> 2; L["低_b9ee259b7f"] -> 1; else -> 0 }
                     if (title.isBlank()) {
-                        NoteBoxState.toast("标题不能为空", ToastKind.Warn)
+                        NoteBoxState.toast(tr("标题不能为空_f2d8d992fe"), ToastKind.Warn)
                         return@PrimaryBtn
                     }
                     if (repeat != "none" && d.isEmpty()) {
-                        NoteBoxState.toast("重复事项需要设置截止日期", ToastKind.Warn)
+                        NoteBoxState.toast(tr("重复事项需要设置截止日期_60cc0d8dec"), ToastKind.Warn)
                         return@PrimaryBtn
                     }
                     onSave(

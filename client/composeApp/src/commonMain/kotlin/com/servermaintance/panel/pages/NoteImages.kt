@@ -1,4 +1,5 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -146,7 +147,7 @@ fun NoteImage(
         Box(modifier.clip(shape), contentAlignment = Alignment.Center) {
             androidx.compose.foundation.Image(
                 bitmap = bmp,
-                contentDescription = alt.ifEmpty { "图片" },
+                contentDescription = alt.ifEmpty { L["图片_be8da62ea1"] },
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxWidth().heightIn(max = maxHeight),
             )
@@ -169,13 +170,13 @@ fun NoteImage(
             if (loading) {
                 com.servermaintance.panel.ui.Spinner(15.dp)
                 Spacer(Modifier.width(9.dp))
-                Text("图片加载中…", color = Palette.muted, fontSize = 11.5.sp)
+                Text(L["图片加载中_c4f542b3bd"], color = Palette.muted, fontSize = 11.5.sp)
             } else {
                 PanelIcon("image", 17.dp, AccentState.current.secondary)
                 Spacer(Modifier.width(9.dp))
                 Column(Modifier.weight(1f)) {
                     Text(
-                        alt.ifEmpty { "图片" },
+                        alt.ifEmpty { L["图片_be8da62ea1"] },
                         color = Palette.text, fontSize = 12.sp, maxLines = 1,
                     )
                     Text(
@@ -183,7 +184,7 @@ fun NoteImage(
                         color = Palette.muted, fontSize = 10.sp, maxLines = 1,
                     )
                 }
-                Text("在浏览器打开", color = AccentState.current.secondary, fontSize = 11.sp)
+                Text(L["在浏览器打开_5eee313d53"], color = AccentState.current.secondary, fontSize = 11.sp)
             }
         }
     }
@@ -234,7 +235,7 @@ fun NoteMediaLink(
         Column(Modifier.weight(1f)) {
             Text(name, color = Palette.text, fontSize = 12.5.sp, maxLines = 1)
             Text(
-                if (kind == "audio") "音频 · 点击用系统播放器打开" else "视频 · 点击用系统播放器打开",
+                if (kind == "audio") L["音频_点击用系统播放器打开_fd844cfc73"] else L["视频_点击用系统播放器打开_c723f43942"],
                 color = Palette.muted, fontSize = 10.5.sp, maxLines = 1,
             )
         }
@@ -275,6 +276,6 @@ fun NoteVideoEmbed(
             Text(title, color = Palette.text, fontSize = 12.5.sp, maxLines = 1)
             Text(url.take(90), color = Palette.muted, fontSize = 10.sp, maxLines = 1)
         }
-        Text("播放", color = AccentState.current.secondary, fontSize = 11.5.sp)
+        Text(L["播放_21925350de"], color = AccentState.current.secondary, fontSize = 11.5.sp)
     }
 }

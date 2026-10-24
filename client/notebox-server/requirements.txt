@@ -1,0 +1,4 @@
+flask>=3.0
+waitress>=3.0
+tzdata>=2024.1
+html2text>=2024.2.26

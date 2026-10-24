@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages.db
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,28 +49,28 @@ object DbMeta {
         "postgres" to "postgresql", "mysql" to "mysql", "redis" to "redis-server", "mongo" to "mongod",
     )
 
-    val INSTALL_TARGETS = listOf(
-        InstallTarget("postgres", "PostgreSQL", "apt install postgresql"),
-        InstallTarget("mysql", "MySQL / MariaDB", "apt install mysql-server"),
-        InstallTarget("sqlite", "SQLite", "apt install sqlite3"),
-        InstallTarget("redis", "Redis", "apt install redis-server"),
-        InstallTarget("mongo", "MongoDB", "添加 MongoDB 官方源并安装 mongodb-org"),
-        InstallTarget("db2", "IBM Db2", "添加 IBM 官方源并安装 ibm-db2（体积较大，需接受许可）"),
+    val INSTALL_TARGETS  get() = listOf(
+        InstallTarget("postgres", "PostgreSQL", L["apt_install_postgresql_f023678960"]),
+        InstallTarget("mysql", L["mysql_mariadb_ce3b5d9d54"], L["apt_install_mysql_server_7704278f5b"]),
+        InstallTarget("sqlite", "SQLite", L["apt_install_sqlite3_b7a0471923"]),
+        InstallTarget("redis", "Redis", L["apt_install_redis_server_2e38d828d0"]),
+        InstallTarget("mongo", "MongoDB", L["添加_mongodb_官方源并安装_mongod_76b4de74d6"]),
+        InstallTarget("db2", L["ibm_db2_0d09be87e3"], L["添加_ibm_官方源并安装_ibm_db2_体积_69ef7f8cc7"]),
     )
 
-    val SQL_TABS = listOf(
-        "overview" to "总览与监控", "databases" to "数据库管理", "tables" to "表与数据",
-        "console" to "SQL 控制台", "insights" to "性能洞察", "objects" to "对象浏览器",
-        "roles" to "用户与权限", "backups" to "备份与恢复", "advanced" to "维护与高级",
+    val SQL_TABS  get() = listOf(
+        "overview" to L["总览与监控_70e2feb12d"], "databases" to L["数据库管理_9995484fc6"], "tables" to L["表与数据_c7d230de1a"],
+        "console" to L["sql_控制台_a3458fb2ad"], "insights" to L["性能洞察_71fa3a4ff8"], "objects" to L["对象浏览器_162b30cd08"],
+        "roles" to L["用户与权限_5c0dbf51f4"], "backups" to L["备份与恢复_dddaeefb0e"], "advanced" to L["维护与高级_1b6aefdd47"],
     )
-    val KV_TABS = listOf(
-        "overview" to "总览", "keys" to "键空间", "console" to "命令控制台",
-        "roles" to "用户与权限 (ACL)", "backups" to "备份与恢复", "advanced" to "配置与维护",
+    val KV_TABS  get() = listOf(
+        "overview" to L["总览_c122e1758c"], "keys" to L["键空间_3568205fa0"], "console" to L["命令控制台_3e37a06e5f"],
+        "roles" to L["用户与权限_acl_5b3d9eaa54"], "backups" to L["备份与恢复_dddaeefb0e"], "advanced" to L["配置与维护_9eaf0997b4"],
     )
-    val DOC_TABS = listOf(
-        "overview" to "总览", "databases" to "数据库", "tables" to "集合与文档",
-        "console" to "Shell 控制台", "roles" to "用户与权限", "backups" to "备份与恢复",
-        "advanced" to "索引与维护",
+    val DOC_TABS  get() = listOf(
+        "overview" to L["总览_c122e1758c"], "databases" to L["nav.databases"], "tables" to L["集合与文档_a7e453bdc6"],
+        "console" to L["shell_控制台_6f576115f4"], "roles" to L["用户与权限_5c0dbf51f4"], "backups" to L["备份与恢复_dddaeefb0e"],
+        "advanced" to L["索引与维护_08e65540df"],
     )
 
     fun label(id: String?): String = ENGINE_LABEL[id ?: ""] ?: id ?: ""
@@ -144,7 +146,7 @@ class DbState {
     var tableView by mutableStateOf("data")   // data | structure | ddl
 
     var kvKey by mutableStateOf<String?>(null)
-    var kvPattern by mutableStateOf("*")
+    var kvPattern by mutableStateOf(L["s_df58248c41"])
     var kvDb by mutableStateOf("0")
     var docDb by mutableStateOf<String?>(null)
     var docColl by mutableStateOf<String?>(null)
@@ -215,7 +217,7 @@ suspend fun runDb(
     val r = Actions.run(path, body, successToast = null, title = outputTitle, reload = reload)
     if (r != null && toast) {
         val out = r.str("output")
-        AppState.toast(if (out.isEmpty()) "操作成功" else out, ToastKind.Ok, 6000)
+        AppState.toast(if (out.isEmpty()) tr("操作成功_3c5be5f2a1") else out, ToastKind.Ok, 6000)
     }
     return r
 }
@@ -223,9 +225,9 @@ suspend fun runDb(
 /** 页签加载失败（复刻 renderTab 的 catch → 错误卡分支）。 */
 data class DbFailure(val message: String, val notInstalled: Boolean, val notRunning: Boolean)
 
-private val RE_NOT_INSTALLED = Regex("未安装|未找到")
+private val RE_NOT_INSTALLED = Regex(com.servermaintance.panel.i18n.apiTag("未安装_未找到_87cb306b77"))
 private val RE_NOT_RUNNING = Regex(
-    "未运行|ECONNREFUSED|连接失败|无法连接|No such file|does not exist.*running|not found",
+    com.servermaintance.panel.i18n.apiTag("未运行_econnrefused_连接失败_无法_b31ae4bd85"),
     RegexOption.IGNORE_CASE,
 )
 
@@ -235,8 +237,8 @@ private val RE_NOT_RUNNING = Regex(
  */
 fun dbFailureOf(e: Throwable): DbFailure {
     val msg = when (e) {
-        is ApiException -> e.message ?: "未知错误"
-        else -> e.message ?: e::class.simpleName ?: "未知错误"
+        is ApiException -> e.message ?: L["未知错误_5f76edc5de"]
+        else -> e.message ?: e::class.simpleName ?: L["未知错误_5f76edc5de"]
     }
     return DbFailure(
         message = msg,
@@ -280,5 +282,5 @@ suspend fun downloadNamed(name: String) {
     if (name.isEmpty()) return
     val bytes = AppState.api.download("/db/backup/download?name=${q(name)}")
     val path = platformExporter.saveFile(name, bytes)
-    if (path != null) AppState.toast("已保存到 $path", ToastKind.Ok)
+    if (path != null) AppState.toast(tr("已保存到_path_6a5d7deabb"), ToastKind.Ok)
 }

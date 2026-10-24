@@ -1,0 +1,120 @@
+0_6_每6小时_任务写入_e_369a8da904	0 */6 * * * ທຸກ 6 ຊົ່ວໂມງ. ງານຖືກຂຽນລົງໃນ /etc/cron.d/cm-<ຊື່> ແລະ ເຮັດວຽກດ້ວຍ root.
+0_个文件_81d82139e8	 · ໄຟລ໌ {0} ໃບ
+0_将进入回收站_保留_1_天_0a8a244509	«{0}» ຈະຖືກຍ້າຍໄປຖົງຂີ້ເຫຍື້ອ ແລະ ເກັບໄວ້ {1} ມື້.
+0_条展示_命中_1_条_0e114bc461	({0} ສະແດງ / ຕົງ {1})
+0_表示立即_189b797c4f	0 ໝາຍຄວາມວ່າທັນທີ
+10分钟_b82d31194e	10 ນາທີ
+14_4_表示约_2_天烧完_sre_常用告_681c4dc86d	≥14.4× ໝາຍຄວາມວ່າໝົດງົບປະມານໃນປະມານ 2 ມື້ (ຂີດເຕືອນທົ່ວໄປຂອງ SRE). 4xx ເປັນບັນຫາຝ່າຍ client ຈຶ່ງບໍ່ນັບເຂົ້າງົບປະມານ.
+163_邮箱_设置_pop3_smtp_2cd036d08b	ອີເມວ 163: ການຕັ້ງຄ່າ → POP3/SMTP → ເປີດ ແລະ ສ້າງ «ລະຫັດອະນຸຍາດ», ຕື່ມລົງລຸ່ານີ້ (ບໍ່ແມ່ນລະຫັດເຂົ້າສູ່ລະບົບ).
+1_列表_522d9cc510	1. ລາຍການ
+1小时_3a9a579a96	1 ຊົ່ວໂມງ
+24_小时发送_8e6d358b2e	ສົ່ງໃນ 24 ຊົ່ວໂມງ
+24_小时失败_f23fa2b0e3	ລົ້ມເຫຼວໃນ 24 ຊົ່ວໂມງ
+24_小时拉起次数_8c19db84c7	ຈຳນວນເລີ່ມຂຶ້ນໃນ 24 ຊົ່ວໂມງ
+24_小时通知_ed50056bf1	ການແຈ້ງໃຫ້ຊາບໃນ 24 ຊົ່ວໂມງ
+24小时_45a2727884	24 ຊົ່ວໂມງ
+2_秒_5198950435	2 ວິນາທີ
+30_天_9401eee769	30 ມື້
+30_天后自动清除_b6c489a29c	ລຶບອັດຕະໂນມັດຫຼັງ 30 ມື້
+33m_会话已关闭_be33fffa31	[33m[ລະບົບຫຼອດຖືກປິດ]
+402_额度_fbd56d7158	ຄວາມຈຳກັດ 402
+403_权限_bd93595602	ສິດ 403
+429_拦截_0_7a460e2aa8	429 ຖືກກັ້ນ {0}
+429_拦截_563bec273d	429 ຖືກກັ້ນ
+429_次数_9333e8c60f	ຈຳນວນ 429
+429_限流_5bd5af3cd2	429 ຖືກຈຳກັດ
+499_中断_8a0629ae88	499 ຖືກຂັດຈັງ
+4xx_0_499_中断_1_817ee52e07	4xx {0} · 499 ຖືກຂັດຈັງ {1}
+4xx_0_5xx_1_未授权_4116249143	4xx {0} · 5xx {1} · ບໍ່ໄດ້ຮັບອະນຸຍາດ {2}
+4xx_0_无响应_1_cd8a2943ad	4xx {0} · ບໍ່ມີການຕອບ {1}
+4xx_错误_2368d2493d	ຂໍ້ຜິດພາດ 4xx
+500_毫秒_cc7da43bcf	500 ms
+5xx_无响应_2355276e0d	5xx/ບໍ່ມີການຕອບ
+5xx_错误_6ed859ac67	ຂໍ້ຜິດພາດ 5xx
+6小时_57937ccefc	6 ຊົ່ວໂມງ
+7_天_e45a81074f	7 ມື້
+account_lock_锁定_bbeaf242af	ACCOUNT LOCK (ຖືກລັອກ)
+account_unlock_解锁_b001d58ec0	ACCOUNT UNLOCK (ຖືກປ່ອງລັອກ)
+acl_用户_0_b7e2c3ae45	ຜູ້ໃຊ້ ACL ({0})
+acl_用户_roles_size_8df0ffb733	ຜູ້ໃຊ້ ACL (${roles.size})
+act_服务_a3ebd5a4a1	ບໍລິການ $act
+analyze_会真实执行该语句以采集实际行数与_7e2c3ab4f2	ANALYZE ຈະຮັບຊີງບັນຍາກາດນີ້ເພື່ອເກັບຈຳນວນແຖວ ແລະ ເວລາຈິງ. ກະລຸນາຢືນຢັນວ່າເປັນການສອບຖາມແບບອ່ານຢ່າງດຽວ; ບັນຍາກາດທີ່ມີການຂຽນຈົກໃຫ້ຮັບຊີງໃນຖ້າຍ SQL.
+analyze_更新统计_ae3c35e60c	ANALYZE (ອັບເດດສະຖິຕິ)
+api_地址_acd8a50431	ທີ່ຢູ່ API
+api_基础地址_走代理时填_5c7aa1a51e	ທີ່ຢູ່ພື້ນຖານຂອງ API (ຕື່ມເມື່ອໃຊ້ proxy)
+app.description	ລູກຄ້າຂອງແຜງຕິດຕາມ ແລະ ຕັ້ງຄ່າເຄື່ອງແມ່ຂ່າຍ
+app_连接的_cloud_monitor_面板_0ee7660770	ທີ່ຢູ່ຂອງແຜງ Cloud Monitor ທີ່ app ເຊື່ອມຕໍ່. ເລີ່ມຕົ້ນ http://8.153.153.176/panel, ສາມາດປ່ຽນເປັນທີ່ຢູ່ແຜງທີ່ຕິດຕັ້ງແລ້ວໃດໆກໍໄດ້.
+apt_任务进行中_0_6028d2fbd3	ງານ apt ກຳລັງດຳເນີນຢູ່: {0}
+apt_缓存_c1fb672ce3	ແຄຊ໌ APT
+auditd_未启用_2ca17006e2	auditd ບໍ່ໄດ້ເປີດ
+auditd_记录的敏感文件变更_谁_用什么命令_de2731982f	ການປ່ຽນແປງໄຟລ໌ສຳຄັນທີ່ auditd ບັນທຶກໄວ້: ແມ່ນໃຜ, ໃຊ້ຄຳສັ່ງຫຍັງ, ເປັນໄຟລ໌ໃດ
+badprov_个供应商配额耗尽_363bea5ae6	ຄວາມຈຳກັດຂອງຜູ້ໃຫ້ບໍລິການ $badProv ໝົດແລ້ວ
+banner_能顺带看到对端_openssh_版_6a7382b65e	banner ຍັງສາມາດເຫັນເວີຊັນ OpenSSH ຂອງຝ່າຍກົງ, ເປັນປະໂຫຍດໃນການກວດເບິ່ງຄວາມຈຳເປັນອັບເກຣດ
+bgsave_会在后台生成_rdb_文件_flu_221d58038d	BGSAVE ຈະສ້າງໄຟລ໌ RDB ໃນພື້ນຫຼັງ; FLUSHDB/ALL ຈະລຶບຂໍ້ມູນທັງໝົດ ແລະ ຕ້ອງຢືນຢັນສອງຄັ້ງ.
+bgsave_后台快照_7679d32e01	BGSAVE (ການຖ່າຍຮູບພື້ນຫຼັງ)
+bilibili_视频_7fcd50c628	ວິດີໂອ Bilibili
+certbot_安装日志_1bf087319a	ບັນທຶກການຕິດຕັ້ງ certbot
+certbot_已安装_7690d6f09a	certbot ຕິດຕັ້ງແລ້ວ
+certbot_未安装_b2dd3df63b	certbot ຍັງບໍ່ໄດ້ຕິດຕັ້ງ
+chat_id_或_频道名_beb6893b9b	Chat ID ຫຼື @ຊື່ຊ່ອງ
+check_校验_8a646f2a85	CHECK (ກວດສອບ)
+common.loading	ກຳລັງໂຫຼດ…
+corecount_核高负载_cores_afc43a96da	core $coreCount ໂຫຼດໜັກ · ທັງໝົດ $coresTotal core
+cpu_使用率_35b17729e2	ການນຳໃຊ້ CPU %
+cpu_使用率_bdf91f384b	ການນຳໃຊ້ CPU
+cpu_占用_89f8a08e80	ການໃຊ້ CPU
+cpu_占用_top_52d0789676	ອັນດັບການໃຊ້ CPU
+cpu_核数_2a5bc46dd3	ຈຳນວນ core CPU
+cron_表达式_6859f82ab2	ນິຍາມ Cron
+crontab_l_条目_6be8b3d177	ລາຍການ crontab -l
+csv_内容_粘贴_17c5b7dbff	ເນື້ອຫາ CSV (ວາງ)
+csv_导入结果_3a4d7db0d7	ຜົນການນຳເຂົ້າ CSV
+ctrl_shift_c_v_复制粘贴_会话_7c3872ffae	Ctrl+Shift+C/V ສຳເນົາ/ວາງ · ລະບົບຫຼອດຈະຖືກເກັບໄວ້ 2 ນາທີຫຼັງຈາກອອກຈາກໜ້ານີ້ (server/shell.js GRACE_MS)· 
+curlabel_按天_12556e7b0c	$curLabel · ຕາມມື້
+curlabel_按天_可复用_vs_8cc7c3562a	$curLabel · ຕາມມື້ · ໃຊ້ຊ້ຳ vs. ໃໝ່
+days_天_a6409fc14f	$days ມື້
+db2_sql_以实例用户执行_51f6dbcefb	SQL Db2 (ເຮັດວຽກດ້ວຍຜູ້ໃຊ້ instance)
+db2_授权_grant_revoke_eb50e06ee0	ສິດ Db2 (GRANT / REVOKE)
+db2_用_grant_revoke_管理权限_209a33078b	Db2 ຈັດການສິດດ້ວຍ GRANT/REVOKE; ຜູ້ໃຊ້ຕ້ອງຖືກສ້າງໃນ instance ກ່ອນ (db2 CREATE USER ຫຼືບັນຊີລະບົບປະຕິບັດການ).
+ddl_定义_可编辑后执行_20bea6e0ac	ຄວາມກຳນົດ DDL (ແກ້ໄຂກ່ອນຮັບຊີງ)
+ddl_执行结果_d203cf40d4	ຜົນການຮັບຊີງ DDL
+dirty_待写盘_a3b33885f4	Dirty (ລໍຖ້າຂຽນລົງດິສກ)
+docker_system_prune_af_ead57cbf4c	docker system prune -af: ລຶບ image/ເຄືອຂ່າຍ/container ທີ່ບໍ່ໄດ້ໃຊ້
+docker_安装日志_08ccdea4e9	ບັນທຶກການຕິດຕັ້ງ Docker
+docker_容器_4372ba1200	Container Docker
+docker_引擎_755076c561	ເຄື່ອງຈັກ Docker
+docker_清理_795b9faf02	ການລະບາງ Docker
+drop_table_删除表_0a38c31f25	DROP TABLE (ລຶບຕາຕະລາງ)
+du_尚未返回结果_0af775f143	du ຍັງບໍ່ທັນສົ່ງຜົນກັບມາ
+e_name_将进入回收站_保留_f_b07c62be90	«${e.name}» ຈະຖືກຍ້າຍໄປຖົງຂີ້ເຫຍື້ອ ແລະ ເກັບໄວ້ ${FileStore.trashDays.value} ມື້.
+else_dat_3b7177d8b6	\n            else -> dateTime(t)\n        }\n    }\n\n    /** ສະແດງເປັນເປີເຊັນ: `99.1%` (ຄວາມຖືກຕ້ອງ ≤0.1, ຕັດ 0 ທີ່ເກີນ). */\n    fun pct(p: Number?, suffix: String = 
+error_log_累计_40739fb64e	ລວມ error.log
+etc_cron_d_其它任务_1075d72b5f	/etc/cron.d ງານອື່ນໆ
+etc_cron_daily_cron_h_0b91b3ac69	· script /etc/cron.daily, cron.hourly:
+explain_分析_5739bed548	ການວິເຄາະ EXPLAIN
+fail2ban_未启用_dba20ac8ac	fail2ban ບໍ່ໄດ້ເປີດ
+fail2ban_未安装_未运行_006151f653	fail2ban ບໍ່ທັນຕິດຕັ້ງ/ບໍ່ທັນດຳເນີນ
+fail2ban_监狱_fd16fed272	ຄຸກ fail2ban
+fail2ban_运行中_401151de3a	fail2ban ກຳລັງດຳເນີນ
+fail2ban_防爆破_e5d811ec15	Fail2ban ປ້ອງກັນການບຸກລຸກ
+failedcount_个服务失败_4bb48044cc	$failedCount ບໍລິການລົ້ມເຫຼວ
+failing_项失败_c0f4c9b479	$failing ລາຍການລົ້ມເຫຼວ
+flushall_清空全部_d122dc5ecd	FLUSHALL (ລ້າງທັງໝົດ)
+flushdb_清空当前库_4587c55eaa	FLUSHDB (ລ້າງຖານຂໍ້ມູນປັດຈຸບັນ)
+gzip_归档_39fcde3a7b	ເອກະສານບີບອັດ gzip
+h_label_采集完成_a374e6c968	ການເກັບກຳ {0} ສຳເລັດແລ້ວ
+hmac_签名密钥_可空_d93d6e2984	ລະຫັດລວກ HMAC (ທາງເລືອກ)
+http_方法_b1d337493c	ວິທີການ HTTP
+inode_使用_0_小文件过多时会先耗尽_241698504d	ໃຊ້ inode {0}% (ເມື່ອມີໄຟລ໌ນ້ອຍຫຼາຍຈະໝົດ inode ກ່ອນ)
+inode_使用_m_inodeusedpc_cd43f1cf53	ໃຊ້ inode ${m.inodeUsedPct}% (ເມື່ອມີໄຟລ໌ນ້ອຍຫຼາຍຈະໝົດ inode ກ່ອນ)
+inode_使用率_5279b4b61c	ອັດຕາການໃຊ້ inode
+ip_或域名_6ebd1799de	IP ຫຼືຊື່ໂດເມນ
+ip_来源_f387b79f3d	ແຫຼ່ງ IP
+journal_apt_轮转日志_093250e13f	journal + APT + ບັນທຶກລຽງວຽນ
+journal_上限_0_1_天_d18e51fc4e	ຂີດຈຳກັດ journal {0} / {1} ມື້
+journal_上限_1f54a3217f	ຂີດຈຳກັດ journal
+journal_上限_s_journalsi_1ef09f8f8d	ຂີດຈຳກັດ journal ${s.journalSize} / ${s.journalDays} ມື້
+journal_保留天数_e74cafd94c	ມື້ເກັບໄວ້ຂອງ journal
+journal_日志_b4bd477c2c	ບັນທຶກ journal
+json_文档_e422afa510	ເອກະສານ JSON
+label_失败_4c06e7d781	<label> ລົ້ມເຫຼວ

@@ -1,0 +1,120 @@
+当前索引更新于_0_1c82f67640	Índice atualizado em {0}
+当前采集到的指标_8e4e47b457	Métricas coletadas no momento
+当前镜像_ed71a792a7	Imagem atual
+当前页面_b7d5886b05	 · Página atual
+彻底删除_0_项_无法恢复_9f56fcff22	Excluir definitivamente {0} itens; não é possível recuperar.
+彻底删除_8c0b37b684	Excluir definitivamente
+彻底删除_trash_size_项_无法恢_87a3623728	Excluir definitivamente ${trash.size} itens; não é possível recuperar.
+彻底卸载_33072f5e11	Desinstalar completamente
+待办_csv_3308e95082	CSV de tarefas
+待办_未完成_已完成_7422fade10	Tarefas (pendentes / concluídas)
+待办清单_febc09d1b1	Lista de tarefas
+待探测_51805a6f50	Sonda pendente
+待检测_05fb47fc35	Aguardando verificação
+待邮箱验证_bada0c2e46	Aguardando verificação de e-mail
+待验证_0b48e4bdd8	Aguardando validação
+必须带_http_或_https_e74acdc586	Deve começar com http:// ou https://
+快捷_14249f75ba	Rápido
+快捷模板_423595bef4	Modelos rápidos:
+快速备份_1cbe05845d	Backup rápido
+性能洞察_71fa3a4ff8	Insights de desempenho
+总_0_新增_1_1fd58b4e12	Total {0} · Novos {1}
+总_token_2d5ae33603	Token total
+总占用_3da7163a84	 Uso total
+总大小_0_a2c8d9634b	Tamanho total {0}
+总大小_fmt_bytes_totalsiz_53ae231269	Tamanho total ${Fmt.bytes(totalSize)}
+总容量_8b60ba80ea	Capacidade total
+总尝试_56d2a2d4f5	Total de tentativas
+总成功率_0_重试_1_32f597c3de	Taxa de sucesso total {0}% · Novas tentativas {1}
+总成功率_322a0370e9	Taxa de sucesso total
+总成功率_61b76516e3	Taxa de sucesso total 
+总探测_572bee6277	Total de sondagens
+总流量_出_6efb4930fb	Tráfego total (saída)
+总耗时_2db420d198	Tempo total
+总览_c122e1758c	Visão geral
+总览与监控_70e2feb12d	Visão geral e monitoramento
+总计_3af1ac5b4e	Total
+总请求_d1cac3ca3b	Total de solicitações
+总账号_02ceb243fe	Total de contas
+恢复_79748ca1c6	Restaurar
+恢复_mongodb_归档_ad961869c7	Restaurar arquivo do MongoDB
+恢复_redis_7dd20f103c	Restaurar Redis
+恢复中_176238056c	Restaurando…
+恢复中_d6426a51e5	Restaurando
+恢复于_0_57aae0c315	Restaurado em {0}
+恢复于_rtmrecover_recover_471df21a46	Restaurado em ${rTmRecover(recoverAt)}
+恢复备份到目标数据库_00fbc874c2	Restaurar backup para o banco de dados de destino
+恢复失败_08c8ed5980	Falha ao restaurar:
+恢复失败_76842a0348	Falha na restauração
+恢复完成_笔记_0_条_待办_1_条_7aa19232cf	Restauração concluída: {0} notas, {1} tarefas
+恢复完整备份_640eea92dc	Restaurar backup completo
+恢复方式_4a0ce48265	Método de restauração
+恢复时是否通知_e60cfd9684	Notificar ao restaurar
+恢复结果_25404d8096	Resultado da restauração
+恢复通知_9d088c33ba	Notificação de restauração
+恢复默认地址_4c7fd3785e	Restaurar endereço padrão
+想到什么_立刻记下来_c54f483edc	Anote na hora o que lhe vier à mente…
+慢查询_slowlog_89cb405eab	Consultas lentas (SLOWLOG)
+慢查询_剖析_e7d6b1beb3	Consultas lentas (análise)
+慢查询_热点语句_e4c8bb10fe	Consultas lentas / instruções mais usadas
+成功_0_错误_1_超时_2_4e74aeecc7	Sucesso {0} · Erros {1} · Tempo esgotado {2}
+成功_51991a5d11	Sucesso
+成功导入_0_条待办_0f7f47eb57	{0} tarefas importadas com sucesso
+成功导入_0_条笔记_f1edf5b407	{0} notas importadas com sucesso
+成功导入_n_条待办_37eadf2708	$n tarefas importadas com sucesso
+成功导入_n_条笔记_2f9691a596	$n notas importadas com sucesso
+成功率_0_047cd91c6c	Taxa de sucesso {0}%
+成功率_2xx_占比_服务可用性_非_5_a3d7b27e95	Taxa de sucesso = parcela de 2xx; disponibilidade do serviço = parcela de não 5xx. Uma diferença grande indica que as falhas vêm principalmente de parâmetros ou cota do cliente, não de falhas a monte.
+成功率_df9dc72f2d	Taxa de sucesso
+成功率_monfmt_fixed_sr_1_4fbf1cc803	Taxa de sucesso ${MonFmt.fixed(sr, 1)}%
+成功率_延迟分位_错误分布_配额消耗与_toke_9c60795c78	Taxa de sucesso, percentis de latência, distribuição de erros, consumo de cota e uso de tokens
+成功登录_last_d5df9592bd	Inícios de sessão bem-sucedidos (últimos)
+我_34f201bc50	Eu
+我已知晓风险_强制执行_cd4e2f773d	Estou ciente dos riscos, forçar execução
+我明白风险_执行_a77f5cd3f3	Estou ciente dos riscos, executar
+或_systemd_单元_nginx_serv_14c65e1864	ou unit systemd: nginx.service
+或点左上角_新建笔记_创建_4bb6db19d3	ou clique em "Nova nota" no canto superior esquerdo
+截止日期_9b3177f0b7	Data de vencimento
+截止时间_864048b32f	Hora de vencimento
+所有操作均被审计记录_511c89f737	Todas as ações são registradas para auditoria
+所有管理操作均写入审计日志_logs_a_e2b87d13a1	 · Todas as ações administrativas são escritas no log de auditoria (logs/audit.log)
+所有者_ff3beb8e45	Proprietário
+所有软件包均为最新版本_ee413e3b4c	Todos os pacotes estão atualizados.
+手动_2a4a4de806	Manual
+手动编辑的_root_crontab_请通过_72bfbdde79	· Edite o crontab de root pelo terminal Web (crontab -e)
+手动进程_040082d08d	Processo manual
+打包_0_项到_1_29836a27f5	Empacotar {0} itens em {1}
+打包_selected_size_项到_e42700bf89	Empacotar ${selected.size} itens em ${l.dir}
+打包_tar_gz_ff1dd64457	Empacotar tar.gz
+打包为_tar_gz_3ea0166662	Empacotar como tar.gz
+打包完成_be69db469a	Empacotamento concluído
+打开_65fc81e161	Abrir
+打开所在目录_b4bf69d6b9	Abrir pasta de destino
+执行_0_70b4feea4a	Executar {0}?
+执行_28febba225	Executar
+执行_act_a3e97e4bee	Executar $act?
+执行_action_b272ecea51	Executar $action?
+执行_apt_get_install_y_ce_6568cc1ca1	Execute apt-get install -y certbot; leva de 1 a 3 minutos.
+执行_b_0_b_1695afa501	Executar <b>{0}</b>?
+执行_b_name_b_67f5a659e6	Executar <b>$name</b>?
+执行_create_extension_if_n_aac00658d4	Executar CREATE EXTENSION IF NOT EXISTS $n?
+执行_create_extension_pg_s_6d03312f5d	Executar CREATE EXTENSION pg_stat_statements? Depois de ativado, ainda é preciso adicioná-lo a shared_preload_libraries e reiniciar o banco para começar a coleta de estatísticas.
+执行_ctrl_enter_ecfb73b4d6	Executar (Ctrl+Enter)
+执行_daemon_stop_dfe266a216	Executar daemon-stop?
+执行_ddl_769fdda3d6	Executar DDL
+执行_ddl_操作_0ed0a31f65	Executar operação DDL
+执行_prune_6b4f1926c7	Executar prune?
+执行_trim_de3f191099	Executar TRIM
+执行一次_relay_状态热备份_sqlite_8bc4bec089	Fazer um backup quente do estado do relay (backup online do SQLite, sem interromper o serviço de relay).
+执行中_1f425b6bf0	Em execução
+执行修复_18ad6adf19	Executar reparação
+执行单元_2466ded40e	Executar unidade
+执行命令_bf162782f5	Executar comando
+执行失败_9746cfc7d2	Falha na execução
+执行异常_f5990190d3	Erro de execução
+执行拉起_24779c513a	Executar inicialização
+执行清理_bebeb0649b	Executar limpeza
+执行结果_1b213f405b	Resultado da execução
+执行自愈_d499e88a86	Executar autorreparação
+执行计划_analyze_cc0577dcef	Plano de execução (ANALYZE)
+执行计划_json_5d921dfd27	Plano de execução JSON

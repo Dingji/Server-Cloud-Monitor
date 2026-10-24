@@ -1,0 +1,120 @@
+耗尽_f67eb4df89	Exhausted
+耗时_0_ms_33425ec157	Took {0} ms
+耗时_a9704e1997	Elapsed
+耗时_ms_ms_ec911881a7	Took ${ms} ms
+自动_4afad87755	Automatic
+自动创建_349e19da26	Create if missing
+自动刷新_297a7ec438	Auto refresh
+自动卸载无用包_38e506d175	Auto-remove unused packages
+自动滚动_9642fc88cd	Auto-scroll
+自动维护参数_0967ce32a8	Auto-maintenance parameters
+自动退避重试_3_次后放弃_49f0c34833	Gives up after 3 retries with exponential backoff
+自定义_c493338e8c	Custom
+自定义指标阈值_持续时长_冷却_触发后进_b246e6a458	Custom metric thresholds + duration + cooldown; on trigger it appears in the panel bell and is pushed via channels; silence and maintenance windows supported
+自愈_1df800af75	Self-heal
+自愈状态_177f482cef	Self-heal status
+至少_8_位_bfd5e79db7	At least 8 characters
+至少两次拨测后才有趋势_当前数据不足_9dba5c89f9	A trend needs at least two probes; not enough data yet
+良好_9d2c3d1616	Good
+范围_785b52eb97	Range
+行数_579f280b5d	Row count
+表_0_查询失败_1_efdfadd0f4	Table {0} query failed: {1}
+表_6a954390e3	Table
+表_schema_table_a84ffba1ae	Table (SCHEMA.TABLE)
+表_索引_e5ebf24606	Tables / indexes
+表_视图_43bc5466be	Tables / views
+表与数据_c7d230de1a	Tables & data
+表名_584c112b78	Table name
+表存储与活动明细_cb235ec52f	Table storage & activity details
+表格_150074c2e8	Table
+表注释_80e60abd25	Table comment
+表级_d0102a7431	Table level
+表级授权_0_0060f41bc1	Table-level grants - {0}
+表级授权_dce69aab71	Table-level grants
+表级授权_name_1c25e30cb1	Table-level grants - $name
+表级授权概览_ae18b3f8df	Table-level grants overview
+表级操作需先选择数据库_部分操作可对整库执行_6097ad490b	Table-level actions require selecting a database first (some actions can run on the whole database).
+表级操作需填写_schema_table_a22a79af68	Table-level actions require SCHEMA.TABLE
+表级权限_d2b9ff43fe	Table-level privileges
+表结构操作_可视化_ddl_bc3615f4dc	Table structure actions (visual DDL)
+表达式格式_分_时_日_月_周_例_0_3_191b93658a	Expression format: minute hour day month weekday, e.g. 0 3 * * * daily at 3am · */5 * * * * every 5 min · 
+被依赖_45c402e800	Dependents:
+被封_ip_906f300fbd	Blocked IPs
+被静默的规则_生效窗口_f8eafcb9e5	Muted rules / active windows
+裁剪系统日志_519fd2b507	Trim system logs
+要搜索的值_如错误码_订单号_1b877f6b69	Value to search, e.g. error code / order number
+要解封的_ip_32d685e891	IP to unblock
+覆盖_a26056298a	Overwrite
+覆盖_清空现有笔记和待办_dc20dbc52a	Overwrite (clear existing notes and todos)
+覆盖导入_62808bb73a	Overwrite import
+覆盖恢复_83c574b3b0	Overwrite restore
+覆盖模式会清空现有全部笔记和待办_确定_70547ed81c	Overwrite mode clears ALL existing notes and todos. Continue?
+覆盖率_0_6f0328f096	Coverage {0}
+规则_0_06f04f77d5	Rule: {0}
+规则_ed904c685a	Rules
+规则_rules_firstornull_8454e6f1e2	Rule: ${rules.firstOrNull { r -> r.id == it.ruleId }?.name ?: it.ruleId}
+规则名称_1937bcb105	Rule name
+规则含义_relay_conf_中继配置_r_fc03773de9	Rule meaning: relay_conf relay configuration · relay_db statistics database · relay_keys API keys · 
+规则已保存_引擎_15_秒内生效_7eba92df56	Rule saved; the engine applies it within 15 s
+规则总数_7e76644f62	Total rules
+规范化地址_aa67aafd91	Normalized address
+视图创建_d4916bc963	Create view
+视图名_可带模式_c955eab7b5	View name (schema optional)
+视图管理_2a1f950926	View management
+视频_fa4e33b698	Video
+视频_点击用系统播放器打开_c723f43942	Video · click to open in the system player
+角色_6b26695e4d	Role
+角色列表_0_6ea3fcc772	Role list ({0})
+角色列表_roles_size_75c346b85b	Role list (${roles.size})
+角色属性_0_2879e4b5a3	Role attributes - {0}
+角色属性_name_c9c5cb5d2c	Role attributes - $name
+解包_8684a68cf4	Unpack
+解压_809c04fbd9	Extract
+解封_ip_af385638f1	Unblock IP
+解析依赖_834fe27e03	Resolve dependencies
+解除_ec7ae06b09	Release
+解除_holds_的版本锁定_这些包将恢复自动_1fb2f54761	Release the version hold on $holds? These packages will resume automatic upgrades.
+解除锁定_eafaffdf18	Release hold
+触发_27eccf9785	Trigger
+触发函数_如_audit_log_change_b963c1c7cb	Trigger function, e.g. audit.log_change()
+触发器创建_e06de4e6ff	Create trigger
+触发器名_49c0ed3c54	Trigger name
+触发器管理_42e0df8ee5	Trigger management
+警告_5521e368d8	Warning
+警告_warncount_676d0d869c	$warnCount warning(s)
+警告_将关闭密码认证_请确认已配置_ssh_38bc29023e	\n\nWarning: password authentication will be disabled. Make sure SSH keys are configured, or you may lose access!
+计数已重置_a5eb486ff3	Counters reset
+认证库_e00e7c38bb	Authentication database
+认证方式_e9492d44ee	Authentication method
+记住密码_c3ce923c20	Remember password
+记录这套面板负责哪些机器_用途_环境_负责人_备_83f2ec8ddc	Track which machines this panel manages: purpose, environment, owner, notes — with SSH port reachability probing
+设值_dc6fa77323	Set value
+设备_01f2c16cda	Device
+设置_7debf9cb03	Set
+设置_key_v_并持久化_090be0bfab	Set $key=$v and persist?
+设置_setprofilinglevel_0fa6b3a320	Set setProfilingLevel
+设置参数_da366b05ca	Set parameters
+设置参数_set_c0c8303f97	Set parameters (SET)
+设置连接限制_afae5f556e	Set connection limit
+访问令牌_73bf8411b8	Access token
+访问密码_c737b784cc	Access password
+访问日志_0_错误日志_1_配置_17439127f4	Access log {0} · Error log {1} · Config {2}
+访问路径_48ec0b4545	Access path
+证书_0_天_ba20b6315c	Certificate {0} d
+证书_it_天_0164eab97a	Certificate ${it} d
+证书剩余天数告警线_064149de24	Certificate expiry alert threshold (days)
+证书即将到期_e004d9a87f	Certificate expiring soon
+证书详情_afc5516b7b	Certificate details
+证书默认_443_5250696a3c	Certificate defaults to 443
+证据与建议_5c970a5da1	Evidence & recommendations
+评分按风险权重扣减_严重项扣满权重_建议项扣_b2552dd8e4	Last inspection {0}. The score is reduced by risk weight (critical items deduct the full weight, advisories deduct half)
+评分趋势_最近_trend_size_次_f542a3ab0d	Score trend (last {0} runs)
+试跑_28dc4e1531	Dry run
+试跑失败_778e634d3d	Dry run failed
+试运行_回滚_76da1fb9a1	Dry run (rollback)
+该任务最近探测明细_a5b3a95ce9	Recent probe details for this task
+该动作由服务器白名单实现_执行前会自动做安全校验_455c5e768f	This action is implemented by a server-side whitelist; a safety check runs automatically before execution.
+该实例没有数据库_2bc55e5004	This instance has no databases
+该库没有表_0968570f19	This database has no tables
+该引擎不提供自动缺失索引分析_请参考上方_性能洞_1cc9a56e12	This engine has no automatic missing-index analysis; see "Performance insights" above.
+该引擎不支持在此创建数据库_14508de033	This engine does not support creating databases here.

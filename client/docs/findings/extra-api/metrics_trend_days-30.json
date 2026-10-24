@@ -1,0 +1,50 @@
+{
+ "cpu": {
+  "points": [
+   {
+    "day": "2026-10-15",
+    "v": 2.83
+   },
+   {
+    "day": "2026-10-16",
+    "v": 3.4
+   }
+  ],
+  "slopePerDay": 0.571,
+  "current": 3.4,
+  "daysToFull": 169.3,
+  "days": 2
+ },
+ "mem": {
+  "points": [
+   {
+    "day": "2026-10-15",
+    "v": 28.74
+   },
+   {
+    "day": "2026-10-16",
+    "v": 30.83
+   }
+  ],
+  "slopePerDay": 2.095,
+  "current": 30.83,
+  "daysToFull": 33,
+  "days": 2
+ },
+ "disk": {
+  "points": [
+   {
+    "day": "2026-10-15",
+    "v": 33.34
+   },
+   {
+    "day": "2026-10-16",
+    "v": 33.68
+   }
+  ],
+  "slopePerDay": 0.342,
+  "current": 33.68,
+  "daysToFull": 193.7,
+  "days": 2
+ }
+}

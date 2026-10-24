@@ -1,4 +1,7 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.apiTag
+import com.servermaintance.panel.i18n.tr
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.JsonObject
@@ -65,6 +68,27 @@ object HostState {
 
     fun roleLabel(key: String): String = roles.value.firstOrNull { it.first == key }?.second ?: key
 
+    /** Localize well-known env tags returned/stored by the panel API (canonical Chinese keys). */
+    fun envLabel(env: String): String =
+        when (env) {
+            apiTag("生产_35d6fec69f") -> tr("生产_35d6fec69f")
+            apiTag("预发_8a98f5b5bd") -> tr("预发_8a98f5b5bd")
+            apiTag("测试_0b5d7ed54b") -> tr("测试_0b5d7ed54b")
+            apiTag("开发_eb3774e356") -> tr("开发_eb3774e356")
+            apiTag("其它_295c71ff98") -> tr("其它_295c71ff98")
+            else -> env
+        }
+
+    fun isProdEnv(env: String): Boolean = env == apiTag("生产_35d6fec69f")
+
+    fun defaultEnvOptions(): List<String> = listOf(
+        tr("生产_35d6fec69f"),
+        tr("预发_8a98f5b5bd"),
+        tr("测试_0b5d7ed54b"),
+        tr("开发_eb3774e356"),
+        tr("其它_295c71ff98"),
+    )
+
     suspend fun load() {
         try {
             val o = api.get("/ops/hosts", 5_000)
@@ -90,10 +114,10 @@ object HostState {
         null
     } catch (e: ApiException) {
         if (e.code == 404) unsupported.value = true else lastError.value = e.message
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     } catch (e: Exception) {
         lastError.value = e.message
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     }
 
     suspend fun save(body: JsonObject): String? = mutate("/ops/host/save", body) { load() }
@@ -107,8 +131,8 @@ object HostState {
         null
     } catch (e: ApiException) {
         if (e.code == 404) unsupported.value = true
-        e.message ?: "探测失败"
+        e.message ?: L["探测失败_1e2b42cb65"]
     } catch (e: Exception) {
-        e.message ?: "探测失败"
+        e.message ?: L["探测失败_1e2b42cb65"]
     }
 }

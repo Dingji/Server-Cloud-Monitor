@@ -1,0 +1,120 @@
+注_册_6ec40f6f72	Registrati
+注册_0_5ad4a3af5f	Registrati {0}
+注册中_44941e2818	Registrazione in corso…
+注册失败_a1d7fb5dfc	Registrazione non riuscita
+注册成功_4a1935bccf	Registrazione riuscita
+注册成功_请查收验证邮件_4d1b9bd9db	Registrazione riuscita, controlla l'email di verifica
+活动_active_9032cdb7c5	Attivo (active)
+活动_b2548636f0	Attivo
+活动统计_3be3732c86	Statistiche attività
+活动连接_0_e7e5929f6f	Connessioni attive ({0})
+活动连接_procs_size_477bb041cd	Connessioni attive (${procs.size})
+活跃会话_42a08c5386	Sessioni attive
+流式_0_非流式_1_bfb0038923	Streaming {0} · Non in streaming {1}
+流式_e4d8c16cd2	In streaming
+流式会话时长分布_8068bcaea8	Distribuzione della durata delle sessioni in streaming
+流式占比_43c882ec7b	Quota di streaming
+流式按模型_1fcdeff1cf	Streaming per modello
+流式请求_每日_d59ef41152	Richieste in streaming (giornaliere)
+流量分析_3953320414	Analisi del traffico
+浅色_80ec9e2b1b	Chiaro
+测试_0b5d7ed54b	Test
+测试中_49562bf14c	Test in corso…
+测试发送_614cdaef43	Invia test
+测试连接_10b7d8eccc	Testa connessione
+测试邮件发送结果_9b487677ed	Esito invio email di test
+测试邮件已发送_请查收_bb593d799c	Email di test inviata, controlla la posta
+测速_304d8c0081	Test velocità
+测速全部_42afec91d1	Testa tutte le velocità
+浏览_ef23ea67b0	Sfoglia
+消息格式_19b61b1c63	Formato del messaggio
+涉及文件_f54d77becb	File coinvolti
+深色_30b2c979ac	Scuro
+添加_94191ce210	Aggiungi
+添加_ibm_官方源并安装_ibm_db2_体积_69ef7f8cc7	Aggiungi il repository ufficiale IBM e installa ibm-db2 (download di grandi dimensioni, è necessario accettare la licenza)
+添加_mongodb_官方源并安装_mongod_76b4de74d6	Aggiungi il repository ufficiale MongoDB e installa mongodb-org
+添加主键_9a777b36f3	Aggiungi chiave primaria
+添加于_0_配额查询于_1_1c991e5cd8	Aggiunto il {0} · Quota consultata il {1}
+添加公钥_3121954aea	Aggiungi chiave pubblica
+添加列_90fcf205d2	Aggiungi colonna
+添加唯一约束_79a24c40af	Aggiungi vincolo di unicità
+添加外键_0c123f4308	Aggiungi chiave esterna
+添加失败_9d563ebbbd	Aggiunta non riuscita
+添加子任务_1f50119c5b	Aggiungi sottoattività
+添加子任务_bcec5e13ad	Aggiungi sottoattività…
+添加密钥_0f17b63bac	Aggiungi chiave
+添加密钥_provid_0f9d502f28	Aggiungi chiave - $provId
+清单_01af8c6eed	Elenco
+清单名称不能为空_6250381cc7	Il nome dell'elenco non può essere vuoto
+清单已删除_内容已移到上一级_71c8380991	Elenco eliminato, i contenuti sono stati spostati a livello superiore
+清单已更新_f933c18e79	Elenco aggiornato
+清屏_e8db7ce0cc	Pulisci schermo
+清理_907c3945d8	Pulisci
+清理_apt_缓存_55c020f574	Pulisci cache apt
+清理历史_ea36817cb3	Cancella cronologia
+清理失败_6f2390db7a	Pulizia non riuscita
+清理孤立依赖_1a60a375a7	Rimuovi dipendenze orfane
+清理已完成_149b3c638f	Pulizia completata
+清理旧备份_17d95953c3	Pulisci vecchi backup
+清理未使用资源_aef1da41a9	Pulisci risorse inutilizzate
+清理缓存_a2cf5ddefb	Svuota cache
+清理项_0_989c8b8e7c	Voce di pulizia {0}
+清理项_d7920a5280	Voci di pulizia
+清空_0_的所有数据_truncate_不_4ddee29cf3	Svuotare tutti i dati di {0} (TRUNCATE)? Irrecuperabile!
+清空_0_窗口内的重启记录_重新给满自愈额度_00414f7998	Svuota le registrazioni di riavvio nella finestra "{0}" e azzera il quota di auto-guarigione.
+清空_84fcd70d42	Svuota
+清空_e_name_窗口内的重启记录_重新_f999fa445b	Svuota le registrazioni di riavvio nella finestra "${e.name}" e azzera il quota di auto-guarigione.
+清空_st_table_的所有数据_tru_663aed317c	Svuotare tutti i dati di ${st.table} (TRUNCATE)? Irrecuperabile!
+清空后恢复_clean_可能丢数据_641f717946	Ripristina dopo lo svuotamento (--clean, potrebbe perdere dati)
+清空回收站_4833ca01fc	Svuota cestino
+清空数据_91ad897e58	Svuota dati
+清空日志_1ef9339dba	Svuota log
+清空表_618d964e8f	Svuota tabella
+清空页缓存_目录项与_inode_缓存_内存紧张_25f5e6c734	Svuota cache delle pagine, voci di directory e cache inode; recupera temporaneamente la memoria quando è scarsa.
+清除_7b15e5e8e7	Cancella
+清除最近访问_d3f083d97b	Cancella accessi recenti
+渠道_c152be9f50	Canale
+渠道名称_99e9ec8d48	Nome canale
+渠道已保存_建议先点_测试发送_8a20b90f03	Canale salvato, consigliato fare clic su “Invia test” prima
+渠道总数_70a84a2aa8	Numero totale di canali
+渠道类型_7ba72e5172	Tipo di canale
+温度_cc6b6c25c5	Temperatura 
+源文件_be43b936dd	File di origine
+源文件备份_0_4a529aae31	Backup del file di origine ({0})
+滚动窗口_f4ad4453d0	Finestra scorrevole
+点_全部探测_刷新状态_4e0ea4e2f7	Fai clic su “Sonda tutti” per aggiornare lo stato
+点上方_新建用户_创建第一个账号_a49eedd915	Fai clic su “Nuovo utente” in alto per creare il primo account
+点击列名可排序_编辑_删除主键_0_a9f0b6e928	Fai clic sul nome di una colonna per ordinare · Modifica/elimina chiave primaria ({0})
+点击列名可排序_该表无主键_编辑需手写_wh_554ef50292	Fai clic sul nome di una colonna per ordinare · Nessuna chiave primaria in questa tabella, la modifica richiede WHERE manuale
+点右上角_新建笔记_开始_96865806de	Fai clic su “Nuova nota” in alto a destra per iniziare
+点左上角_新建笔记_创建_90394355e9	Fai clic su “Nuova nota” in alto a sinistra per creare
+燃烧率_1_正好按预算节奏消耗_6_表_9e0d1c9091	Burn rate 1× = consumo esattamente secondo il ritmo del budget; ≥6× indica che l'intero budget del periodo è bruciato in circa 5 giorni;
+燃烧率_b7f530cc1b	Burn rate
+版本_989d1affa0	Versione
+版本_依赖_维护窗口等_3f2cbde76d	Versione, dipendenze, finestre di manutenzione, ecc.
+版本锁定_f00c209863	Blocco versione
+物理内存_c8353b5f3b	Memoria fisica
+物理挂载点_63c0461fc1	Punti di mount fisici
+状态_62e951a692	Stato
+状态_路线_0f4ee76007	Stato / Percorso
+状态变化才发信_3e6b8f558f	Notifica solo al cambio di stato
+状态文件_ba5e6e9f66	File di stato
+状态码_2fd51d31a7	Codice di stato
+状态码分布_b43479251a	Distribuzione dei codici di stato
+状态码分布_近期访问日志_0405a22fb0	Distribuzione dei codici di stato (log di accesso recenti)
+环境_aa3833ea2a	Ambiente
+环境不具备_17f075425e	Ambiente non disponibile
+环比_0_e9d96f96a1	vs. periodo precedente {0}
+环比上一周期_787f54131c	vs. periodo precedente
+环比昨日_0_e52d529e62	vs. ieri {0}
+琥珀_84c5d7ae27	Ambra
+生产_35d6fec69f	Produzione
+生产环境_7f152260df	Ambiente di produzione
+生效中_4de07ee065	In vigore
+生效位置_applied_8b922ae94b	Posizione di applicazione (applied)
+用_file_覆盖_redis_当前数据_会覆_3f0f894cfc	Sovrascrivere i dati attuali di Redis con $file? Sovrascrive dump.rdb nella directory dei dati, avrà effetto dopo il riavvio di Redis e i dati esistenti andranno persi.
+用于仪表盘网络吞吐进度条_按真实上限显示占用比例_9f3376c761	Usato per la barra di avanzamento del traffico di rete della dashboard, mostra l'occupazione rispetto al limite reale; se non impostato usa il riferimento di 1 Mbps.
+用户_9ba763ea34	Utenti
+用户_权限_0_467c74d975	Utenti / Permessi ({0})
+用户_权限_roles_size_cbb2b92096	Utenti / Permessi (${roles.size})
+用户_组_1e6a976270	Utenti/Gruppi

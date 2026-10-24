@@ -1,0 +1,120 @@
+导出_fmt_uppercase_5fa0136e39	Export ${fmt.uppercase()}
+导出失败_38ab583870	Export failed:
+导出数据库_8eb2a58640	Export database
+将_0_1_复制到_2_40d7c9a939	Copy {0}.{1} to {2}
+将_0_移入回收站_可随时恢复_b035da26b3	Move "{0}" to the recycle bin? You can restore it at any time.
+将_db_tbl_复制到_target_bfe49531fd	Copy $db.$tbl to $target
+将_journald_日志体积限制到_200mb_88b7b48940	Limit journald log size to 200MB
+将_name_加入_sudo_组_e6b5bf2823	Add $name to the sudo group?
+将_src_打包为_tar_gz_大目录可能耗_0e4d5baded	Pack $src as tar.gz (large directories may take a while).
+将_vm_swappiness_设置为_v_并_d6d34ffc96	Set vm.swappiness to $v and persist?
+将停止_0_服务_不会删除数据_3644eaaa47	Stop the {0} service (data will not be deleted).
+将停止_label_服务_不会删除数据_b8004f9ec0	Stop the $label service (data will not be deleted).
+将写入并重载_sshd_body_warn_b8307d441d	Will write and reload sshd:\n$body$warn
+将删除_0_中满足条件的数据_1_此操_6705d19e0e	Will delete rows matching the criteria from {0}:\n{1}\nThis cannot be undone.
+将删除_st_table_中满足条件的数据_4e3f9bc4e7	Will delete rows matching the criteria from ${st.table}:\n$w\nThis cannot be undone.
+将删除用户_name_及其家目录_userde_38f9f46e9a	Will delete user $name and their home directory (userdel -r); this cannot be undone!
+将启动_0_服务_1f105846d4	Start the {0} service.
+将启动_label_服务_b82e5baf55	Start the $label service.
+将启用_ufw_默认拒绝入站_请确认已允许_2_ebeb8137d3	Enable UFW (deny inbound by default). Make sure port 22 is allowed: ufw allow 22/tcp
+将强制删除容器_0_docker_rm_f_e5e8832e8e	Will force-delete container {0} (docker rm -f); container data volumes are unaffected.
+将执行_apt_get_install_fail_e1244066c3	Will run apt-get install fail2ban and start the service (requires an internet connection, may take 1-2 minutes).
+将执行_apt_get_install_y_d_5218b05b7a	Will run apt-get install -y docker.io, about 1-3 minutes.
+将执行_drop_caches_3_系统可能短暂_6626720ff2	Will run drop_caches=3; the system may briefly slow down. Continue?
+将按已保存的计划执行清理项_journal_ap_762e3baf6f	Will run the saved cleanup items (journal, APT, rotated logs, etc.) per the schedule.
+将永久删除_db_及其全部数据_不可恢复_a493b3bdb0	Will permanently delete $db and all of its data; this cannot be undone!
+将添加_root_定时任务_每天_03_00_执_0937e4afe4	Will add a root cron job, daily at 03:00:\n$cmd
+将添加_root_定时任务_每天_03_00_执_e6ee798c58	Will add a root cron job, daily at 03:00:\n{0}
+将自动备份当前源文件并执行_apt_get_up_0276b8cab1	Will back up the current source files and run apt-get update; if the refresh fails it rolls back automatically. Takes about 30-120 seconds.
+小于_7d11896ff4	< Less than
+小于等于_190834de3e	≤ Less than or equal to
+小文件数量占比_e37f172da2	Small-file share
+小时_99f6904ff3	Hour
+尚未执行过任何修复动作_fe7c3d4771	No remediation actions performed yet
+尚未运行健康检查_ba6dfd78c0	Health check not run yet
+尝试_31d1e44656	Try
+属主_444fd7bd13	Owner
+属主已更新_dce00bf89c	Owner updated
+属性_7d3c35c29b	Properties
+峰值时段_6bb7941d45	Peak period
+峰值轮_4cecb849cf	Peak round
+工作区_保留收藏_b4859ec177	Workspace · Keep favorites
+工作数据库_866878eb8f	Working database
+工作日_27b4a6aed2	Weekday
+工具_f7bb5ad4da	Tools:
+已上传_0_62e7aadbe5	Uploaded {0}
+已上传_f_name_06d42217a4	Uploaded ${f.name}
+已上传并覆盖_0_56609744b2	Uploaded and overwritten {0}
+已上传并覆盖_f_name_da9914d31d	Uploaded and overwritten ${f.name}
+已产生不可用事件_a2f7f57fb3	An unavailable event has been recorded
+已保存_cdfab96f75	Saved
+已保存_email_4726a5328b	Saved $email
+已保存_saved_36d870566a	Saved: $saved
+已保存_下一次重复已自动排期_866a056587	Saved · next occurrence auto-scheduled
+已保存到_path_6a5d7deabb	Saved to $path
+已保存到_saved_49bd95c1fb	Saved to $saved
+已停止_75dddf524e	Stopped
+已停止公开分享_9a9cf049a9	Public sharing stopped
+已停用_0_c934ebc3bd	Disabled {0}
+已停用_6c7dcbb73a	Disabled
+已停用自动维护_836de837e0	Auto maintenance disabled
+已共享给_ev_email_permt_77651d6ed4	Shared with ${ev.email} (${permText(ev.perm)})
+已切换为浅色模式_910f7b8537	Switched to light mode
+已切换为深色模式_b03918bd9e	Switched to dark mode
+已切换到_0_f0c31c31dc	Switched to {0}
+已切换到_appstate_config_0ccf0355a4	Switched to ${AppState.config().normalizedUrl()}
+已创建归类_name_4dcdef1d04	Created category "$name"
+已创建新终端会话_096edaffb2	New terminal session created
+已创建清单_name_0235b26a57	Created list "$name"
+已删除_0_a0892ec5c3	Deleted {0}
+已删除_0_行_a56ea85604	Deleted {0} rows
+已删除_fb5fe1e266	Deleted
+已到期_75e6c9fb6f	Expired
+已加载的审计规则_575f3a8203	Loaded audit rules
+已占_028e892f8e	In use
+已取消保存_1f0e8fda6a	Save cancelled
+已取消带宽上限_4d02387c26	Bandwidth cap removed
+已取消置顶_64ca5ea597	Unpinned
+已启用_0_29dab49ed0	Enabled {0}
+已启用_25d2843150	Enabled
+已启用的源文件_0_7a8ed113e1	Enabled source files ({0})
+已启用的源文件_files_size_3ef3f7d5ad	Enabled source files (${files.size})
+已启用自动维护_26c95d2e69	Auto maintenance enabled
+已回滚_c4ab8c16f8	Rolled back
+已固定_46f9ebb3cb	(Pinned)
+已复制_e381a5763d	Copied
+已复制到剪贴板_c2bb6d50ae	Copied to clipboard
+已复制笔记_578fe5f530	Note copied
+已存_it_secretset_jointo_371806c69d	Stored {0}
+已存在_a867d42ddf	Already exists
+已安装_eb88ff57c9	Installed
+已安装_total_438379cb60	Installed ($total)
+已完成_e99b48a29b	Done
+已完成_下一次重复已自动排期_2f89384a29	Done · next occurrence auto-scheduled
+已导入_n_条待办_c3352cbaa8	Imported $n to-dos
+已导入_n_条笔记_09e6db7128	Imported $n notes
+已建立连接_0_ac05618709	Established connections ({0})
+已建立连接_established_siz_bb2e6b06da	Established connections (${established.size})
+已开启实时跟随_b8c950e7d3	Live tailing enabled
+已归档_5cfbea2b76	Archived
+已彻底删除_21ae7be063	Permanently deleted
+已恢复_0_120218aebb	Restored "{0}"
+已恢复_6aa9ad7241	Restored
+已截断_61c54972d5	 · Truncated
+已打开新会话选项卡_b298c97275	New session tab opened
+已执行计划清理_b29e9620a4	Scheduled cleanup executed
+已扫描_0_个索引文件_9909c34fb8	 · Scanned {0} index files
+已扫描_scanned_个索引文件_b6efc4ae77	 · Scanned $scanned index files
+已按保留期清理轮转日志_deca9628b4	Rotated logs cleaned per retention
+已按当前值试跑_结果见发送记录_467ceb202b	Test run with current values (see delivery log)
+已推送到铃铛与渠道_336daad702	Pushed to the bell and channels
+已插入_ok_个文件_5032d55e92	Inserted $ok files
+已收藏_41f91d9758	 · Favorited
+已是最新_5985ee9a3c	Already up to date
+已更新_112f98675e	Updated
+已有_apt_任务在执行_请等待完成_52d32c3717	An apt task is already running; wait for it to finish
+已有账号_c9bc5e7bff	Already have an account?
+已格式化_简单模式_注意字符串内关键词也会被换行_ff56058a41	Formatted (simple mode; note that keywords inside strings are wrapped too)
+已检查全部看护项_7ceab11b1c	All watched items checked
+已永久删除_b2e5fd714f	Permanently deleted
+已测量_a418169c62	Measured

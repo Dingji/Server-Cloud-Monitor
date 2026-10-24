@@ -1,0 +1,75 @@
+﻿== unbound user-facing literals: 41 hits in 23 files ==
+     5  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Hosts.kt
+     3  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbDocTab.kt
+     3  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NotesPage.kt
+     3  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NoteTransferPage.kt
+     3  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/SettingsPage.kt
+     2  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbAdvancedTab.kt
+     2  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbDatabasesTab.kt
+     2  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbModel.kt
+     2  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsHostsPage.kt
+     2  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsRulesPage.kt
+     2  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/SloPage.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Api.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Files.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/NoteBox.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbBackupsTab.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbKvTab.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbRolesTab.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/HealthAlertsPage.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NoteCommon.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsDiskPage.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsFilesPage.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsSecPage.kt
+     1  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/PackagesPage.kt
+
+== CJK unbound examples (38 shown) ==
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Files.kt:284  e.typeLabel != "��������" && (
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Hosts.kt:73  "����" -> tr("����_35d6fec69f")
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Hosts.kt:74  "Ԥ��" -> tr("Ԥ��_8a98f5b5bd")
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Hosts.kt:75  "����" -> tr("����_0b5d7ed54b")
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Hosts.kt:76  "����" -> tr("����_eb3774e356")
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Hosts.kt:77  "����" -> tr("����_295c71ff98")
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbAdvancedTab.kt:366  state.startsWith("�") && !p.str("state").contains("active", true) -> false
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbAdvancedTab.kt:389  state.startsWith("�") -> "active"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbBackupsTab.kt:142  onValueChange = { format = if (it.contains("�Զ���")) "custom" else "plain" },
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbDatabasesTab.kt:254  sel.startsWith("���ò���") -> "set-param"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbDatabasesTab.kt:255  sel.startsWith("����") -> "reset-param"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbDocTab.kt:365  it.startsWith("У��") -> "validate"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbDocTab.kt:366  it.startsWith("�ؽ�") -> "reindex"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbDocTab.kt:367  it.startsWith("ѹ��") -> "compact"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbModel.kt:228  private val RE_NOT_INSTALLED = Regex("δ��װ|δ�ҵ�")
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbModel.kt:230  "δ����|ECONNREFUSED|����ʧ��|�޷�����|No such file|does not exist.*running|not found",
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbRolesTab.kt:244  if (op.startsWith("��ʾ")) {
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/HealthAlertsPage.kt:115  slope = (if (s >= 0) L["s_a979ef10cc"] else "") + numStr(s) + "%/��",
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NoteCommon.kt:504  if (error.contains("��֤")) {
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NotesPage.kt:585  "�� �½����࡭" -> createFolder(folderSel.removePrefix("f:").toIntOrNull())
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NotesPage.kt:647  "����ʱ��" -> "created"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NotesPage.kt:1863  L["ֻ��_ffc1d065fb"] -> "read"; L["�ɱ༭_bff55f2cd9"] -> "edit"; "����" -> "admin"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NoteTransferPage.kt:291  text.startsWith("������") || text.startsWith("�ָ���") -> Palette.muted
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NoteTransferPage.kt:291  text.startsWith("������") || text.startsWith("�ָ���") -> Palette.muted
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/NoteTransferPage.kt:292  text.contains("ʧ��") -> Palette.bad
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsDiskPage.kt:288  "journal + APT + ��ת��־" -> kotlinx.serialization.json.JsonArray(
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsFilesPage.kt:121  if (err != null && err.contains("�Ѵ���")) {
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsHostsPage.kt:145  value = trf("0_0b0c6f90d1", s?.byEnv?.get("����") ?: 0),
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsHostsPage.kt:169  Chip(HostState.envLabel(it.env), tone = if (it.env == "����") Level.Warn else Level.Muted)
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsRulesPage.kt:115  "notifyRecover" to (f["recover"] != "��֪ͨ"),
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsRulesPage.kt:145  val daily = f["kind"] == "ÿ��̶�ʱ��"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/ops/OpsSecPage.kt:161  "������" -> it.level == "warn" || it.level == "bad"
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/PackagesPage.kt:333  if (msg.contains("�ܱ���") && !force) {
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/SettingsPage.kt:261  color = if (it.contains("�޷�") || it.contains("ʧ��")) Palette.bad else Palette.ok,
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/SettingsPage.kt:261  color = if (it.contains("�޷�") || it.contains("ʧ��")) Palette.bad else Palette.ok,
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/SettingsPage.kt:982  LevelBadge(text = it, level = if (it.contains("ͨ��")) Level.Ok else Level.Bad)
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/SloPage.kt:121  "����" -> Level.Warn
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/SloPage.kt:128  "����" -> L["����_168469b0ba"]
+
+== English unbound examples (3 shown) ==
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/Api.kt:111  message = if (msg.isNullOrBlank()) "HTTP $code" else msg,
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/core/NoteBox.kt:126  message = if (msg.isNullOrBlank()) "HTTP $code" else msg,
+  composeApp/src/commonMain/kotlin/com/servermaintance/panel/pages/db/DbKvTab.kt:269  val r = Modal.prompt("CONFIG SET $n", listOf(FormField.Text("value", L["��ֵ_c4f3da96a2"], value = row.str("value"))), okText = L["����_7debf9cb03"])
+
+== keys used in code but MISSING from zh.json: 0 ==
+
+== locales missing keys present in zh.json ==
+
+total zh.json keys: 3992; referenced in code: 3149

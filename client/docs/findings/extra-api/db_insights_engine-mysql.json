@@ -1,0 +1,62 @@
+{
+ "engine": "mysql",
+ "database": null,
+ "sections": [
+  {
+   "title": "库容量统计",
+   "columns": [],
+   "rows": [],
+   "error": "/bin/bash: line 1: mysql: command not found",
+   "note": ""
+  },
+  {
+   "title": "表碎片 / 空间回收建议",
+   "columns": [],
+   "rows": [],
+   "error": "/bin/bash: line 1: mysql: command not found",
+   "note": ""
+  },
+  {
+   "title": "空表 / 小表检测",
+   "columns": [],
+   "rows": [],
+   "error": "/bin/bash: line 1: mysql: command not found",
+   "note": ""
+  },
+  {
+   "title": "锁与事务",
+   "columns": [],
+   "rows": [],
+   "error": "/bin/bash: line 1: mysql: command not found",
+   "note": ""
+  },
+  {
+   "title": "活动查询",
+   "columns": [],
+   "rows": [],
+   "error": "/bin/bash: line 1: mysql: command not found",
+   "note": ""
+  },
+  {
+   "title": "未使用索引",
+   "columns": [],
+   "rows": [],
+   "error": "/bin/bash: line 1: mysql: command not found",
+   "note": "需要 MySQL 8.0+ (sys schema)"
+  },
+  {
+   "title": "累积统计 (关键指标)",
+   "columns": [],
+   "rows": [],
+   "error": "/bin/bash: line 1: mysql: command not found",
+   "note": ""
+  },
+  {
+   "title": "InnoDB 缓冲池",
+   "columns": [],
+   "rows": [],
+   "error": "/bin/bash: line 1: mysql: command not found",
+   "note": ""
+  }
+ ]
+}

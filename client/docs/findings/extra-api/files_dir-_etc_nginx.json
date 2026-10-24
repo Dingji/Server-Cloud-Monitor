@@ -1,0 +1,152 @@
+{
+ "dir": "/etc/nginx/",
+ "entries": [
+  {
+   "mode": "drwxr-xr-x",
+   "name": "14 21:04 .",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "16 06:45 ..",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "11 10:59 .htpasswd-relay",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "14 21:07 conf.d",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 fastcgi.conf",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 fastcgi_params",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 koi-utf",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 koi-win",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 mime.types",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "7 06:21 modules-available",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "7 06:21 modules-enabled",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "14 21:04 nginx.conf",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "11 11:48 nginx.conf.mem-bak",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "14 11:38 nginx.conf.pre-limit-20261014210425",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 proxy_params",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 scgi_params",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "14 21:22 sites-available",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "11 10:35 sites-enabled",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "14 14:20 snippets",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 uwsgi_params",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "-rw-r--r--",
+   "name": "27  2026 win-utf",
+   "isDir": false,
+   "isLink": false,
+   "target": null
+  }
+ ]
+}

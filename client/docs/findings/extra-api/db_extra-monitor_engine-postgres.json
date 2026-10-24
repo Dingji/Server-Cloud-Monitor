@@ -1,0 +1,75 @@
+{
+ "engine": "postgres",
+ "sections": [
+  {
+   "title": "后台写进程 (pg_stat_bgwriter)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "检查点 (pg_stat_checkpointer)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": "PostgreSQL 17+"
+  },
+  {
+   "title": "WAL 统计 (pg_stat_wal)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": "PostgreSQL 14+"
+  },
+  {
+   "title": "后端 I/O (pg_stat_io)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": "PostgreSQL 16+"
+  },
+  {
+   "title": "归档统计 (pg_stat_archiver)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "复制槽 (pg_replication_slots)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": "为空表示没有逻辑/物理复制槽"
+  },
+  {
+   "title": "死锁与冲突",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "表级 I/O (pg_statio_user_tables)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "长事务与空闲事务",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "连接池/后端类型",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  }
+ ]
+}

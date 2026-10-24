@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.JsonArray
@@ -83,7 +85,7 @@ object DiskState {
             lastError.value = null
             return
         }
-        lastError.value = "$path: ${e.message ?: "请求失败"}"
+        lastError.value = trf("0_1_4d3c418a83", path, e.message ?: L["请求失败_8fdc4112a4"])
     }
 
     suspend fun load() {
@@ -173,9 +175,9 @@ object DiskState {
         null
     } catch (e: ApiException) {
         if (e.code == 404) unsupported.value = true else lastError.value = e.message
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     } catch (e: Exception) {
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     } finally {
         busy.value = false
     }

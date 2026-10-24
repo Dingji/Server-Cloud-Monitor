@@ -1,0 +1,120 @@
+分析_9c00c951b8	Analysieren
+分析数据库_27120f4e22	Datenbank analysieren
+分类_435c5259e4	Kategorie
+分组_97d8a6c05b	Gruppe
+分节_0_72a336b550	Abschnitt {0}
+分节_cc61ad798e	Abschnitt
+分节_i_1_f0d1636fb2	Abschnitt ${i + 1}
+切换使用_440dcd4a60	Verwendung umschalten
+切换到_dcfa6ff76a	Wechseln zu
+切换到此源_6a51392f3d	Zu dieser Quelle wechseln
+切换到浅色主题_68c147dbb8	Zum hellen Design wechseln
+切换到深色主题_81f29dbac3	Zum dunklen Design wechseln
+切换告警中心_6ee18893d6	Alarmcenter umschalten
+切换失败_9e2fdc4fee	Umschalten fehlgeschlagen
+切换失败_已回滚_c0cfb2c6b5	Umschalten fehlgeschlagen (zurückgerollt)
+切换并刷新索引_90b6357c92	Umschalten und Index aktualisieren
+切换强调色_750952d685	Akzentfarbe wechseln
+切换成功后会清理旧镜像残留索引_避免搜索结果_3a16b0a93b	· Nach erfolgreichem Umschalten werden veraltete Indizes der alten Mirror bereinigt, damit Suchergebnisse nicht aus anderen Quellen stammen.
+切换数据库_a1ab00957c	Datenbank wechseln
+切换率_0_5f66fea7ee	Umschaltquote {0}%
+切换率_0_尝试_请求_1_549548a929	Umschaltquote {0}% · Versuche/Anfragen {1}
+切换软件源_1d685b5c20	Softwarequelle wechseln
+切换镜像会先备份源文件_改写后立即执行_ap_b31cb7b626	· Beim Mirror-Wechsel wird zuerst die Quelldatei gesichert und direkt danach apt-get update ausgeführt; schlägt die Aktualisierung fehl, wird automatisch auf den ursprünglichen Mirror zurückgerollt.
+列_ad3ee64830	Spalte
+列_逗号分隔_e6b76472d6	Spalte (durch Komma getrennt)
+列a_列b_276b732289	\n| Spalte A | Spalte B |\n| --- | --- |\n|  |  |\n
+列列表_逗号分隔_3fbb861c18	Spaltenliste (durch Komma getrennt)
+列名_56dc7e14b9	Spaltenname
+列名_目标列_93b57e8329	Spaltenname / Zielspalte
+列注释_9f54addfdc	Spaltenkommentar
+列目录中_1d7fe661c3	Verzeichnis wird aufgelistet…
+列结构_d6bcf00979	Spaltenstruktur
+列表_7d9b515037	• Liste
+刚刚_9e636642d6	Gerade eben
+创建_0_b962ace170	{0} erstellen
+创建_0_f7fa88a48a	{0} erstellen?
+创建_acl_用户_cd96ef0588	ACL-Benutzer erstellen
+创建_fcbd093292	Erstellen
+创建_notebox_账号并分配角色_2911541ceb	NoteBox-Konto erstellen und Rollen zuweisen
+创建_替换_c8d121c449	Erstellen/Ersetzen
+创建于_f3b01f3f1a	Erstellt am
+创建任务_cf42fd678f	Aufgabe erstellen
+创建备份_f4587bf8b2	Backup erstellen
+创建失败_deb3990191	Erstellen fehlgeschlagen
+创建定时任务_cc992174ac	Geplante Aufgabe erstellen
+创建数据库_1bf70a1209	Datenbank erstellen
+创建时间_84e3802f60	Erstellungszeit
+创建每日自动备份_7c94d434a4	Tägliches automatisches Backup erstellen
+创建用户_315315d695	Benutzer erstellen
+创建用户_name_sudosuffix_423f11e860	Benutzer $name$sudoSuffix erstellen?
+创建用户_角色_87bba5f559	Benutzer/Rolle erstellen
+创建的用户拥有_all_全部键_全_2da1a3462f	Der erstellte Benutzer besitzt ~* +@all (alle Tasten + alle Befehle); Berechtigungen mit ACL SETUSER verfeinern.
+创建索引_39988166a9	Index erstellen
+创建维护计划_04a82258e7	Wartungsplan erstellen
+创建角色_24cf247879	Rolle erstellen
+创建计划_bddda94d14	Plan erstellen
+删_38cadf487e	Entf.
+删凭据_578de9d115	Zugangsdaten löschen
+删除_0_1fbd66c221	{0} löschen?
+删除_0_a1ee4b1af0	{0} löschen ?
+删除_0_c27e726e6d	„{0}“ löschen?
+删除_0_on_1_fb3815f989	{0} on {1} löschen ?
+删除_0_不可恢复_122855ffb8	{0} löschen? Dies kann nicht rückgängig gemacht werden.
+删除_0_不可恢复_935f255ade	{0} löschen ? Dies kann nicht rückgängig gemacht werden!
+删除_0_其中的待办与子清单会移动到上一级_a7634c43e7	„{0}“ löschen? Die enthaltenen To-dos und Unterlisten werden eine Ebene nach oben verschoben, nicht gelöscht.
+删除_0_其中的笔记与子归类会移动到上一级_327496c4d8	„{0}“ löschen? Die enthaltenen Notizen und Unterkategorien werden eine Ebene nach oben verschoben, nicht gelöscht.
+删除_0_历史事件仍保留_d3e46884f0	„{0}“ löschen? Historische Ereignisse bleiben erhalten.
+删除_0_及其全部集合_不可恢复_27bf2aa4e3	{0} und alle zugehörigen Sammlungen löschen? Dies kann nicht rückgängig gemacht werden!
+删除_0_及其后续统计_已归档的按日数据仍保_79a549e6e8	„{0}“ und die nachfolgenden Statistiken löschen? Archivierte Tagesdaten bleiben erhalten.
+删除_0_引用它的规则将不再向该渠道推送_2a68290638	„{0}“ löschen? Regeln, die darauf verweisen, stellen die Zustellung an diesen Kanal ein.
+删除_0_该角色拥有的对象可能变为无主_81db941aef	{0} löschen ? Von dieser Rolle besessene Objekte können verwaist werden.
+删除_3755f56f2f	Löschen
+删除_c_name_引用它的规则将不再向_a15854651b	„${c.name}“ löschen? Regeln, die darauf verweisen, stellen die Zustellung an diesen Kanal ein.
+删除_e_name_历史事件仍保留_7c4f97a765	„${e.name}“ löschen? Historische Ereignisse bleiben erhalten.
+删除_folder_name_其中的待办_8acd8d3681	„${folder.name}“ löschen? Die enthaltenen To-dos und Unterlisten werden eine Ebene nach oben verschoben, nicht gelöscht.
+删除_folder_name_其中的笔记_02f00181b7	„${folder.name}“ löschen? Die enthaltenen Notizen und Unterkategorien werden eine Ebene nach oben verschoben, nicht gelöscht.
+删除_h_label_的_ssh_凭据_采_714dcba255	SSH-Zugangsdaten für „{0}“ löschen? Die Erfassung wird bis zur Neukonfiguration gestoppt.
+删除_id_0_5757172d9f	_id = {0} löschen ?
+删除_id_id_9f0c4ee411	_id = $id löschen ?
+删除_it_name_不可恢复_2e58b9d314	${it.name} löschen? Dies kann nicht rückgängig gemacht werden.
+删除_item_name_不可恢复_196f667e1b	${item.name} löschen? Dies kann nicht rückgängig gemacht werden.
+删除_job_file_0df6f1b1c0	${job.file} löschen?
+删除_k_不可恢复_7f04e8d988	$k löschen ? Dies kann nicht rückgängig gemacht werden!
+删除_n_447134e66a	$n löschen ?
+删除_n_及其全部集合_不可恢复_75c0387e71	$n und alle zugehörigen Sammlungen löschen? Dies kann nicht rückgängig gemacht werden!
+删除_name_该角色拥有的对象可能变为无主_444ea2ccd8	$name löschen ? Von dieser Rolle besessene Objekte können verwaist werden.
+删除_r_name_历史事件仍保留_d216275bef	„${r.name}“ löschen? Historische Ereignisse bleiben erhalten.
+删除_s_name_62446c983c	„${s.name}“ löschen?
+删除_tgname_trim_on_61b891ec54	${tgName.trim()} on ${tgTable.trim()} löschen ?
+删除_ufw_规则_n_969e18703f	UFW-Regel #$n löschen?
+删除_var_cache_apt_archiv_4cd0531496	Heruntergeladene Pakete unter /var/cache/apt/archives löschen
+删除_x_name_及其后续统计_已归档的_f9923c3d24	„${x.name}“ und die nachfolgenden Statistiken löschen? Archivierte Tagesdaten bleiben erhalten.
+删除主机_643f7d4bb9	Host löschen
+删除事项_0_fd51d58bcb	Element „{0}“ löschen?
+删除事项_baf69ed21f	Element löschen
+删除事项_t_title_86546066a3	Element „${t.title}“ löschen?
+删除全部_0_条已完成事项_edea779a77	Alle {0} abgeschlossenen Elemente löschen?
+删除全部_n_条已完成事项_c6c82b6be8	Alle $n abgeschlossenen Elemente löschen?
+删除公钥_b83efa4dbe	Öffentlichen Schlüssel löschen
+删除凭据_35bc7d6ff1	Zugangsdaten löschen
+删除列_16f1347814	Spalte löschen
+删除到回收站_f418fcf1e6	In Papierkorb verschieben
+删除后持有该密钥的客户端将无法登录_1d472813e0	Nach dem Löschen können Clients mit diesem Schlüssel sich nicht mehr anmelden.
+删除后无法恢复_确认删除该密钥_68e3c91b1d	Dies kann nicht rückgängig gemacht werden. Diesen Schlüssel löschen?
+删除告警规则_fb9b26e21f	Alarmregel löschen
+删除备份_749438d2de	Backup löschen
+删除备份文件_df6543f316	Backup-Datei löschen
+删除失败_72250c5922	Löschen fehlgeschlagen
+删除子任务_165f2995e1	Unteraufgabe löschen
+删除定时任务_cbbfd7d59d	Geplante Aufgabe löschen
+删除容器_c1cbe14e79	Container löschen
+删除密钥_8017614a47	Schlüssel löschen
+删除已下载的_deb_安装包_释放_0_不_dc8e1f42c6	Heruntergeladene .deb-Pakete löschen, um {0} freizugeben. Installierte Software bleibt unberührt.
+删除归类_f282b52e6b	Kategorie löschen
+删除拨测任务_2193297dfe	Messauftrag löschen
+删除数据库_f0f7b49980	Datenbank löschen
+删除文档_e7adbd575b	Dokument löschen
+删除时间_8d55c8d894	Löschzeit
+删除模式_0_及其全部对象_cascade_6336954e53	Schema {0} und alle zugehörigen Objekte (CASCADE) löschen?
+删除模式_77bed2385b	Schema löschen

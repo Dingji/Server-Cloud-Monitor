@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.trf
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -63,7 +65,7 @@ internal fun parseMdNodes(src: String): List<MdNode> {
 
     fun isTableSep(l: String): Boolean {
         val t = l.trim()
-        return Regex("^[\\s|:-]+$").containsMatchIn(t) && t.contains('|') && t.contains('-')
+        return Regex("^[\\s|:-]+\$").containsMatchIn(t) && t.contains('|') && t.contains('-')
     }
     fun isBlockStart(l: String): Boolean {
         val t = l.trim()
@@ -276,9 +278,9 @@ internal fun renderInline(src: String, baseSize: Int, bold: Boolean = false): An
                 val m = Regex("^!\\[([^\\]]*)]\\(([^)\\s]+)\\)").find(src.substring(i))
                 if (m != null) {
                     flushPlain()
-                    val alt = m.groupValues[1].ifEmpty { "图片" }
+                    val alt = m.groupValues[1].ifEmpty { L["图片_be8da62ea1"] }
                     withStyle(SpanStyle(color = AccentState.current.secondary, fontSize = baseSize.sp)) {
-                        append("[图片: $alt]")
+                        append(trf("图片_0_b8121a43e1", alt))
                     }
                     i += m.value.length
                     continue
@@ -286,7 +288,7 @@ internal fun renderInline(src: String, baseSize: Int, bold: Boolean = false): An
             }
             // link
             if (c == '[') {
-                val bar = src.indexOf("](", i)
+                val bar = src.indexOf(L["s_f81238d820"], i)
                 val end = if (bar > i) src.indexOf(')', bar) else -1
                 if (bar > i && end > bar) {
                     val text = src.substring(i + 1, bar)
@@ -304,7 +306,7 @@ internal fun renderInline(src: String, baseSize: Int, bold: Boolean = false): An
             }
             // bold ** **
             if (c == '*' && i + 1 < n && src[i + 1] == '*') {
-                val end = src.indexOf("**", i + 2)
+                val end = src.indexOf(L["s_bc2f74c22f"], i + 2)
                 if (end > i + 1) {
                     flushPlain()
                     withStyle(
@@ -320,7 +322,7 @@ internal fun renderInline(src: String, baseSize: Int, bold: Boolean = false): An
             }
             // bold __ __
             if (c == '_' && i + 1 < n && src[i + 1] == '_') {
-                val end = src.indexOf("__", i + 2)
+                val end = src.indexOf(L["s_9cccc847b2"], i + 2)
                 if (end > i + 1) {
                     flushPlain()
                     withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = Palette.text, fontSize = baseSize.sp)) {

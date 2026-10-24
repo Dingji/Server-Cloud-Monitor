@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,10 +48,10 @@ private val OVERVIEW_PATHS = mapOf(
     "daily" to "/relay/daily",
 )
 
-private val WIN_LABEL = linkedMapOf(
-    "rolling" to "滚动窗口",
-    "weekly" to "本周",
-    "monthly" to "本月",
+private val WIN_LABEL  get() = linkedMapOf(
+    "rolling" to L["滚动窗口_f4ad4453d0"],
+    "weekly" to L["本周_e16e8248b1"],
+    "monthly" to L["本月_389f0007de"],
 )
 
 @Composable
@@ -74,77 +76,77 @@ fun RelayOverviewTab() {
     StatRow(
         listOf(
             StatItem(
-                label = "总请求",
+                label = L["总请求_d1cac3ca3b"],
                 value = rNum(s.nestedNum("totals", "requests")),
-                sub = "今日 ${rNum(s.num("requests_today"))} · 会话 ${rNum(s.num("sessions"))} · 客户端 ${rNum(s.num("clients"))}",
+                sub = trf("今日_0_会话_1_客户端_2_dfa0d41ced", rNum(s.num("requests_today")), rNum(s.num("sessions")), rNum(s.num("clients"))),
             ),
             StatItem(
-                label = "成功率",
+                label = L["成功率_df9dc72f2d"],
                 value = pct1(s.num("success_rate")),
-                sub = "成功 ${rNum(s.num("success"))} · 错误 ${rNum(s.num("errors"))} · 超时 ${rNum(s.num("timeouts"))}",
+                sub = trf("成功_0_错误_1_超时_2_4e74aeecc7", rNum(s.num("success")), rNum(s.num("errors")), rNum(s.num("timeouts"))),
             ),
             StatItem(
-                label = "P95 延迟",
-                value = fixed(s.num("p95_latency"), 0) + " ms",
-                sub = "均值 ${rPlain(s.num("avg_latency"))} · P99 ${rPlain(s.num("p99_latency"))} · 流式 ${rPlain(s.num("streaming_rate"))}%",
+                label = L["p95_延迟_57d63f8b46"],
+                value = fixed(s.num("p95_latency"), 0) + L["ms_c980fc9bd8"],
+                sub = trf("均值_0_p99_1_流式_2_95941eec2b", rPlain(s.num("avg_latency")), rPlain(s.num("p99_latency")), rPlain(s.num("streaming_rate"))),
             ),
             StatItem(
-                label = "失败率",
+                label = L["失败率_c9951c649f"],
                 value = pct1(s.num("error_rate")),
-                sub = "4xx ${rNum(s.num("errors_4xx"))} · 5xx ${rNum(s.num("errors_5xx"))} · 未授权 ${rNum(s.num("unauthorized"))}",
+                sub = trf("4xx_0_5xx_1_未授权_4116249143", rNum(s.num("errors_4xx")), rNum(s.num("errors_5xx")), rNum(s.num("unauthorized"))),
             ),
             StatItem(
-                label = "总流量(出)",
+                label = L["总流量_出_6efb4930fb"],
                 value = rBytes(s.num("bytes_out")),
-                sub = "入站 ${rBytes(s.num("bytes_in"))} · 均值/请求 ${rBytes(s.num("avg_bytes_total"))}",
+                sub = trf("入站_0_均值_请求_1_406a6865d4", rBytes(s.num("bytes_in")), rBytes(s.num("avg_bytes_total"))),
             ),
             StatItem(
-                label = "重试 / 故障切换",
+                label = L["重试_故障切换_bd0ca3d8c5"],
                 value = rNum(s.num("retried")),
-                sub = "切换率 ${rPlain(s.num("failover_rate"))}% · 尝试/请求 ${rPlain(s.num("attempts_per_request"))}",
+                sub = trf("切换率_0_尝试_请求_1_549548a929", rPlain(s.num("failover_rate")), rPlain(s.num("attempts_per_request"))),
             ),
             StatItem(
-                label = "峰值时段",
+                label = L["峰值时段_6bb7941d45"],
                 value = s.str("peak_hour").ifEmpty { "-" },
-                sub = "该时段 ${rNum(s.num("peak_hour_requests"))} 请求",
+                sub = trf("该时段_0_请求_44f386fcd1", rNum(s.num("peak_hour_requests"))),
             ),
             StatItem(
-                label = "采集器",
-                value = if (okCollector) "正常" else "异常",
-                sub = "入库 ${rNum(h.num("rows_ingested"))}/${rNum(h.num("rows_total"))} · 运行 ${rUptime(h.long("uptime_s"))}",
+                label = L["采集器_426884b7c2"],
+                value = if (okCollector) L["正常_f78d037abc"] else L["异常_5caf279339"],
+                sub = trf("入库_0_1_运行_2_6103dc0494", rNum(h.num("rows_ingested")), rNum(h.num("rows_total")), rUptime(h.long("uptime_s"))),
                 icon = if (okCollector) "activity" else "warning",
             ),
         ),
     )
 
-    RelaySection(title = "今日 24 小时分布", cardKey = "rl-hourly") {
+    RelaySection(title = L["今日_24_小时分布_d5b7360f18"], cardKey = "rl-hourly") {
         RelayMultiBar(
             labels = hourly.map { it.str("hour") },
             series = listOf(
-                BarSer("请求", hourly.map { it.num("requests").toFloat() }, RelayColors.reqBlue),
-                BarSer("错误", hourly.map { it.num("errors").toFloat() }, RelayColors.errRed),
+                BarSer(L["请求_926f6b6b6a"], hourly.map { it.num("requests").toFloat() }, RelayColors.reqBlue),
+                BarSer(L["错误_b859c7be75"], hourly.map { it.num("errors").toFloat() }, RelayColors.errRed),
             ),
             stacked = true,
         )
     }
 
-    RelaySection(title = "近 7 日请求与错误", cardKey = "rl-daily") {
+    RelaySection(title = L["近_7_日请求与错误_92125f234d"], cardKey = "rl-daily") {
         RelayMultiBar(
             labels = daily.map { it.str("day").takeLast(5) },
             series = listOf(
-                BarSer("请求", daily.map { it.num("requests").toFloat() }, RelayColors.reqBlue),
-                BarSer("错误", daily.map { it.num("errors").toFloat() }, RelayColors.errRed),
+                BarSer(L["请求_926f6b6b6a"], daily.map { it.num("requests").toFloat() }, RelayColors.reqBlue),
+                BarSer(L["错误_b859c7be75"], daily.map { it.num("errors").toFloat() }, RelayColors.errRed),
             ),
             stacked = false,
         )
     }
 
-    RelaySection(title = "配额与自愈", cardKey = "rl-quota-selfheal") {
+    RelaySection(title = L["配额与自愈_9a7dfc8467"], cardKey = "rl-quota-selfheal") {
         GridLayout(columns = 2, spacing = 14.dp) {
             /* ---------------- 左：配额 ---------------- */
             Column {
                 Muted(
-                    "当前密钥 ${q.str("key_masked").ifEmpty { "-" }} · 刷新于 ${rTmTail(q.str("fetched_at"))}",
+                    trf("当前密钥_0_刷新于_1_b44dce11d6", q.str("key_masked").ifEmpty { "-" }, rTmTail(q.str("fetched_at"))),
                     Modifier.padding(bottom = 8.dp),
                 )
                 val usage = q.obj("usage")
@@ -157,7 +159,7 @@ fun RelayOverviewTab() {
                 }
                 Spacer(Modifier.height(8.dp))
                 GhostBtn(
-                    text = "刷新配额",
+                    text = L["刷新配额_851859899a"],
                     icon = "refresh",
                     onClick = { scope.launch { relayAction("quota/refresh", reload = reload) } },
                 )
@@ -170,10 +172,10 @@ fun RelayOverviewTab() {
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                 ) {
-                    Muted("自愈状态")
+                    Muted(L["自愈状态_177f482cef"])
                     val status = sh.str("status")
                     LevelBadge(
-                        text = if (status == "ok") "全部通过" else status.ifEmpty { "-" },
+                        text = if (status == "ok") L["全部通过_3b6e5a1267"] else status.ifEmpty { "-" },
                         level = if (status == "ok") Level.Ok else Level.Warn,
                     )
                     Mono(
@@ -184,24 +186,24 @@ fun RelayOverviewTab() {
                 relayTable(
                     rows = sh.arr("checks").filterIsInstance<JsonObject>().take(10),
                     cols = listOf(
-                        RCol("name", "检查项", mono = true, width = 1.3f),
+                        RCol("name", L["检查项_871b61f946"], mono = true, width = 1.3f),
                         RCol(
-                            "ok", "结果",
+                            "ok", L["结果_0a2c91cec6"],
                             fmt = { if (jbool(it)) "OK" else "FAIL" },
                             tone = { if (jbool(it)) Level.Ok else Level.Bad },
                         ),
-                        RCol("detail", "详情", width = 1.6f),
-                        RCol("ms", "耗时", num = true, fmt = { rPlain(jnum(it)) + "ms" }),
+                        RCol("detail", L["详情_4f55ee1e68"], width = 1.6f),
+                        RCol("ms", L["耗时_a9704e1997"], num = true, fmt = { rPlain(jnum(it)) + "ms" }),
                     ),
-                    emptyText = "无检查项",
+                    emptyText = L["无检查项_3d5aa31af3"],
                 )
                 Spacer(Modifier.height(8.dp))
                 GhostBtn(
-                    text = "执行自愈",
+                    text = L["执行自愈_d499e88a86"],
                     icon = "restart",
                     onClick = {
                         scope.launch {
-                            relayAction("selfheal/run", confirmFirst = true, confirmText = "执行", reload = reload)
+                            relayAction("selfheal/run", confirmFirst = true, confirmText = L["执行_28febba225"], reload = reload)
                         }
                     },
                 )
@@ -209,9 +211,9 @@ fun RelayOverviewTab() {
         }
     }
 
-    RelaySection(title = "供应商状态", cardKey = "rl-provs") {
+    RelaySection(title = L["供应商状态_ed8f7c5676"], cardKey = "rl-provs") {
         if (provs.isEmpty()) {
-            Muted("无供应商数据")
+            Muted(L["无供应商数据_079694fa08"])
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 provs.forEach { p -> ProviderRow(p) }
@@ -263,9 +265,9 @@ fun ProviderRow(p: JsonObject) {
             maxLines = 1,
         )
         Spacer(Modifier.weight(1f))
-        LevelBadge(text = if (exhausted) "配额耗尽" else "可用", level = if (exhausted) Level.Bad else Level.Ok)
-        Chip(text = "密钥 ${rNum(p.num("key_count"))} · 可用 ${rNum(p.num("usable"))}")
-        Chip(text = "窗口 ${p.arr("windows").joinToString("/") { jstr(it, "").ifEmpty { strOf(it) } }}")
+        LevelBadge(text = if (exhausted) L["配额耗尽_9f8e15153c"] else L["可用_e91365cf9e"], level = if (exhausted) Level.Bad else Level.Ok)
+        Chip(text = trf("密钥_0_可用_1_426c7d2a6e", rNum(p.num("key_count")), rNum(p.num("usable"))))
+        Chip(text = trf("窗口_0_66b23aab3b", p.arr("windows").joinToString("/") { jstr(it, "").ifEmpty { strOf(it) } }))
     }
 }
 
@@ -284,7 +286,7 @@ fun ActionBtn(
     payload: JsonObject = jsonObjectOf(),
     icon: String? = null,
     confirmFirst: Boolean = false,
-    confirmText: String = "执行",
+    confirmText: String = L["执行_28febba225"],
     reload: suspend () -> Unit,
 ) {
     val scope = rememberCoroutineScope()

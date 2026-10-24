@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label Установка завершена, обновление…
+label_安装日志_13ce1b1029	$label Журнал установки
+label_实现中_70505f7ef8	«$label» — реализация…
+llm_api_中继的请求量_token_用量_6b89d708ea	Объём запросов, использование Token, квота пула ключов, доступность моделей и анализ качества для LLM API relay
+location_块_不要停用该站点以免面板与_4ae164b62b	location), не отключайте этот сайт, иначе панель и сервис реле уйдут в офлайн одновременно.
+login.access_token	Токен доступа
+login.advanced	Расширенные
+login.audit_notice	Все действия фиксируются в журнале аудита
+login.connect_failed	Не удалось подключиться:
+login.failed	Ошибка входа
+login.normalized_url	Нормализованный адрес
+login.not_logged_in	Не выполнен вход
+login.password_required	Введите пароль
+login.remember_password	Запомнить пароль
+login.restore_default_url	Восстановить адрес по умолчанию
+login.save_on_test_hint	После смены адреса нажмите «Проверить соединение», чтобы сохранить его
+login.server_config	Настройки подключения к серверу
+login.sign_in	Войти
+login.signing_in	Выполняется вход…
+login.subtitle	Консоль мониторинга сервера в реальном времени и настройки
+login.test_connection	Проверить соединение
+login.testing	Проверка…
+login_可登录_0e617ada9b	LOGIN (вход возможен)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(байты предыдущего раунда, байты этого раунда) — это содержимое, уже отправленное в предыдущих раундах; это верхняя граница, до которой должен доходить кэш, независимо от отчётов вендора.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB не возвращает пространство; validate/reindex — обычное регулярное обслуживание.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB использует mongodump для создания gzip-архива (требуется mongodump).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB создаёт базу данных только при первой записи в коллекцию; здесь будет создана резервная коллекция _cm_init.
+mongodb_的过滤条件支持_字段_值_558264a7d8	Фильтры MongoDB поддерживают форму {"поле":значение} (внутри преобразуется в условие запроса) или сокращение поле=значение. Документы показываются в формате JSON; _id — идентификатор документа.
+mongodb_维护结果_aaeb39f907	Результаты обслуживания MongoDB
+ms_毫秒_7ade5ab3a4	$ms мс
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (по умолчанию root + socket)
+mysql_语法_8200e34cb7	Синтаксис MySQL
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a статистика
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c проверка
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o оптимизация
+name_ver_连接正常_33d0a44ec7	$name $ver соединение в норме
+name_关闭_c8e887ebc0	$name: Выкл.
+name_开启_54ce939603	$name: Вкл.
+nav.audit	Журнал аудита
+nav.backups	Центр резервного копирования
+nav.cron	Запланированные задачи
+nav.dashboard	Панель мониторинга
+nav.databases	Базы данных
+nav.disks	Управление дисками
+nav.docker	Контейнеры Docker
+nav.health_alerts	Оповещения о состоянии
+nav.logs	Центр журналов
+nav.memory	Управление памятью
+nav.network	Управление сетью
+nav.note_mail	Уведомления по почте
+nav.note_settings	Настройки NoteBox
+nav.note_transfer	Импорт / Экспорт
+nav.note_users	Управление пользователями
+nav.notes	Заметки
+nav.ops_channels	Каналы уведомлений
+nav.ops_disk	Администрирование дисков
+nav.ops_files	Управление файлами
+nav.ops_hosts	Обслуживаемые хосты
+nav.ops_remote	Метрики удалённых хостов
+nav.ops_rules	Правила оповещений
+nav.ops_sec	Проверка базового уровня безопасности
+nav.ops_uptime	Зондирование доступности
+nav.ops_watch	Надзор за сервисами
+nav.packages	Управление пакетами
+nav.page_placeholder	Страница «{0}» в разработке…
+nav.pinned_hint	(закреплено, удерживайте, чтобы открепить)
+nav.processes	Управление процессами
+nav.relay	Реле OpenCode
+nav.section.app	Приложения
+nav.section.monitor	Мониторинг
+nav.section.notes	Заметки
+nav.section.server	Сервер
+nav.section.system	Система
+nav.section.tools	Инструменты
+nav.security	Управление безопасностью
+nav.services	Системные сервисы
+nav.settings	Настройки панели
+nav.slo	SLO и использование
+nav.terminal	Веб-терминал
+nav.todos	Список задач
+nav.web	Сайты / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf конфигурация Nginx · sshd_config конфигурация SSH · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	Конфигурации nginx/sshd/fstab автоматически проверяются после сохранения
+nginx_站点_0_6bcfddef71	Сайты Nginx ({0})
+nginx_站点_sites_size_2db3c2b5be	Сайты Nginx (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	SMTP и правила оповещений NoteBox
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox облачные заметки (иерархические категории · корзина · Markdown · совместный доступ)
+notebox_地址未配置_3d37258011	Адрес NoteBox не настроен
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox задачи (сроки и напоминания по почте)
+notebox_数据迁移_362725f18e	Миграция данных NoteBox
+notebox_服务可达_6a7506d6ac	Сервис NoteBox доступен
+notebox_服务可达_未登录_e023d68cad	Сервис NoteBox доступен (не выполнен вход)
+notebox_服务地址_默认端口_13345_e0880dfda6	Адрес сервиса NoteBox (порт по умолчанию 13345). После изменения нужно войти заново.
+notebox_登录成功_013138644f	Вход в NoteBox выполнен
+notebox_设置_efb5a47b98	Настройки NoteBox
+notebox_账号_仅管理员_81b8d4ca26	Учётная запись NoteBox (только для администраторов)
+online_台有近期数据_1fefff8cdc	$online хостов с недавними данными
+opencode_中继_2e021ee797	Реле OpenCode
+p95_延迟_57d63f8b46	Задержка P95
+p95_延迟_ba65a873bc	Задержка p95
+palette.accent_hint	Оформление · текущее {0}
+palette.open_page	Открыть страницу {0}
+palette.pin	Закрепить «{0}»
+palette.pin_hint	Рабочее пространство · долгое нажатие на пункт боковой панели тоже переключает
+palette.reload_hint	F5 / Ctrl+R · Перезагрузить
+palette.theme_hint	Оформление · текущее {0}
+palette.unpin	Открепить «{0}»
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (принудительная смена пароля)
+pg_自定义格式_0cc41d0ea4	Пользовательский формат PG
+postgresql_mysql_sql_42e513fca9	Управление базами данных и таблицами, SQL-консоль, аналитика производительности и резервное копирование/восстановление для PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	Пользовательский формат PostgreSQL -Fc (более быстрое восстановление)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (по умолчанию аутентификация peer: su - postgres)
+rdb_快照_62f218ed40	Снимок RDB
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis выполняет BGSAVE и копирует файл RDB; восстановление перезаписывает каталог данных и требует перезапуска Redis.
+redis_命令控制台_fa42019a53	Консоль команд Redis
+redis_维护_d2a01bfbd3	Обслуживание Redis
+reindex_全部库_90545e1eeb	REINDEX всех баз данных
+reindex_重建索引_256956f94e	REINDEX / перестроить индексы
+reindex_重建索引_d81fcbf8d0	REINDEX (перестроить индексы)
+relay_alert_py_检查_smtp_告_012aaa3373	Проверка relay_alert.py, канал оповещений SMTP, пороги и журнал оповещений

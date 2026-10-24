@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.db
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -40,8 +43,8 @@ import kotlinx.serialization.json.JsonPrimitive
 @Composable
 fun DbRolesTab(st: DbState, scope: CoroutineScope) {
     when {
-        st.isSqlite -> PanelCard(title = "用户与权限", cardKey = "rl-sqlite", collapsible = false) {
-            Text("SQLite 是单文件嵌入式数据库，没有用户/角色概念，访问控制由操作系统的文件权限决定。", style = dbMuted, fontSize = 12.sp)
+        st.isSqlite -> PanelCard(title = L["用户与权限_5c0dbf51f4"], cardKey = "rl-sqlite", collapsible = false) {
+            Text(L["sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3"], style = dbMuted, fontSize = 12.sp)
         }
         st.isDb2 -> Db2Roles(st, scope)
         st.kind == "kv" -> RedisAcl(st, scope)
@@ -72,17 +75,17 @@ private fun SqlRoles(st: DbState, scope: CoroutineScope) {
         val privs = payload?.let { it["privileges"] }.asObjList()
         val dbNames = dbs.map { it.str("name") }.filter { it.isNotEmpty() }
 
-        PanelCard(title = "创建用户/角色", cardKey = "rl-create") {
+        PanelCard(title = L["创建用户_角色_87bba5f559"], cardKey = "rl-create") {
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Bottom) {
-                Field(name, { name = it }, Modifier.width(160.dp), label = "名称", hint = "appuser", mono = true)
-                if (st.isMy) Field(host, { host = it }, Modifier.width(140.dp), label = "Host", mono = true)
-                Field(pw, { pw = it }, Modifier.width(160.dp), label = "密码", hint = "留空则无密码", password = true)
-                CheckRow(superU, { superU = it }, "超级用户")
-                DbBtn("创建", tone = DbBtnTone.Primary) {
+                Field(name, { name = it }, Modifier.width(160.dp), label = L["名称_1be7ae4fc2"], hint = "appuser", mono = true)
+                if (st.isMy) Field(host, { host = it }, Modifier.width(140.dp), label = L["host_3960ec4ca5"], mono = true)
+                Field(pw, { pw = it }, Modifier.width(160.dp), label = L["密码_c839a8ff17"], hint = L["留空则无密码_25bc684b53"], password = true)
+                CheckRow(superU, { superU = it }, L["超级用户_b429b65128"])
+                DbBtn(L["创建_fcbd093292"], tone = DbBtnTone.Primary) {
                     val n = name.trim()
-                    if (n.isEmpty()) AppState.toast("请输入名称", ToastKind.Warn)
+                    if (n.isEmpty()) AppState.toast(tr("请输入名称_c2afb255a5"), ToastKind.Warn)
                     else scope.launch {
-                        val okc = Modal.confirm("创建角色", n + if (superU) " （超级用户）" else "")
+                        val okc = Modal.confirm(L["创建角色_24cf247879"], trf("创建_0_b962ace170", n) + if (superU) L["超级用户_cf4469a6db"] else "")
                         if (!okc) return@launch
                         runDb(
                             "/db/role",
@@ -98,7 +101,7 @@ private fun SqlRoles(st: DbState, scope: CoroutineScope) {
             }
         }
 
-        PanelCard(title = "角色列表 (${roles.size})", cardKey = "rl-list", right = { DbBtn("刷新") { st.bump() } }) {
+        PanelCard(title = trf("角色列表_0_6ea3fcc772", roles.size), cardKey = "rl-list", right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } }) {
             DynamicTable(
                 columns = buildList {
                     add("name")
@@ -107,25 +110,25 @@ private fun SqlRoles(st: DbState, scope: CoroutineScope) {
                 },
                 rows = roles,
                 maxHeight = 320,
-                extra = TableCol("操作", weight = 2.4f) { row ->
+                extra = TableCol(L["操作_f3ea6d345e"], weight = 2.4f) { row ->
                     val n = row.str("name")
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        DbBtn("改密") { changePw(scope, st, n) }
-                        DbBtn("授权库", tone = DbBtnTone.Ok) { grantDb(scope, st, n, dbNames) }
-                        DbBtn("表级授权") { grantTable(scope, st, n, dbNames) }
-                        DbBtn(if (st.isPg) "属性" else "账户") { alterRole(scope, st, n) }
-                        DbBtn("删除", tone = DbBtnTone.Danger) { dropRole(scope, st, n) }
+                        DbBtn(L["改密_bb974d3064"]) { changePw(scope, st, n) }
+                        DbBtn(L["授权库_4d0119c773"], tone = DbBtnTone.Ok) { grantDb(scope, st, n, dbNames) }
+                        DbBtn(L["表级授权_dce69aab71"]) { grantTable(scope, st, n, dbNames) }
+                        DbBtn(if (st.isPg) L["属性_7d3c35c29b"] else L["账户_c3d92b20c8"]) { alterRole(scope, st, n) }
+                        DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) { dropRole(scope, st, n) }
                     }
                 },
             )
         }
         if (grants.isNotEmpty()) {
-            PanelCard(title = "当前用户权限 (SHOW GRANTS)", cardKey = "rl-grants") {
+            PanelCard(title = L["当前用户权限_show_grants_e8e7d7d1e2"], cardKey = "rl-grants") {
                 PreBox(grants.joinToString("\n"), maxHeight = 220)
             }
         }
         if (privs.isNotEmpty()) {
-            PanelCard(title = "表级授权概览", cardKey = "rl-privs") {
+            PanelCard(title = L["表级授权概览_ae18b3f8df"], cardKey = "rl-privs") {
                 DynamicTable(listOf("grantee", "schema", "privilege"), privs, maxHeight = 280)
             }
         }
@@ -134,7 +137,7 @@ private fun SqlRoles(st: DbState, scope: CoroutineScope) {
 
 private fun changePw(scope: CoroutineScope, st: DbState, name: String) {
     scope.launch {
-        val r = Modal.prompt("修改密码 - $name", listOf(FormField.Password("password", "新密码")), okText = "修改") ?: return@launch
+        val r = Modal.prompt(trf("修改密码_0_1a306d5990", name), listOf(FormField.Password("password", L["新密码_d22c9c0085"])), okText = L["修改_c9c77517fe"]) ?: return@launch
         val pw = r["password"].orEmpty()
         if (pw.isEmpty()) return@launch
         runDb("/db/role", jsonObjectOf("engine" to st.engineId, "action" to "password", "name" to name, "password" to pw))
@@ -144,7 +147,7 @@ private fun changePw(scope: CoroutineScope, st: DbState, name: String) {
 private fun grantDb(scope: CoroutineScope, st: DbState, name: String, dbs: List<String>) {
     scope.launch {
         if (dbs.isEmpty()) return@launch
-        val r = Modal.prompt("授予数据库权限", listOf(FormField.Select("database", "数据库", dbs, dbs.first())), okText = "授权") ?: return@launch
+        val r = Modal.prompt(L["授予数据库权限_fa513839dd"], listOf(FormField.Select("database", L["nav.databases"], dbs, dbs.first())), okText = L["授权_3a6e607f0c"]) ?: return@launch
         runDb(
             "/db/role",
             jsonObjectOf("engine" to st.engineId, "action" to "grant-db", "name" to name, "database" to r["database"]),
@@ -157,21 +160,21 @@ private fun grantTable(scope: CoroutineScope, st: DbState, name: String, dbs: Li
     scope.launch {
         if (dbs.isEmpty()) return@launch
         val r1 = Modal.prompt(
-            "表级授权 - $name",
-            listOf(FormField.Select("database", "数据库", dbs, st.database ?: dbs.first())),
-            okText = "下一步",
+            trf("表级授权_0_0060f41bc1", name),
+            listOf(FormField.Select("database", L["nav.databases"], dbs, st.database ?: dbs.first())),
+            okText = L["下一步_ea0ef2ae72"],
         ) ?: return@launch
         val database = r1["database"].orEmpty()
         val tables = runCatching { AppState.api.get("/db/tables?engine=${st.engineId}&database=${q(database)}") }
             .getOrNull().asObjList().map { it.str("schema") + "." + it.str("name") }
         val r2 = Modal.prompt(
-            "选择表与权限",
+            L["选择表与权限_3c404e93dc"],
             listOf(
-                FormField.Select("table", "表", tables.ifEmpty { listOf("") }, tables.firstOrNull().orEmpty()),
-                FormField.Select("privs", "权限", listOf("SELECT", "SELECT,INSERT", "SELECT,INSERT,UPDATE,DELETE", "ALL"), "SELECT"),
-                FormField.Select("op", "操作", listOf("授予", "回收"), "授予"),
+                FormField.Select("table", L["表_6a954390e3"], tables.ifEmpty { listOf("") }, tables.firstOrNull().orEmpty()),
+                FormField.Select("privs", L["权限_560165a6d7"], listOf("SELECT", L["select_insert_067c776f68"], L["select_insert_update_del_2405844409"], "ALL"), "SELECT"),
+                FormField.Select("op", L["操作_f3ea6d345e"], listOf(L["授予_afc60b6b80"], L["回收_6eda6254dd"])),
             ),
-            okText = "执行",
+            okText = L["执行_28febba225"],
         ) ?: return@launch
         val table = r2["table"].orEmpty()
         if (table.isEmpty()) return@launch
@@ -180,7 +183,7 @@ private fun grantTable(scope: CoroutineScope, st: DbState, name: String, dbs: Li
             "/db/role",
             jsonObjectOf(
                 "engine" to st.engineId,
-                "action" to if (r2["op"] == "授予") "grant-table" else "revoke-table",
+                "action" to if (r2["op"] == L["授予_afc60b6b80"]) "grant-table" else "revoke-table",
                 "name" to name,
                 "database" to database,
                 "params" to jsonObjectOf("table" to table, "privileges" to jsonStrings(privileges)),
@@ -193,14 +196,14 @@ private fun alterRole(scope: CoroutineScope, st: DbState, name: String) {
     scope.launch {
         if (st.isPg) {
             val r = Modal.prompt(
-                "角色属性 - $name",
+                trf("角色属性_0_2879e4b5a3", name),
                 listOf(
-                    FormField.Select("login", "LOGIN（可登录）", listOf("不变", "LOGIN", "NOLOGIN"), "不变"),
-                    FormField.Select("superuser", "SUPERUSER", listOf("不变", "SUPERUSER", "NOSUPERUSER"), "不变"),
-                    FormField.Select("createdb", "CREATEDB", listOf("不变", "CREATEDB", "NOCREATEDB"), "不变"),
-                    FormField.Select("createrole", "CREATEROLE", listOf("不变", "CREATEROLE", "NOCREATEROLE"), "不变"),
-                    FormField.Text("connlimit", "连接数限制（空=不变，-1=无限）"),
-                    FormField.Text("validUntil", "密码有效期 (如 2030-01-01，空=不变)"),
+                    FormField.Select("login", L["login_可登录_0e617ada9b"], listOf(L["不变_46b24ed86c"], "LOGIN", "NOLOGIN")),
+                    FormField.Select("superuser", "SUPERUSER", listOf(L["不变_46b24ed86c"], "SUPERUSER", "NOSUPERUSER")),
+                    FormField.Select("createdb", "CREATEDB", listOf(L["不变_46b24ed86c"], "CREATEDB", "NOCREATEDB")),
+                    FormField.Select("createrole", "CREATEROLE", listOf(L["不变_46b24ed86c"], "CREATEROLE", "NOCREATEROLE")),
+                    FormField.Text("connlimit", L["连接数限制_空_不变_1_无限_93c52a151b"]),
+                    FormField.Text("validUntil", L["密码有效期_如_2030_01_01_空_不变_4b3bee9f12"]),
                 ),
             ) ?: return@launch
             val privileges = buildList {
@@ -220,15 +223,27 @@ private fun alterRole(scope: CoroutineScope, st: DbState, name: String) {
             )
         } else {
             val r = Modal.prompt(
-                "账户管理 - $name",
-                listOf(FormField.Select("op", "操作", listOf("ACCOUNT LOCK(锁定)", "ACCOUNT UNLOCK(解锁)", "PASSWORD EXPIRE(强制改密)", "显示权限清单"), "ACCOUNT LOCK(锁定)")),
+                trf("账户管理_0_3d8c9ea2f9", name),
+                listOf(
+                    FormField.Select(
+                        "op",
+                        L["操作_f3ea6d345e"],
+                        listOf(
+                            L["account_lock_锁定_bbeaf242af"],
+                            L["account_unlock_解锁_b001d58ec0"],
+                            L["password_expire_强制改密_03ed6aea19"],
+                            L["显示权限清单_edc6d375d3"],
+                        ),
+                        L["account_lock_锁定_bbeaf242af"],
+                    ),
+                ),
                 danger = true,
-                okText = "执行",
+                okText = L["执行_28febba225"],
             ) ?: return@launch
             val op = r["op"].orEmpty()
-            if (op.startsWith("显示")) {
-                val res = runDb("/db/role", jsonObjectOf("engine" to "mysql", "action" to "grants-list", "name" to name), outputTitle = "权限清单 - $name", toast = false)
-                if (res != null) Modal.output("权限清单 - $name", res.str("output"))
+            if (op == L["显示权限清单_edc6d375d3"]) {
+                val res = runDb("/db/role", jsonObjectOf("engine" to "mysql", "action" to "grants-list", "name" to name), outputTitle = trf("权限清单_0_14c573d55b", name), toast = false)
+                if (res != null) Modal.output(trf("权限清单_0_14c573d55b", name), res.str("output"))
                 return@launch
             }
             val act = when {
@@ -243,7 +258,7 @@ private fun alterRole(scope: CoroutineScope, st: DbState, name: String) {
 
 private fun dropRole(scope: CoroutineScope, st: DbState, name: String) {
     scope.launch {
-        val okc = Modal.confirm("删除角色", "删除 $name ？该角色拥有的对象可能变为无主。", okText = "删除", danger = true)
+        val okc = Modal.confirm(L["删除角色_89dab40d48"], trf("删除_0_该角色拥有的对象可能变为无主_81db941aef", name), okText = L["删除_3755f56f2f"], danger = true)
         if (!okc) return@launch
         runDb("/db/role", jsonObjectOf("engine" to st.engineId, "action" to "drop", "name" to name), reload = { st.bump() })
     }
@@ -253,11 +268,11 @@ private fun dropRole(scope: CoroutineScope, st: DbState, name: String) {
 private fun Db2Roles(st: DbState, scope: CoroutineScope) {
     var payload by remember(st.tick) { mutableStateOf<JsonObject?>(null) }
     var user by remember { mutableStateOf("") }
-    var scopeSel by remember { mutableStateOf("数据库级") }
+    var scopeSel by remember { mutableStateOf(L["数据库级_6e3f81b153"]) }
     var auth by remember { mutableStateOf("DBADM") }
     var privs by remember { mutableStateOf("SELECT") }
     var table by remember { mutableStateOf("") }
-    var op by remember { mutableStateOf("授予") }
+    var op by remember { mutableStateOf(L["授予_afc60b6b80"]) }
 
     TabScaffold(
         st = st,
@@ -267,20 +282,20 @@ private fun Db2Roles(st: DbState, scope: CoroutineScope) {
         },
     ) {
         val roles = payload?.let { it["roles"] }.asObjList()
-        PanelCard(title = "Db2 授权（GRANT / REVOKE）", cardKey = "db2-grant") {
+        PanelCard(title = L["db2_授权_grant_revoke_eb50e06ee0"], cardKey = "db2-grant") {
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Bottom) {
-                Field(user, { user = it }, Modifier.width(150.dp), label = "用户/组", hint = "APPUSER", mono = true)
-                SelectField(scopeSel, listOf("数据库级", "表级"), { scopeSel = it }, Modifier.width(120.dp), label = "作用范围")
-                SelectField(auth, listOf("DBADM", "DATAACCESS", "ACCESSCTRL", "SECADM", "CONNECT"), { auth = it }, Modifier.width(140.dp), label = "权限")
-                SelectField(privs, listOf("SELECT", "SELECT,INSERT", "SELECT,INSERT,UPDATE,DELETE", "ALL"), { privs = it }, Modifier.width(220.dp), label = "表级权限")
-                Field(table, { table = it }, Modifier.width(170.dp), label = "表 (SCHEMA.TABLE)", hint = "APP.TBL", mono = true)
-                SelectField(op, listOf("授予", "回收"), { op = it }, Modifier.width(90.dp), label = "操作")
-                DbBtn("执行", tone = DbBtnTone.Primary) {
+                Field(user, { user = it }, Modifier.width(150.dp), label = L["用户_组_1e6a976270"], hint = "APPUSER", mono = true)
+                SelectField(scopeSel, listOf(L["数据库级_6e3f81b153"], L["表级_d0102a7431"]), { scopeSel = it }, Modifier.width(120.dp), label = L["作用范围_95a5e61424"])
+                SelectField(auth, listOf("DBADM", "DATAACCESS", "ACCESSCTRL", "SECADM", "CONNECT"), { auth = it }, Modifier.width(140.dp), label = L["权限_560165a6d7"])
+                SelectField(privs, listOf("SELECT", L["select_insert_067c776f68"], L["select_insert_update_del_2405844409"], "ALL"), { privs = it }, Modifier.width(220.dp), label = L["表级权限_d2b9ff43fe"])
+                Field(table, { table = it }, Modifier.width(170.dp), label = L["表_schema_table_a84ffba1ae"], hint = L["app_tbl_45e7d8e021"], mono = true)
+                SelectField(op, listOf(L["授予_afc60b6b80"], L["回收_6eda6254dd"]), { op = it }, Modifier.width(90.dp), label = L["操作_f3ea6d345e"])
+                DbBtn(L["执行_28febba225"], tone = DbBtnTone.Primary) {
                     val n = user.trim()
-                    if (n.isEmpty()) AppState.toast("请输入用户/组名", ToastKind.Warn)
-                    else if (scopeSel == "表级" && table.trim().isEmpty()) AppState.toast("表级操作需填写 SCHEMA.TABLE", ToastKind.Warn)
+                    if (n.isEmpty()) AppState.toast(tr("请输入用户_组名_2b012efd38"), ToastKind.Warn)
+                    else if (scopeSel == tr("表级_d0102a7431") && table.trim().isEmpty()) AppState.toast(tr("表级操作需填写_schema_table_a22a79af68"), ToastKind.Warn)
                     else scope.launch {
-                        val action = (if (op == "授予") "grant" else "revoke") + if (scopeSel == "表级") "-table" else "-db"
+                        val action = (if (op == L["授予_afc60b6b80"]) "grant" else "revoke") + if (scopeSel == L["表级_d0102a7431"]) L["table_ee2eebe47d"] else L["db_01cac9a55e"]
                         runDb(
                             "/db/role",
                             jsonObjectOf(
@@ -296,9 +311,9 @@ private fun Db2Roles(st: DbState, scope: CoroutineScope) {
                 }
             }
             Spacer(Modifier.size(8.dp))
-            Text("Db2 用 GRANT/REVOKE 管理权限；用户本身需先在实例上创建（db2 CREATE USER 或操作系统账号）。", style = dbMuted, fontSize = 11.sp)
+            Text(L["db2_用_grant_revoke_管理权限_209a33078b"], style = dbMuted, fontSize = 11.sp)
         }
-        PanelCard(title = "用户 / 权限 (${roles.size})", cardKey = "db2-users", right = { DbBtn("刷新") { st.bump() } }) {
+        PanelCard(title = trf("用户_权限_0_467c74d975", roles.size), cardKey = "db2-users", right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } }) {
             DynamicTable(listOf("name", "dbadm", "data_access", "access_ctrl"), roles, maxHeight = 280)
             val un = payload?.str("unsupported").orEmpty()
             if (un.isNotEmpty()) {
@@ -320,13 +335,13 @@ private fun RedisAcl(st: DbState, scope: CoroutineScope) {
         load = { payload = runCatching { AppState.api.get("/db/roles?engine=redis") }.getOrNull() as? JsonObject },
     ) {
         val roles = payload?.let { it["roles"] }.asObjList()
-        PanelCard(title = "创建 ACL 用户", cardKey = "acl-create") {
+        PanelCard(title = L["创建_acl_用户_cd96ef0588"], cardKey = "acl-create") {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Bottom) {
-                Field(name, { name = it }, Modifier.width(150.dp), label = "用户名", hint = "appuser", mono = true)
-                Field(pw, { pw = it }, Modifier.width(170.dp), label = "密码", password = true)
-                DbBtn("创建", tone = DbBtnTone.Primary) {
+                Field(name, { name = it }, Modifier.width(150.dp), label = L["用户名_a1aaf352cb"], hint = "appuser", mono = true)
+                Field(pw, { pw = it }, Modifier.width(170.dp), label = L["密码_c839a8ff17"], password = true)
+                DbBtn(L["创建_fcbd093292"], tone = DbBtnTone.Primary) {
                     val n = name.trim()
-                    if (n.isEmpty()) AppState.toast("请输入用户名", ToastKind.Warn)
+                    if (n.isEmpty()) AppState.toast(tr("请输入用户名_ad5f05f1cf"), ToastKind.Warn)
                     else scope.launch {
                         runDb(
                             "/db/role",
@@ -337,17 +352,17 @@ private fun RedisAcl(st: DbState, scope: CoroutineScope) {
                 }
             }
             Spacer(Modifier.size(6.dp))
-            Text("创建的用户拥有 ~* +@all（全部键 + 全部命令），可到 ACL SETUSER 细化授权。", style = dbMuted, fontSize = 11.sp)
+            Text(L["创建的用户拥有_all_全部键_全_2da1a3462f"], style = dbMuted, fontSize = 11.sp)
         }
-        PanelCard(title = "ACL 用户 (${roles.size})", cardKey = "acl-list", right = { DbBtn("刷新") { st.bump() } }) {
+        PanelCard(title = trf("acl_用户_0_b7e2c3ae45", roles.size), cardKey = "acl-list", right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } }) {
             DynamicTable(
                 columns = listOf("name", "rule"),
                 rows = roles,
-                extra = TableCol("操作", weight = 1.2f) { row ->
+                extra = TableCol(L["操作_f3ea6d345e"], weight = 1.2f) { row ->
                     val n = row.str("name")
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        DbBtn("改密") { changePw(scope, st, n) }
-                        DbBtn("删除", tone = DbBtnTone.Danger) { dropRole(scope, st, n) }
+                        DbBtn(L["改密_bb974d3064"]) { changePw(scope, st, n) }
+                        DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) { dropRole(scope, st, n) }
                     }
                 },
             )
@@ -368,15 +383,15 @@ private fun MongoRoles(st: DbState, scope: CoroutineScope) {
         load = { payload = runCatching { AppState.api.get("/db/roles?engine=mongo") }.getOrNull() as? JsonObject },
     ) {
         val roles = payload?.let { it["roles"] }.asObjList()
-        PanelCard(title = "创建用户", cardKey = "mo-user") {
+        PanelCard(title = L["创建用户_315315d695"], cardKey = "mo-user") {
             Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Bottom) {
-                Field(name, { name = it }, Modifier.width(150.dp), label = "用户名", mono = true)
-                Field(pw, { pw = it }, Modifier.width(170.dp), label = "密码", password = true)
-                Field(dbn, { dbn = it }, Modifier.width(110.dp), label = "库", mono = true)
-                Field(rolesStr, { rolesStr = it }, Modifier.width(180.dp), label = "角色", hint = "readWrite, dbOwner", mono = true)
-                DbBtn("创建", tone = DbBtnTone.Primary) {
+                Field(name, { name = it }, Modifier.width(150.dp), label = L["用户名_a1aaf352cb"], mono = true)
+                Field(pw, { pw = it }, Modifier.width(170.dp), label = L["密码_c839a8ff17"], password = true)
+                Field(dbn, { dbn = it }, Modifier.width(110.dp), label = L["库_87eedee459"], mono = true)
+                Field(rolesStr, { rolesStr = it }, Modifier.width(180.dp), label = L["角色_6b26695e4d"], hint = L["readwrite_dbowner_c79887aba1"], mono = true)
+                DbBtn(L["创建_fcbd093292"], tone = DbBtnTone.Primary) {
                     val n = name.trim()
-                    if (n.isEmpty()) AppState.toast("请输入用户名", ToastKind.Warn)
+                    if (n.isEmpty()) AppState.toast(tr("请输入用户名_ad5f05f1cf"), ToastKind.Warn)
                     else scope.launch {
                         runDb(
                             "/db/role",
@@ -387,22 +402,22 @@ private fun MongoRoles(st: DbState, scope: CoroutineScope) {
                 }
             }
         }
-        PanelCard(title = "用户列表 (${roles.size})", cardKey = "mo-users", right = { DbBtn("刷新") { st.bump() } }) {
+        PanelCard(title = trf("用户列表_0_06a9e65b3d", roles.size), cardKey = "mo-users", right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } }) {
             DynamicTable(
                 columns = listOf("name", "roles"),
                 rows = roles,
-                extra = TableCol("操作", weight = 1.2f) { row ->
+                extra = TableCol(L["操作_f3ea6d345e"], weight = 1.2f) { row ->
                     val n = row.str("name")
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        DbBtn("改密") {
+                        DbBtn(L["改密_bb974d3064"]) {
                             scope.launch {
-                                val r = Modal.prompt("修改密码 - $n", listOf(FormField.Password("password", "新密码")), okText = "修改") ?: return@launch
+                                val r = Modal.prompt(trf("修改密码_0_1a306d5990", n), listOf(FormField.Password("password", L["新密码_d22c9c0085"])), okText = L["修改_c9c77517fe"]) ?: return@launch
                                 runDb("/db/role", jsonObjectOf("engine" to "mongo", "action" to "password", "name" to n, "password" to r["password"], "database" to "admin"), reload = { st.bump() })
                             }
                         }
-                        DbBtn("删除", tone = DbBtnTone.Danger) {
+                        DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) {
                             scope.launch {
-                                val okc = Modal.confirm("删除用户", "删除 $n ？", okText = "删除", danger = true)
+                                val okc = Modal.confirm(L["删除用户_bcfca951a1"], trf("删除_0_a1ee4b1af0", n), okText = L["删除_3755f56f2f"], danger = true)
                                 if (!okc) return@launch
                                 runDb("/db/role", jsonObjectOf("engine" to "mongo", "action" to "drop", "name" to n, "database" to "admin"), reload = { st.bump() })
                             }

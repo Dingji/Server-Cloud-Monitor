@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,12 +39,12 @@ import com.servermaintance.panel.ui.PanelCard
  * 端点：GET /relayops/tokenhit?range=<1h|6h|24h|7d|all>
  * ========================================================================= */
 
-private val HR_RANGES = listOf(
-    "1h" to "近 1 小时",
-    "6h" to "近 6 小时",
-    "24h" to "近 24 小时",
-    "7d" to "近 7 天",
-    "all" to "全部",
+private val HR_RANGES  get() = listOf(
+    "1h" to L["近_1_小时_9b122efc5b"],
+    "6h" to L["近_6_小时_72ecdebccc"],
+    "24h" to L["近_24_小时_05c6f396a2"],
+    "7d" to L["近_7_天_f297b996de"],
+    "all" to L["全部_778fc8f994"],
 )
 
 private fun tkhLevel(v: Double?): Level = when {
@@ -56,22 +59,22 @@ private fun jnull(v: kotlinx.serialization.json.JsonElement?): Boolean =
 
 @Composable
 fun RelayTokenHitTab() {
-    var range by remember { mutableStateOf("24h") }
+    var range by remember { mutableStateOf(L["24h_0277959611"]) }
     val paths = remember(range) { mapOf("tokenhit" to "/relayops/tokenhit?range=$range") }
     val feed = rememberRelayFeed(paths, intervalMs = 2000L)
 
-    var status by remember { mutableStateOf("连接中…") }
+    var status by remember { mutableStateOf(L["连接中_9d02d12157"]) }
     val marker = feed.data["tokenhit"]
     val err = feed.err("tokenhit")
     LaunchedEffect(marker, err, range) {
         status = when {
-            err != null && marker == null -> "● 更新失败: $err"
+            err != null && marker == null -> trf("更新失败_0_97268fd8ec", err)
             marker != null -> {
                 val lv = feed["tokenhit"].obj("live") ?: JsonObject(emptyMap())
-                "● 更新于 ${Fmt.clock()} · 近5分钟 ${rNum(lv.num("turns"))} 轮 / " +
-                    "${rBytes(lv.num("bytes"))} / ${rNum(lv.num("events"))} 事件"
+                trf("更新于_0_近5分钟_1_轮_0fd646dbb6", Fmt.clock(), rNum(lv.num("turns"))) +
+                    trf("0_1_事件_5ea71250ba", rBytes(lv.num("bytes")), rNum(lv.num("events")))
             }
-            else -> "连接中…"
+            else -> L["连接中_9d02d12157"]
         }
     }
 
@@ -91,7 +94,7 @@ fun RelayTokenHitTab() {
     )
 
     Text(
-        "复用率(估算) vs 真实缓存命中率(厂商)",
+        L["复用率_估算_vs_真实缓存命中率_厂商_76b9b6d5a6"],
         color = Palette.muted,
         style = MaterialTheme.typography.labelSmall,
         modifier = Modifier.padding(bottom = 12.dp),
@@ -107,27 +110,27 @@ fun RelayTokenHitTab() {
     StatRow(
         listOf(
             StatItem(
-                label = "上下文复用率(估算)",
+                label = L["上下文复用率_估算_88aa6474a4"],
                 value = fixed(ru.num("reuseRate"), 2) + "%",
-                sub = "多轮会话平均 " +
+                sub = L["多轮会话平均_f44e5a3880"] +
                     (if (jnull(ru.key("avgSessionReuse"))) "-" else pct1(ru.num("avgSessionReuse"))) +
-                    " · 多轮 ${rNum(ru.num("multiTurnSessions"))} / 单轮 ${rNum(ru.num("singleTurnSessions"))}",
+                    trf("多轮_0_单轮_1_994729b389", rNum(ru.num("multiTurnSessions")), rNum(ru.num("singleTurnSessions"))),
             ),
             StatItem(
-                label = "真实缓存命中率",
+                label = L["真实缓存命中率_43aa06a244"],
                 value = fixed(ve.num("hitRate"), 2) + "%",
-                sub = "命中 ${rNum(ve.num("cacheRead"))} / 未命中 ${rNum(ve.num("inputNew"))} tok · 覆盖率 " +
+                sub = trf("命中_0_未命中_1_tok_覆_e84c124898", rNum(ve.num("cacheRead")), rNum(ve.num("inputNew"))) +
                     (if (jnull(ve.key("coveragePct"))) "-" else pct1(ve.num("coveragePct"))),
             ),
             StatItem(
-                label = "可复用上下文",
+                label = L["可复用上下文_9727f037bf"],
                 value = rBytes(ru.num("reuseBytes")),
-                sub = "总 ${rBytes(ru.num("totalBytes"))} · 新增 ${rBytes(ru.num("newBytes"))}",
+                sub = trf("总_0_新增_1_1fd58b4e12", rBytes(ru.num("totalBytes")), rBytes(ru.num("newBytes"))),
             ),
             StatItem(
-                label = "两者差距",
-                value = if (gap == null) "-" else fixed(gap, 2) + " pp",
-                sub = "复用率 − 真实命中率（差距越大越亏）",
+                label = L["两者差距_16481d1166"],
+                value = if (gap == null) "-" else fixed(gap, 2) + L["pp_40474b7c96"],
+                sub = L["复用率_真实命中率_差距越大越亏_8659217f8a"],
             ),
         ),
     )
@@ -140,20 +143,20 @@ fun RelayTokenHitTab() {
 
     GridLayout(columns = 2, spacing = 14.dp) {
         PanelCard(
-            title = "会话上下文构成",
+            title = L["会话上下文构成_ce6fae8e45"],
             cardKey = "tkh-mix",
-            right = { Muted("$curLabel · 按天 · 可复用 vs 新增") },
+            right = { Muted(trfn("curlabel_按天_可复用_vs_8cc7c3562a", "curLabel" to curLabel)) },
         ) {
             RelayMultiBar(
                 labels = reuseDays.map { it.str("day").takeLast(5) },
                 series = listOf(
                     BarSer(
-                        "可复用(缓存上限)",
+                        L["可复用_缓存上限_96e0d3a181"],
                         reuseDays.map { it.num("reuseBytes").toFloat() },
                         RelayColors.streamGreen,
                     ),
                     BarSer(
-                        "新增",
+                        L["新增_2cd9e6ce81"],
                         reuseDays.map { (it.num("totalBytes") - it.num("reuseBytes")).toFloat() },
                         RelayColors.otherGrey,
                     ),
@@ -164,9 +167,9 @@ fun RelayTokenHitTab() {
             )
         }
         PanelCard(
-            title = "真实缓存命中率趋势",
+            title = L["真实缓存命中率趋势_94bdc19207"],
             cardKey = "tkh-vendor",
-            right = { Muted("$curLabel · 按天") },
+            right = { Muted(trfn("curlabel_按天_12556e7b0c", "curLabel" to curLabel)) },
         ) {
             LineChart(
                 points = vendorDays.map { it.num("hitRate").toFloat() },
@@ -181,46 +184,46 @@ fun RelayTokenHitTab() {
 
     /* ---------------- 会话排行 ---------------- */
     RelaySection(
-        title = "会话排行（按上下文字节）",
+        title = L["会话排行_按上下文字节_e47849da63"],
         cardKey = "tkh-top",
         right = {
             Muted(
-                "$curLabel · ${rNum(ru.num("sessions"))} 个会话 / ${rNum(ru.num("turns"))} 轮 · " +
-                    "合计 ${rBytes(ru.num("totalBytes"))}",
+                trf("0_1_个会话_2_轮_203fdaeaee", curLabel, rNum(ru.num("sessions")), rNum(ru.num("turns"))) +
+                    trf("合计_0_03a6ed19a9", rBytes(ru.num("totalBytes"))),
             )
         },
     ) {
         val top = ru.arr("top").filterIsInstance<JsonObject>()
         if (top.isEmpty()) {
-            Muted("该窗口内没有会话数据")
+            Muted(L["该窗口内没有会话数据_ed9d181c42"])
         } else {
             relayTable(
                 rows = top,
                 cols = listOf(
-                    RCol("sess", "会话", mono = true, width = 1.8f),
-                    RCol("route", "线路", mono = true),
-                    RCol("turns", "轮数", num = true),
-                    RCol("totalBytes", "上下文总量", num = true, fmt = { rBytes(jnum(it)) }),
-                    RCol("reuseBytes", "可复用", num = true, fmt = { rBytes(jnum(it)) }),
-                    RCol("newBytes", "新增", num = true, fmt = { rBytes(jnum(it)) }),
+                    RCol("sess", L["会话_836ffe0e10"], mono = true, width = 1.8f),
+                    RCol("route", L["线路_5922d95f29"], mono = true),
+                    RCol("turns", L["轮数_2a8445ec1c"], num = true),
+                    RCol("totalBytes", L["上下文总量_8957c21723"], num = true, fmt = { rBytes(jnum(it)) }),
+                    RCol("reuseBytes", L["可复用_ec5baa1975"], num = true, fmt = { rBytes(jnum(it)) }),
+                    RCol("newBytes", L["新增_2cd9e6ce81"], num = true, fmt = { rBytes(jnum(it)) }),
                     RCol(
-                        "reuseRate", "复用率", num = true,
+                        "reuseRate", L["复用率_c15d8906d5"], num = true,
                         fmt = { fixed(jnum(it), 2) + "%" },
                         tone = { tkhLevel(jnum(it)) },
                     ),
-                    RCol("avgPerTurn", "均/轮", num = true, fmt = { rBytes(jnum(it)) }),
-                    RCol("maxTurn", "峰值轮", num = true, fmt = { rBytes(jnum(it)) }),
-                    RCol("models", "模型", width = 1.6f),
-                    RCol("lastDay", "最近", mono = true),
+                    RCol("avgPerTurn", L["均_轮_401ebb3923"], num = true, fmt = { rBytes(jnum(it)) }),
+                    RCol("maxTurn", L["峰值轮_4cecb849cf"], num = true, fmt = { rBytes(jnum(it)) }),
+                    RCol("models", L["模型_98fd0cbd9c"], width = 1.6f),
+                    RCol("lastDay", L["最近_8c73d90eca"], mono = true),
                 ),
-                emptyText = "该窗口内没有会话数据",
+                emptyText = L["该窗口内没有会话数据_ed9d181c42"],
             )
         }
     }
 
     /* ---------------- 按模型：复用率 vs 真实命中率 + 口径说明 ---------------- */
     GridLayout(columns = 2, spacing = 14.dp) {
-        PanelCard(title = "按模型：复用率 vs 真实命中率", cardKey = "tkh-models") {
+        PanelCard(title = L["按模型_复用率_vs_真实命中率_c4c8c68680"], cardKey = "tkh-models") {
             val vendorByModel = HashMap<String, JsonObject>()
             ve.arr("byModel").filterIsInstance<JsonObject>().forEach { m ->
                 vendorByModel[m.str("model")] = m
@@ -240,39 +243,39 @@ fun RelayTokenHitTab() {
                 }.let { JsonObject(it) }
             }
             if (rows.isEmpty()) {
-                Muted("无数据")
+                Muted(L["无数据_6ffa7e6d35"])
             } else {
                 relayTable(
                     rows = rows,
                     cols = listOf(
-                        RCol("model", "模型", mono = true, width = 1.6f),
-                        RCol("sessions", "会话", num = true),
-                        RCol("turns", "轮数", num = true),
-                        RCol("totalBytes", "上下文总量", num = true, fmt = { rBytes(jnum(it)) }),
-                        RCol("reuseBytes", "可复用", num = true, fmt = { rBytes(jnum(it)) }),
+                        RCol("model", L["模型_98fd0cbd9c"], mono = true, width = 1.6f),
+                        RCol("sessions", L["会话_836ffe0e10"], num = true),
+                        RCol("turns", L["轮数_2a8445ec1c"], num = true),
+                        RCol("totalBytes", L["上下文总量_8957c21723"], num = true, fmt = { rBytes(jnum(it)) }),
+                        RCol("reuseBytes", L["可复用_ec5baa1975"], num = true, fmt = { rBytes(jnum(it)) }),
                         RCol(
-                            "reuseRate", "复用率", num = true,
+                            "reuseRate", L["复用率_c15d8906d5"], num = true,
                             fmt = { fixed(jnum(it), 2) + "%" },
                             tone = { tkhLevel(jnum(it)) },
                         ),
                         RCol(
-                            "vendorHit", "真实命中率", num = true,
-                            fmt = { if (jnull(it)) "未上报" else pct1(jnum(it)) },
+                            "vendorHit", L["真实命中率_d32623c189"], num = true,
+                            fmt = { if (jnull(it)) L["未上报_af807e32e8"] else pct1(jnum(it)) },
                         ),
-                        RCol("cacheRead", "缓存读 tok", num = true),
+                        RCol("cacheRead", L["缓存读_tok_941fe28661"], num = true),
                     ),
-                    emptyText = "无数据",
+                    emptyText = L["无数据_6ffa7e6d35"],
                 )
             }
         }
 
-        PanelCard(title = "口径说明", cardKey = "tkh-note") {
+        PanelCard(title = L["口径说明_53a989d8cc"], cardKey = "tkh-note") {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 listOf(
-                    "· 上下文复用率（估算）：编码代理每轮都会把整个会话上下文重发一遍。第 N 轮请求体里至少有 min(上一轮字节, 本轮字节) 是前面轮次已经发过的内容 —— 这就是缓存本该命中的上限。数据来自 session_turns.sent_bytes，不依赖厂商。",
-                    "· 真实缓存命中率（厂商上报）：上游响应 usage 里的 cache_read（Anthropic 的 cache_read_input_tokens / OpenAI 的 prompt_tokens_details.cached_tokens）÷（未命中输入 + cache_read），与采集端口径一致。",
-                    "· 上报覆盖率：多少比例的事件真的带了缓存字段。覆盖率为 0 时，「真实命中率 0%」表示厂商没上报，不能直接断定没有命中。",
-                    "· 两个数字差距越大，说明「本可缓存的上下文正按全价被重复计费」。",
+                    L["上下文复用率_估算_编码代理每轮都会把整个_9f32a68e6c"],
+                    L["真实缓存命中率_厂商上报_上游响应_usa_6a1c2d5bf7"],
+                    L["上报覆盖率_多少比例的事件真的带了缓存字段_d70d902796"],
+                    L["两个数字差距越大_说明_本可缓存的上下文正按_b286a17236"],
                 ).forEach { Text(it, color = Palette.muted, style = MaterialTheme.typography.bodySmall) }
             }
         }

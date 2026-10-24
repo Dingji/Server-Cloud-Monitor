@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label インストール完了、更新中…
+label_安装日志_13ce1b1029	$label インストールログ
+label_实现中_70505f7ef8	「$label」実装中…
+llm_api_中继的请求量_token_用量_6b89d708ea	LLM API リレーのリクエスト数、Token 使用量、キープールクォータ、モデルの可用性と品質の分析
+location_块_不要停用该站点以免面板与_4ae164b62b	location ブロック)、パネルとリレーサービスが同時に止まらないよう、このサイトを無効にしないでください。
+login.access_token	アクセストークン
+login.advanced	詳細
+login.audit_notice	すべての操作が監査記録されます
+login.connect_failed	接続失敗：
+login.failed	ログイン失敗
+login.normalized_url	正規化アドレス
+login.not_logged_in	未ログイン
+login.password_required	パスワードを入力してください
+login.remember_password	パスワードを記憶
+login.restore_default_url	デフォルトアドレスに戻す
+login.save_on_test_hint	アドレス変更後、「接続テスト」をクリックすると保存されます
+login.server_config	サーバー接続設定
+login.sign_in	ログイン
+login.signing_in	ログイン中…
+login.subtitle	サーバーのリアルタイム監視・設定コンソール
+login.test_connection	接続テスト
+login.testing	テスト中…
+login_可登录_0e617ada9b	LOGIN（ログイン可能）
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(前のラウンドのバイト数,今回のラウンドのバイト数) は、以前のラウンドですでに送信された内容です — これがキャッシュが本来ヒットすべき上限であり、ベンダーの報告値には依存しません。\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB はスペースを回収しません。validate/reindex は定例メンテナンスとしてよく使われます。
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB は mongodump で gzip アーカイブを作成します（mongodump が必要）。
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB は最初の書き込み時に初めてデータベースが作成されます。ここではプレースホルダーの _cm_init コレクションが作成されます。
+mongodb_的过滤条件支持_字段_值_558264a7d8	MongoDB のフィルターは {"フィールド":値} 形式（内部でクエリ条件に変換）または フィールド=値 の短縮形式に対応しています。ドキュメントは JSON で表示され、_id がドキュメント識別子です。
+mongodb_维护结果_aaeb39f907	MongoDB メンテナンス結果
+ms_毫秒_7ade5ab3a4	$ms ミリ秒
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB（デフォルト root + socket）
+mysql_语法_8200e34cb7	MySQL 構文
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a 統計
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c 検証
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o 最適化
+name_ver_连接正常_33d0a44ec7	$name $ver 接続正常
+name_关闭_c8e887ebc0	$name: オフ
+name_开启_54ce939603	$name: オン
+nav.audit	監査ログ
+nav.backups	バックアップセンター
+nav.cron	スケジュールタスク
+nav.dashboard	ダッシュボード
+nav.databases	データベース
+nav.disks	ディスク管理
+nav.docker	Docker コンテナ
+nav.health_alerts	ヘルスアラート
+nav.logs	ログセンター
+nav.memory	メモリ管理
+nav.network	ネットワーク管理
+nav.note_mail	メール通知
+nav.note_settings	NoteBox 設定
+nav.note_transfer	インポート / エクスポート
+nav.note_users	ユーザー管理
+nav.notes	ノート
+nav.ops_channels	通知チャンネル
+nav.ops_disk	ディスクガバナンス
+nav.ops_files	ファイル管理
+nav.ops_hosts	管理対象ホスト
+nav.ops_remote	リモートホストメトリクス
+nav.ops_rules	アラートルール
+nav.ops_sec	セキュリティベースライン検査
+nav.ops_uptime	稼働監視
+nav.ops_watch	サービス監視
+nav.packages	パッケージ管理
+nav.page_placeholder	「{0}」ページ実装中…
+nav.pinned_hint	（ピン留め済み、長押しで解除）
+nav.processes	プロセス管理
+nav.relay	OpenCode リレー
+nav.section.app	アプリ
+nav.section.monitor	監視
+nav.section.notes	ノート
+nav.section.server	サーバー
+nav.section.system	システム
+nav.section.tools	ツール
+nav.security	セキュリティ管理
+nav.services	システムサービス
+nav.settings	パネル設定
+nav.slo	SLO と使用量
+nav.terminal	Web ターミナル
+nav.todos	TODO リスト
+nav.web	ウェブサイト / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf Nginx 設定 · sshd_config SSH 設定 · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	nginx/sshd/fstab の設定は保存後に自動検証されます
+nginx_站点_0_6bcfddef71	Nginx サイト ({0})
+nginx_站点_sites_size_2db3c2b5be	Nginx サイト (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP とアラートルール
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox クラウドノート（多階層カテゴリ · ゴミ箱 · Markdown · 共有）
+notebox_地址未配置_3d37258011	NoteBox のアドレスが未設定です
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox TODO（期限とメールリマインダーに対応）
+notebox_数据迁移_362725f18e	NoteBox データ移行
+notebox_服务可达_6a7506d6ac	NoteBox サービス到達可能
+notebox_服务可达_未登录_e023d68cad	NoteBox サービス到達可能（未ログイン）
+notebox_服务地址_默认端口_13345_e0880dfda6	NoteBox サービスアドレス（デフォルトポート 13345）。変更後は再ログインが必要です。
+notebox_登录成功_013138644f	NoteBox ログイン成功
+notebox_设置_efb5a47b98	NoteBox 設定
+notebox_账号_仅管理员_81b8d4ca26	NoteBox アカウント（管理者のみ）
+online_台有近期数据_1fefff8cdc	$online 台に最近のデータがあります
+opencode_中继_2e021ee797	OpenCode リレー
+p95_延迟_57d63f8b46	P95レイテンシ
+p95_延迟_ba65a873bc	p95 レイテンシ
+palette.accent_hint	外観 · 現在 {0}
+palette.open_page	ページを開く {0}
+palette.pin	「{0}」をピン留め
+palette.pin_hint	ワークスペース · サイドバーの項目を長押ししても切り替えできます
+palette.reload_hint	F5 / Ctrl+R · 再読み込み
+palette.theme_hint	外観 · 現在 {0}
+palette.unpin	「{0}」のピン留めを解除
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE（パスワード強制変更）
+pg_自定义格式_0cc41d0ea4	PG カスタム形式
+postgresql_mysql_sql_42e513fca9	PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB のデータベース・テーブル管理、SQL コンソール、パフォーマンス分析、バックアップと復元
+postgresql_自定义格式_fc_更快恢_080c860e81	PostgreSQL カスタム形式 -Fc（高速復元）
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL（デフォルトで peer 認証: su - postgres）
+rdb_快照_62f218ed40	RDB スナップショット
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis は BGSAVE を実行し RDB ファイルをコピーします。復元はデータディレクトリを上書きし、反映には Redis の再起動が必要です。
+redis_命令控制台_fa42019a53	Redis コマンドコンソール
+redis_维护_d2a01bfbd3	Redis メンテナンス
+reindex_全部库_90545e1eeb	REINDEX すべてのデータベース
+reindex_重建索引_256956f94e	REINDEX / インデックス再構築
+reindex_重建索引_d81fcbf8d0	REINDEX（インデックス再構築）
+relay_alert_py_检查_smtp_告_012aaa3373	relay_alert.py 検査、SMTP アラートチャネル、しきい値とアラート記録

@@ -1,4 +1,5 @@
 package com.servermaintance.panel.ui
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -66,7 +67,7 @@ private val Y_LABEL_W = 40.dp
 /** 网格分段数（5 条横线）。 */
 private const val GRID_STEPS = 4
 
-private const val EMPTY_TEXT = "暂无数据"
+private val EMPTY_TEXT get() = L["暂无数据_b246458f20"]
 
 /** 计算 [lo, hi]：优先 yMin/yMax 覆盖，其次取有限值的 min/max，等高/非法时垫开。 */
 private fun computeRange(values: List<Float>, yMin: Float?, yMax: Float?): Pair<Float, Float> {

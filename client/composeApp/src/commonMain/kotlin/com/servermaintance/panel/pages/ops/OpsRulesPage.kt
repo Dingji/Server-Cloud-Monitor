@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.ops
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -75,21 +78,26 @@ fun OpsRulesPage() {
         scope.launch {
             if (metrics.isEmpty()) OpsState.loadRules()
             val metricLabels = metrics.map { it.label }
-            val opOptions = listOf("≥ 大于等于", "> 大于", "≤ 小于等于", "< 小于")
+            val opOptions = listOf(L["大于等于_be43f55fe3"], L["大于_6857759f9f"], L["小于等于_190834de3e"], L["小于_7d11896ff4"])
             val f = Modal.prompt(
-                if (existing == null) "新建告警规则" else "编辑「${existing.name}」",
+                if (existing == null) L["新建告警规则_4f937923b8"] else trf("编辑_0_70e0b308bd", existing.name),
                 listOf(
-                    FormField.Text("name", "规则名称", value = existing?.name ?: "", hint = "如 根分区快满 / CPU 长期偏高"),
-                    FormField.Select("metric", "监控指标", options = metricLabels, value = existing?.let { r -> metrics.firstOrNull { it.key == r.metric }?.label } ?: metricLabels.first()),
-                    FormField.Select("op", "条件", options = opOptions, value = existing?.let { r -> opOptions.firstOrNull { it.startsWith(opsOf(r.op)) } } ?: opOptions.first()),
-                    FormField.Text("threshold", "阈值", value = (existing?.threshold ?: 90.0).toString(), mono = true),
-                    FormField.Text("forSec", "持续多少秒才告警", value = (existing?.forSec ?: 60).toString(), mono = true, hint = "0 表示立即"),
-                    FormField.Text("cooldownSec", "重复告警冷却（秒）", value = (existing?.cooldownSec ?: 900).toString(), mono = true),
-                    FormField.Select("level", "级别", options = RULE_LEVELS.values.toList(), value = RULE_LEVELS[existing?.level] ?: "警告"),
-                    FormField.Select("channel", "通知渠道", options = channelOptions(), value = existing?.channelIds?.firstOrNull()?.let { OpsState.channelName(it) } ?: channelOptions().first()),
-                    FormField.Select("recover", "恢复时是否通知", options = listOf("通知", "不通知"), value = if (existing?.notifyRecover == false) "不通知" else "通知"),
+                    FormField.Text("name", L["规则名称_1937bcb105"], value = existing?.name ?: "", hint = L["如_根分区快满_cpu_长期偏高_090f6860d1"]),
+                    FormField.Select("metric", L["监控指标_9fec69659d"], options = metricLabels, value = existing?.let { r -> metrics.firstOrNull { it.key == r.metric }?.label } ?: metricLabels.first()),
+                    FormField.Select("op", L["条件_72f1cf759c"], options = opOptions, value = existing?.let { r -> opOptions.firstOrNull { it.startsWith(opsOf(r.op)) } } ?: opOptions.first()),
+                    FormField.Text("threshold", L["阈值_a05320e189"], value = (existing?.threshold ?: 90.0).toString(), mono = true),
+                    FormField.Text("forSec", L["持续多少秒才告警_9624b095e1"], value = (existing?.forSec ?: 60).toString(), mono = true, hint = L["0_表示立即_189b797c4f"]),
+                    FormField.Text("cooldownSec", L["重复告警冷却_秒_7f78078cd3"], value = (existing?.cooldownSec ?: 900).toString(), mono = true),
+                    FormField.Select("level", L["级别_2548499200"], options = RULE_LEVELS.values.toList(), value = RULE_LEVELS[existing?.level] ?: L["警告_5521e368d8"]),
+                    FormField.Select("channel", L["nav.ops_channels"], options = channelOptions(), value = existing?.channelIds?.firstOrNull()?.let { OpsState.channelName(it) } ?: channelOptions().first()),
+                    FormField.Select(
+                        "recover",
+                        L["恢复时是否通知_e60cfd9684"],
+                        options = listOf(L["通知_7a66c0d036"], L["不通知_8c6daa58db"]),
+                        value = if (existing?.notifyRecover == false) L["不通知_8c6daa58db"] else L["通知_7a66c0d036"],
+                    ),
                 ),
-                okText = "保存",
+                okText = L["保存_fadf24dbc5"],
             ) ?: return@launch
             val metricKey = metrics.firstOrNull { it.label == f["metric"] }?.key ?: "cpuPct"
             val opKey = opKeyOf((f["op"] ?: "").split(" ").firstOrNull().orEmpty())
@@ -104,41 +112,46 @@ fun OpsRulesPage() {
                 "cooldownSec" to (f["cooldownSec"]?.toIntOrNull() ?: 900),
                 "level" to levelKey,
                 "channelIds" to JsonArray(channelIdForOption(f["channel"])?.let { listOf(JsonPrimitive(it)) } ?: emptyList()),
-                "notifyRecover" to (f["recover"] != "不通知"),
+                "notifyRecover" to (f["recover"] != L["不通知_8c6daa58db"]),
                 "enabled" to (existing?.enabled ?: true),
             ))
-            AppState.toast(err ?: "规则已保存，引擎 15 秒内生效", if (err == null) ToastKind.Ok else ToastKind.Err, ms = 6000)
+            AppState.toast(err ?: tr("规则已保存_引擎_15_秒内生效_7eba92df56"), if (err == null) ToastKind.Ok else ToastKind.Err, ms = 6000)
         }
     }
 
     fun openSilenceForm() {
         scope.launch {
             val f = Modal.prompt(
-                "新建静默 / 维护窗口",
+                L["新建静默_维护窗口_00c1db257e"],
                 listOf(
-                    FormField.Text("name", "名称", value = "维护窗口", hint = "如 每晚备份窗口"),
-                    FormField.Select("kind", "类型", options = listOf("单次时间段", "每天固定时段"), value = "单次时间段"),
-                    FormField.Select("scope", "作用范围", options = listOf("全部规则", "指定规则", "指定指标"), value = "全部规则"),
-                    FormField.Select("rule", "指定规则（作用范围=指定规则时）", options = listOf("不指定") + rules.map { it.name }, value = "不指定"),
-                    FormField.Select("metric", "指定指标（作用范围=指定指标时）", options = listOf("不指定") + metrics.map { it.label }, value = "不指定"),
-                    FormField.Text("minutes", "单次时长（分钟）", value = "60", mono = true, hint = "仅「单次时间段」生效"),
-                    FormField.Text("from", "每日开始（HH:MM）", value = "01:00", mono = true),
-                    FormField.Text("to", "每日结束（HH:MM）", value = "05:00", mono = true),
-                    FormField.Text("reason", "原因备注"),
+                    FormField.Text("name", L["名称_1be7ae4fc2"], value = L["维护窗口_21d86e812a"], hint = L["如_每晚备份窗口_f81f635f6e"]),
+                    FormField.Select(
+                        "kind",
+                        L["类型_e4e46c7235"],
+                        options = listOf(L["单次时间段_ee80d47d80"], L["每天固定时段_035cafe753"]),
+                        value = L["单次时间段_ee80d47d80"],
+                    ),
+                    FormField.Select("scope", L["作用范围_95a5e61424"], options = listOf(L["全部规则_33c1cd2c36"], L["指定规则_e050a72f42"], L["指定指标_efb37dcdc8"]), value = L["全部规则_33c1cd2c36"]),
+                    FormField.Select("rule", L["指定规则_作用范围_指定规则时_a4bbca73a1"], options = listOf(L["不指定_1aad39c63a"]) + rules.map { it.name }, value = L["不指定_1aad39c63a"]),
+                    FormField.Select("metric", L["指定指标_作用范围_指定指标时_2b528db368"], options = listOf(L["不指定_1aad39c63a"]) + metrics.map { it.label }, value = L["不指定_1aad39c63a"]),
+                    FormField.Text("minutes", L["单次时长_分钟_0e95dd9d82"], value = "60", mono = true, hint = L["仅_单次时间段_生效_baadedcb43"]),
+                    FormField.Text("from", L["每日开始_hh_mm_785f0f4695"], value = L["01_00_c54d21b6fc"], mono = true),
+                    FormField.Text("to", L["每日结束_hh_mm_ec8711b104"], value = L["05_00_d0db6de4b6"], mono = true),
+                    FormField.Text("reason", L["原因备注_0a726bdb00"]),
                 ),
-                okText = "创建",
+                okText = L["创建_fcbd093292"],
             ) ?: return@launch
             val now = nowEpochMillis()
-            val daily = f["kind"] == "每天固定时段"
+            val daily = f["kind"] == L["每天固定时段_035cafe753"]
             val ruleId = rules.firstOrNull { it.name == f["rule"] }?.id
             val metricKey = metrics.firstOrNull { it.label == f["metric"] }?.key
             val err = OpsState.saveSilence(jsonObjectOf(
                 "name" to f["name"],
                 "kind" to (if (daily) "daily" else "once"),
                 "scope" to when (f["scope"]) {
-                    "指定规则" -> "rule"
-                    "指定指标" -> "metric"
-                    else -> "*"
+                    L["指定规则_e050a72f42"] -> "rule"
+                    L["指定指标_efb37dcdc8"] -> "metric"
+                    else -> L["s_df58248c41"]
                 },
                 "ruleId" to ruleId,
                 "metric" to metricKey,
@@ -148,19 +161,19 @@ fun OpsRulesPage() {
                 "to" to f["to"],
                 "reason" to f["reason"],
             ))
-            AppState.toast(err ?: "静默窗口已创建", if (err == null) ToastKind.Ok else ToastKind.Err, ms = 6000)
+            AppState.toast(err ?: tr("静默窗口已创建_f3fcf66cdc"), if (err == null) ToastKind.Ok else ToastKind.Err, ms = 6000)
         }
     }
 
     PageScaffold(
-        title = "告警规则",
-        desc = "自定义指标阈值 + 持续时长 + 冷却，触发后进面板铃铛并按渠道推送；支持静默与维护窗口",
+        title = L["告警规则_de497c4e56"],
+        desc = L["自定义指标阈值_持续时长_冷却_触发后进_b246e6a458"],
         actions = {
-            GhostBtn(text = "刷新", onClick = { scope.launch { OpsState.loadRules() } }, icon = "refresh")
+            GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { OpsState.loadRules() } }, icon = "refresh")
             Spacer(Modifier.size(8.dp))
-            GhostBtn(text = "静默窗口", onClick = { openSilenceForm() }, icon = "clock")
+            GhostBtn(text = L["静默窗口_5bbd0724f7"], onClick = { openSilenceForm() }, icon = "clock")
             Spacer(Modifier.size(8.dp))
-            PrimaryBtn(text = "新建规则", onClick = { openRuleForm(null) }, icon = "plus")
+            PrimaryBtn(text = L["新建规则_eae3b2e915"], onClick = { openRuleForm(null) }, icon = "plus")
         },
     ) {
         if (unsupported) {
@@ -169,30 +182,30 @@ fun OpsRulesPage() {
         }
         val t = totals
         GridLayout(columns = 4, spacing = 12.dp) {
-            StatTile(label = "规则总数", value = "${t?.ruleTotal ?: rules.size}", sub = "由 ops 引擎每 15 秒评估", icon = "filter")
+            StatTile(label = L["规则总数_7e76644f62"], value = "${t?.ruleTotal ?: rules.size}", sub = L["由_ops_引擎每_15_秒评估_4b3335d36f"], icon = "filter")
             StatTile(
-                label = "正在告警", value = "${t?.ruleFiring ?: 0}",
-                sub = if ((t?.ruleFiring ?: 0) > 0) "已推送到铃铛与渠道" else "全部在阈值内",
+                label = L["正在告警_ad193fe023"], value = "${t?.ruleFiring ?: 0}",
+                sub = if ((t?.ruleFiring ?: 0) > 0) L["已推送到铃铛与渠道_336daad702"] else L["全部在阈值内_3b9654881f"],
                 icon = "bell", valueColor = if ((t?.ruleFiring ?: 0) > 0) Palette.bad else Palette.ok,
             )
-            StatTile(label = "静默中 / 窗口", value = "${t?.ruleSilenced ?: 0} / ${t?.windowsActive ?: 0}", sub = "被静默的规则 / 生效窗口", icon = "clock")
+            StatTile(label = L["静默中_窗口_b5d161015a"], value = "${t?.ruleSilenced ?: 0} / ${t?.windowsActive ?: 0}", sub = L["被静默的规则_生效窗口_f8eafcb9e5"], icon = "clock")
             StatTile(
-                label = "24 小时通知", value = "${t?.sent24h ?: 0} 条",
-                sub = if ((t?.failed24h ?: 0) > 0) "其中 ${t?.failed24h} 条失败" else "全部发送成功",
+                label = L["24_小时通知_ed50056bf1"], value = trf("0_条_1932375aa5", t?.sent24h ?: 0),
+                sub = if ((t?.failed24h ?: 0) > 0) trf("其中_0_条失败_c5eef2f155", t?.failed24h) else L["全部发送成功_66de2386e0"],
                 icon = "mail", valueColor = if ((t?.failed24h ?: 0) > 0) Palette.warn else Palette.muted,
             )
         }
 
-        PanelCard("当前采集到的指标", cardKey = "ops-rules-sample") {
+        PanelCard(title = L["当前采集到的指标_8e4e47b457"], cardKey = "ops-rules-sample") {
             if (values.isEmpty()) {
-                EmptyState("引擎还没跑完一轮（新建规则后约 15 秒），或服务器未部署采集器", icon = "gauge")
+                EmptyState(L["引擎还没跑完一轮_新建规则后约_15_秒_或服_4db3fea74e"], icon = "gauge")
             } else {
                 GridLayout(columns = 4, spacing = 10.dp) {
                     metrics.filter { values.containsKey(it.key) }.forEach { m ->
                         val v = values[m.key]
                         StatTile(
                             label = m.label,
-                            value = if (v == null) "无数据" else if (kotlin.math.abs(v) >= 100) "${v.toInt()}" else "${(v * 100).toInt() / 100.0}",
+                            value = if (v == null) L["无数据_6ffa7e6d35"] else if (kotlin.math.abs(v) >= 100) "${v.toInt()}" else "${(v * 100).toInt() / 100.0}",
                             sub = m.unit.ifBlank { m.source },
                             icon = "activity",
                             valueColor = if (v == null) Palette.muted else Palette.text,
@@ -202,63 +215,65 @@ fun OpsRulesPage() {
             }
         }
 
-        PanelCard("规则", cardKey = "ops-rules-list", collapsible = false) {
+        PanelCard(title = L["规则_ed904c685a"], cardKey = "ops-rules-list", collapsible = false) {
             if (rules.isEmpty()) {
-                EmptyState("还没有规则。示例：磁盘使用率 ≥ 85% 持续 60 秒 → 严重告警并推送企业微信", icon = "filter")
+                EmptyState(L["还没有规则_示例_磁盘使用率_85_持续_12b6541208"], icon = "filter")
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<OpsRule>("规则", weight = 1.5f) { x ->
+                        TableCol<OpsRule>(L["规则_ed904c685a"], weight = 1.5f) { x ->
                             Column {
                                 Text(text = x.name, color = Palette.text, fontSize = 12.5.sp)
                                 if (x.note.isNotBlank()) Text(text = x.note, color = Palette.muted, fontSize = 11.sp)
                             }
                         },
-                        TableCol<OpsRule>("条件", weight = 1.7f, mono = true) { r ->
+                        TableCol<OpsRule>(L["条件_72f1cf759c"], weight = 1.7f, mono = true) { r ->
                             Column {
                                 Text(
                                     text = "${OpsState.metricLabel(r.metric)} ${opsOf(r.op)} ${fmtThreshold(r.threshold)}${OpsState.metricUnit(r.metric)}",
                                     color = Palette.text, fontSize = 12.sp,
                                 )
                                 Text(
-                                    text = "持续 ${r.forSec}s · 冷却 ${r.cooldownSec}s · ${if (r.notifyRecover) "恢复通知" else "仅告警"}",
+                                    text = trf("持续_0_s_冷却_1_s_2_a238875611", r.forSec, r.cooldownSec, if (r.notifyRecover) L["恢复通知_9d088c33ba"] else L["仅告警_dd88e195cf"]),
                                     color = Palette.muted, fontSize = 11.sp,
                                 )
                             }
                         },
-                        TableCol<OpsRule>("当前值", weight = 0.9f, align = TextAlign.End, mono = true) {
+                        TableCol<OpsRule>(L["当前值_8b0db67871"], weight = 0.9f, align = TextAlign.End, mono = true) {
                             TableText(if (it.currentValue == null) "—" else "${it.currentValue}", textAlign = TextAlign.End, mono = true)
                         },
-                        TableCol<OpsRule>("级别", weight = 0.7f) {
+                        TableCol<OpsRule>(L["级别_2548499200"], weight = 0.7f) {
                             Chip(RULE_LEVELS[it.level] ?: it.level, tone = when (it.level) {
                                 "bad" -> Level.Bad
                                 "warn" -> Level.Warn
                                 else -> Level.Info
                             })
                         },
-                        TableCol<OpsRule>("状态", weight = 1.1f) { RuleStateBadge(it) },
-                        TableCol<OpsRule>("通知渠道", weight = 1.2f) {
-                            TableText(if (it.channelIds.isEmpty()) "仅面板铃铛" else it.channelIds.joinToString("、") { id -> OpsState.channelName(id) },
-                                color = if (it.channelIds.isEmpty()) Palette.muted else Palette.text)
+                        TableCol<OpsRule>(L["状态_62e951a692"], weight = 1.1f) { RuleStateBadge(it) },
+                        TableCol<OpsRule>(L["nav.ops_channels"], weight = 1.2f) {
+                            TableText(
+                                if (it.channelIds.isEmpty()) L["仅面板铃铛_3ecf2a6ea9"] else it.channelIds.joinToString(L["s_611e057fbc"]) { id -> OpsState.channelName(id) },
+                                color = if (it.channelIds.isEmpty()) Palette.muted else Palette.text,
+                            )
                         },
-                        TableCol<OpsRule>("操作", weight = 2.0f) { r ->
+                        TableCol<OpsRule>(L["操作_f3ea6d345e"], weight = 2.0f) { r ->
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                GhostBtn(text = "试跑", onClick = {
+                                GhostBtn(text = L["试跑_28dc4e1531"], onClick = {
                                     busy = true
                                     scope.launch {
                                         val err = OpsState.testRule(jsonObjectOf("id" to r.id))
                                         busy = false
-                                        AppState.toast(err ?: "已按当前值试跑（结果见发送记录）", if (err == null) ToastKind.Ok else ToastKind.Warn, ms = 6000)
+                                        AppState.toast(err ?: tr("已按当前值试跑_结果见发送记录_467ceb202b"), if (err == null) ToastKind.Ok else ToastKind.Warn, ms = 6000)
                                     }
                                 }, enabled = !busy, icon = "play")
-                                GhostBtn(text = "编辑", onClick = { openRuleForm(r) }, icon = "edit")
-                                GhostBtn(text = if (r.enabled) "停用" else "启用", onClick = {
-                                    scope.launch { AppState.toast(OpsState.toggleRule(r.id) ?: "已更新", ToastKind.Ok) }
+                                GhostBtn(text = L["编辑_a7f814c0a4"], onClick = { openRuleForm(r) }, icon = "edit")
+                                GhostBtn(text = if (r.enabled) L["停用_d989e55188"] else L["启用_d4e9ca3dd4"], onClick = {
+                                    scope.launch { AppState.toast(OpsState.toggleRule(r.id) ?: tr("已更新_112f98675e"), ToastKind.Ok) }
                                 }, icon = if (r.enabled) "stop" else "play")
-                                GhostBtn(text = "删除", onClick = {
+                                GhostBtn(text = L["删除_3755f56f2f"], onClick = {
                                     scope.launch {
-                                        if (Modal.confirm("删除告警规则", "删除「${r.name}」？历史事件仍保留。", okText = "删除", danger = true)) {
-                                            AppState.toast(OpsState.deleteRule(r.id) ?: "已删除", ToastKind.Ok)
+                                        if (Modal.confirm(L["删除告警规则_fb9b26e21f"], trf("删除_0_历史事件仍保留_d3e46884f0", r.name), okText = L["删除_3755f56f2f"], danger = true)) {
+                                            AppState.toast(OpsState.deleteRule(r.id) ?: tr("已删除_fb5fe1e266"), ToastKind.Ok)
                                         }
                                     }
                                 }, icon = "trash")
@@ -271,36 +286,36 @@ fun OpsRulesPage() {
             }
         }
 
-        PanelCard("静默与维护窗口", cardKey = "ops-rules-silences") {
+        PanelCard(title = L["静默与维护窗口_edc48021ef"], cardKey = "ops-rules-silences") {
             if (silences.isEmpty()) {
-                EmptyState("未设置静默窗口：备份、发布等例行操作期间可用它屏蔽告警", icon = "clock")
+                EmptyState(L["未设置静默窗口_备份_发布等例行操作期间可用它屏_12f1e16155"], icon = "clock")
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<OpsSilence>("名称", weight = 1.4f) { TableText(it.name) },
-                        TableCol<OpsSilence>("类型", weight = 1.0f) {
-                            Chip(if (it.kind == "daily") "每天 ${it.from}–${it.to}" else "单次", tone = Level.Muted)
+                        TableCol<OpsSilence>(L["名称_1be7ae4fc2"], weight = 1.4f) { TableText(it.name) },
+                        TableCol<OpsSilence>(L["类型_e4e46c7235"], weight = 1.0f) {
+                            Chip(if (it.kind == "daily") trf("每天_0_1_f762ef5aa9", it.from, it.to) else L["单次_6fe4ab9915"], tone = Level.Muted)
                         },
-                        TableCol<OpsSilence>("范围", weight = 1.2f) {
+                        TableCol<OpsSilence>(L["范围_785b52eb97"], weight = 1.2f) {
                             TableText(when (it.scope) {
-                                "rule" -> "规则：${rules.firstOrNull { r -> r.id == it.ruleId }?.name ?: it.ruleId}"
-                                "metric" -> "指标：${OpsState.metricLabel(it.metric)}"
-                                else -> "全部规则"
+                                "rule" -> trf("规则_0_06f04f77d5", rules.firstOrNull { r -> r.id == it.ruleId }?.name ?: it.ruleId)
+                                "metric" -> trf("指标_0_89d6aad554", OpsState.metricLabel(it.metric))
+                                else -> L["全部规则_33c1cd2c36"]
                             })
                         },
-                        TableCol<OpsSilence>("时间段", weight = 1.6f, mono = true) {
-                            TableText(if (it.kind == "daily") "周${it.days.joinToString(",")} ${it.from}–${it.to}" else "${Fmt.dateTime(it.startsAt)} → ${Fmt.dateTime(it.endsAt)}", mono = true)
+                        TableCol<OpsSilence>(L["时间段_7f34462708"], weight = 1.6f, mono = true) {
+                            TableText(if (it.kind == "daily") trf("周_0_1_2_78c92bdbef", it.days.joinToString(L["s_d3bc9a378d"]), it.from, it.to) else "${Fmt.dateTime(it.startsAt)} → ${Fmt.dateTime(it.endsAt)}", mono = true)
                         },
-                        TableCol<OpsSilence>("状态", weight = 0.9f) {
-                            if (it.active) Chip("生效中", tone = Level.Info) else if (!it.enabled) Chip("已停用", tone = Level.Muted) else Chip("未生效", tone = Level.Muted)
+                        TableCol<OpsSilence>(L["状态_62e951a692"], weight = 0.9f) {
+                            if (it.active) Chip(L["生效中_4de07ee065"], tone = Level.Info) else if (!it.enabled) Chip(L["已停用_6c7dcbb73a"], tone = Level.Muted) else Chip(L["未生效_2ed178b607"], tone = Level.Muted)
                         },
-                        TableCol<OpsSilence>("原因", weight = 1.4f) { TableText(it.reason.ifBlank { "—" }, color = Palette.muted) },
-                        TableCol<OpsSilence>("操作", weight = 1.0f) { s ->
+                        TableCol<OpsSilence>(L["原因_1ff9c3d001"], weight = 1.4f) { TableText(it.reason.ifBlank { "—" }, color = Palette.muted) },
+                        TableCol<OpsSilence>(L["操作_f3ea6d345e"], weight = 1.0f) { s ->
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                GhostBtn(text = "删除", onClick = {
+                                GhostBtn(text = L["删除_3755f56f2f"], onClick = {
                                     scope.launch {
-                                        if (Modal.confirm("删除静默窗口", "删除「${s.name}」？", okText = "删除", danger = true)) {
-                                            AppState.toast(OpsState.deleteSilence(s.id) ?: "已删除", ToastKind.Ok)
+                                        if (Modal.confirm(L["删除静默窗口_ec702916cf"], trf("删除_0_c27e726e6d", s.name), okText = L["删除_3755f56f2f"], danger = true)) {
+                                            AppState.toast(OpsState.deleteSilence(s.id) ?: tr("已删除_fb5fe1e266"), ToastKind.Ok)
                                         }
                                     }
                                 }, icon = "trash")
@@ -314,11 +329,11 @@ fun OpsRulesPage() {
             }
         }
 
-        PanelCard("告警事件流", cardKey = "ops-rules-events") {
+        PanelCard(title = L["告警事件流_7910b238b1"], cardKey = "ops-rules-events") {
             DataTable(
                 columns = listOf(
-                    TableCol<OpsAlertEvent>("时间", weight = 1.4f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
-                    TableCol<OpsAlertEvent>("级别", weight = 0.8f) {
+                    TableCol<OpsAlertEvent>(L["时间_89b4aa6364"], weight = 1.4f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
+                    TableCol<OpsAlertEvent>(L["级别_2548499200"], weight = 0.8f) {
                         Chip(RULE_LEVELS[it.level] ?: it.level, tone = when (it.level) {
                             "bad" -> Level.Bad
                             "warn" -> Level.Warn
@@ -326,48 +341,48 @@ fun OpsRulesPage() {
                             else -> Level.Info
                         })
                     },
-                    TableCol<OpsAlertEvent>("事件", weight = 2.6f) { TableText(it.title) },
-                    TableCol<OpsAlertEvent>("来源", weight = 0.9f, mono = true) {
+                    TableCol<OpsAlertEvent>(L["事件_550e328062"], weight = 2.6f) { TableText(it.title) },
+                    TableCol<OpsAlertEvent>(L["来源_c63f79e636"], weight = 0.9f, mono = true) {
                         TableText(when (it.source) {
-                            "rule" -> "规则"
-                            "uptime" -> "拨测"
-                            "test" -> "试跑"
+                            "rule" -> L["规则_ed904c685a"]
+                            "uptime" -> L["拨测_0c26df31f3"]
+                            "test" -> L["试跑_28dc4e1531"]
                             else -> it.source
                         }, color = Palette.muted, mono = true)
                     },
-                    TableCol<OpsAlertEvent>("键", weight = 1.4f, mono = true) { TableText(it.key, mono = true, color = Palette.muted) },
+                    TableCol<OpsAlertEvent>(L["键_5a8c893cd4"], weight = 1.4f, mono = true) { TableText(it.key, mono = true, color = Palette.muted) },
                 ),
                 rows = events,
                 rowKey = { "${it.ts}-${it.key}" },
-                emptyText = "暂无告警事件",
+                emptyText = L["暂无告警事件_5afa22a92c"],
                 maxRows = 12,
             )
         }
 
-        PanelCard("通知发送记录", cardKey = "ops-rules-notify", collapsible = false) {
+        PanelCard(title = L["通知发送记录_c308008bc7"], cardKey = "ops-rules-notify", collapsible = false) {
             DataTable(
                 columns = listOf(
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("时间", weight = 1.3f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("渠道", weight = 1.3f) {
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["时间_89b4aa6364"], weight = 1.3f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["渠道_c152be9f50"], weight = 1.3f) {
                         Column {
                             Text(text = it.channelName, color = Palette.text, fontSize = 12.sp)
                             Text(text = it.channelType, color = Palette.muted, fontSize = 11.sp)
                         }
                     },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("标题", weight = 2.2f) { TableText(it.title) },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("结果", weight = 0.9f) {
-                        if (it.ok) Chip("已送达", tone = Level.Ok) else Chip("失败", tone = Level.Bad)
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["标题_748d7dc7e3"], weight = 2.2f) { TableText(it.title) },
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["结果_0a2c91cec6"], weight = 0.9f) {
+                        if (it.ok) Chip(L["已送达_da986b8ec5"], tone = Level.Ok) else Chip(L["失败_3e3c8068bb"], tone = Level.Bad)
                     },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("耗时", weight = 0.8f, align = TextAlign.End, mono = true) {
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["耗时_a9704e1997"], weight = 0.8f, align = TextAlign.End, mono = true) {
                         TableText("${it.ms} ms", textAlign = TextAlign.End, mono = true)
                     },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("错误", weight = 2.0f) {
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["错误_b859c7be75"], weight = 2.0f) {
                         TableText(it.error.ifBlank { "—" }, color = if (it.error.isBlank()) Palette.muted else Palette.bad)
                     },
                 ),
                 rows = notifyLog,
                 rowKey = { "${it.ts}-${it.channelId}-${it.title}" },
-                emptyText = "还没有发送记录",
+                emptyText = L["还没有发送记录_8ec160d4de"],
                 maxRows = 12,
             )
         }
@@ -375,18 +390,18 @@ fun OpsRulesPage() {
 }
 
 private fun opsOf(op: String): String = when (op) {
-    ">=" -> "≥"
-    ">" -> ">"
-    "<=" -> "≤"
-    "<" -> "<"
+    ">=" -> L["s_dcec4f1daf"]
+    ">" -> L["s_091385be99"]
+    "<=" -> L["s_c8426723ce"]
+    "<" -> L["s_c4dd3c8cdd"]
     else -> op
 }
 
 private fun opKeyOf(symbol: String): String = when (symbol) {
-    "≥" -> ">="
-    "≤" -> "<="
+    "≥" -> L["s_6c22e68f3b"]
+    "≤" -> L["s_8a681a2f04"]
     ">", "<" -> symbol
-    else -> ">="
+    else -> L["s_6c22e68f3b"]
 }
 
 private fun fmtThreshold(v: Double): String = if (v == v.toLong().toDouble()) v.toLong().toString() else v.toString()

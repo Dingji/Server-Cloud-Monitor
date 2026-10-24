@@ -1,0 +1,120 @@
+删除模式_n_及其全部对象_cascade_7be2ccf5c3	Schema $n und alle dessen Objekte löschen (CASCADE)?
+删除清单_9ef1393048	Manifest löschen
+删除用户_0_其全部笔记_待办与共享将一并_2bdfec376d	Benutzer {0} löschen? Alle seine Notizen, To-dos und Freigaben werden ebenfalls gelöscht und können nicht wiederhergestellt werden!
+删除用户_bcfca951a1	Benutzer löschen
+删除的笔记会先放到这里_可随时恢复_1e1ce2f496	Gelöschte Notizen werden hier zuerst abgelegt und können jederzeit wiederhergestellt werden
+删除看护项_a25ad06abe	Überwachungspunkt löschen
+删除索引_0_603822ce94	Index {0} löschen?
+删除索引_b35a3521e8	Index löschen
+删除索引_n_36f8faee06	Index $n löschen?
+删除约束_79e25fc4b0	Constraint löschen
+删除线_c85de9e58a	Durchgestrichen
+删除结果_1e53f0d130	Ergebnis löschen
+删除行_3a7d5b0104	Zeile löschen
+删除表_b9fd2c7a44	Tabelle löschen
+删除视图_3bcc039f64	Ansicht löschen
+删除角色_89dab40d48	Rolle löschen
+删除触发器_74803e962b	Trigger löschen
+删除该行_定位_0_b6bfea70ab	Diese Zeile löschen?\nPosition: {0}
+删除该行_定位_loc_b3f2f5d90e	Diese Zeile löschen?\nPosition: $loc
+删除轮转日志_f8de13f44b	Rotierte Logs löschen
+删除通知渠道_5fb682fc27	Benachrichtigungskanal löschen
+删除键_ea51f84dd1	Schlüssel löschen
+删除防火墙规则_f1c7ac57e4	Firewall-Regel löschen
+删除集合_0_及其全部文档_3a1fd80488	Collection {0} und alle ihre Dokumente löschen?
+删除集合_e86f0eec01	Collection löschen
+删除集合_n_及其全部文档_3e6b9c73f5	Collection $n und alle ihre Dokumente löschen?
+删除静默窗口_ec702916cf	Stille-Fenster löschen
+到期提醒_ce425cc527	Ablauf-Erinnerung
+到期提醒_截止前_n_分钟发送_每日摘要_在设定_0805f20d0d	Ablauf-Erinnerung: N Minuten vor Fälligkeit senden; Tagesübersicht: fasst „abgelaufen + heute fällig“ um die eingestellte Uhrzeit zusammen.
+到期时间_3144a998f0	Ablaufzeit
+到期邮件提醒_4e76e9fec7	E-Mail-Erinnerung bei Ablauf
+制定方案_fabaee1920	Plan erstellen
+刷新_38108eaa1d	Aktualisieren
+刷新中_ea0ab1492c	Wird aktualisiert…
+刷新全部配额_076a4d3565	Alle Kontingente aktualisieren
+刷新分析_6a65ab904e	Analysen aktualisieren
+刷新引擎信息_022b2c17cd	Engine-Infos aktualisieren
+刷新当前页面_ea66e5616b	Aktuelle Seite aktualisieren
+刷新状态_7cc7f07a2c	Status aktualisieren
+刷新配额_851859899a	Kontingent aktualisieren
+刷新间隔已更新为_0_0bc513729c	Aktualisierungsintervall auf {0} geändert
+刷新间隔已更新为_refreshlabel_e742c6c081	Aktualisierungsintervall auf ${refreshLabel(v)} geändert
+前往_23926d6146	Gehe zu
+剖析设置_3fa475fa54	Profiling-Einstellungen
+剩余_0_共_1_a04477cc45	{0} verbleibend / {1} gesamt
+剩余_fmt_bytes_d_availkb_fd7a85ca9b	${Fmt.bytes(d.availKb * 1024)} verbleibend / ${Fmt.bytes(d.totalKb * 1024)} gesamt
+剩余天数_fb0ca9d4ed	Verbleibende Tage
+加密方式_4bf1dc061d	Verschlüsselungsart
+加签密钥_sec_开头_63ebeb3c8d	Signaturschlüssel (beginnt mit SEC)
+加签密钥_可空_a075da941a	Signaturschlüssel (optional)
+加粗_f670b2adc0	Fett
+加载中_300ee3dee4	Wird geladen…
+加载中_ce56f617e4	Wird geladen
+加载单元日志_faba070327	Unit-Logs laden
+加载失败_f6b7a41e56	Laden fehlgeschlagen
+加载日志源_e64e9c0145	Logquellen werden geladen…
+加载详情失败_02c28cd84c	Details konnten nicht geladen werden
+劣化_07f00d1b46	Degradiert
+动作_d9d9827827	Aktion
+动作历史_探测_拉起_恢复_放弃_ced77539db	Aktionsverlauf (Probe / Start / Recovery / Abbruch)
+勾选后可批量操作_执行前照常预览变更_过程中显示_8b4692abd7	Häkchen setzen für Sammelaktionen: Änderungen werden wie gewohnt vor der Ausführung als Vorschau gezeigt, mit Gesamtfortschrittsbalken und Live-Logs während der Ausführung (max. 500 Pakete pro Lauf, automatisch aufgeteilt)
+包名_03c2d07a24	Paketname
+包含数据_1cf1ae1b58	Enthält Daten
+区域_17fc93c9cd	Region
+区间_2e8dd83da0	Intervall
+升序_c0276ec9a7	Aufsteigend
+升级_2e8e70958c	Upgrade
+协议_b0c431675b	Protokoll
+单价表_etc_relay_pricing_j_2bb5e45a84	Preistabelle: /etc/relay/pricing.json, unterstützt mimo-* als Platzhalter; Modelle mit -free werden mit 0 berechnet.
+单位_mb_du_只统计同一文件系统内的内容_fbcbac3988	Einheit: MB; du zählt nur Inhalte innerhalb desselben Dateisystems
+单元_9abfa4fb70	Einheit
+单次_6fe4ab9915	Einmalig
+单次时长_分钟_0e95dd9d82	Dauer pro Lauf (Minuten)
+单次时间段_ee80d47d80	Einmaliger Zeitraum
+单次超时_毫秒_6917a6a5b4	Timeout pro Lauf (Millisekunden)
+单表备份_a2ec5e9278	Backup einer einzelnen Tabelle
+单请求_token_e856ed3d96	Token pro Anfrage
+占用_0_50085c6df1	Belegt {0}
+占用_7b81023b68	Belegt
+占用_fmt_bytes_totalsize_c86f7a479b	Belegt ${Fmt.bytes(totalSize)}
+占用分析_003851e93c	Belegungsanalyse
+危险操作会弹出确认框_所有操作都会写入审计日志_762239eaff	Gefährliche Aktionen öffnen einen Bestätigungsdialog. Alle Aktionen werden im Audit-Log protokolliert.
+即将_f48bcfb627	Bald
+卸载_200cf1550d	Deinstallieren
+卸载不再被任何软件包依赖的软件包_8ed32b0b41	Pakete entfernen, die von keinem anderen Paket mehr benötigt werden
+历史加载失败_26115dcd28	Verlauf konnte nicht geladen werden
+历史记录_19e0e3f3df	Verlauf
+历史趋势_83a53b6a5f	Historischer Trend
+压缩_4b8163f527	Komprimieren
+压缩集合_3a8375459c	Collection komprimieren
+原位置_00e56f7a13	Ursprünglicher Speicherort
+原因_1ff9c3d001	Grund
+原因备注_0a726bdb00	Bemerkung zum Grund
+原密码_2bd80322a5	Aktuelles Passwort
+原配置备份_0_45dc9a773d	\n\nOriginaler Konfigurations-Backup: {0}
+原配置备份_it_bc51af7b89	\n\nOriginaler Konfigurations-Backup: $it
+去登录_6c01b0cfd0	Zur Anmeldung
+去重_sess_c93d23e294	sess deduplizieren
+参数值_所有者_连接数_5fbebb4ba1	Parameterwert / Eigentümer / Verbindungen
+参数名_如_work_mem_search_5337d4de4f	Parametername (z. B. work_mem / search_path)
+参数已保存_5252465cd0	Parameter gespeichert
+发件人名_c1dac198b4	Absendername
+发件人地址_e83d394caa	Absenderadresse
+发件人显示名_可空_cf0818ed1b	Anzeigename des Absenders (optional)
+发件账号_c4c54b3c06	Sendekonto
+发现不可用_d0375abbf5	Als nicht verfügbar erkannt
+发行版_6ef5fc415c	Distribution
+发送中_c1b894480d	Wird gesendet…
+发送失败_e767d34c78	Senden fehlgeschlagen
+发送测试邮件_1eace6fb59	Test-E-Mail senden
+发送记录_90ed819b22	Sendeverlauf
+发送详情邮件_ad8277f7a5	Details per E-Mail senden
+取下一个值_0101cf2ed1	Nächsten Wert abrufen
+取尾中_d2a2c10e52	Letzte Zeilen werden abgerufen…
+取消_4d0b4688c7	Abbrechen
+取消共享_2b2e551005	Freigabe aufheben
+取消对该用户的共享_67e86f5c00	Freigabe für diesen Benutzer aufheben?
+取消选择_f02e943954	Auswahl aufheben
+受保护_9505edfd06	Geschützt
+受窗口内上限约束_b1435a79c4	Unterliegt dem Limit pro Fenster

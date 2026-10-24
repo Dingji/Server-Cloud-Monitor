@@ -1,0 +1,120 @@
+分析_9c00c951b8	Analyser
+分析数据库_27120f4e22	Analyser la base de données
+分类_435c5259e4	Catégorie
+分组_97d8a6c05b	Groupe
+分节_0_72a336b550	Section {0}
+分节_cc61ad798e	Section
+分节_i_1_f0d1636fb2	Section ${i + 1}
+切换使用_440dcd4a60	Basculer l'usage
+切换到_dcfa6ff76a	Basculer vers
+切换到此源_6a51392f3d	Basculer vers cette source
+切换到浅色主题_68c147dbb8	Passer au thème clair
+切换到深色主题_81f29dbac3	Passer au thème sombre
+切换告警中心_6ee18893d6	Basculer le centre d'alertes
+切换失败_9e2fdc4fee	Bascule échouée
+切换失败_已回滚_c0cfb2c6b5	Bascule échouée (rétablie)
+切换并刷新索引_90b6357c92	Basculer et actualiser l'index
+切换强调色_750952d685	Changer la couleur d'accent
+切换成功后会清理旧镜像残留索引_避免搜索结果_3a16b0a93b	· Après une bascule réussie, les index résiduels de l'ancien miroir sont nettoyés pour éviter que les résultats de recherche ne mélangent les sources.
+切换数据库_a1ab00957c	Basculer de base de données
+切换率_0_5f66fea7ee	Taux de bascule {0}%
+切换率_0_尝试_请求_1_549548a929	Taux de bascule {0}% · Tentatives/requêtes {1}
+切换软件源_1d685b5c20	Changer la source logicielle
+切换镜像会先备份源文件_改写后立即执行_ap_b31cb7b626	· Le changement de miroir sauvegarde d'abord le fichier source puis exécute apt-get update juste après la réécriture ; si l'actualisation échoue, le retour automatique se fait vers le miroir d'origine.
+列_ad3ee64830	Colonne
+列_逗号分隔_e6b76472d6	Colonne (séparées par des virgules)
+列a_列b_276b732289	\n| Colonne A | Colonne B |\n| --- | --- |\n|  |  |\n
+列列表_逗号分隔_3fbb861c18	Liste de colonnes (séparées par des virgules)
+列名_56dc7e14b9	Nom de colonne
+列名_目标列_93b57e8329	Nom de colonne / colonne cible
+列注释_9f54addfdc	Commentaire de colonne
+列目录中_1d7fe661c3	Liste du répertoire…
+列结构_d6bcf00979	Structure des colonnes
+列表_7d9b515037	• Liste
+刚刚_9e636642d6	À l'instant
+创建_0_b962ace170	Créer {0}
+创建_0_f7fa88a48a	Créer {0} ?
+创建_acl_用户_cd96ef0588	Créer un utilisateur ACL
+创建_fcbd093292	Créer
+创建_notebox_账号并分配角色_2911541ceb	Créer un compte NoteBox et attribuer les rôles
+创建_替换_c8d121c449	Créer/remplacer
+创建于_f3b01f3f1a	Créé le
+创建任务_cf42fd678f	Créer une tâche
+创建备份_f4587bf8b2	Créer une sauvegarde
+创建失败_deb3990191	Échec de la création
+创建定时任务_cc992174ac	Créer une tâche planifiée
+创建数据库_1bf70a1209	Créer une base de données
+创建时间_84e3802f60	Date de création
+创建每日自动备份_7c94d434a4	Créer une sauvegarde automatique quotidienne
+创建用户_315315d695	Créer un utilisateur
+创建用户_name_sudosuffix_423f11e860	Créer l'utilisateur $name$sudoSuffix ?
+创建用户_角色_87bba5f559	Créer utilisateur/rôle
+创建的用户拥有_all_全部键_全_2da1a3462f	L'utilisateur créé dispose de ~* +@all (toutes les touches + toutes les commandes) ; affinez les autorisations avec ACL SETUSER.
+创建索引_39988166a9	Créer un index
+创建维护计划_04a82258e7	Créer un plan de maintenance
+创建角色_24cf247879	Créer un rôle
+创建计划_bddda94d14	Créer un plan
+删_38cadf487e	Suppr.
+删凭据_578de9d115	Supprimer les identifiants
+删除_0_1fbd66c221	Supprimer {0} ?
+删除_0_a1ee4b1af0	Supprimer {0} ?
+删除_0_c27e726e6d	Supprimer « {0} » ?
+删除_0_on_1_fb3815f989	Supprimer {0} on {1} ?
+删除_0_不可恢复_122855ffb8	Supprimer {0} ? Action irréversible.
+删除_0_不可恢复_935f255ade	Supprimer {0} ? Action irréversible !
+删除_0_其中的待办与子清单会移动到上一级_a7634c43e7	Supprimer « {0} » ? Les tâches et sous-listes qu'il contient seront déplacées d'un niveau, pas supprimées.
+删除_0_其中的笔记与子归类会移动到上一级_327496c4d8	Supprimer « {0} » ? Les notes et sous-catégories qu'il contient seront déplacées d'un niveau, pas supprimées.
+删除_0_历史事件仍保留_d3e46884f0	Supprimer « {0} » ? Les événements historiques sont conservés.
+删除_0_及其全部集合_不可恢复_27bf2aa4e3	Supprimer {0} et toutes ses collections ? Action irréversible !
+删除_0_及其后续统计_已归档的按日数据仍保_79a549e6e8	Supprimer « {0} » et ses statistiques suivantes ? Les données quotidiennes archivées sont conservées.
+删除_0_引用它的规则将不再向该渠道推送_2a68290638	Supprimer « {0} » ? Les règles qui le référencent ne pousseront plus vers ce canal.
+删除_0_该角色拥有的对象可能变为无主_81db941aef	Supprimer {0} ? Les objets appartenant à ce rôle peuvent devenir orphelins.
+删除_3755f56f2f	Supprimer
+删除_c_name_引用它的规则将不再向_a15854651b	Supprimer « ${c.name} » ? Les règles qui le référencent ne pousseront plus vers ce canal.
+删除_e_name_历史事件仍保留_7c4f97a765	Supprimer « ${e.name} » ? Les événements historiques sont conservés.
+删除_folder_name_其中的待办_8acd8d3681	Supprimer « ${folder.name} » ? Les tâches et sous-listes qu'il contient seront déplacées d'un niveau, pas supprimées.
+删除_folder_name_其中的笔记_02f00181b7	Supprimer « ${folder.name} » ? Les notes et sous-catégories qu'il contient seront déplacées d'un niveau, pas supprimées.
+删除_h_label_的_ssh_凭据_采_714dcba255	Supprimer les identifiants SSH de « {0} » ? La collecte s'arrêtera jusqu'à la reconfiguration.
+删除_id_0_5757172d9f	Supprimer _id = {0} ?
+删除_id_id_9f0c4ee411	Supprimer _id = $id ?
+删除_it_name_不可恢复_2e58b9d314	Supprimer ${it.name} ? Action irréversible.
+删除_item_name_不可恢复_196f667e1b	Supprimer ${item.name} ? Action irréversible.
+删除_job_file_0df6f1b1c0	Supprimer ${job.file} ?
+删除_k_不可恢复_7f04e8d988	Supprimer $k ? Action irréversible !
+删除_n_447134e66a	Supprimer $n ?
+删除_n_及其全部集合_不可恢复_75c0387e71	Supprimer $n et toutes ses collections ? Action irréversible !
+删除_name_该角色拥有的对象可能变为无主_444ea2ccd8	Supprimer $name ? Les objets appartenant à ce rôle peuvent devenir orphelins.
+删除_r_name_历史事件仍保留_d216275bef	Supprimer « ${r.name} » ? Les événements historiques sont conservés.
+删除_s_name_62446c983c	Supprimer « ${s.name} » ?
+删除_tgname_trim_on_61b891ec54	Supprimer ${tgName.trim()} on ${tgTable.trim()} ?
+删除_ufw_规则_n_969e18703f	Supprimer la règle UFW #$n ?
+删除_var_cache_apt_archiv_4cd0531496	Supprimer les paquets téléchargés dans /var/cache/apt/archives
+删除_x_name_及其后续统计_已归档的_f9923c3d24	Supprimer « ${x.name} » et ses statistiques suivantes ? Les données quotidiennes archivées sont conservées.
+删除主机_643f7d4bb9	Supprimer l'hôte
+删除事项_0_fd51d58bcb	Supprimer l'élément « {0} » ?
+删除事项_baf69ed21f	Supprimer un élément
+删除事项_t_title_86546066a3	Supprimer l'élément « ${t.title} » ?
+删除全部_0_条已完成事项_edea779a77	Supprimer les {0} éléments terminés ?
+删除全部_n_条已完成事项_c6c82b6be8	Supprimer les $n éléments terminés ?
+删除公钥_b83efa4dbe	Supprimer la clé publique
+删除凭据_35bc7d6ff1	Supprimer les identifiants
+删除列_16f1347814	Supprimer la colonne
+删除到回收站_f418fcf1e6	Placer dans la corbeille
+删除后持有该密钥的客户端将无法登录_1d472813e0	Après suppression, les clients détenant cette clé ne pourront plus se connecter.
+删除后无法恢复_确认删除该密钥_68e3c91b1d	Action irréversible. Supprimer cette clé ?
+删除告警规则_fb9b26e21f	Supprimer la règle d'alerte
+删除备份_749438d2de	Supprimer la sauvegarde
+删除备份文件_df6543f316	Supprimer le fichier de sauvegarde
+删除失败_72250c5922	Échec de la suppression
+删除子任务_165f2995e1	Supprimer la sous-tâche
+删除定时任务_cbbfd7d59d	Supprimer la tâche planifiée
+删除容器_c1cbe14e79	Supprimer le conteneur
+删除密钥_8017614a47	Supprimer la clé
+删除已下载的_deb_安装包_释放_0_不_dc8e1f42c6	Supprimer les paquets .deb téléchargés pour libérer {0}. Les logiciels installés ne sont pas affectés.
+删除归类_f282b52e6b	Supprimer la catégorie
+删除拨测任务_2193297dfe	Supprimer la tâche de sondage
+删除数据库_f0f7b49980	Supprimer la base de données
+删除文档_e7adbd575b	Supprimer le document
+删除时间_8d55c8d894	Date de suppression
+删除模式_0_及其全部对象_cascade_6336954e53	Supprimer le schéma {0} et tous ses objets (CASCADE) ?
+删除模式_77bed2385b	Supprimer le schéma

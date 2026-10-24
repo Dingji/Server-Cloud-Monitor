@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.Palette
 
@@ -55,18 +56,14 @@ internal fun WindowsCloseChoiceDialog(
             )
             Column(Modifier.padding(20.dp)) {
                 Text(
-                    "关闭 Cloud Monitor",
+                    L["win.dialog.title"],
                     color = Palette.text,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    if (traySupported) {
-                        "退出程序，或驻留到系统托盘继续在后台接收服务器告警。"
-                    } else {
-                        "退出程序，或最小化到任务栏继续在后台接收服务器告警。"
-                    },
+                    if (traySupported) L["win.dialog.body_tray"] else L["win.dialog.body_taskbar"],
                     color = Palette.muted,
                     fontSize = 13.sp,
                     lineHeight = 18.sp,
@@ -77,15 +74,15 @@ internal fun WindowsCloseChoiceDialog(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    DialogBtn("取消", ghost = true, onClick = onDismiss)
+                    DialogBtn(L["win.dialog.cancel"], ghost = true, onClick = onDismiss)
                     Spacer(Modifier.padding(4.dp))
                     DialogBtn(
-                        if (traySupported) "驻留到托盘" else "最小化到任务栏",
+                        if (traySupported) L["win.dialog.stay_tray"] else L["win.dialog.minimize"],
                         ghost = false,
                         onClick = onTray,
                     )
                     Spacer(Modifier.padding(4.dp))
-                    DialogBtn("退出程序", ghost = false, danger = true, onClick = onQuit)
+                    DialogBtn(L["win.dialog.quit"], ghost = false, danger = true, onClick = onQuit)
                 }
             }
         }

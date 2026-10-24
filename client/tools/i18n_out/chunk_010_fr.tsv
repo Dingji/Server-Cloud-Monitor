@@ -1,0 +1,120 @@
+存在风险_34748d1f0d	Risque présent
+存放位置_182f3cab1b	Emplacement de stockage
+孤立依赖清理_3088424930	Nettoyage des dépendances orphelines
+安全升级_只做向上兼容的升级_不卸载其它包_841c2b3607	La « mise à niveau sécurisée » n'effectue que des mises à niveau rétrocompatibles et ne supprime aucun autre paquet ; la « mise à niveau complète » peut supprimer les paquets en conflit et présente plus de risques — un aperçu des changements est affiché avant l'exécution.
+安全基线巡检_cb83870cad	Inspection de la ligne de base de sécurité
+安全更新_d02224fdc8	Mise à jour de sécurité
+安全管理_27a60a5c86	Gestion de la sécurité
+安装_087db63ab1	Installer
+安装_0_340ee35e2a	⬇ Installer {0}
+安装_0_710b3a3d30	Installer {0}
+安装_certbot_b472f9adf8	Installer certbot
+安装_docker_f131e1cdff	Installer Docker
+安装_engine_name_d4fe147ff5	⬇ Installer ${engine.name}
+安装_fail2ban_38aa818b73	Installer Fail2ban
+安装_label_0399b4e4de	Installer $label
+安装_t_label_36d02c935b	Installer ${t.label}
+安装中_b2c6913616	Installation en cours…
+安装大小_85c8cf1c58	Taille de l'installation
+安装并启动_d20e3e1fda	Installer et démarrer
+安装引擎_e5276cf0a5	＋ Installer le moteur
+安装扩展_354d80ae67	Installer l'extension
+安装约需_1_3_分钟_取决于网络_完成后此页_75a815fda1	L'installation prend environ 1 à 3 minutes (selon le réseau) ; cette page deviendra disponible automatiquement une fois terminée.
+安装配置_02517d8d8f	Configuration de l'installation
+完成_33246f6a5e	Terminé
+完成_e982a7473c	 Terminé
+完成进度_722d50c7b4	Progression
+完整_6e6e581133	Complet
+完整_结构_数据_6aebce144a	Complet (structure + données)
+完整升级_05b1a3ac5b	Mise à niveau complète
+完整升级_含移除_3bed74b0f0	Mise à niveau complète (avec suppression)
+完整升级可能移除与新版本冲突的软件包_请仔细核对_50ce8ea44d	Une mise à niveau complète peut supprimer des paquets en conflit avec la nouvelle version ; veuillez vérifier attentivement l'aperçu.
+完整备份_json_cbe231e819	Sauvegarde complète JSON
+完整性检查_495199337a	Vérification d'intégrité
+完整日志_4a1b1f9673	Journal complet :
+完整说明与依赖列表_0cf5ceed2a	Description complète et liste des dépendances
+定时任务_c97ffbda2e	Tâches planifiées
+定时器_70cbf60aeb	Minuterie
+定时维护计划_8560c2fd47	Plan de maintenance planifié
+定时采集运行中_4b7159cb16	Collecte planifiée en cours
+实例用户_6be929149e	Utilisateur de l'instance
+实时_每_2_秒刷新_c4c5d531ed	Temps réel · actualisation toutes les 2 s
+实时刷新_556a3ffff3	Actualisation en temps réel
+实时活动_最近请求_d2ee85344c	Activité en temps réel (requêtes récentes)
+实时流量_近_60_秒_1fa853d958	Trafic en temps réel (60 dernières s)
+实时磁盘_i_o_193640917c	E/S disque en temps réel
+实时资源占用_c8bda73ba6	Utilisation des ressources en temps réel
+实时跟随_8e180d6871	Suivi en temps réel
+实时跟随经_websocket_订阅_最大保留_5bfbd4a38a	Suivi en temps réel via abonnement WebSocket, au maximum ${Fmt.count(MAX_LINES)} lignes conservées ;
+实时跟随经_websocket_订阅_最大保留_bb1ab8a92b	Suivi en temps réel via abonnement WebSocket, au maximum {0} lignes conservées ;
+实时连接_2e937edd01	Connexions en temps réel
+审计不可用_5ba8cd56a3	Audit indisponible
+审计日志_7666cd4323	Journal d'audit
+审计服务_17e6a7950d	Service d'audit
+审计规则_bc6a3d7a3f	Règles d'audit
+客户端4xx_499dc47a60	Client 4xx
+客户端_09afbbcc9b	Client
+客户端_4xx_d966c5f146	Client 4xx
+客户端与会话_fd8ce68403	Clients et sessions
+客户端数_4821cbdb7b	Nombre de clients
+客户端软件_afcacf7cb8	Logiciel client
+客户端软件构成_aaec3233f0	Répartition des logiciels clients
+客户端错误_不计入_71aa68fd1c	Erreurs client (non comptées)
+家目录_f273ea575f	Répertoire personnel
+容器_d179a3480d	Conteneur
+容器列表_6ee925b478	Liste des conteneurs
+容器日志_0_176db5f47c	Journal du conteneur {0}
+容器日志_2a0f3b0fac	Journaux des conteneurs …
+容器日志_id_take_12_faa2c2b1bc	Journal du conteneur ${id.take(12)}
+容量趋势_近_7_天_d77b3aebd5	Tendance de la capacité (7 derniers jours)
+密码_c839a8ff17	Mot de passe
+密码_授权码_d2c3e3135f	Mot de passe / code d'autorisation
+密码_无_e55f2504ae	Mot de passe (aucun)
+密码_留空_不改_d56e21cbcb	Mot de passe (laisser vide = inchangé)
+密码_留空不变_5e4f64d946	Mot de passe (inchangé si vide)
+密码_留空保持不变_6d05826ea3	Mot de passe (laisser vide pour conserver l'actuel)
+密码_至少_8_位_692b63ec1c	Mot de passe (8 caractères min.)
+密码修改成功_f0e65f05ad	Mot de passe modifié avec succès
+密码已更新_eb5719cf68	Mot de passe mis à jour
+密码更新后其它设备的登录将会失效_9b16aec699	Après la mise à jour du mot de passe, les connexions depuis les autres appareils seront invalidées.
+密码有效期_如_2030_01_01_空_不变_4b3bee9f12	Durée de validité du mot de passe (ex. 2030-01-01, vide = inchangé)
+密码至少需要_8_位_b6a69b6e34	Le mot de passe doit contenir au moins 8 caractères
+密钥_0_可用_1_426c7d2a6e	Clé {0} · disponible {1}
+密钥_0d1965e139	Clé
+密钥池_6ab58f884e	Pool de clés
+对_0_张表执行_1_004762155e	Exécuter {1} sur {0} tables ?
+对_0_执行_1_0df7a13871	Exécuter {1} sur {0} ?
+对_selected_size_张表执行_209354c5c6	Exécuter $act sur ${selected.size} tables ?
+对_st_table_执行_label_a6b8052291	Exécuter $label sur ${st.table} ?
+对_target_执行_action_d5673f5e8f	Exécuter $action sur $target ?
+对_unit_执行_systemctl_ac_ba3c9e7d90	Exécuter systemctl $act sur $unit ?
+对外端口_fe3302e0a7	Port externe
+对容器_0_执行_docker_restar_c942faf88e	Exécuter docker restart sur le conteneur {0} ?
+对容器_0_执行_docker_start_a6406fd5d5	Exécuter docker start sur le conteneur {0} ?
+对容器_0_执行_docker_stop_02eec7a6e4	Exécuter docker stop sur le conteneur {0} ?
+对容器_id_take_12_执行_do_558a792531	Exécuter docker start sur le conteneur ${id.take(12)} ?
+对容器_id_take_12_执行_do_724af26fed	Exécuter docker restart sur le conteneur ${id.take(12)} ?
+对容器_id_take_12_执行_do_c78695043c	Exécuter docker stop sur le conteneur ${id.take(12)} ?
+对所有支持的挂载点执行_fstrim_优化_ss_82318eb7af	Exécuter fstrim sur tous les points de montage pris en charge pour optimiser les SSD
+对方邮箱_需已注册并验证_a4de8e4a8f	E-mail du destinataire (doit être enregistré et vérifié)
+对端_58e5dbe70d	Extrémité distante
+对象_539cb3b0a6	Objet
+对象数量_7a08198ac2	Nombre d'objets
+对象浏览器_162b30cd08	Explorateur d'objets
+导入_csv_eee6da0840	Importer CSV
+导入_csv_到_0_230452d08d	Importer CSV dans {0}
+导入_csv_到_st_table_ffcc6cb46a	Importer CSV dans ${st.table}
+导入_notebox_导出的_json_备份文_9e7560aff1	Importer un fichier de sauvegarde .json exporté depuis NoteBox, contenant toutes les notes et tâches.
+导入_sql_文件_用于恢复_3313acce03	Importer un fichier SQL (pour restauration)
+导入_导出_995e254175	Importer / Exporter
+导入中_de56a0bf71	Importation en cours…
+导入中_f0a7986c54	Importation
+导入中_请稍候_6259769fcb	Importation en cours, veuillez patienter…
+导入失败_aeec838ca4	Échec de l'importation :
+导入待办_1a771a17b3	Importer les tâches
+导入方式_0eac17d654	Méthode d'importation
+导入笔记_ef0dc85571	Importer les notes
+导出_0_31a404b60a	Exporter {0}
+导出_0_为_sql_压缩包_078b43a5d3	Exporter {0} dans une archive SQL ?
+导出_188896795f	Exporter
+导出_db_为_sql_压缩包_28584b981a	Exporter $db dans une archive SQL ?

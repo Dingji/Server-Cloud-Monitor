@@ -1,4 +1,5 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -173,7 +174,7 @@ private fun MdCodeBlock(node: MdNode.Code, fontSize: Int) {
                     .padding(horizontal = 10.dp, vertical = 3.dp),
             ) {
                 Text(
-                    if (copied) "已复制" else "复制",
+                    if (copied) L["已复制_e381a5763d"] else L["复制_4edd1d0087"],
                     color = if (copied) Color(0xFF4ADE80) else Color(0xFFCBD5E1),
                     fontSize = 11.5.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -320,7 +321,7 @@ private fun MdList(items: List<MdNode.ListItem>, fontSize: Int) {
                     }
                     else -> {
                         Text(
-                            "• ",
+                            L["s_f79cc0e87e"],
                             color = AccentState.current.secondary,
                             fontSize = fontSize.sp,
                             modifier = Modifier.padding(top = 1.dp),
@@ -380,7 +381,7 @@ private fun MdMedia(node: MdNode.Media, fontSize: Int) {
             val id = mdYoutubeId(node.url)
             NoteVideoEmbed(
                 "https://www.youtube-nocookie.com/embed/$id",
-                "YouTube 视频",
+                L["youtube_视频_70a0be3df0"],
                 Modifier.fillMaxWidth().padding(vertical = 4.dp),
             )
         }
@@ -388,7 +389,7 @@ private fun MdMedia(node: MdNode.Media, fontSize: Int) {
             val bvid = mdBiliId(node.url)
             NoteVideoEmbed(
                 "https://player.bilibili.com/player.html?bvid=$bvid&autoplay=0&high_quality=1",
-                "Bilibili 视频",
+                L["bilibili_视频_7fcd50c628"],
                 Modifier.fillMaxWidth().padding(vertical = 4.dp),
             )
         }

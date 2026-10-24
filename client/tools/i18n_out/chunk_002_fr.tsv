@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	Sauvegarde relay indisponible
+relay_备份结果_0cf7f02f06	Résultats de la sauvegarde relay
+relay_每日状态备份_32dee8ba2b	Sauvegarde quotidienne de l'état de relay
+reorg_重建索引_2b9d2e3b0e	REORG (reconstruire les index)
+reorg_重组表_6195b56608	REORG (réorganiser les tables)
+reorgchk_校验_010830b6a4	REORGCHK (vérification)
+repair_修复_8dd157c84c	REPAIR (réparation)
+restart_值_77d45b4c24	Valeur RESTART
+root_密码登录_df671edd13	Connexion avec mot de passe root
+root_权限的交互式_shell_经_ssh_724c53e674	Shell interactif avec privilèges root (via SSH PTY, terminal ANSI natif)
+running_运行中_contain_7d4c0797f6	$running en cours · ${containers.size - running} arrêtés
+runstats_reorg_针对整库或所选表执_d40a81b4e9	RUNSTATS/REORG s'exécute sur toute la base ou les tables sélectionnées ; les grosses tables peuvent prendre du temps.
+runstats_全库统计_e9fcb7b8fd	RUNSTATS statistiques sur toute la base
+runstats_更新统计_a6a6663709	RUNSTATS (mettre à jour les statistiques)
+save_同步快照_afc91773af	SAVE (synchroniser l'instantané)
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\nNom de la tâche : cm-$n
+settings.language.changed	Langue mise à jour
+settings.language.hint	Prend effet immédiatement et votre choix est mémorisé. L'interface arabe met automatiquement la disposition en miroir.
+settings.language.label	Langue
+settings.language.title	Langue de l'interface
+setval_值_938e9aa8cf	Valeur setval
+shell_控制台_6f576115f4	Console Shell
+sites_enabled_为空_4516b41170	sites-enabled est vide
+slo_与用量_a308fd44ff	SLO et utilisation
+slo_目标已更新为_0_1_天_41ec05d358	Objectif SLO mis à jour vers {0}% / {1} jours
+slo_目标已更新为_t_dy_天_7716799870	Objectif SLO mis à jour vers $t% / $dy jours
+slo_目标应为_0_100_之间的百分数_254085fd3b	L'objectif SLO doit être un pourcentage entre 0 et 100
+slo_错误预算_47d719e135	Budget d'erreurs SLO
+smtp_主机_9cb2a0f9f3	Hôte SMTP
+smtp_已配置_70f40873a7	SMTP configuré
+smtp_授权码_273299a5a3	Code d'autorisation SMTP
+smtp_服务器_941346a5f4	Serveur SMTP
+smtp_未配置_先填账号授权码_c97b712442	SMTP non configuré (saisissez d'abord le compte et le code d'autorisation)
+smtp_状态_8658366a9a	État SMTP
+smtp_设置已保存_e5e2238754	Paramètres SMTP enregistrés
+smtp_账号_163_邮箱_4bbcd0b1d0	Compte SMTP (boîte 163)
+sql_控制台_a3458fb2ad	Console SQL
+sql_文本_gzip_通用_可编辑_48f716760f	Texte SQL + gzip (générique, modifiable)
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	SQLite est une base à fichier unique : un nouveau fichier est créé s'il n'existe pas ; le nom doit se terminer par .db/.sqlite.
+sqlite_搜索目录_49521cf800	Répertoire de recherche SQLite
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	SQLite est une base embarquée à fichier unique, sans notion d'utilisateur/rôle ; le contrôle d'accès dépend des permissions de fichiers du système d'exploitation.
+sqlite_生成_sql_文本_gzi_f960464be7	· SQLite produit un texte SQL + gzip, directement restaurable dans un nouveau fichier.
+sqlite_语法_支持_tables_sc_41d445ac53	Syntaxe SQLite (prend en charge les commandes pointées comme .tables/.schema)
+ssh2_可用_efe0e7bbc7	ssh2 disponible
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys clés autorisées · relay_scripts scripts de relais · ufw_conf pare-feu · cron_conf tâches planifiées.
+ssh_凭据_0_527cdbdfec	Identifiants SSH · {0}
+ssh_凭据_h_label_24a0886915	Identifiants SSH · ${h.label}
+ssh_可达_df28fdb916	SSH joignable
+ssh_密码认证_f22e3cd826	Authentification SSH par mot de passe
+ssh_授权密钥_authorized_key_4fee36881a	Clés autorisées SSH (authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	Contrôle en lecture seule de l'exposition SSH, du pare-feu, des comptes et permissions, des mises à jour, des journaux et de la synchronisation heure ; les actions de correction s'exécutent après la vérification de sécurité du serveur
+ssh_服务配置_sshd_有效配置_b5a2f5733e	Configuration du service SSH (configuration effective de sshd)
+ssh_端口_db451b3851	Port SSH
+ssh_设置已保存_a65c44f49c	Paramètres SSH enregistrés
+ssh_连接_用于_web_终端的_pty_b26f43db91	Connexion SSH (PTY pour le terminal web)
+ssh_通道_dbd1043d39	Canal SSH
+ssh_配置应用_c35c2ef2bf	Appliquer la configuration SSH
+ssh_防爆破_3e3c79eef0	Protection SSH anti force brute
+ssl_证书_let_s_encrypt_332fd65bdb	Certificat SSL (Let's Encrypt)
+sudo_权限_e03e1e61f9	Droits sudo
+swap_控制_12c3f63c98	Contrôle du Swap
+systemd_单元名_c8ea5d11ad	Nom d'unité systemd
+systemd_定时器_0_dc0dc6e637	Minuteur systemd ({0})
+systemd_定时器_f8d95995f8	Minuteur systemd
+systemd_定时器_timers_si_6ade92f31f	Minuteur systemd (${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· Les minuteurs systemd sont gérés par systemd et affichés en lecture seule ;
+systemd_日志总占用_f776a05861	Occupation totale des journaux systemd
+systemd_服务_fe73189369	Services systemd
+tcp_主机_c307455515	Hôte TCP
+tcp_端口_468daa15c6	Port TCP
+tcp_端口探活_731f0297a0	Contrôle d'activité du port TCP
+title_names_size_个_acb99452ee	$title · ${names.size} paquets
+tls_证书_43af3d4e3c	Certificat TLS
+tmp_保留_0_天_f32c9b5407	/tmp conservé {0} jours
+tmp_保留_s_tmpdays_天_86426f5281	/tmp conservé ${s.tmpDays} jours
+tmp_保留天数_0d11396618	Jours de rétention de /tmp
+token_命中率_2bfb8e83db	Taux de réussite des tokens
+token_总量_3f5fa71b8e	Total des tokens
+token_构成_9af64ae64e	Composition des tokens
+token_用量归集_81e6ced52c	Agrégation de l'usage des tokens
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	Les statistiques de tokens sont agrégées sur une fenêtre glissante · données depuis {0}
+top_会话_3c40651605	Top des sessions
+top_进程_17603f0ba3	Top des processus
+truncate_清空数据_2b621f28d2	TRUNCATE (effacer les données)
+ttfb_按线路_dd77200ec0	TTFB par itinéraire
+ua_族_886e5b0cbd	Familles UA
+ufwrulescount_条规则_4d66159719	$ufwRulesCount règles
+user_或_user_group_dab37bbd5c	user ou user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE sur toutes les bases
+vacuum_full_全部库_7cb397ec45	VACUUM FULL sur toutes les bases
+vacuum_full_重写表_6eacd637a2	VACUUM FULL (réécrit la table)
+vacuum_回收空间_1fab10fe60	VACUUM (libère de l'espace)
+vacuum_重建文件_7a9b0fc30b	VACUUM (reconstruit le fichier)
+w_a_个异常找到疑似变更_072ff64ee0	$w / $a anomalies avec modifications suspectes trouvées
+wal_检查点_2010a0cc44	Point de contrôle WAL
+web_终端_7a3963643f	Terminal web
+where_条件_如_id_10_211cc8803d	Condition WHERE, ex. id > 10
+where_条件_必填_d024e40edd	Condition WHERE (obligatoire)
+where_条件_必填_禁止分号_de5b786116	Condition WHERE (obligatoire, point-virgule interdit)
+win.client.close_label	À la fermeture de la fenêtre
+win.client.desc_ask	Demander à chaque fermeture : rester en arrière-plan ou quitter.
+win.client.desc_quit	Quitter Cloud Monitor juste après la fermeture.
+win.client.desc_tray	Masquer la fenêtre principale après la fermeture et continuer à recevoir les notifications d'alerte dans le tray.
+win.client.desc_tray_no_tray	Réduire dans la barre des tâches après la fermeture et continuer à recevoir les notifications d'alerte en arrière-plan.
+win.client.hint	Comportement au clic sur le bouton de fermeture de la fenêtre. Le premier choix dans la boîte de fermeture est aussi enregistré ici automatiquement.
+win.client.title	Client Windows
+win.client.updated_toast	Comportement de fermeture mis à jour
+win.close.ask	Demander à chaque fois
+win.close.quit	Quitter le programme immédiatement
+win.close.tray	Rester dans la zone de notification à la fermeture
+win.close.tray_taskbar	Réduire dans la barre des tâches à la fermeture
+win.dialog.body_taskbar	Quitter le programme, ou réduire dans la barre des tâches pour continuer à recevoir les alertes serveur en arrière-plan.
+win.dialog.body_tray	Quitter le programme, ou rester dans la zone de notification pour continuer à recevoir les alertes serveur en arrière-plan.
+win.dialog.cancel	Annuler
+win.dialog.minimize	Réduire dans la barre des tâches
+win.dialog.quit	Quitter
+win.dialog.stay_tray	Rester dans le tray
+win.dialog.title	Fermer Cloud Monitor
+youtube_视频_70a0be3df0	Vidéo YouTube
+一_d274eee8a1	1

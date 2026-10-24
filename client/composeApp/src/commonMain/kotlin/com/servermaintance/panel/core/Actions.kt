@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.tr
 
 import com.servermaintance.panel.ui.Modal
 import kotlinx.coroutines.CancellationException
@@ -36,15 +38,15 @@ object Actions {
     } catch (e: CancellationException) {
         throw e
     } catch (e: ApiException) {
-        AppState.toast(e.message ?: "操作失败", ToastKind.Err, ms = 6000)
+        AppState.toast(e.message ?: tr("操作失败_09e424b5e8"), ToastKind.Err, ms = 6000)
         if (!e.output.isNullOrBlank()) {
-            Modal.output(title ?: "执行失败", e.output, isError = true)
+            Modal.output(title ?: tr("执行失败_9746cfc7d2"), e.output, isError = true)
         }
         if (throwOnError) throw e
         null
     } catch (e: Exception) {
         AppState.toast(
-            "操作失败: ${e.message ?: e::class.simpleName ?: "未知错误"}",
+            trf("0_1_4d3c418a83", tr("操作失败_09e424b5e8"), e.message ?: tr("未知错误_5f76edc5de")),
             ToastKind.Err,
             ms = 6000,
         )

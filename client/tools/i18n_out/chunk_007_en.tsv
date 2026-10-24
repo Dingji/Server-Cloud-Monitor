@@ -1,0 +1,120 @@
+删除模式_n_及其全部对象_cascade_7be2ccf5c3	Delete schema $n and all its objects (CASCADE)?
+删除清单_9ef1393048	Delete manifest
+删除用户_0_其全部笔记_待办与共享将一并_2bdfec376d	Delete user {0}? All of their notes, to-dos and shares will also be deleted and cannot be recovered!
+删除用户_bcfca951a1	Delete user
+删除的笔记会先放到这里_可随时恢复_1e1ce2f496	Deleted notes go here first and can be restored at any time
+删除看护项_a25ad06abe	Delete watch item
+删除索引_0_603822ce94	Delete index {0}?
+删除索引_b35a3521e8	Delete index
+删除索引_n_36f8faee06	Delete index $n?
+删除约束_79e25fc4b0	Delete constraint
+删除线_c85de9e58a	Strikethrough
+删除结果_1e53f0d130	Delete result
+删除行_3a7d5b0104	Delete row
+删除表_b9fd2c7a44	Delete table
+删除视图_3bcc039f64	Delete view
+删除角色_89dab40d48	Delete role
+删除触发器_74803e962b	Delete trigger
+删除该行_定位_0_b6bfea70ab	Delete this row?\nLocation: {0}
+删除该行_定位_loc_b3f2f5d90e	Delete this row?\nLocation: $loc
+删除轮转日志_f8de13f44b	Delete rotated logs
+删除通知渠道_5fb682fc27	Delete notification channel
+删除键_ea51f84dd1	Delete key
+删除防火墙规则_f1c7ac57e4	Delete firewall rule
+删除集合_0_及其全部文档_3a1fd80488	Delete collection {0} and all its documents?
+删除集合_e86f0eec01	Delete collection
+删除集合_n_及其全部文档_3e6b9c73f5	Delete collection $n and all its documents?
+删除静默窗口_ec702916cf	Delete silence window
+到期提醒_ce425cc527	Expiry reminder
+到期提醒_截止前_n_分钟发送_每日摘要_在设定_0805f20d0d	Expiry reminder: sent N minutes before the deadline; daily digest: summarizes "expired + due today" items at the configured time.
+到期时间_3144a998f0	Expiry time
+到期邮件提醒_4e76e9fec7	Expiry email reminder
+制定方案_fabaee1920	Create plan
+刷新_38108eaa1d	Refresh
+刷新中_ea0ab1492c	Refreshing…
+刷新全部配额_076a4d3565	Refresh all quotas
+刷新分析_6a65ab904e	Refresh analytics
+刷新引擎信息_022b2c17cd	Refresh engine info
+刷新当前页面_ea66e5616b	Refresh current page
+刷新状态_7cc7f07a2c	Refresh status
+刷新配额_851859899a	Refresh quota
+刷新间隔已更新为_0_0bc513729c	Refresh interval updated to {0}
+刷新间隔已更新为_refreshlabel_e742c6c081	Refresh interval updated to ${refreshLabel(v)}
+前往_23926d6146	Go to
+剖析设置_3fa475fa54	Profiling settings
+剩余_0_共_1_a04477cc45	{0} remaining / {1} total
+剩余_fmt_bytes_d_availkb_fd7a85ca9b	${Fmt.bytes(d.availKb * 1024)} remaining / ${Fmt.bytes(d.totalKb * 1024)} total
+剩余天数_fb0ca9d4ed	Days remaining
+加密方式_4bf1dc061d	Encryption method
+加签密钥_sec_开头_63ebeb3c8d	Signing key (starts with SEC)
+加签密钥_可空_a075da941a	Signing key (optional)
+加粗_f670b2adc0	Bold
+加载中_300ee3dee4	Loading…
+加载中_ce56f617e4	Loading
+加载单元日志_faba070327	Load unit logs
+加载失败_f6b7a41e56	Load failed
+加载日志源_e64e9c0145	Loading log sources…
+加载详情失败_02c28cd84c	Failed to load details
+劣化_07f00d1b46	Degraded
+动作_d9d9827827	Action
+动作历史_探测_拉起_恢复_放弃_ced77539db	Action history (probe / start / recover / abandon)
+勾选后可批量操作_执行前照常预览变更_过程中显示_8b4692abd7	Tick the boxes for batch operations: changes are previewed before execution as usual, with an overall progress bar and live logs shown while running (up to 500 packages per run, batched automatically)
+包名_03c2d07a24	Package name
+包含数据_1cf1ae1b58	Contains data
+区域_17fc93c9cd	Region
+区间_2e8dd83da0	Interval
+升序_c0276ec9a7	Ascending
+升级_2e8e70958c	Upgrade
+协议_b0c431675b	Protocol
+单价表_etc_relay_pricing_j_2bb5e45a84	Pricing table: /etc/relay/pricing.json, supports mimo-* wildcards; models containing -free are billed at 0.
+单位_mb_du_只统计同一文件系统内的内容_fbcbac3988	Unit: MB; du only counts content within the same filesystem
+单元_9abfa4fb70	Unit
+单次_6fe4ab9915	Single run
+单次时长_分钟_0e95dd9d82	Duration per run (minutes)
+单次时间段_ee80d47d80	Single time window
+单次超时_毫秒_6917a6a5b4	Timeout per run (milliseconds)
+单表备份_a2ec5e9278	Single-table backup
+单请求_token_e856ed3d96	Tokens per request
+占用_0_50085c6df1	Used {0}
+占用_7b81023b68	Used
+占用_fmt_bytes_totalsize_c86f7a479b	Used ${Fmt.bytes(totalSize)}
+占用分析_003851e93c	Usage analysis
+危险操作会弹出确认框_所有操作都会写入审计日志_762239eaff	Dangerous operations show a confirmation dialog. All operations are written to the audit log.
+即将_f48bcfb627	Soon
+卸载_200cf1550d	Uninstall
+卸载不再被任何软件包依赖的软件包_8ed32b0b41	Remove packages that are no longer required by any other package
+历史加载失败_26115dcd28	Failed to load history
+历史记录_19e0e3f3df	History
+历史趋势_83a53b6a5f	Historical trend
+压缩_4b8163f527	Compress
+压缩集合_3a8375459c	Compact collection
+原位置_00e56f7a13	Original location
+原因_1ff9c3d001	Reason
+原因备注_0a726bdb00	Reason note
+原密码_2bd80322a5	Current password
+原配置备份_0_45dc9a773d	\n\nOriginal config backup: {0}
+原配置备份_it_bc51af7b89	\n\nOriginal config backup: $it
+去登录_6c01b0cfd0	Go to sign in
+去重_sess_c93d23e294	Dedupe sess
+参数值_所有者_连接数_5fbebb4ba1	Parameter value / Owner / Connections
+参数名_如_work_mem_search_5337d4de4f	Parameter name (e.g. work_mem / search_path)
+参数已保存_5252465cd0	Parameter saved
+发件人名_c1dac198b4	Sender name
+发件人地址_e83d394caa	Sender address
+发件人显示名_可空_cf0818ed1b	Sender display name (optional)
+发件账号_c4c54b3c06	Sending account
+发现不可用_d0375abbf5	Found unavailable
+发行版_6ef5fc415c	Distribution
+发送中_c1b894480d	Sending…
+发送失败_e767d34c78	Send failed
+发送测试邮件_1eace6fb59	Send test email
+发送记录_90ed819b22	Send history
+发送详情邮件_ad8277f7a5	Send details email
+取下一个值_0101cf2ed1	Fetch next value
+取尾中_d2a2c10e52	Fetching tail…
+取消_4d0b4688c7	Cancel
+取消共享_2b2e551005	Cancel sharing
+取消对该用户的共享_67e86f5c00	Cancel sharing with this user?
+取消选择_f02e943954	Clear selection
+受保护_9505edfd06	Protected
+受窗口内上限约束_b1435a79c4	Subject to the per-window cap

@@ -1,4 +1,5 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable

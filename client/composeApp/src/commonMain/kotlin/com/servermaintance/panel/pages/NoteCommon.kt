@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -101,7 +104,7 @@ internal fun localDateOfEpochSeconds(epochSec: Long): String =
 
 /** 待办优先级文案（同 app.js PRI_LABEL）。 */
 internal fun priLabel(p: Int): String = when (p) {
-    3 -> "高"; 2 -> "中"; 1 -> "低"; else -> "无"
+    3 -> L["高_b096b3f5ac"]; 2 -> L["中_0869071c92"]; 1 -> L["低_b9ee259b7f"]; else -> L["无_72077749f7"]
 }
 
 internal fun priTone(p: Int): com.servermaintance.panel.ui.Level = when (p) {
@@ -121,8 +124,8 @@ internal fun localDateStr(days: Int = 0): String {
 
 /** 简单 markdown 剥离（列表摘要用，同 app.js stripMd）。 */
 internal fun stripMd(s: String): String = s
-    .replace(Regex("```[\\s\\S]*?```"), " 〔代码〕 ")
-    .replace(Regex("!\\[[^\\]]*\\]\\([^)]*\\)"), " 〔图片〕 ")
+    .replace(Regex("```[\\s\\S]*?```"), L["代码_21cdbf098d"])
+    .replace(Regex("!\\[[^\\]]*\\]\\([^)]*\\)"), L["图片_a66a146a35"])
     .replace(Regex("\\[([^\\]]+)\\]\\([^)]*\\)"), "$1")
     .replace(Regex("[#>*_`~|-]+"), " ")
     .replace(Regex("\\s+"), " ")
@@ -141,10 +144,10 @@ internal fun fmtRelTime(tsSec: Long): String {
     if (tsSec <= 0) return "--"
     val diff = nowEpochMillis() / 1000 - tsSec
     return when {
-        diff < 60 -> "刚刚"
-        diff < 3600 -> "${diff / 60} 分钟前"
-        diff < 86400 -> "${diff / 3600} 小时前"
-        diff < 7 * 86400 -> "${diff / 86400} 天前"
+        diff < 60 -> L["刚刚_9e636642d6"]
+        diff < 3600 -> trf("0_分钟前_607909447d", diff / 60)
+        diff < 86400 -> trf("0_小时前_87a6439b2e", diff / 3600)
+        diff < 7 * 86400 -> trf("0_天前_9094e27946", diff / 86400)
         else -> fmtShortTime(tsSec)
     }
 }
@@ -175,15 +178,17 @@ internal fun dueInfo(t: JsonObject): DueInfo {
         val ds = ldt.date.toString()
         val hm = (if (ldt.hour < 10) "0" else "") + ldt.hour + ":" + (if (ldt.minute < 10) "0" else "") + ldt.minute
         val label = when (ds) {
-            today -> "今天 $hm"
-            tomorrow -> "明天 $hm"
+            today -> L["今天_hm_b5123a00e4"]
+            tomorrow -> L["明天_hm_4adda4dab9"]
             else -> "${ldt.monthNumber}-${(if (ldt.dayOfMonth < 10) "0" else "")}${ldt.dayOfMonth} $hm"
         }
         return DueInfo(late = pending && dueAt < now, today = ds == today, label = label, hasDue = true)
     }
     if (dueDate.isNotEmpty()) {
         val label = when (dueDate) {
-            today -> "今天"; tomorrow -> "明天"; else -> dueDate
+            today -> L["今天_17e83cc25e"]
+            tomorrow -> L["明天_b76ce230d3"]
+            else -> dueDate
         }
         return DueInfo(late = pending && dueDate < today, today = dueDate == today, label = label, hasDue = true)
     }
@@ -196,7 +201,10 @@ internal fun dueInfo(t: JsonObject): DueInfo {
 
 /** 权限文案（同服务端 PERM_TEXT）。 */
 internal fun permText(perm: String?): String = when (perm) {
-    "read" -> "只读"; "edit" -> "可编辑"; "admin" -> "管理"; else -> "拥有者"
+    "read" -> L["只读_ffc1d065fb"]
+    "edit" -> L["可编辑_bff55f2cd9"]
+    "admin" -> L["管理_4989b5cf94"]
+    else -> L["拥有者_0f0558fe5a"]
 }
 
 /**
@@ -296,7 +304,7 @@ fun NoteGate(content: @Composable () -> Unit) {
         NbSessionState.Boot -> {
             LaunchedEffect(Unit) { NoteBoxState.bootstrap() }
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("连接 NoteBox…", color = Palette.muted, fontSize = 12.5.sp, fontFamily = FontFamily.Monospace)
+                Text(L["连接_notebox_2a3eb35dd0"], color = Palette.muted, fontSize = 12.5.sp, fontFamily = FontFamily.Monospace)
             }
         }
         NbSessionState.Login -> NoteLoginCard()
@@ -332,7 +340,7 @@ private fun NoteLoginCard() {
 
     val doLogin: () -> Unit = {
         if (user.isBlank() || pass.isEmpty()) {
-            fireError("请输入邮箱和密码")
+            fireError(L["请输入邮箱和密码_36ec7ea481"])
         } else if (!busy) {
             error = ""
             scope.launch {
@@ -348,9 +356,9 @@ private fun NoteLoginCard() {
                         }
                     }
                     val err = NoteBoxState.login(user.trim(), pass)
-                    if (err != null) fireError(err) else NoteBoxState.toast("NoteBox 登录成功", ToastKind.Ok)
+                    if (err != null) fireError(err) else NoteBoxState.toast(tr("notebox_登录成功_013138644f"), ToastKind.Ok)
                 } catch (e: Exception) {
-                    fireError(e.message ?: e::class.simpleName ?: "登录失败")
+                    fireError(e.message ?: e::class.simpleName ?: L["登录失败_aeb6c8a818"])
                 } finally {
                     busy = false
                 }
@@ -360,9 +368,9 @@ private fun NoteLoginCard() {
 
     val doRegister: () -> Unit = {
         when {
-            !regEmail.contains("@") -> fireError("请输入正确的邮箱地址")
-            regPass.length < 8 -> fireError("密码至少需要 8 位")
-            regPass != regPass2 -> fireError("两次输入的密码不一致")
+            !regEmail.contains("@") -> fireError(L["请输入正确的邮箱地址_60d23edd4e"])
+            regPass.length < 8 -> fireError(L["密码至少需要_8_位_b6a69b6e34"])
+            regPass != regPass2 -> fireError(L["两次输入的密码不一致_3e2b222d98"])
             else -> {
                 error = ""
                 scope.launch {
@@ -379,13 +387,13 @@ private fun NoteLoginCard() {
                         if (err != null) {
                             fireError(err)
                         } else {
-                            doneMsg = "验证邮件已发送，请查收（24 小时内有效）。若未收到请联系管理员激活。"
+                            doneMsg = L["验证邮件已发送_请查收_24_小时内有效_若未_b397297e85"]
                             regPass = ""; regPass2 = ""
                             pane = NbAuthPane.Done
-                            NoteBoxState.toast("注册成功，请查收验证邮件", ToastKind.Ok)
+                            NoteBoxState.toast(tr("注册成功_请查收验证邮件_4d1b9bd9db"), ToastKind.Ok)
                         }
                     } catch (e: Exception) {
-                        fireError(e.message ?: e::class.simpleName ?: "注册失败")
+                        fireError(e.message ?: e::class.simpleName ?: L["注册失败_a1d7fb5dfc"])
                     } finally {
                         busy = false
                     }
@@ -428,14 +436,14 @@ private fun NoteLoginCard() {
                         fontWeight = FontWeight.Bold, letterSpacing = 3.sp,
                     )
                     Spacer(Modifier.size(6.dp))
-                    Text("云端笔记 · 待办清单", color = Palette.muted, fontSize = 12.sp)
+                    Text(L["云端笔记_待办清单_084379143a"], color = Palette.muted, fontSize = 12.sp)
                     Spacer(Modifier.size(16.dp))
 
                     when (pane) {
                         NbAuthPane.Login -> {
-                            NbLoginField(user, { user = it; if (error.isNotEmpty()) error = "" }, "邮箱 / 账号", enabled = !busy, onEnter = doLogin)
+                            NbLoginField(user, { user = it; if (error.isNotEmpty()) error = "" }, L["邮箱_账号_229cd1d954"], enabled = !busy, onEnter = doLogin)
                             Spacer(Modifier.size(8.dp))
-                            NbLoginField(pass, { pass = it; if (error.isNotEmpty()) error = "" }, "密码",
+                            NbLoginField(pass, { pass = it; if (error.isNotEmpty()) error = "" }, L["密码_c839a8ff17"],
                                 password = true, enabled = !busy, onEnter = doLogin)
 
                             Text(
@@ -451,7 +459,7 @@ private fun NoteLoginCard() {
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
-                                    if (busy) "登录中…" else "登 录",
+                                    if (busy) L["登录中_734b8bcd6a"] else L["login.sign_in"],
                                     color = if (!busy) Palette.white else Palette.muted,
                                     fontSize = 13.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 1.sp,
                                 )
@@ -489,12 +497,12 @@ private fun NoteLoginCard() {
                                     }
                                 }
                                 Spacer(Modifier.size(8.dp))
-                                Text("记住密码", color = Palette.muted, fontSize = 12.sp)
+                                Text(L["login.remember_password"], color = Palette.muted, fontSize = 12.sp)
                             }
 
                             /* 未验证邮箱 → 提示可重发验证邮件 */
-                            if (error.contains("验证")) {
-                                GhostBtn("重新发送验证邮件", onClick = {
+                            if (com.servermaintance.panel.i18n.textHasI18nKey(error, "验证_80144e2e73")) {
+                                GhostBtn(L["重新发送验证邮件_06d80dfad4"], onClick = {
                                     scope.launch {
                                         val msg = NoteBoxState.resendVerification(user.trim())
                                         NoteBoxState.toast(msg, ToastKind.Info, 5000)
@@ -507,9 +515,9 @@ private fun NoteLoginCard() {
                                 Modifier.fillMaxWidth().padding(top = 14.dp),
                                 horizontalArrangement = Arrangement.Center,
                             ) {
-                                Text("还没有账号？", color = Palette.muted, fontSize = 12.sp)
+                                Text(L["还没有账号_1e58e9e7ba"], color = Palette.muted, fontSize = 12.sp)
                                 Text(
-                                    "邮箱注册",
+                                    L["邮箱注册_79082eeb61"],
                                     color = AccentState.current.secondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.clickable { error = ""; pane = NbAuthPane.Register },
                                 )
@@ -517,12 +525,12 @@ private fun NoteLoginCard() {
                         }
 
                         NbAuthPane.Register -> {
-                            NbLoginField(regEmail, { regEmail = it; if (error.isNotEmpty()) error = "" }, "邮箱", enabled = !busy, onEnter = doRegister)
+                            NbLoginField(regEmail, { regEmail = it; if (error.isNotEmpty()) error = "" }, L["邮箱_9ed627bcf6"], enabled = !busy, onEnter = doRegister)
                             Spacer(Modifier.size(8.dp))
-                            NbLoginField(regPass, { regPass = it; if (error.isNotEmpty()) error = "" }, "密码（至少 8 位）",
+                            NbLoginField(regPass, { regPass = it; if (error.isNotEmpty()) error = "" }, L["密码_至少_8_位_692b63ec1c"],
                                 password = true, enabled = !busy, onEnter = doRegister)
                             Spacer(Modifier.size(8.dp))
-                            NbLoginField(regPass2, { regPass2 = it; if (error.isNotEmpty()) error = "" }, "确认密码",
+                            NbLoginField(regPass2, { regPass2 = it; if (error.isNotEmpty()) error = "" }, L["确认密码_1d0167f693"],
                                 password = true, enabled = !busy, onEnter = doRegister)
 
                             Text(
@@ -538,7 +546,7 @@ private fun NoteLoginCard() {
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
-                                    if (busy) "注册中…" else "注 册",
+                                    if (busy) L["注册中_44941e2818"] else L["注_册_6ec40f6f72"],
                                     color = if (!busy) Palette.white else Palette.muted,
                                     fontSize = 13.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 1.sp,
                                 )
@@ -548,9 +556,9 @@ private fun NoteLoginCard() {
                                 Modifier.fillMaxWidth().padding(top = 14.dp),
                                 horizontalArrangement = Arrangement.Center,
                             ) {
-                                Text("已有账号？", color = Palette.muted, fontSize = 12.sp)
+                                Text(L["已有账号_c9bc5e7bff"], color = Palette.muted, fontSize = 12.sp)
                                 Text(
-                                    "去登录",
+                                    L["去登录_6c01b0cfd0"],
                                     color = AccentState.current.secondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.clickable { error = ""; pane = NbAuthPane.Login },
                                 )
@@ -560,7 +568,7 @@ private fun NoteLoginCard() {
                         NbAuthPane.Done -> {
                             PanelIcon("checkCircle", 46.dp, Palette.ok, stroke = 1.6f)
                             Spacer(Modifier.size(12.dp))
-                            Text("注册成功", color = Palette.text, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                            Text(L["注册成功_4a1935bccf"], color = Palette.text, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                             Spacer(Modifier.size(8.dp))
                             Text(
                                 doneMsg,
@@ -569,7 +577,7 @@ private fun NoteLoginCard() {
                                 modifier = Modifier.fillMaxWidth(),
                             )
                             Spacer(Modifier.size(16.dp))
-                            GhostBtn("重新发送验证邮件", onClick = {
+                            GhostBtn(L["重新发送验证邮件_06d80dfad4"], onClick = {
                                 scope.launch {
                                     val msg = NoteBoxState.resendVerification(regEmail.ifEmpty { user }.trim())
                                     NoteBoxState.toast(msg, ToastKind.Info, 5000)
@@ -583,7 +591,7 @@ private fun NoteLoginCard() {
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
-                                    "返回登录",
+                                    L["返回登录_f2fe4ecc0f"],
                                     color = Palette.white, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 1.sp,
                                 )
                             }
@@ -597,7 +605,7 @@ private fun NoteLoginCard() {
                         PanelIcon("link", 13.dp, Palette.muted)
                         Spacer(Modifier.size(7.dp))
                         Text(
-                            "服务器连接配置",
+                            L["login.server_config"],
                             color = Palette.muted, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace,
                             letterSpacing = 1.sp, modifier = Modifier.weight(1f),
                         )
@@ -621,7 +629,7 @@ private fun NoteLoginCard() {
                                     }
                                     testOk = true
                                 } catch (e: Exception) {
-                                    testOk = false; testMsg = "连接失败：" + (e.message ?: "未知错误")
+                                    testOk = false; testMsg = L["连接失败_eb93205cb2"] + (e.message ?: L["未知错误_5f76edc5de"])
                                 } finally { testing = false }
                             }
                         })
@@ -637,18 +645,18 @@ private fun NoteLoginCard() {
                                                 testMsg = withContext(Dispatchers.IO) { com.servermaintance.panel.core.NoteBoxApi.probe(url) }
                                                 testOk = true
                                             } catch (e: Exception) {
-                                                testOk = false; testMsg = "连接失败：" + (e.message ?: "未知错误")
+                                                testOk = false; testMsg = L["连接失败_eb93205cb2"] + (e.message ?: L["未知错误_5f76edc5de"])
                                             } finally { testing = false }
                                         }
                                     }
                                     .padding(horizontal = 10.dp, vertical = 5.dp),
                             ) {
-                                Text(if (testing) "测试中…" else "测试连接", color = Palette.text, fontSize = 11.5.sp)
+                                Text(if (testing) L["测试中_49562bf14c"] else L["login.test_connection"], color = Palette.text, fontSize = 11.5.sp)
                             }
                             Spacer(Modifier.size(10.dp))
                             val ok = testOk
                             Text(
-                                testMsg.ifEmpty { "默认 ${NoteBoxStore.DEFAULT_URL}" },
+                                testMsg.ifEmpty { trf("默认_0_5ce2332f3f", NoteBoxStore.DEFAULT_URL) },
                                 color = when (ok) { true -> Palette.ok; false -> Palette.bad; null -> Palette.muted },
                                 fontSize = 10.5.sp, fontFamily = FontFamily.Monospace, modifier = Modifier.weight(1f),
                             )
@@ -776,11 +784,11 @@ fun NbStatRow(stats: JsonObject?) {
         Modifier.fillMaxWidth().padding(bottom = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        NbMiniStat("笔记", s.long("notes").toInt(), "note", Modifier.weight(1f), index = 0)
-        NbMiniStat("未完成", s.long("pending").toInt(), "checkSquare", Modifier.weight(1f), index = 1)
-        NbMiniStat("已完成", s.long("done").toInt(), "checkCircle", Modifier.weight(1f), index = 2)
-        NbMiniStat("已过期", s.long("overdue").toInt(), "warn", Modifier.weight(1f), index = 3, bad = s.long("overdue") > 0)
-        NbMiniStat("今天到期", s.long("today").toInt(), "calendar", Modifier.weight(1f), index = 4, warn = s.long("today") > 0)
+        NbMiniStat(L["nav.notes"], s.long("notes").toInt(), "note", Modifier.weight(1f), index = 0)
+        NbMiniStat(L["未完成_b61b08aec3"], s.long("pending").toInt(), "checkSquare", Modifier.weight(1f), index = 1)
+        NbMiniStat(L["已完成_e99b48a29b"], s.long("done").toInt(), "checkCircle", Modifier.weight(1f), index = 2)
+        NbMiniStat(L["已过期_1354374f76"], s.long("overdue").toInt(), "warn", Modifier.weight(1f), index = 3, bad = s.long("overdue") > 0)
+        NbMiniStat(L["今天到期_fb2cb94029"], s.long("today").toInt(), "calendar", Modifier.weight(1f), index = 4, warn = s.long("today") > 0)
     }
 }
 

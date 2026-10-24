@@ -1,0 +1,120 @@
+注_册_6ec40f6f72	Registrieren
+注册_0_5ad4a3af5f	Registrieren {0}
+注册中_44941e2818	Registriere…
+注册失败_a1d7fb5dfc	Registrierung fehlgeschlagen
+注册成功_4a1935bccf	Registrierung erfolgreich
+注册成功_请查收验证邮件_4d1b9bd9db	Registrierung erfolgreich, bitte prüfe die Bestätigungs-E-Mail
+活动_active_9032cdb7c5	Aktiv (active)
+活动_b2548636f0	Aktiv
+活动统计_3be3732c86	Aktivitätsstatistik
+活动连接_0_e7e5929f6f	Aktive Verbindungen ({0})
+活动连接_procs_size_477bb041cd	Aktive Verbindungen (${procs.size})
+活跃会话_42a08c5386	Aktive Sitzungen
+流式_0_非流式_1_bfb0038923	Streaming {0} · Kein Streaming {1}
+流式_e4d8c16cd2	Streaming
+流式会话时长分布_8068bcaea8	Verteilung der Streaming-Sitzungsdauer
+流式占比_43c882ec7b	Streaming-Anteil
+流式按模型_1fcdeff1cf	Streaming nach Modell
+流式请求_每日_d59ef41152	Streaming-Anfragen (täglich)
+流量分析_3953320414	Verkehrsanalyse
+浅色_80ec9e2b1b	Hell
+测试_0b5d7ed54b	Test
+测试中_49562bf14c	Teste…
+测试发送_614cdaef43	Test senden
+测试连接_10b7d8eccc	Verbindung testen
+测试邮件发送结果_9b487677ed	Test-E-Mail-Sendergebnis
+测试邮件已发送_请查收_bb593d799c	Test-E-Mail gesendet, bitte Posteingang prüfen
+测速_304d8c0081	Speedtest
+测速全部_42afec91d1	Alle Speedtests
+浏览_ef23ea67b0	Durchsuchen
+消息格式_19b61b1c63	Nachrichtenformat
+涉及文件_f54d77becb	Betroffene Dateien
+深色_30b2c979ac	Dunkel
+添加_94191ce210	Hinzufügen
+添加_ibm_官方源并安装_ibm_db2_体积_69ef7f8cc7	IBM-Offizielles Repository hinzufügen und ibm-db2 installieren (sehr groß, Lizenz muss akzeptiert werden)
+添加_mongodb_官方源并安装_mongod_76b4de74d6	MongoDB-Offizielles Repository hinzufügen und mongodb-org installieren
+添加主键_9a777b36f3	Primärschlüssel hinzufügen
+添加于_0_配额查询于_1_1c991e5cd8	Hinzugefügt am {0} · Quota abgefragt am {1}
+添加公钥_3121954aea	Öffentlichen Schlüssel hinzufügen
+添加列_90fcf205d2	Spalte hinzufügen
+添加唯一约束_79a24c40af	UNIQUE-Constraint hinzufügen
+添加外键_0c123f4308	Fremdschlüssel hinzufügen
+添加失败_9d563ebbbd	Hinzufügen fehlgeschlagen
+添加子任务_1f50119c5b	Unteraufgabe hinzufügen
+添加子任务_bcec5e13ad	Unteraufgabe hinzufügen…
+添加密钥_0f17b63bac	Schlüssel hinzufügen
+添加密钥_provid_0f9d502f28	Schlüssel hinzufügen - $provId
+清单_01af8c6eed	Liste
+清单名称不能为空_6250381cc7	Listenname darf nicht leer sein
+清单已删除_内容已移到上一级_71c8380991	Liste gelöscht, Inhalt in die übergeordnete Ebene verschoben
+清单已更新_f933c18e79	Liste aktualisiert
+清屏_e8db7ce0cc	Bildschirm löschen
+清理_907c3945d8	Bereinigen
+清理_apt_缓存_55c020f574	apt-Cache bereinigen
+清理历史_ea36817cb3	Verlauf löschen
+清理失败_6f2390db7a	Bereinigung fehlgeschlagen
+清理孤立依赖_1a60a375a7	Verwaiste Abhängigkeiten bereinigen
+清理已完成_149b3c638f	Bereinigung abgeschlossen
+清理旧备份_17d95953c3	Alte Backups bereinigen
+清理未使用资源_aef1da41a9	Ungenutzte Ressourcen bereinigen
+清理缓存_a2cf5ddefb	Cache leeren
+清理项_0_989c8b8e7c	Bereinigungspunkt {0}
+清理项_d7920a5280	Bereinigungspunkte
+清空_0_的所有数据_truncate_不_4ddee29cf3	Alle Daten in {0} löschen (TRUNCATE)? Nicht wiederherstellbar!
+清空_0_窗口内的重启记录_重新给满自愈额度_00414f7998	Neustartprotokolle im Fenster „{0}“ löschen und das Selbstheilungskontingent wieder auf volle Höhe auffüllen.
+清空_84fcd70d42	Leeren
+清空_e_name_窗口内的重启记录_重新_f999fa445b	Neustartprotokolle im Fenster „${e.name}“ löschen und das Selbstheilungskontingent wieder auf volle Höhe auffüllen.
+清空_st_table_的所有数据_tru_663aed317c	Alle Daten in ${st.table} löschen (TRUNCATE)? Nicht wiederherstellbar!
+清空后恢复_clean_可能丢数据_641f717946	Wiederherstellen nach dem Leeren (--clean, möglicher Datenverlust)
+清空回收站_4833ca01fc	Papierkorb leeren
+清空数据_91ad897e58	Daten leeren
+清空日志_1ef9339dba	Logs leeren
+清空表_618d964e8f	Tabelle leeren
+清空页缓存_目录项与_inode_缓存_内存紧张_25f5e6c734	Seiten-Cache, Verzeichniseinträge und inode-Cache leeren; bei Speicherengpass wird vorübergehend Speicher freigegeben.
+清除_7b15e5e8e7	Löschen
+清除最近访问_d3f083d97b	Letzten Zugriff löschen
+渠道_c152be9f50	Kanal
+渠道名称_99e9ec8d48	Kanalname
+渠道已保存_建议先点_测试发送_8a20b90f03	Kanal gesichert, empfohlen ist zuerst „Test senden“ zu klicken
+渠道总数_70a84a2aa8	Anzahl der Kanäle
+渠道类型_7ba72e5172	Kanaltyp
+温度_cc6b6c25c5	Temperatur 
+源文件_be43b936dd	Quelldatei
+源文件备份_0_4a529aae31	Quelldatei-Backup ({0})
+滚动窗口_f4ad4453d0	Rollierendes Fenster
+点_全部探测_刷新状态_4e0ea4e2f7	Auf „Alle Sonden“ klicken, um den Status zu aktualisieren
+点上方_新建用户_创建第一个账号_a49eedd915	Oben auf „Neuer Benutzer“ klicken, um das erste Konto zu erstellen
+点击列名可排序_编辑_删除主键_0_a9f0b6e928	Spaltenname anklicken zum Sortieren · Primärschlüssel bearbeiten/löschen ({0})
+点击列名可排序_该表无主键_编辑需手写_wh_554ef50292	Spaltenname anklicken zum Sortieren · Diese Tabelle hat keinen Primärschlüssel, Bearbeiten erfordert manuelles WHERE
+点右上角_新建笔记_开始_96865806de	Oben rechts auf „Neue Notiz“ klicken, um zu beginnen
+点左上角_新建笔记_创建_90394355e9	Oben links auf „Neue Notiz“ klicken zum Erstellen
+燃烧率_1_正好按预算节奏消耗_6_表_9e0d1c9091	Burn-Rate 1× = genau im Budgettempo verbraucht; ≥6× bedeutet, dass das gesamte Periodenbudget in etwa 5 Tagen verbraucht wird;
+燃烧率_b7f530cc1b	Burn-Rate
+版本_989d1affa0	Version
+版本_依赖_维护窗口等_3f2cbde76d	Version, Abhängigkeiten, Wartungsfenster usw.
+版本锁定_f00c209863	Versions-Pinning
+物理内存_c8353b5f3b	Physischer Arbeitsspeicher
+物理挂载点_63c0461fc1	Physische Mountpunkte
+状态_62e951a692	Status
+状态_路线_0f4ee76007	Status / Route
+状态变化才发信_3e6b8f558f	Nur bei Statuswechsel benachrichtigen
+状态文件_ba5e6e9f66	Statusdatei
+状态码_2fd51d31a7	Statuscode
+状态码分布_b43479251a	Statuscode-Verteilung
+状态码分布_近期访问日志_0405a22fb0	Statuscode-Verteilung (aktuelle Zugriffslogs)
+环境_aa3833ea2a	Umgebung
+环境不具备_17f075425e	Umgebung nicht verfügbar
+环比_0_e9d96f96a1	Vgl. Vorperiode {0}
+环比上一周期_787f54131c	Vgl. Vorperiode
+环比昨日_0_e52d529e62	Vgl. gestern {0}
+琥珀_84c5d7ae27	Bernstein
+生产_35d6fec69f	Produktion
+生产环境_7f152260df	Produktionsumgebung
+生效中_4de07ee065	Wirksam
+生效位置_applied_8b922ae94b	Wirksame Position (applied)
+用_file_覆盖_redis_当前数据_会覆_3f0f894cfc	Aktuelle Redis-Daten mit $file überschreiben? Dadurch wird dump.rdb im Datenverzeichnis überschrieben, wirksam nach dem Neustart von Redis; vorhandene Daten gehen verloren.
+用于仪表盘网络吞吐进度条_按真实上限显示占用比例_9f3376c761	Für den Netzwerk-Durchsatz-Fortschrittsbalken im Dashboard; zeigt die Belegung anteilig an der echten Obergrenze; ohne Einstellung wird der 1-Mbps-Standard verwendet.
+用户_9ba763ea34	Benutzer
+用户_权限_0_467c74d975	Benutzer / Rechte ({0})
+用户_权限_roles_size_cbb2b92096	Benutzer / Rechte (${roles.size})
+用户_组_1e6a976270	Benutzer/Gruppen

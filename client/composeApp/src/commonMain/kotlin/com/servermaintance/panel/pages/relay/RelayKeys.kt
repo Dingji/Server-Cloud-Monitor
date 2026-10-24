@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,10 +56,10 @@ private val KEYS_PATHS = mapOf(
     "key" to "/relay/key",
 )
 
-private val WIN_LABEL = linkedMapOf(
-    "rolling" to "滚动窗口",
-    "weekly" to "本周",
-    "monthly" to "本月",
+private val WIN_LABEL  get() = linkedMapOf(
+    "rolling" to L["滚动窗口_f4ad4453d0"],
+    "weekly" to L["本周_e16e8248b1"],
+    "monthly" to L["本月_389f0007de"],
 )
 
 /** 保守的查询串编码（provider id 多为安全字符，但不假设）。 */
@@ -84,7 +87,7 @@ fun RelayKeysTab() {
 
     val provs = feed["providers"].arr("providers").filterIsInstance<JsonObject>()
     if (provs.isEmpty()) {
-        EmptyState(text = "无供应商数据", icon = "key")
+        EmptyState(text = L["无供应商数据_079694fa08"], icon = "key")
         return
     }
 
@@ -92,14 +95,14 @@ fun RelayKeysTab() {
     if (feed.has("key")) {
         val k = feed["key"]
         Muted(
-            "当前密钥 ${k.str("key_masked").ifEmpty { "-" }} · " +
-                (if (k.bool("configured")) "已配置" else "未配置") +
-                " · 更新于 ${rTmTail(k.str("updated_at")).ifEmpty { "-" }}",
+            trf("当前密钥_0_a6dc721288", k.str("key_masked").ifEmpty { "-" }) +
+                (if (k.bool("configured")) L["已配置_dc7cd22f34"] else L["未配置_63595e95b7"]) +
+                trf("更新于_0_7340e34cda", rTmTail(k.str("updated_at")).ifEmpty { "-" }),
             Modifier.padding(bottom = 10.dp),
         )
     } else {
         val keyErr = feed.err("key")
-        if (keyErr != null) Muted("当前密钥：暂不可用", Modifier.padding(bottom = 10.dp))
+        if (keyErr != null) Muted(L["当前密钥_暂不可用_698a7394eb"], Modifier.padding(bottom = 10.dp))
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -122,22 +125,22 @@ private fun ProviderKeysCard(p: JsonObject) {
 
     PanelCard(
         title = label,
-        cardKey = "rl-prov-$pid",
+        cardKey = L["rl_prov_pid_e3748ee319"],
         right = {
             LevelBadge(
-                text = if (exhausted) "配额耗尽" else "可用",
+                text = if (exhausted) L["配额耗尽_9f8e15153c"] else L["可用_e91365cf9e"],
                 level = if (exhausted) Level.Bad else Level.Ok,
             )
             Spacer(Modifier.width(6.dp))
-            Chip(text = "密钥 ${rNum(p.num("key_count"))} · 可用 ${rNum(p.num("usable"))}")
+            Chip(text = trf("密钥_0_可用_1_426c7d2a6e", rNum(p.num("key_count")), rNum(p.num("usable"))))
             Spacer(Modifier.width(6.dp))
-            Chip(text = "窗口 ${p.arr("windows").joinToString("/") { jstr(it) }}")
+            Chip(text = trf("窗口_0_66b23aab3b", p.arr("windows").joinToString("/") { jstr(it) }))
         },
     ) {
         val err = feed.err("keys")
         when {
             err != null && !feed.has("keys") -> Muted(err)
-            !feed.has("keys") -> Muted("加载中…")
+            !feed.has("keys") -> Muted(L["common.loading"])
             else -> {
                 val kd = feed["keys"]
                 val keys = kd.arr("keys").filterIsInstance<JsonObject>()
@@ -145,7 +148,7 @@ private fun ProviderKeysCard(p: JsonObject) {
                     .ifEmpty { listOf("rolling", "weekly", "monthly") }
 
                 if (keys.isEmpty()) {
-                    Muted("暂无密钥")
+                    Muted(L["暂无密钥_0e15befa13"])
                 } else {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         keys.forEach { k -> KeyRow(k = k, pid = pid, wins = wins, reload = reload) }
@@ -155,12 +158,12 @@ private fun ProviderKeysCard(p: JsonObject) {
                 Spacer(Modifier.height(10.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     PrimaryBtn(
-                        text = "添加密钥",
+                        text = L["添加密钥_0f17b63bac"],
                         icon = "plus",
                         onClick = { scope.launch { addKey(pid, reload) } },
                     )
                     GhostBtn(
-                        text = "刷新全部配额",
+                        text = L["刷新全部配额_076a4d3565"],
                         icon = "refresh",
                         onClick = {
                             scope.launch {
@@ -173,20 +176,20 @@ private fun ProviderKeysCard(p: JsonObject) {
                 val log = kd.arr("switch_log").filterIsInstance<JsonObject>().takeLast(5).reversed()
                 if (log.isNotEmpty()) {
                     Spacer(Modifier.height(10.dp))
-                    Muted("最近切换记录", Modifier.padding(bottom = 6.dp))
+                    Muted(L["最近切换记录_4e33862ed5"], Modifier.padding(bottom = 6.dp))
                     relayTable(
                         rows = log,
                         cols = listOf(
-                            RCol("at", "时间", fmt = { rTm(it) }),
-                            RCol("to_masked", "切换到", mono = true),
+                            RCol("at", L["时间_89b4aa6364"], fmt = { rTm(it) }),
+                            RCol("to_masked", L["切换到_dcfa6ff76a"], mono = true),
                             RCol(
-                                "ok", "结果",
-                                fmt = { if (jbool(it)) "成功" else "失败" },
+                                "ok", L["结果_0a2c91cec6"],
+                                fmt = { if (jbool(it)) L["成功_51991a5d11"] else L["失败_3e3c8068bb"] },
                                 tone = { if (jbool(it)) Level.Ok else Level.Bad },
                             ),
-                            RCol("detail", "详情", width = 1.6f),
+                            RCol("detail", L["详情_4f55ee1e68"], width = 1.6f),
                         ),
-                        emptyText = "暂无切换记录",
+                        emptyText = L["暂无切换记录_cb6e9b8316"],
                     )
                 }
             }
@@ -222,10 +225,10 @@ private fun KeyRow(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Mono(masked, color = Palette.text, modifier = Modifier.weight(1f, fill = false))
-            if (active) LevelBadge("当前使用", Level.Info)
-            if (enabled) LevelBadge("启用", Level.Ok) else LevelBadge("禁用", Level.Muted)
-            if (exhausted.isNotEmpty()) LevelBadge("${exhausted.joinToString("/")} 耗尽", Level.Warn)
-            if (recoverAt.isNotEmpty()) Chip(text = "恢复于 ${rTmRecover(recoverAt)}")
+            if (active) LevelBadge(L["当前使用_297318c276"], Level.Info)
+            if (enabled) LevelBadge(L["启用_d4e9ca3dd4"], Level.Ok) else LevelBadge(L["禁用_be70be5a2e"], Level.Muted)
+            if (exhausted.isNotEmpty()) LevelBadge(trf("0_耗尽_47f859e844", exhausted.joinToString("/")), Level.Warn)
+            if (recoverAt.isNotEmpty()) Chip(text = trf("恢复于_0_57aae0c315", rTmRecover(recoverAt)))
         }
 
         /* ---- 三档配额（契约控件 PctBar；阈值差 70 vs 75 已知并接受） ---- */
@@ -251,37 +254,37 @@ private fun KeyRow(
 
         /* ---- 5 个操作按钮（对应 relay.js data-act） ---- */
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
-            GhostBtn("切换使用", onClick = {
+            GhostBtn(L["切换使用_440dcd4a60"], onClick = {
                 scope.launch { relayAction("keys/activate", keyPayload(k, pid), reload = reload) }
             })
-            GhostBtn("刷新配额", onClick = {
+            GhostBtn(L["刷新配额_851859899a"], onClick = {
                 scope.launch { relayAction("keys/refresh", keyPayload(k, pid), reload = reload) }
             })
-            GhostBtn("测试", onClick = {
+            GhostBtn(L["测试_0b5d7ed54b"], onClick = {
                 scope.launch { relayAction("keys/test", keyPayload(k, pid), reload = reload) }
             })
-            GhostBtn(if (enabled) "禁用" else "启用", onClick = {
+            GhostBtn(if (enabled) L["禁用_be70be5a2e"] else L["启用_d4e9ca3dd4"], onClick = {
                 scope.launch {
                     relayAction("keys/enable", keyPayload(k, pid, enabled = !enabled), reload = reload)
                 }
             })
-            DangerBtn("删除", onClick = {
+            DangerBtn(L["删除_3755f56f2f"], onClick = {
                 scope.launch {
                     relayAction(
                         "keys/remove",
                         keyPayload(k, pid),
                         confirmFirst = true,
                         danger = true,
-                        confirmTitle = "删除密钥",
-                        confirmMsg = "删除后无法恢复，确认删除该密钥？",
-                        confirmText = "删除",
+                        confirmTitle = L["删除密钥_8017614a47"],
+                        confirmMsg = L["删除后无法恢复_确认删除该密钥_68e3c91b1d"],
+                        confirmText = L["删除_3755f56f2f"],
                         reload = reload,
                     )
                 }
             })
         }
 
-        Muted("添加于 ${rTmShort(k.str("added_at"))} · 配额查询于 ${rTmShort(k.str("usage_at").ifEmpty { "-" })}")
+        Muted(trf("添加于_0_配额查询于_1_1c991e5cd8", rTmShort(k.str("added_at")), rTmShort(k.str("usage_at").ifEmpty { "-" })))
     }
 }
 
@@ -297,12 +300,12 @@ private fun keyPayload(k: JsonObject, pid: String, enabled: Boolean? = null): Js
 /** JS `addKey(provId)`：Modal.prompt 两个字段 → POST /relay/action keys/add */
 private suspend fun addKey(provId: String, reload: suspend () -> Unit) {
     val r = Modal.prompt(
-        title = "添加密钥 - $provId",
+        title = L["添加密钥_provid_0f9d502f28"],
         fields = listOf(
-            FormField.Text("key", "密钥", hint = "oc_sk_... / glm-...", mono = true),
-            FormField.Text("label", "备注", hint = "可选"),
+            FormField.Text("key", L["密钥_0d1965e139"], hint = L["oc_sk_glm_bf58d4a93b"], mono = true),
+            FormField.Text("label", L["备注_e0361480e3"], hint = L["可选_53e32830a5"]),
         ),
-        okText = "添加",
+        okText = L["添加_94191ce210"],
     ) ?: return
     val keyVal = r["key"].orEmpty()
     if (keyVal.isEmpty()) return
@@ -325,6 +328,6 @@ private suspend fun addKey(provId: String, reload: suspend () -> Unit) {
             (o.key(f) as? JsonPrimitive)?.takeIf { s -> s.content.isNotBlank() }?.content
         }
     }
-    AppState.toast(msg ?: "已添加", ToastKind.Ok)
+    AppState.toast(msg ?: tr("已添加_57828673c0"), ToastKind.Ok)
     reload()
 }

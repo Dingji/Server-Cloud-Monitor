@@ -1,5 +1,6 @@
 package com.servermaintance.panel.window
 
+import com.servermaintance.panel.i18n.tr
 import com.servermaintance.panel.platformStore
 
 /** Windows 桌面：点关闭按钮时的默认行为（持久化在本地偏好）。 */
@@ -30,9 +31,10 @@ object WindowsCloseBehavior {
     }
 
     fun label(action: WindowsCloseAction, traySupported: Boolean): String = when (action) {
-        WindowsCloseAction.Ask -> "每次询问"
-        WindowsCloseAction.Tray -> if (traySupported) "关闭时驻留到系统托盘" else "关闭时最小化到任务栏"
-        WindowsCloseAction.Quit -> "直接退出程序"
+        WindowsCloseAction.Ask -> tr("win.close.ask")
+        WindowsCloseAction.Tray ->
+            if (traySupported) tr("win.close.tray") else tr("win.close.tray_taskbar")
+        WindowsCloseAction.Quit -> tr("win.close.quit")
     }
 
     fun allLabels(traySupported: Boolean): List<String> =

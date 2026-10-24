@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	ບັນທຶກສະບັບສຳຮອງຂອງ relay ບໍ່ສາມາດໃຊ້ໄດ້
+relay_备份结果_0cf7f02f06	ຜົນການສະບັບສຳຮອງຂອງ relay
+relay_每日状态备份_32dee8ba2b	ການສະບັບສຳຮອງສະພາບລາຍວັນຂອງ relay
+reorg_重建索引_2b9d2e3b0e	REORG (ສ້າງດັດນັດໃຫມ່)
+reorg_重组表_6195b56608	REORG (ຈັດລຽງຕາຕະລາງໃຫມ່)
+reorgchk_校验_010830b6a4	REORGCHK (ກວດສອບ)
+repair_修复_8dd157c84c	REPAIR (ສ້ອມແປງ)
+restart_值_77d45b4c24	ຄ່າ RESTART
+root_密码登录_df671edd13	ເຂົ້າສູ່ລະບົບດ້ວຍລະຫັດຜ່ານ root
+root_权限的交互式_shell_经_ssh_724c53e674	Shell ເຊື່ອມຕໍ່ໂດຍມີສິດ root (ຜ່ານ SSH PTY, ເທີມິນນອນ ANSI ຕົນເອງ)
+running_运行中_contain_7d4c0797f6	$running ກຳລັງຮັບໃຊ້ · ${containers.size - running} ຢຸດແລ້ວ
+runstats_reorg_针对整库或所选表执_d40a81b4e9	RUNSTATS/REORG ດຳເນີນກັບຖານຂໍ້ມູນທັງຫມົດ ຫຼື ຕາຕະລາງທີ່ເລືອກ; ຕາຕະລາງໃຫຍ່ອາດເສຍເວລາດົນ.
+runstats_全库统计_e9fcb7b8fd	RUNSTATS ສະຖິດຖານຂໍ້ມູນທັງຫມົດ
+runstats_更新统计_a6a6663709	RUNSTATS (ອັບເດດສະຖິດຕາມ)
+save_同步快照_afc91773af	SAVE (ຊິ້ງຂໍ້ມູນ snapshot)
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\nຊື່ໜ້າທີ່: cm-$n
+settings.language.changed	ອັບເດດພາສາແລ້ວ
+settings.language.hint	ຫຼັງຈາກປ່ຽນຈະມີຜົນທັນທີ ແລະ ຈະຈື່ການເລືອກຂອງທ່ານ. ອິນເຕີເຟສພາສາອາຣັບຈະກັບຮູບແບບໂດຍອັດຕະໂນມັດ.
+settings.language.label	ພາສາ
+settings.language.title	ພາສາຂອງອິນເຕີເຟສ
+setval_值_938e9aa8cf	ຄ່າ setval
+shell_控制台_6f576115f4	ໂຄງການ Shell
+sites_enabled_为空_4516b41170	sites-enabled ວ່າງເປົ່າ
+slo_与用量_a308fd44ff	SLO ແລະ ການນຳໃຊ້
+slo_目标已更新为_0_1_天_41ec05d358	ເປົ້າຫມາຍ SLO ເຖິງ {0}% / {1} ມື້ແລ້ວ
+slo_目标已更新为_t_dy_天_7716799870	ເປົ້າຫມາຍ SLO ເຖິງ $t% / $dy ມື້ແລ້ວ
+slo_目标应为_0_100_之间的百分数_254085fd3b	ເປົ້າຫມາຍ SLO ຕ້ອງເປັນເປີເຊັນລະຫວ່າງ 0 ແລະ 100
+slo_错误预算_47d719e135	ງົບຂໍ້ຜິດພາດ SLO
+smtp_主机_9cb2a0f9f3	ໂຮສ SMTP
+smtp_已配置_70f40873a7	ຕັ້ງຄ່າ SMTP ແລ້ວ
+smtp_授权码_273299a5a3	ລະຫັດອະນຸຍາດ SMTP
+smtp_服务器_941346a5f4	ເຊີບເວີ SMTP
+smtp_未配置_先填账号授权码_c97b712442	ຍັງບໍ່ໄດ້ຕັ້ງຄ່າ SMTP (ໃສ່ບັນຊີ ແລະ ລະຫັດອະນຸຍາດກ່ອນ)
+smtp_状态_8658366a9a	ສະຖານະ SMTP
+smtp_设置已保存_e5e2238754	ບັນທຶກການຕັ້ງຄ່າ SMTP ແລ້ວ
+smtp_账号_163_邮箱_4bbcd0b1d0	ບັນຊີ SMTP (ອີເມວ 163)
+sql_控制台_a3458fb2ad	ໂຄງການ SQL
+sql_文本_gzip_通用_可编辑_48f716760f	ຄຳສັ່ງ SQL + gzip (ທົ່ວໄປ, ດັດແປງໄດ້)
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	SQLite ແມ່ນຖານຂໍ້ມູນໄຟລ໌ດຽວ: ຖ້າບໍ່ມີໄຟລ໌ຈະສ້າງໃຫມ່; ຊື່ໄຟລ໌ຕ້ອງຈົບດ້ວຍ .db/.sqlite.
+sqlite_搜索目录_49521cf800	ໂຄງສ້າງຄົ້ນຫາ SQLite
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	SQLite ແມ່ນຖານຂໍ້ມູນຝັງຕົວໃນໄຟລ໌ດຽວ ບໍ່ມີຄຳສັບຜູ້ໃຊ້/ບົດບາດ; ການຄວບຄຼມການເຂົ້າເຖິງແມ່ນກຳນົດໂດຍສິດໄຟລ໌ຂອງລະບົບປະຕິບັດການ.
+sqlite_生成_sql_文本_gzi_f960464be7	· SQLite ສ້າງຄຳສັ່ງ SQL + gzip ທີ່ສາມາດກູ້ຄືນໄປໄຟລ໌ໃຫມ່ໂດຍກົງ.
+sqlite_语法_支持_tables_sc_41d445ac53	ຊັດເຊນ SQLite (ສະຫນັບສະຫນູນຄຳສັ່ງຈຸດເຊັ່ນ .tables/.schema)
+ssh2_可用_efe0e7bbc7	ssh2 ມີໃຫ້ໃຊ້
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys ກຸນແຈທີ່ອະນຸຍາດ · relay_scripts ສະຄຣິບທ່ອນ · ufw_conf ຜາກກັນຂີ້ເຜົາ · cron_conf ໜ້າທີ່ຕາມກຳນົດ.
+ssh_凭据_0_527cdbdfec	ຂໍ້ມູນຮັບรอง SSH · {0}
+ssh_凭据_h_label_24a0886915	ຂໍ້ມູນຮັບรอง SSH · ${h.label}
+ssh_可达_df28fdb916	ເຂົ້າເຖິງ SSH ໄດ້
+ssh_密码认证_f22e3cd826	ການຢັງຢືນຕົວຕົນ SSH ດ້ວຍລະຫັດຜ່ານ
+ssh_授权密钥_authorized_key_4fee36881a	ກຸນແຈທີ່ອະນຸຍາດ SSH (authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	ການກວດສອບແບບອ່ານຢ່າງດຽວ: ຜິນໜ້າສຳຜັດ SSH, ຜາກກັນຂີ້ເຜົາ, ບັນຊີ ແລະ ສິດ, ການອັບເດດ, ບັນທຶກ ແລະ ຊິ້ງເວລາ; ການແກ້ໄຂຈະດຳເນີນຫຼັງຈາກກວດສອບຄວາມປອດໄພຂອງເຊີບເວີ
+ssh_服务配置_sshd_有效配置_b5a2f5733e	ການຕັ້ງຄ່າບໍລິການ SSH (ການຕັ້ງຄ່າທີ່ມີປະສິດທິຜົນຂອງ sshd)
+ssh_端口_db451b3851	ພອດ SSH
+ssh_设置已保存_a65c44f49c	ບັນທຶກການຕັ້ງຄ່າ SSH ແລ້ວ
+ssh_连接_用于_web_终端的_pty_b26f43db91	ການເຊື່ອມຕໍ່ SSH (PTY ສຳລັບເທີມິນນອນ Web)
+ssh_通道_dbd1043d39	ແນວທາງ SSH
+ssh_配置应用_c35c2ef2bf	ນຳໃຊ້ການຕັ້ງຄ່າ SSH
+ssh_防爆破_3e3c79eef0	ປ້ອງກັນການແຕກລະຫັດ SSH
+ssl_证书_let_s_encrypt_332fd65bdb	ໃບຮັບຮອງ SSL (Let's Encrypt)
+sudo_权限_e03e1e61f9	ສິດ sudo
+swap_控制_12c3f63c98	ການຄວບຄຼມ Swap
+systemd_单元名_c8ea5d11ad	ຊື່ໜ່ວຍ systemd
+systemd_定时器_0_dc0dc6e637	ເຕີມະເນີ Systemd ({0})
+systemd_定时器_f8d95995f8	ເຕີມະເນີ Systemd
+systemd_定时器_timers_si_6ade92f31f	ເຕີມະເນີ Systemd (${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· ເຕີມະເນີ Systemd ແມ່ນຖືກຈັດການໂດຍ systemd ແລະ ສະແດງເທົ່ານັ້ນ;
+systemd_日志总占用_f776a05861	ການໃຊ້ບັນທຶກ systemd ທັງຫມົດ
+systemd_服务_fe73189369	ບໍລິການ systemd
+tcp_主机_c307455515	ໂຮສ TCP
+tcp_端口_468daa15c6	ພອດ TCP
+tcp_端口探活_731f0297a0	ການກວດຊອກພອດ TCP
+title_names_size_个_acb99452ee	$title · ${names.size} ແພັກເກຈ
+tls_证书_43af3d4e3c	ໃບຮັບຮອງ TLS
+tmp_保留_0_天_f32c9b5407	ເກັບ /tmp {0} ມື້
+tmp_保留_s_tmpdays_天_86426f5281	ເກັບ /tmp ${s.tmpDays} ມື້
+tmp_保留天数_0d11396618	ມື້ເກັບຮັກສາ /tmp
+token_命中率_2bfb8e83db	ອັດຕາການຕົກລົງຂອງ Token
+token_总量_3f5fa71b8e	ຈຳນວນ Token ທັງຫມົດ
+token_构成_9af64ae64e	ສ່ວນປະກອບຂອງ Token
+token_用量归集_81e6ced52c	ການລວມການນຳໃຊ້ Token
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	ສະຖິດ Token ຖືກລວມຕາມຫນ່ວຍເວລາເລື່ອນ · ຂໍ້ມູນຈາກ {0}
+top_会话_3c40651605	ເຊຊັນອັນດັບ
+top_进程_17603f0ba3	ໂປຣເຊສອັນດັບ
+truncate_清空数据_2b621f28d2	TRUNCATE (ລ້າງຂໍ້ມູນ)
+ttfb_按线路_dd77200ec0	TTFB ຕາມເສັ້ນທາງ
+ua_族_886e5b0cbd	ຊະນິດ UA
+ufwrulescount_条规则_4d66159719	$ufwRulesCount ກົດລະບຽບ
+user_或_user_group_dab37bbd5c	user ຫຼື user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE ຖານຂໍ້ມູນທັງຫມົດ
+vacuum_full_全部库_7cb397ec45	VACUUM FULL ຖານຂໍ້ມູນທັງຫມົດ
+vacuum_full_重写表_6eacd637a2	VACUUM FULL (ຂຽນຕາຕະລາງໃຫມ່)
+vacuum_回收空间_1fab10fe60	VACUUM (ຟື້ນຟູພື້ນທີ່)
+vacuum_重建文件_7a9b0fc30b	VACUUM (ສ້າງໄຟລ໌ໃຫມ່)
+w_a_个异常找到疑似变更_072ff64ee0	ພົບ $w / $a ຄວາມຜິດປົກກະຕິທີ່ມີການປ່ຽນແປງທີ່ສົງໄສ
+wal_检查点_2010a0cc44	ຈຸດກວດສອບ WAL
+web_终端_7a3963643f	ເທີມິນນອນ Web
+where_条件_如_id_10_211cc8803d	ເງື່ອນໄຂ WHERE, ເຊັ່ນ id > 10
+where_条件_必填_d024e40edd	ເງື່ອນໄຂ WHERE (ບັງຄັບ)
+where_条件_必填_禁止分号_de5b786116	ເງື່ອນໄຂ WHERE (ບັງຄັບ, ຫ້າມໃຊ່ເຄື່ອງໝາຍຈຸດຄົມ)
+win.client.close_label	ເມື່ອປິດຫນ້າຕ່າງ
+win.client.desc_ask	ຖາມທຸກຄັ້ງທີ່ປິດ: ຢູ່ໃນພື້ນຫຼັງ ຫຼື ອອກຈາກໂປຣແກຣມ.
+win.client.desc_quit	ອອກຈາກ Cloud Monitor ທັນທີຫຼັງຈາກປິດ.
+win.client.desc_tray	ເຊື່ອງຫນ້າຕ່າງຫຼັກຫຼັງຈາກປິດ ແລະ ຍັງຮັບການແຈ້ງເຕືອນໃນ tray.
+win.client.desc_tray_no_tray	ນ້ອຍລົງໃສ່ແຖບວຽກຫຼັງຈາກປິດ ແລະ ຍັງຮັບການແຈ້ງເຕືອນໃນພື້ນຫຼັງ.
+win.client.hint	ພຶດຕິກຳເມື່ອກົດປຸ່ມປິດຫນ້າຕ່າງ. ການເລືອກຄັ້ງທຳອິດໃນກອງປິດກໍຈະຖືກບັນທຶກໄວ້ທີ່ນີ້ໂດຍອັດຕະໂນມັດ.
+win.client.title	ໂຄງການ Windows
+win.client.updated_toast	ອັບເດດພຶດຕິກຳການປິດແລ້ວ
+win.close.ask	ຖາມທຸກຄັ້ງ
+win.close.quit	ອອກຈາກໂປຣແກຣມທັນທີ
+win.close.tray	ຢູ່ໃນ tray ຂອງລະບົບເມື່ອປິດ
+win.close.tray_taskbar	ນ້ອຍລົງໃສ່ແຖບວຽກເມື່ອປິດ
+win.dialog.body_taskbar	ອອກຈາກໂປຣແກຣມ, ຫຼື ນ້ອຍລົງໃສ່ແຖບວຽກເພື່ອຍັງຮັບການແຈ້ງເຕືອນເຊີບເວີໃນພື້ນຫຼັງ.
+win.dialog.body_tray	ອອກຈາກໂປຣແກຣມ, ຫຼື ຢູ່ໃນ tray ຂອງລະບົບເພື່ອຍັງຮັບການແຈ້ງເຕືອນເຊີບເວີໃນພື້ນຫຼັງ.
+win.dialog.cancel	ຍົກເລີກ
+win.dialog.minimize	ນ້ອຍລົງໃສ່ແຖບວຽກ
+win.dialog.quit	ອອກ
+win.dialog.stay_tray	ຢູ່ໃນ tray
+win.dialog.title	ປິດ Cloud Monitor
+youtube_视频_70a0be3df0	ວິດີໂອ YouTube
+一_d274eee8a1	1

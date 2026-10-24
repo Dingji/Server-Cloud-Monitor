@@ -1,0 +1,120 @@
+分析_9c00c951b8	Analizza
+分析数据库_27120f4e22	Analizza database
+分类_435c5259e4	Categoria
+分组_97d8a6c05b	Gruppo
+分节_0_72a336b550	Sezione {0}
+分节_cc61ad798e	Sezione
+分节_i_1_f0d1636fb2	Sezione ${i + 1}
+切换使用_440dcd4a60	Commuta utilizzo
+切换到_dcfa6ff76a	Passa a
+切换到此源_6a51392f3d	Passa a questa fonte
+切换到浅色主题_68c147dbb8	Passa al tema chiaro
+切换到深色主题_81f29dbac3	Passa al tema scuro
+切换告警中心_6ee18893d6	Commuta centro avvisi
+切换失败_9e2fdc4fee	Commutazione non riuscita
+切换失败_已回滚_c0cfb2c6b5	Commutazione non riuscita (ripristinata)
+切换并刷新索引_90b6357c92	Commuta e aggiorna indice
+切换强调色_750952d685	Cambia colore accento
+切换成功后会清理旧镜像残留索引_避免搜索结果_3a16b0a93b	· Dopo una commutazione riuscita vengono ripuliti gli indici residui del vecchio mirror, così i risultati di ricerca non mescolano le fonti.
+切换数据库_a1ab00957c	Commuta database
+切换率_0_5f66fea7ee	Tasso di commutazione {0}%
+切换率_0_尝试_请求_1_549548a929	Tasso di commutazione {0}% · Tentativi/richieste {1}
+切换软件源_1d685b5c20	Cambia sorgente software
+切换镜像会先备份源文件_改写后立即执行_ap_b31cb7b626	· La commutazione del mirror prima esegue il backup del file sorgente e subito dopo la riscrittura esegue apt-get update; se l'aggiornamento fallisce, viene ripristinato automaticamente il mirror originale.
+列_ad3ee64830	Colonna
+列_逗号分隔_e6b76472d6	Colonna (separata da virgole)
+列a_列b_276b732289	\n| Colonna A | Colonna B |\n| --- | --- |\n|  |  |\n
+列列表_逗号分隔_3fbb861c18	Elenco colonne (separato da virgole)
+列名_56dc7e14b9	Nome colonna
+列名_目标列_93b57e8329	Nome colonna / colonna di destinazione
+列注释_9f54addfdc	Commento colonna
+列目录中_1d7fe661c3	Elenco directory in corso…
+列结构_d6bcf00979	Struttura colonne
+列表_7d9b515037	• Elenco
+刚刚_9e636642d6	Adesso
+创建_0_b962ace170	Crea {0}
+创建_0_f7fa88a48a	Crea {0}?
+创建_acl_用户_cd96ef0588	Crea utente ACL
+创建_fcbd093292	Crea
+创建_notebox_账号并分配角色_2911541ceb	Crea account NoteBox e assegna i ruoli
+创建_替换_c8d121c449	Crea/Sostituisci
+创建于_f3b01f3f1a	Creato il
+创建任务_cf42fd678f	Crea attività
+创建备份_f4587bf8b2	Crea backup
+创建失败_deb3990191	Creazione non riuscita
+创建定时任务_cc992174ac	Crea attività pianificata
+创建数据库_1bf70a1209	Crea database
+创建时间_84e3802f60	Data di creazione
+创建每日自动备份_7c94d434a4	Crea backup automatico giornaliero
+创建用户_315315d695	Crea utente
+创建用户_name_sudosuffix_423f11e860	Crea utente $name$sudoSuffix?
+创建用户_角色_87bba5f559	Crea utente/ruolo
+创建的用户拥有_all_全部键_全_2da1a3462f	L'utente creato possiede ~* +@all (tutte le chiavi + tutti i comandi); perfeziona le autorizzazioni con ACL SETUSER.
+创建索引_39988166a9	Crea indice
+创建维护计划_04a82258e7	Crea piano di manutenzione
+创建角色_24cf247879	Crea ruolo
+创建计划_bddda94d14	Crea piano
+删_38cadf487e	Elim.
+删凭据_578de9d115	Elimina credenziali
+删除_0_1fbd66c221	Elimina {0}?
+删除_0_a1ee4b1af0	Elimina {0} ?
+删除_0_c27e726e6d	Eliminare “{0}”?
+删除_0_on_1_fb3815f989	Elimina {0} on {1} ?
+删除_0_不可恢复_122855ffb8	Elimina {0}? Operazione irreversibile.
+删除_0_不可恢复_935f255ade	Elimina {0} ? Operazione irreversibile!
+删除_0_其中的待办与子清单会移动到上一级_a7634c43e7	Eliminare “{0}”? Le attività e le sotto-liste al suo interno verranno spostate di un livello, non eliminate.
+删除_0_其中的笔记与子归类会移动到上一级_327496c4d8	Eliminare “{0}”? Le note e le sottocategorie al suo interno verranno spostate di un livello, non eliminate.
+删除_0_历史事件仍保留_d3e46884f0	Eliminare “{0}”? Gli eventi storici verranno conservati.
+删除_0_及其全部集合_不可恢复_27bf2aa4e3	Elimina {0} e tutte le sue collezioni? Operazione irreversibile!
+删除_0_及其后续统计_已归档的按日数据仍保_79a549e6e8	Eliminare “{0}” e le statistiche successive? I dati giornalieri archiviati verranno conservati.
+删除_0_引用它的规则将不再向该渠道推送_2a68290638	Eliminare “{0}”? Le regole che la richiamano non la invieranno più a questo canale.
+删除_0_该角色拥有的对象可能变为无主_81db941aef	Elimina {0} ? Gli oggetti di cui questo ruolo è proprietario potrebbero rimanere orfani.
+删除_3755f56f2f	Elimina
+删除_c_name_引用它的规则将不再向_a15854651b	Eliminare “${c.name}”? Le regole che la richiamano non la invieranno più a questo canale.
+删除_e_name_历史事件仍保留_7c4f97a765	Eliminare “${e.name}”? Gli eventi storici verranno conservati.
+删除_folder_name_其中的待办_8acd8d3681	Eliminare “${folder.name}”? Le attività e le sotto-liste al suo interno verranno spostate di un livello, non eliminate.
+删除_folder_name_其中的笔记_02f00181b7	Eliminare “${folder.name}”? Le note e le sottocategorie al suo interno verranno spostate di un livello, non eliminate.
+删除_h_label_的_ssh_凭据_采_714dcba255	Eliminare le credenziali SSH di “{0}”? La raccolta dati si fermerà fino alla riconfigurazione.
+删除_id_0_5757172d9f	Elimina _id = {0} ?
+删除_id_id_9f0c4ee411	Elimina _id = $id ?
+删除_it_name_不可恢复_2e58b9d314	Elimina ${it.name}? Operazione irreversibile.
+删除_item_name_不可恢复_196f667e1b	Elimina ${item.name}? Operazione irreversibile.
+删除_job_file_0df6f1b1c0	Elimina ${job.file}?
+删除_k_不可恢复_7f04e8d988	Elimina $k ? Operazione irreversibile!
+删除_n_447134e66a	Elimina $n ?
+删除_n_及其全部集合_不可恢复_75c0387e71	Elimina $n e tutte le sue collezioni? Operazione irreversibile!
+删除_name_该角色拥有的对象可能变为无主_444ea2ccd8	Elimina $name ? Gli oggetti di cui questo ruolo è proprietario potrebbero rimanere orfani.
+删除_r_name_历史事件仍保留_d216275bef	Eliminare “${r.name}”? Gli eventi storici verranno conservati.
+删除_s_name_62446c983c	Eliminare “${s.name}”?
+删除_tgname_trim_on_61b891ec54	Elimina ${tgName.trim()} on ${tgTable.trim()} ?
+删除_ufw_规则_n_969e18703f	Elimina regola UFW #$n?
+删除_var_cache_apt_archiv_4cd0531496	Elimina i pacchetti scaricati in /var/cache/apt/archives
+删除_x_name_及其后续统计_已归档的_f9923c3d24	Eliminare “${x.name}” e le statistiche successive? I dati giornalieri archiviati verranno conservati.
+删除主机_643f7d4bb9	Elimina host
+删除事项_0_fd51d58bcb	Eliminare elemento “{0}”?
+删除事项_baf69ed21f	Elimina elemento
+删除事项_t_title_86546066a3	Eliminare elemento “${t.title}”?
+删除全部_0_条已完成事项_edea779a77	Elimina tutti i {0} elementi completati?
+删除全部_n_条已完成事项_c6c82b6be8	Elimina tutti i $n elementi completati?
+删除公钥_b83efa4dbe	Elimina chiave pubblica
+删除凭据_35bc7d6ff1	Elimina credenziali
+删除列_16f1347814	Elimina colonna
+删除到回收站_f418fcf1e6	Sposta nel cestino
+删除后持有该密钥的客户端将无法登录_1d472813e0	Dopo l'eliminazione, i client in possesso di questa chiave non potranno più accedere.
+删除后无法恢复_确认删除该密钥_68e3c91b1d	Operazione irreversibile. Eliminare questa chiave?
+删除告警规则_fb9b26e21f	Elimina regola di avviso
+删除备份_749438d2de	Elimina backup
+删除备份文件_df6543f316	Elimina file di backup
+删除失败_72250c5922	Eliminazione non riuscita
+删除子任务_165f2995e1	Elimina sottocompito
+删除定时任务_cbbfd7d59d	Elimina attività pianificata
+删除容器_c1cbe14e79	Elimina container
+删除密钥_8017614a47	Elimina chiave
+删除已下载的_deb_安装包_释放_0_不_dc8e1f42c6	Elimina i pacchetti .deb scaricati per liberare {0}. Il software installato non viene interessato.
+删除归类_f282b52e6b	Elimina categoria
+删除拨测任务_2193297dfe	Elimina attività di sondaggio
+删除数据库_f0f7b49980	Elimina database
+删除文档_e7adbd575b	Elimina documento
+删除时间_8d55c8d894	Data di eliminazione
+删除模式_0_及其全部对象_cascade_6336954e53	Elimina schema {0} e tutti i suoi oggetti (CASCADE)?
+删除模式_77bed2385b	Elimina schema

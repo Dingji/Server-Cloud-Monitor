@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label 安装完成，正在刷新…
+label_安装日志_13ce1b1029	$label 安装日志
+label_实现中_70505f7ef8	「$label」实现中…
+llm_api_中继的请求量_token_用量_6b89d708ea	LLM API 中继的请求量、Token 用量、密钥池配额、模型可用性与质量分析
+location_块_不要停用该站点以免面板与_4ae164b62b	location 块），不要停用该站点以免面板与中继服务同时下线。
+login.access_token	访问令牌
+login.advanced	高级
+login.audit_notice	所有操作均被审计记录
+login.connect_failed	连接失败：
+login.failed	登录失败
+login.normalized_url	规范化地址
+login.not_logged_in	未登录
+login.password_required	请输入密码
+login.remember_password	记住密码
+login.restore_default_url	恢复默认地址
+login.save_on_test_hint	改地址后点「测试连接」即持久化生效
+login.server_config	服务器连接配置
+login.sign_in	登 录
+login.signing_in	登录中…
+login.subtitle	服务器实时监控与配置控制台
+login.test_connection	测试连接
+login.testing	测试中…
+login_可登录_0e617ada9b	LOGIN（可登录）
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(上一轮字节, 本轮字节) 是前面轮次已发过的内容 —— 这就是缓存本该命中的上限，不依赖厂商上报。\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB 不做空间回收，validate/reindex 是常用的例行维护。
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB 使用 mongodump 生成 gzip 归档（需 mongodump）。
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB 在首次写入集合时才真正创建数据库，这里会创建 _cm_init 集合占位。
+mongodb_的过滤条件支持_字段_值_558264a7d8	MongoDB 的过滤条件支持 {"字段":值} 形式（内部转为查询条件）或 字段=值 简写。文档以 JSON 展示，_id 为文档标识。
+mongodb_维护结果_aaeb39f907	MongoDB 维护结果
+ms_毫秒_7ade5ab3a4	$ms 毫秒
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB（默认 root + socket）
+mysql_语法_8200e34cb7	MySQL 语法
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a 统计
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c 校验
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o 优化
+name_ver_连接正常_33d0a44ec7	$name $ver 连接正常
+name_关闭_c8e887ebc0	$name: 关闭
+name_开启_54ce939603	$name: 开启
+nav.audit	审计日志
+nav.backups	备份中心
+nav.cron	定时任务
+nav.dashboard	仪表盘
+nav.databases	数据库
+nav.disks	磁盘管理
+nav.docker	Docker 容器
+nav.health_alerts	健康告警
+nav.logs	日志中心
+nav.memory	内存管理
+nav.network	网络管理
+nav.note_mail	邮件通知
+nav.note_settings	NoteBox 设置
+nav.note_transfer	导入 / 导出
+nav.note_users	用户管理
+nav.notes	笔记
+nav.ops_channels	通知渠道
+nav.ops_disk	磁盘治理
+nav.ops_files	文件管理
+nav.ops_hosts	纳管主机
+nav.ops_remote	远程主机指标
+nav.ops_rules	告警规则
+nav.ops_sec	安全基线巡检
+nav.ops_uptime	可用性拨测
+nav.ops_watch	服务看护
+nav.packages	软件包管理
+nav.page_placeholder	「{0}」页面实现中…
+nav.pinned_hint	（已收藏，长按取消）
+nav.processes	进程管理
+nav.relay	OpenCode 中继
+nav.section.app	应用
+nav.section.monitor	监控
+nav.section.notes	笔记
+nav.section.server	服务器
+nav.section.system	系统
+nav.section.tools	工具
+nav.security	安全管理
+nav.services	系统服务
+nav.settings	面板设置
+nav.slo	SLO 与用量
+nav.terminal	Web 终端
+nav.todos	待办清单
+nav.web	网站 / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf Nginx 配置 · sshd_config SSH 配置 · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	nginx/sshd/fstab 配置保存后会自动校验
+nginx_站点_0_6bcfddef71	Nginx 站点 ({0})
+nginx_站点_sites_size_2db3c2b5be	Nginx 站点 (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP 与提醒规则
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox 云端笔记（多级归类 · 回收站 · Markdown · 共享）
+notebox_地址未配置_3d37258011	NoteBox 地址未配置
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox 待办事项（支持截止时间与邮件提醒）
+notebox_数据迁移_362725f18e	NoteBox 数据迁移
+notebox_服务可达_6a7506d6ac	NoteBox 服务可达
+notebox_服务可达_未登录_e023d68cad	NoteBox 服务可达（未登录）
+notebox_服务地址_默认端口_13345_e0880dfda6	NoteBox 服务地址（默认端口 13345）。修改后需要重新登录。
+notebox_登录成功_013138644f	NoteBox 登录成功
+notebox_设置_efb5a47b98	NoteBox 设置
+notebox_账号_仅管理员_81b8d4ca26	NoteBox 账号（仅管理员）
+online_台有近期数据_1fefff8cdc	$online 台有近期数据
+opencode_中继_2e021ee797	OpenCode 中继
+p95_延迟_57d63f8b46	P95 延迟
+p95_延迟_ba65a873bc	p95 延迟
+palette.accent_hint	外观 · 当前 {0}
+palette.open_page	打开页面{0}
+palette.pin	收藏「{0}」
+palette.pin_hint	工作区 · 长按侧栏项也可切换
+palette.reload_hint	F5 / Ctrl+R · 重新加载
+palette.theme_hint	外观 · 当前{0}
+palette.unpin	取消收藏「{0}」
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE(强制改密)
+pg_自定义格式_0cc41d0ea4	PG 自定义格式
+postgresql_mysql_sql_42e513fca9	PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB 的库表管理、SQL 控制台、性能洞察与备份恢复
+postgresql_自定义格式_fc_更快恢_080c860e81	PostgreSQL 自定义格式 -Fc（更快恢复）
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL（默认使用 peer 认证 su - postgres）
+rdb_快照_62f218ed40	RDB 快照
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis 会执行 BGSAVE 并复制 RDB 文件；恢复会覆盖数据目录，需重启 Redis 生效。
+redis_命令控制台_fa42019a53	Redis 命令控制台
+redis_维护_d2a01bfbd3	Redis 维护
+reindex_全部库_90545e1eeb	REINDEX 全部库
+reindex_重建索引_256956f94e	REINDEX / 重建索引
+reindex_重建索引_d81fcbf8d0	REINDEX（重建索引）
+relay_alert_py_检查_smtp_告_012aaa3373	relay_alert.py 检查、SMTP 告警通道、阈值与告警记录

@@ -1,0 +1,120 @@
+分析_9c00c951b8	Analisis
+分析数据库_27120f4e22	Analisis pangkalan data
+分类_435c5259e4	Kategori
+分组_97d8a6c05b	Kumpulan
+分节_0_72a336b550	Seksyen {0}
+分节_cc61ad798e	Seksyen
+分节_i_1_f0d1636fb2	Seksyen ${i + 1}
+切换使用_440dcd4a60	Togol penggunaan
+切换到_dcfa6ff76a	Tukar ke
+切换到此源_6a51392f3d	Tukar ke sumber ini
+切换到浅色主题_68c147dbb8	Tukar ke tema terang
+切换到深色主题_81f29dbac3	Tukar ke tema gelap
+切换告警中心_6ee18893d6	Togol pusat amaran
+切换失败_9e2fdc4fee	Penukaran gagal
+切换失败_已回滚_c0cfb2c6b5	Penukaran gagal (dikembalikan)
+切换并刷新索引_90b6357c92	Tukar dan segarkan indeks
+切换强调色_750952d685	Tukar warna aksen
+切换成功后会清理旧镜像残留索引_避免搜索结果_3a16b0a93b	· Selepas penukaran berjaya, indeks residu imej lama akan dibersihkan supaya hasil carian tidak mencampurkan sumber.
+切换数据库_a1ab00957c	Tukar pangkalan data
+切换率_0_5f66fea7ee	Kadar penukaran {0}%
+切换率_0_尝试_请求_1_549548a929	Kadar penukaran {0}% · Cubaan/permintaan {1}
+切换软件源_1d685b5c20	Tukar sumber perisian
+切换镜像会先备份源文件_改写后立即执行_ap_b31cb7b626	· Tukar imej akan menyimpan fail sumber dahulu, kemudian menjalankan apt-get update sejurus selepas menulis semula; jika penyegaran gagal, ia akan dikembalikan secara automatik ke imej asal.
+列_ad3ee64830	Lajur
+列_逗号分隔_e6b76472d6	Lajur (dipisahkan dengan koma)
+列a_列b_276b732289	\n| Lajur A | Lajur B |\n| --- | --- |\n|  |  |\n
+列列表_逗号分隔_3fbb861c18	Senarai lajur (dipisahkan dengan koma)
+列名_56dc7e14b9	Nama lajur
+列名_目标列_93b57e8329	Nama lajur / lajur sasaran
+列注释_9f54addfdc	Komen lajur
+列目录中_1d7fe661c3	Senarai direktori…
+列结构_d6bcf00979	Struktur lajur
+列表_7d9b515037	• Senarai
+刚刚_9e636642d6	Baru sahaja
+创建_0_b962ace170	Cipta {0}
+创建_0_f7fa88a48a	Cipta {0}?
+创建_acl_用户_cd96ef0588	Cipta pengguna ACL
+创建_fcbd093292	Cipta
+创建_notebox_账号并分配角色_2911541ceb	Cipta akaun NoteBox dan tetapkan peranan
+创建_替换_c8d121c449	Cipta/Ganti
+创建于_f3b01f3f1a	Dicipta pada
+创建任务_cf42fd678f	Cipta tugas
+创建备份_f4587bf8b2	Cipta sandaran
+创建失败_deb3990191	Penciptaan gagal
+创建定时任务_cc992174ac	Cipta tugas berjadual
+创建数据库_1bf70a1209	Cipta pangkalan data
+创建时间_84e3802f60	Masa dicipta
+创建每日自动备份_7c94d434a4	Cipta sandaran automatik harian
+创建用户_315315d695	Cipta pengguna
+创建用户_name_sudosuffix_423f11e860	Cipta pengguna $name$sudoSuffix?
+创建用户_角色_87bba5f559	Cipta pengguna/peranan
+创建的用户拥有_all_全部键_全_2da1a3462f	Pengguna yang dicipta memiliki ~* +@all (semua kekunci + semua arahan); perhalus kebenaran dengan ACL SETUSER.
+创建索引_39988166a9	Cipta indeks
+创建维护计划_04a82258e7	Cipta pelan penyelenggaraan
+创建角色_24cf247879	Cipta peranan
+创建计划_bddda94d14	Cipta pelan
+删_38cadf487e	Padam
+删凭据_578de9d115	Padam kelayakan
+删除_0_1fbd66c221	Padam {0}?
+删除_0_a1ee4b1af0	Padam {0} ?
+删除_0_c27e726e6d	Padam “{0}”?
+删除_0_on_1_fb3815f989	Padam {0} on {1} ?
+删除_0_不可恢复_122855ffb8	Padam {0}? Tindakan ini tidak boleh dibuat asal.
+删除_0_不可恢复_935f255ade	Padam {0} ? Tindakan ini tidak boleh dibuat asal!
+删除_0_其中的待办与子清单会移动到上一级_a7634c43e7	Padam “{0}”? To-do dan senarai sub di dalamnya akan dipindahkan satu paras ke atas, bukan dipadam.
+删除_0_其中的笔记与子归类会移动到上一级_327496c4d8	Padam “{0}”? Nota dan subkategori di dalamnya akan dipindahkan satu paras ke atas, bukan dipadam.
+删除_0_历史事件仍保留_d3e46884f0	Padam “{0}”? Peristiwa sejarah akan kekal disimpan.
+删除_0_及其全部集合_不可恢复_27bf2aa4e3	Padam {0} dan semua koleksinya? Tindakan ini tidak boleh dibuat asal!
+删除_0_及其后续统计_已归档的按日数据仍保_79a549e6e8	Padam “{0}” dan statistik selepasnya? Data harian yang diarkibkan akan kekal disimpan.
+删除_0_引用它的规则将不再向该渠道推送_2a68290638	Padam “{0}”? Peraturan yang merujuknya tidak lagi menghantar ke saluran ini.
+删除_0_该角色拥有的对象可能变为无主_81db941aef	Padam {0} ? Objek milik peranan ini mungkin menjadi tiada tuan.
+删除_3755f56f2f	Padam
+删除_c_name_引用它的规则将不再向_a15854651b	Padam “${c.name}”? Peraturan yang merujuknya tidak lagi menghantar ke saluran ini.
+删除_e_name_历史事件仍保留_7c4f97a765	Padam “${e.name}”? Peristiwa sejarah akan kekal disimpan.
+删除_folder_name_其中的待办_8acd8d3681	Padam “${folder.name}”? To-do dan senarai sub di dalamnya akan dipindahkan satu paras ke atas, bukan dipadam.
+删除_folder_name_其中的笔记_02f00181b7	Padam “${folder.name}”? Nota dan subkategori di dalamnya akan dipindahkan satu paras ke atas, bukan dipadam.
+删除_h_label_的_ssh_凭据_采_714dcba255	Padam kelayakan SSH bagi “{0}”? Pengumpulan akan berhenti sehingga dikonfigurasi semula.
+删除_id_0_5757172d9f	Padam _id = {0} ?
+删除_id_id_9f0c4ee411	Padam _id = $id ?
+删除_it_name_不可恢复_2e58b9d314	Padam ${it.name}? Tindakan ini tidak boleh dibuat asal.
+删除_item_name_不可恢复_196f667e1b	Padam ${item.name}? Tindakan ini tidak boleh dibuat asal.
+删除_job_file_0df6f1b1c0	Padam ${job.file}?
+删除_k_不可恢复_7f04e8d988	Padam $k ? Tindakan ini tidak boleh dibuat asal!
+删除_n_447134e66a	Padam $n ?
+删除_n_及其全部集合_不可恢复_75c0387e71	Padam $n dan semua koleksinya? Tindakan ini tidak boleh dibuat asal!
+删除_name_该角色拥有的对象可能变为无主_444ea2ccd8	Padam $name ? Objek milik peranan ini mungkin menjadi tiada tuan.
+删除_r_name_历史事件仍保留_d216275bef	Padam “${r.name}”? Peristiwa sejarah akan kekal disimpan.
+删除_s_name_62446c983c	Padam “${s.name}”?
+删除_tgname_trim_on_61b891ec54	Padam ${tgName.trim()} on ${tgTable.trim()} ?
+删除_ufw_规则_n_969e18703f	Padam peraturan UFW #$n?
+删除_var_cache_apt_archiv_4cd0531496	Padam pakej yang dimuat turun dalam /var/cache/apt/archives
+删除_x_name_及其后续统计_已归档的_f9923c3d24	Padam “${x.name}” dan statistik selepasnya? Data harian yang diarkibkan akan kekal disimpan.
+删除主机_643f7d4bb9	Padam hos
+删除事项_0_fd51d58bcb	Padam item “{0}”?
+删除事项_baf69ed21f	Padam item
+删除事项_t_title_86546066a3	Padam item “${t.title}”?
+删除全部_0_条已完成事项_edea779a77	Padam semua {0} item yang selesai?
+删除全部_n_条已完成事项_c6c82b6be8	Padam semua $n item yang selesai?
+删除公钥_b83efa4dbe	Padam kunci awam
+删除凭据_35bc7d6ff1	Padam kelayakan
+删除列_16f1347814	Padam lajur
+删除到回收站_f418fcf1e6	Pindah ke tong sampah
+删除后持有该密钥的客户端将无法登录_1d472813e0	Selepas dipadam, klien yang memegang kunci ini tidak akan dapat log masuk lagi.
+删除后无法恢复_确认删除该密钥_68e3c91b1d	Tindakan ini tidak boleh dibuat asal. Padam kunci ini?
+删除告警规则_fb9b26e21f	Padam peraturan amaran
+删除备份_749438d2de	Padam sandaran
+删除备份文件_df6543f316	Padam fail sandaran
+删除失败_72250c5922	Pemadaman gagal
+删除子任务_165f2995e1	Padam sub tugas
+删除定时任务_cbbfd7d59d	Padam tugas berjadual
+删除容器_c1cbe14e79	Padam kontena
+删除密钥_8017614a47	Padam kunci
+删除已下载的_deb_安装包_释放_0_不_dc8e1f42c6	Padam pakej .deb yang dimuat turun untuk membebaskan {0}. Perisian yang dipasang tidak terjejas.
+删除归类_f282b52e6b	Padam kategori
+删除拨测任务_2193297dfe	Padam tugas sonding
+删除数据库_f0f7b49980	Padam pangkalan data
+删除文档_e7adbd575b	Padam dokumen
+删除时间_8d55c8d894	Masa dipadam
+删除模式_0_及其全部对象_cascade_6336954e53	Padam skema {0} dan semua objeknya (CASCADE)?
+删除模式_77bed2385b	Padam skema

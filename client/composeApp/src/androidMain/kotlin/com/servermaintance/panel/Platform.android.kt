@@ -1,4 +1,5 @@
 package com.servermaintance.panel
+import com.servermaintance.panel.i18n.L
 
 import android.app.Application
 import android.content.Context
@@ -54,7 +55,7 @@ private class AndroidClip : Clip {
     override fun copy(text: String) {
         val ctx = context() ?: return
         val cm = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return
-        cm.setPrimaryClip(ClipData.newPlainText("Cloud Monitor", text))
+        cm.setPrimaryClip(ClipData.newPlainText(L["cloud_monitor_5e4d4fbbe5"], text))
     }
 }
 

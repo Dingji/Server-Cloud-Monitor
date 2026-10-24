@@ -11,6 +11,9 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.servermaintance.panel.AppInfo
+import com.servermaintance.panel.i18n.LocaleState
+import com.servermaintance.panel.i18n.StringRepository
+import com.servermaintance.panel.i18n.tr
 import com.servermaintance.panel.window.DesktopAppFrame
 import com.servermaintance.panel.window.WindowsBackgroundAlerts
 import com.servermaintance.panel.window.WindowsCloseAction
@@ -24,6 +27,8 @@ import com.servermaintance.panel.window.performTrayClose
 import java.awt.Dimension
 
 fun main() = application {
+    LocaleState.load()
+    StringRepository.preload()
     val windowState = rememberWindowState(width = 1360.dp, height = 900.dp)
     var showCloseChoice by remember { mutableStateOf(false) }
     var hiddenInTray by remember { mutableStateOf(false) }
@@ -31,7 +36,7 @@ fun main() = application {
 
     Window(
         onCloseRequest = { onCloseRequest.value() },
-        title = "${AppInfo.NAME} ${AppInfo.VERSION_LABEL} · ${AppInfo.DESCRIPTION}",
+        title = "${AppInfo.NAME} ${AppInfo.VERSION_LABEL} · ${tr("app.description")}",
         state = windowState,
         undecorated = true,
         transparent = !isWindowsDesktop,

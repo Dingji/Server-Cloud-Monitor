@@ -1,0 +1,120 @@
+仅本地_5c28a4b5d1	Local only
+仅结构_15c49958e4	Structure only
+仅结构_8cdf512d85	(Structure only)
+仅结构_不含数据_86341bfbf0	Structure only (no data)
+仅运行_affb726f94	Running only
+仅面板铃铛_3ecf2a6ea9	Panel bell only
+今天_17e83cc25e	Today
+今天_hm_b5123a00e4	Today $hm
+今天到期_fb2cb94029	Due today
+今日_0_会话_1_客户端_2_dfa0d41ced	Today {0} · Sessions {1} · Clients {2}
+今日_0_新增_1_e17159d28e	Today {0} · New {1}
+今日_0_请求_f79a1b4d82	{0} requests today
+今日_24_小时分布_d5b7360f18	Today's 24-hour distribution
+今日_574cd4fb79	Today
+今日_token_d0b5adbe07	Today's Token
+今日出站_ae22fbbb49	Today's outbound
+今日成功率_70d58b9151	Today's success rate
+今日请求_0_8e7833564f	Requests today {0}
+今日请求_731c00a176	Requests today
+今日邮件发送成功_060f80e076	Emails sent successfully today
+今日错误_97f268b84a	Errors today
+从_0_切换到_94f8b2509a	Switched from {0} to:\n\n
+从未发信_d605d91365	Never sent
+从镜像站拉取最新软件包列表_安装新包前建议先刷新_18f22cecb1	Fetches the latest package list from the mirror; refreshing before installing new packages is recommended.
+代码_21cdbf098d	 〔Code〕 
+代码_33246dda76	Code
+以_0_执行_结果支持多语句_1_052948bd3b	Run as {0} · Results support multiple statements · {1}
+以_dbmeta_label_st_engi_c4aac0c4ce	Run as ${DbMeta.label(st.engineId)} · Results support multiple statements · $dialect
+以下已安装包依赖它_卸载可能连带移除或导致异常_f26237adcd	The following installed packages depend on it; removing it may also remove them or cause issues:\n
+以后_ac5d03ece3	Later
+仪表盘_2c0ab88554	Dashboard
+任何拿到链接的人_无需登录_可查看_3f77643748	Anyone with the link (no login required) can view it
+任务_3172b317f9	Tasks
+任务名_c8d6eeaa4c	Task name
+任务名称_2e30469899	Task name
+任务启动失败_服务端未返回任务_id_500799f8a2	Task failed to start: server did not return a task id
+任务执行失败_97312db4c3	Task execution failed
+任务文件_8f4e93dc3d	Task file
+任务状态已丢失_服务端可能重启过_请重新发起该_3a4e99bf96	Task state lost (the server may have restarted); please retry this action
+休眠_0_c11a981edd	Suspend {0}
+优先级_7cabe771eb	Priority
+优秀_3e61f36792	Excellent
+会自动执行配置校验_d447aa930e	(configuration validation runs automatically)
+会话_1_497c4ea2d5	Session 1
+会话_836ffe0e10	Session
+会话_titleseq_33244bea87	Session $titleSeq
+会话上下文明细_内存视图_22c78a29f0	Session context details (in-memory view)
+会话上下文构成_ce6fae8e45	Session context composition
+会话内存视图_fcd9415f11	Session memory view
+会话分布_按请求数_b85c7c435b	Session distribution (by request count)
+会话已关闭_095a652630	Session closed
+会话已过期_请重新登录_32f89bb43c	Session expired, please log in again
+会话批量清理_55815972d3	Bulk session cleanup
+会话排行_按上下文字节_0_1_6f0f0e51a3	Session ranking (by context bytes)  {0} · {1} sessions / {2} turns · total {3}
+会话排行_按上下文字节_e47849da63	Session ranking (by context bytes)
+会话数_4d72abd2e9	Sessions
+会话数_今日_9cd79de908	Sessions (today)
+估算成本_f05235023c	Estimated cost
+位置_88c34452cc	Location
+低_b9ee259b7f	Low
+低于告警线的证书任务_695579ce30	Certificate tasks below the alert threshold
+作用范围_95a5e61424	Scope
+使用_ssl_465_端口勾选_316a136e99	Use SSL (check for port 465)
+使用率_8ca02f90d1	Usage
+例如_工作_项目资料_190eafea68	e.g., Work, project files
+供应商状态_ed8f7c5676	Provider status
+依赖_0_推荐依赖_1_反向依赖_2507ad6a45	Dependencies {0} · Recommended {1} · Reverse {2}
+依赖_2ebf56c207	\n\n--- Dependencies ---\n
+依赖_depn_推荐依赖_recn_684b03c97f	Dependencies $depN · Recommended $recN · Reverse $revN
+保存_fadf24dbc5	Save
+保存_smtp_设置_31e1de2129	Save SMTP settings
+保存中_6644f06197	Saving…
+保存地址_b4507bac53	Save address
+保存失败_40525a7328	Save failed
+保存失败_b12163000c	Save failed:
+保存失败或被取消_7e2bbcfe18	Save failed or cancelled
+保存并重连_a440c33bd4	Save and reconnect
+保存数据库连接_ccfc22f810	Save database connection
+保存文件_184adfdabf	Save file
+保存被取消_82f61f25b1	Save cancelled
+保存通知规则_81afc138cf	Save notification rules
+保存阈值_1a6c3945df	Save threshold
+保留_0_份_6f62f9cd31	Keep {0} copies
+保留_30_份_relay_backup_tim_b625d85371	Keep 30 copies; relay-backup.timer runs daily at 03:30.
+保留最近_n_个_855e3ce9c7	Keep the latest N
+修复失败_3d6dfbe1ad	Repair failed
+修复执行记录_2669e0f726	Repair execution log
+修复未成功_d8d320b456	Repair unsuccessful
+修改_c9c77517fe	Edit
+修改会写入_etc_ssh_sshd_conf_4cb39a7a47	Changes are written to /etc/ssh/sshd_config.d/99-cloud-monitor.conf; sshd -t is run first to validate and the change is aborted automatically on failure. Set up keys before disabling password authentication.
+修改列_类型_默认值_可空_8bebfff9e5	Edit column (type/default/nullable)
+修改失败_9abb465039	Edit failed
+修改密码_0_1a306d5990	Change password - {0}
+修改密码_0ae20ac3af	Change password
+修改密码_n_00b25b96ac	Change password - $n
+修改密码_name_d9c700cba6	Change password - $name
+修改所有者_3876d6ab1f	Change owner
+修改时间_af71bc5cc4	Modified time
+修改登录密码_321d9d86f6	Change login password
+修改端口_路径需编辑_config_json_后_983be325ee	Changing the port/path requires editing config.json and restarting
+修改限流阈值_编辑_00_limits_conf_1152af13c3	To change rate-limit thresholds: edit 00-limits.conf, then run nginx -t && systemctl reload nginx.
+修改面板密码_17fc433ccc	Change panel password
+倒计时_80176c18f3	Countdown
+候选_0461e4db19	Candidates
+值_321b955840	Value
+值越小越倾向使用物理内存_数据库服务器常用_10_d669b666d0	Lower values favor physical memory more; database servers commonly use 10.
+偏快_8900d928c6	Slightly fast
+停止_0_e0be2c8b16	Stop {0}
+停止_a17f70a8d3	Stop
+停止_fail2ban_c4775a3abd	Stop Fail2ban
+停止_label_8f0e06c363	Stop $label
+停止_容器_c97111b01f	Stop container
+停止分享_55c70caa51	Stop sharing
+停止后将失去_ssh_防爆破保护_cf3e594655	Stopping will remove SSH brute-force protection.
+停止引擎_f83e27f9a5	Stop engine
+停止自愈_8e53c62499	Stop auto-heal
+停止跟随_72312418e3	Stop following
+停用_0_其会话将立即失效_bd25e844b8	Deactivate {0}? Its sessions will become invalid immediately.
+停用_d989e55188	Deactivate
+停用用户_3f2f67ac37	Deactivate user

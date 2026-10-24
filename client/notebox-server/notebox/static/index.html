@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>NoteBox · 云端笔记与待办</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke-linejoin='round' stroke='%233730a3' stroke-width='.8'%3E%3Cg%3E%3Cpath d='M12 3.2 20.7 7.7 12 12.2 3.3 7.7Z' fill='%234f46e5'/%3E%3Cpath d='M3.3 7.7v8.4L12 20.6v-8.4' fill='%23c7d2fe'/%3E%3Cpath d='M20.7 7.7v8.4L12 20.6v-8.4' fill='%23a5b4fc'/%3E%3CanimateTransform attributeName='transform' type='translate' values='0 0; 0 -1.1; 0 0' dur='2.6s' repeatCount='indefinite'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- ============ login / register ============ -->
+<div id="login-screen" class="login-screen">
+  <form id="login-form" class="login-card">
+    <div class="logo-big"><span class="ico-slot" data-ico="box"></span><span class="logo-word">NoteBox</span></div>
+    <p class="sub">个人云端笔记 · 待办清单</p>
+    <div id="auth-banner" class="auth-banner hidden"></div>
+    <label>邮箱 / 账号<span class="input-icon"><span class="ico-slot" data-ico="user"></span><input id="login-user" autocomplete="username" required autofocus placeholder="邮箱或账号"></span></label>
+    <label>密码<span class="input-icon"><span class="ico-slot" data-ico="lock"></span><input id="login-pass" type="password" autocomplete="current-password" required placeholder="请输入密码"></span></label>
+    <button class="btn primary block" type="submit">登录</button>
+    <p id="login-error" class="error hidden"></p>
+    <button type="button" id="btn-resend" class="btn small hidden">重新发送验证邮件</button>
+    <p class="auth-switch">还没有账号？<a href="#" id="link-to-register">邮箱注册</a></p>
+  </form>
+
+  <form id="register-form" class="login-card hidden">
+    <div class="logo-big"><span class="ico-slot" data-ico="box"></span><span class="logo-word">NoteBox</span></div>
+    <p class="sub">邮箱注册 · 验证后启用</p>
+    <label>邮箱<span class="input-icon"><span class="ico-slot" data-ico="user"></span><input id="reg-email" type="email" autocomplete="email" required placeholder="you@example.com"></span></label>
+    <label>密码（至少 8 位）<span class="input-icon"><span class="ico-slot" data-ico="lock"></span><input id="reg-pass" type="password" autocomplete="new-password" required minlength="8" placeholder="至少 8 位"></span></label>
+    <label>确认密码<span class="input-icon"><span class="ico-slot" data-ico="lock"></span><input id="reg-pass2" type="password" autocomplete="new-password" required minlength="8" placeholder="再输入一次"></span></label>
+    <button class="btn primary block" type="submit">注册</button>
+    <p id="reg-error" class="error hidden"></p>
+    <p class="auth-switch">已有账号？<a href="#" id="link-to-login">去登录</a></p>
+  </form>
+
+  <div id="register-done" class="login-card hidden">
+    <div class="done-icon"><span class="ico-slot" data-ico="checkCircle"></span></div>
+    <h3 class="done-title">注册成功</h3>
+    <p id="done-msg" class="sub"></p>
+    <button type="button" id="btn-resend2" class="btn">重新发送验证邮件</button>
+    <button type="button" id="btn-back-login" class="btn primary block">返回登录</button>
+  </div>
+</div>
+
+<!-- ============ app ============ -->
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand"><span class="nav-ico brand-ico" data-ico="box"></span><span class="brand-text">NoteBox</span></div>
+    <nav id="nav">
+      <button class="nav-item active" data-view="notes">
+        <span class="nav-ico" data-ico="note"></span>
+        <span class="nav-label">笔记</span>
+        <span class="nav-badge" id="badge-notes"></span>
+      </button>
+      <button class="nav-item" data-view="todos">
+        <span class="nav-ico" data-ico="checkSquare"></span>
+        <span class="nav-label">待办</span>
+        <span class="nav-badge danger hidden" id="badge-overdue"></span>
+      </button>
+      <button class="nav-item" data-view="transfer">
+        <span class="nav-ico" data-ico="import"></span>
+        <span class="nav-label">导入 / 导出</span>
+      </button>
+      <button class="nav-item" data-view="mail" data-role="admin">
+        <span class="nav-ico" data-ico="mail"></span>
+        <span class="nav-label">邮件通知</span>
+        <span class="dot" id="mail-dot" title="SMTP 未配置"></span>
+      </button>
+      <button class="nav-item" data-view="users" data-role="admin">
+        <span class="nav-ico" data-ico="user"></span>
+        <span class="nav-label">用户管理</span>
+        <span class="nav-badge hidden" id="badge-users"></span>
+      </button>
+      <button class="nav-item" data-view="settings">
+        <span class="nav-ico" data-ico="sliders"></span>
+        <span class="nav-label">设置</span>
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <div id="who" class="who">admin</div>
+      <button id="btn-logout" class="btn ghost small">退出登录</button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- ======== NOTES ======== -->
+    <section id="view-notes" class="view">
+      <header class="view-head">
+        <h1>笔记</h1>
+        <div class="head-actions">
+          <span class="input-icon"><span class="ico-slot" data-ico="search"></span><input id="note-search" class="input" placeholder="搜索笔记…"></span>
+          <select id="note-tag" class="input select"><option value="">全部标签</option></select>
+          <button id="btn-new-note" class="btn primary"><span class="ico-slot" data-ico="plus"></span>新建笔记</button>
+        </div>
+      </header>
+      <div class="notes-pane">
+        <div class="note-list" id="note-list"></div>
+        <div class="note-editor" id="note-editor">
+          <div class="empty" id="note-empty"><span class="ico-slot empty-arrow" data-ico="arrowLeft"></span>选择一条笔记，或点「新建笔记」开始</div>
+          <div id="note-form" class="hidden">
+            <div class="editor-top">
+              <input id="note-title" class="input title-input" placeholder="标题">
+              <div class="editor-actions">
+                <span id="share-badge" class="pill share-badge hidden"></span>
+                <button id="note-share" class="btn ghost small" title="共享与公开链接"><span class="ico-slot" data-ico="share"></span></button>
+                <button id="note-pin" class="btn ghost small" title="置顶"><span class="ico-slot" data-ico="pin"></span></button>
+                <button id="note-mode" class="btn ghost small">预览</button>
+                <button id="note-delete" class="btn ghost small danger" title="删除"><span class="ico-slot" data-ico="trash"></span></button>
+                <span id="note-saved" class="saved-ind">已保存</span>
+              </div>
+            </div>
+            <div id="share-panel" class="share-panel hidden">
+              <div class="share-sec">公开链接 <span class="share-hint">任何拿到链接的人（无需登录）可查看</span></div>
+              <div id="public-row" class="share-bar">
+                <span class="ico-slot" data-ico="link"></span>
+                <a id="share-link" class="share-link" target="_blank" rel="noopener"></a>
+                <button id="share-copy" class="btn small" type="button">复制链接</button>
+                <button id="share-off" class="btn small ghost danger" type="button">停止分享</button>
+              </div>
+              <button id="public-on" class="btn small hidden" type="button">开启公开链接</button>
+              <div class="share-sec">共享给用户 <span class="share-hint">只读＝仅查看 · 可编辑＝可修改 · 管理＝可修改删除并管理共享</span></div>
+              <div class="share-user-form">
+                <input id="share-email" class="input grow" placeholder="对方邮箱（需已注册并验证）" type="email">
+                <select id="share-perm" class="input select">
+                  <option value="read">只读</option>
+                  <option value="edit">可编辑</option>
+                  <option value="admin">管理</option>
+                </select>
+                <button id="share-add" class="btn small primary" type="button">共享</button>
+              </div>
+              <div id="share-user-list" class="share-user-list"></div>
+            </div>
+            <div class="editor-toolbar" id="editor-toolbar">
+              <button type="button" class="tb" data-cmd="h1" title="一级标题">H1</button>
+              <button type="button" class="tb" data-cmd="h2" title="二级标题">H2</button>
+              <span class="tb-sep"></span>
+              <button type="button" class="tb" data-cmd="bold" title="加粗"><b>B</b></button>
+              <button type="button" class="tb" data-cmd="italic" title="斜体"><i>I</i></button>
+              <button type="button" class="tb" data-cmd="strike" title="删除线"><s>S</s></button>
+              <button type="button" class="tb" data-cmd="inline-code" title="行内代码">&lt;/&gt;</button>
+              <span class="tb-sep"></span>
+              <button type="button" class="tb" data-cmd="ul" title="无序列表">• 列表</button>
+              <button type="button" class="tb" data-cmd="ol" title="有序列表">1. 列表</button>
+              <button type="button" class="tb" data-cmd="task" title="任务清单">任务</button>
+              <button type="button" class="tb" data-cmd="quote" title="引用">&gt; 引用</button>
+              <button type="button" class="tb" data-cmd="hr" title="分割线">— 分割线</button>
+              <button type="button" class="tb" data-cmd="table" title="表格">表格</button>
+              <span class="tb-sep"></span>
+              <button type="button" class="tb tb-ico" data-cmd="codeblock" title="插入代码块（自动识别语言并高亮）"><span class="ico-slot" data-ico="code"></span>代码</button>
+              <button type="button" class="tb tb-ico" data-cmd="link" title="插入链接"><span class="ico-slot" data-ico="link"></span></button>
+              <button type="button" class="tb tb-ico" data-cmd="image" title="插入图片（支持多选，也可直接粘贴/拖拽）"><span class="ico-slot" data-ico="image"></span>图片</button>
+              <button type="button" class="tb tb-ico" data-cmd="video" title="插入视频/音频（也可直接粘贴本地文件）"><span class="ico-slot" data-ico="video"></span>视频</button>
+            </div>
+            <input type="file" id="asset-image" accept="image/*" multiple hidden>
+            <input type="file" id="asset-video" accept="video/*,audio/*" hidden>
+            <div class="tag-row">
+              <span class="tag-label">标签</span>
+              <input id="note-tags" class="input" placeholder="逗号分隔，如：工作,灵感">
+            </div>
+            <textarea id="note-content" class="note-textarea" placeholder="开始写…支持 Markdown（# 标题、**加粗**、- 列表、``` 代码块）"></textarea>
+            <div id="note-preview" class="markdown hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== TODOS ======== -->
+    <section id="view-todos" class="view hidden">
+      <header class="view-head">
+        <h1>待办清单</h1>
+        <div class="head-actions">
+          <span class="input-icon"><span class="ico-slot" data-ico="search"></span><input id="todo-search" class="input" placeholder="搜索事项…"></span>
+        </div>
+      </header>
+      <form id="quick-add" class="quick-add">
+        <input id="qa-title" class="input grow" placeholder="添加新事项，回车确认…" required>
+        <input id="qa-date" class="input" type="date" title="截止日期">
+        <input id="qa-time" class="input" type="time" title="截止时间（可选）">
+        <select id="qa-priority" class="input select" title="优先级">
+          <option value="1">优先级·低</option>
+          <option value="2" selected>优先级·中</option>
+          <option value="3">优先级·高</option>
+        </select>
+        <label class="check"><input type="checkbox" id="qa-remind" checked><span class="ico-slot" data-ico="mail"></span>到期提醒</label>
+        <button class="btn primary" type="submit">添加</button>
+      </form>
+      <div class="tabs" id="todo-tabs">
+        <span class="tab-slider" id="tab-slider"></span>
+        <button class="tab active" data-filter="today">今天</button>
+        <button class="tab" data-filter="inbox">全部未完成</button>
+        <button class="tab" data-filter="upcoming">即将</button>
+        <button class="tab" data-filter="done">已完成</button>
+        <button class="tab" data-filter="all">全部</button>
+      </div>
+      <div id="todo-list" class="todo-list"></div>
+      <div class="todo-foot">
+        <span id="todo-counts"></span>
+        <button id="btn-clear-done" class="btn ghost small">清理已完成</button>
+      </div>
+    </section>
+
+    <!-- ======== IMPORT / EXPORT ======== -->
+    <section id="view-transfer" class="view hidden">
+      <header class="view-head"><h1>导入 / 导出</h1></header>
+      <div class="cards">
+        <div class="card">
+          <h3><span class="ico-slot" data-ico="import"></span>导入笔记</h3>
+          <p class="muted">支持 Markdown / 纯文本 / <b>HTML</b>（.md .txt .html .htm，HTML 自动转成可编辑的 Markdown），可一次选择多个文件。含多个一级标题（# 标题 或 多个 &lt;h1&gt;）时自动拆分成多条笔记。</p>
+          <label class="check"><input type="checkbox" id="imp-notes-split" checked> 按一级标题拆分</label>
+          <input type="file" id="imp-notes" multiple accept=".md,.markdown,.txt,.text,.html,.htm">
+          <div id="imp-notes-status" class="status"></div>
+        </div>
+        <div class="card">
+          <h3><span class="ico-slot" data-ico="import"></span>导入待办</h3>
+          <p class="muted">支持 CSV（有/无表头均可，列名支持 标题/截止/优先级/备注/状态）、纯文本清单（- [x] 语法）、JSON 数组。</p>
+          <input type="file" id="imp-todos" accept=".csv,.txt,.json,.md">
+          <div id="imp-todos-status" class="status"></div>
+        </div>
+        <div class="card">
+          <h3><span class="ico-slot" data-ico="import"></span>恢复完整备份</h3>
+          <p class="muted">导入 NoteBox 导出的 .json 备份文件（含全部笔记和待办）。</p>
+          <label class="radio"><input type="radio" name="bk-mode" value="merge" checked> 合并（保留现有数据）</label>
+          <label class="radio"><input type="radio" name="bk-mode" value="replace"> 覆盖（清空现有笔记和待办）</label>
+          <input type="file" id="imp-backup" accept=".json">
+          <div id="imp-backup-status" class="status"></div>
+        </div>
+        <div class="card">
+          <h3><span class="ico-slot" data-ico="export"></span>导出</h3>
+          <p class="muted">随时把数据下载到本地备份。</p>
+          <div class="btn-row">
+            <a class="btn" href="/api/export"><span class="ico-slot" data-ico="fileDown"></span>完整备份 JSON</a>
+            <a class="btn" href="/api/export/markdown"><span class="ico-slot" data-ico="fileDown"></span>笔记 Markdown</a>
+            <a class="btn" href="/api/export/csv"><span class="ico-slot" data-ico="fileDown"></span>待办 CSV</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== MAIL ======== -->
+    <section id="view-mail" class="view hidden">
+      <header class="view-head">
+        <h1>邮件通知</h1>
+        <div class="head-actions"><span id="smtp-state" class="pill"></span></div>
+      </header>
+      <div class="cards two">
+        <div class="card">
+          <h3><span class="ico-slot" data-ico="mail"></span>SMTP 账号（163 邮箱）</h3>
+          <p class="muted">163 邮箱：设置 <span class="ico-slot ico-inline" data-ico="arrowRight"></span> POP3/SMTP <span class="ico-slot ico-inline" data-ico="arrowRight"></span> 开启并生成「授权码」，填入下方（不是登录密码）。</p>
+          <form id="smtp-form" class="form-grid">
+            <label>SMTP 主机<input id="set-host" class="input" placeholder="smtp.163.com"></label>
+            <label>端口<input id="set-port" class="input" placeholder="465"></label>
+            <label class="check span2"><input type="checkbox" id="set-ssl" checked> 使用 SSL（465 端口勾选）</label>
+            <label>邮箱账号<input id="set-user" class="input" placeholder="you@163.com" autocomplete="off"></label>
+            <label>授权码<input id="set-pass" class="input" type="password" placeholder="SMTP 授权码" autocomplete="new-password"></label>
+            <label>发件人地址<input id="set-from" class="input" placeholder="留空则用邮箱账号"></label>
+            <label>收件人<input id="set-to" class="input" placeholder="留空发给自己；多个用逗号分隔"></label>
+            <div class="btn-row span2">
+              <button class="btn primary" type="submit">保存 SMTP 设置</button>
+              <button class="btn" type="button" id="btn-test-mail">发送测试邮件</button>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <h3><span class="ico-slot" data-ico="sliders"></span>通知规则</h3>
+          <form id="notify-form" class="form-grid">
+            <label class="check"><input type="checkbox" id="set-notify"> 启用邮件通知</label>
+            <label class="check"><input type="checkbox" id="set-digest"> 启用每日摘要</label>
+            <label class="span2 rule-note">提醒规则：截止前 <b>1 天</b>、截止前 <b>10 分钟</b>各发送一封（全天事项为前一天 09:00 和当天 08:50），每封最多重试 3 次。</label>
+            <label>摘要发送时间<input id="set-digest-time" class="input" type="time"></label>
+            <label class="span2">站点地址（邮件里的跳转链接）<input id="set-baseurl" class="input" placeholder="http://8.153.153.176:13345"></label>
+            <label class="span2">时区<select id="set-tz" class="input select">
+              <option value="Asia/Shanghai">Asia/Shanghai（北京时间）</option>
+              <option value="Asia/Hong_Kong">Asia/Hong_Kong</option>
+              <option value="Asia/Tokyo">Asia/Tokyo</option>
+              <option value="UTC">UTC</option>
+            </select></label>
+            <div class="btn-row span2"><button class="btn primary" type="submit">保存通知规则</button></div>
+          </form>
+          <p class="muted">到期提醒：截止前 N 分钟发送；每日摘要：在设定时间汇总「已过期 + 今天到期」的事项。每个事项的提醒开关在事项编辑弹窗里。</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="ico-slot" data-ico="mail"></span>发送记录</h3>
+        <table class="table" id="mail-log">
+          <thead><tr><th>时间</th><th>类型</th><th>主题</th><th>状态</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ======== SETTINGS ======== -->
+    <section id="view-settings" class="view hidden">
+      <header class="view-head"><h1>设置</h1></header>
+      <div class="cards two">
+        <div class="card">
+          <h3><span class="ico-slot" data-ico="sliders"></span>修改登录密码</h3>
+          <form id="pw-form" class="form-grid">
+            <label class="span2">原密码<input id="pw-old" class="input" type="password" required autocomplete="current-password"></label>
+            <label class="span2">新密码（至少 8 位）<input id="pw-new" class="input" type="password" required minlength="8" autocomplete="new-password"></label>
+            <div class="btn-row span2"><button class="btn primary" type="submit">修改密码</button></div>
+          </form>
+        </div>
+        <div class="card" data-role="admin">
+          <h3><span class="ico-slot" data-ico="checkSquare"></span>服务器信息</h3>
+          <table class="kv" id="server-info"></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== USERS (admin) ======== -->
+    <section id="view-users" class="view hidden">
+      <header class="view-head">
+        <h1>用户管理</h1>
+        <div class="head-actions">
+          <button id="btn-new-user" class="btn primary"><span class="ico-slot" data-ico="plus"></span>新建用户</button>
+        </div>
+      </header>
+      <div class="card table-card">
+        <table class="table" id="users-table">
+          <thead><tr>
+            <th>邮箱 / 账号</th><th>角色</th><th>状态</th><th>笔记 · 待办</th><th>注册时间</th><th>最后登录</th><th>操作</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ user admin modal ============ -->
+<div id="user-modal" class="modal-back hidden">
+  <div class="modal">
+    <h3 id="um-title">新建用户</h3>
+    <div class="form-grid">
+      <label class="span2">邮箱 / 账号<input id="um-email" class="input" type="email" placeholder="you@example.com"></label>
+      <label class="span2">密码（至少 8 位；编辑时留空表示不修改）<input id="um-pw" class="input" type="password" placeholder="留空则不修改" autocomplete="new-password"></label>
+      <label>角色<select id="um-role" class="input select">
+        <option value="user">普通用户</option>
+        <option value="admin">管理员</option>
+      </select></label>
+      <label class="check"><input type="checkbox" id="um-active" checked> 已启用</label>
+    </div>
+    <p id="um-error" class="error hidden"></p>
+    <div class="btn-row right">
+      <button class="btn ghost" id="um-cancel">取消</button>
+      <button class="btn primary" id="um-save">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ todo edit modal ============ -->
+<div id="modal" class="modal-back hidden">
+  <div class="modal">
+    <h3>编辑事项</h3>
+    <div class="form-grid">
+      <label class="span2">标题<input id="ed-title" class="input"></label>
+      <label class="span2">备注<textarea id="ed-detail" class="input area" rows="3" placeholder="可选…"></textarea></label>
+      <label>截止日期<input id="ed-date" class="input" type="date"></label>
+      <label>截止时间<input id="ed-time" class="input" type="time"></label>
+      <label>优先级<select id="ed-priority" class="input select">
+        <option value="0">无</option><option value="1">低</option><option value="2">中</option><option value="3">高</option>
+      </select></label>
+      <label class="check"><input type="checkbox" id="ed-remind"><span class="ico-slot" data-ico="mail"></span>到期邮件提醒</label>
+      <label class="check span2"><input type="checkbox" id="ed-done"><span class="ico-slot" data-ico="check"></span>已完成</label>
+    </div>
+    <div class="btn-row right">
+      <button class="btn ghost" id="ed-cancel">取消</button>
+      <button class="btn danger" id="ed-delete">删除</button>
+      <button class="btn primary" id="ed-save">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="/static/icons.js"></script>
+<script src="/static/md.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

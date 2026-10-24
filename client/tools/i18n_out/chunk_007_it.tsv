@@ -1,0 +1,120 @@
+删除模式_n_及其全部对象_cascade_7be2ccf5c3	Eliminare lo schema $n e tutti i suoi oggetti (CASCADE)?
+删除清单_9ef1393048	Elimina il manifesto
+删除用户_0_其全部笔记_待办与共享将一并_2bdfec376d	Eliminare l'utente {0}? Anche tutte le sue note, attività e condivisioni saranno eliminate e non saranno recuperabili!
+删除用户_bcfca951a1	Elimina utente
+删除的笔记会先放到这里_可随时恢复_1e1ce2f496	Le note eliminate finiscono prima qui e possono essere ripristinate in qualsiasi momento
+删除看护项_a25ad06abe	Elimina voce di monitoraggio
+删除索引_0_603822ce94	Eliminare l'indice {0}?
+删除索引_b35a3521e8	Elimina indice
+删除索引_n_36f8faee06	Eliminare l'indice $n?
+删除约束_79e25fc4b0	Elimina vincolo
+删除线_c85de9e58a	Barrato
+删除结果_1e53f0d130	Elimina risultato
+删除行_3a7d5b0104	Elimina riga
+删除表_b9fd2c7a44	Elimina tabella
+删除视图_3bcc039f64	Elimina vista
+删除角色_89dab40d48	Elimina ruolo
+删除触发器_74803e962b	Elimina trigger
+删除该行_定位_0_b6bfea70ab	Eliminare questa riga?\nPosizione: {0}
+删除该行_定位_loc_b3f2f5d90e	Eliminare questa riga?\nPosizione: $loc
+删除轮转日志_f8de13f44b	Elimina log di rotazione
+删除通知渠道_5fb682fc27	Elimina canale di notifica
+删除键_ea51f84dd1	Elimina chiave
+删除防火墙规则_f1c7ac57e4	Elimina regola del firewall
+删除集合_0_及其全部文档_3a1fd80488	Eliminare la collection {0} e tutti i suoi documenti?
+删除集合_e86f0eec01	Elimina collection
+删除集合_n_及其全部文档_3e6b9c73f5	Eliminare la collection $n e tutti i suoi documenti?
+删除静默窗口_ec702916cf	Elimina finestra di silenzio
+到期提醒_ce425cc527	Promemoria di scadenza
+到期提醒_截止前_n_分钟发送_每日摘要_在设定_0805f20d0d	Promemoria di scadenza: inviato N minuti prima della scadenza; riepilogo giornaliero: raggruppa gli elementi «scaduti + in scadenza oggi» all'ora impostata.
+到期时间_3144a998f0	Orario di scadenza
+到期邮件提醒_4e76e9fec7	Promemoria di scadenza via email
+制定方案_fabaee1920	Crea piano
+刷新_38108eaa1d	Aggiorna
+刷新中_ea0ab1492c	Aggiornamento…
+刷新全部配额_076a4d3565	Aggiorna tutte le quote
+刷新分析_6a65ab904e	Aggiorna le analisi
+刷新引擎信息_022b2c17cd	Aggiorna le info del motore
+刷新当前页面_ea66e5616b	Aggiorna la pagina corrente
+刷新状态_7cc7f07a2c	Aggiorna lo stato
+刷新配额_851859899a	Aggiorna la quota
+刷新间隔已更新为_0_0bc513729c	Intervallo di aggiornamento aggiornato a {0}
+刷新间隔已更新为_refreshlabel_e742c6c081	Intervallo di aggiornamento aggiornato a ${refreshLabel(v)}
+前往_23926d6146	Vai a
+剖析设置_3fa475fa54	Impostazioni di profiling
+剩余_0_共_1_a04477cc45	{0} rimanenti / {1} totali
+剩余_fmt_bytes_d_availkb_fd7a85ca9b	${Fmt.bytes(d.availKb * 1024)} liberi / ${Fmt.bytes(d.totalKb * 1024)} totali
+剩余天数_fb0ca9d4ed	Giorni rimanenti
+加密方式_4bf1dc061d	Metodo di crittografia
+加签密钥_sec_开头_63ebeb3c8d	Chiave di firma (inizia con SEC)
+加签密钥_可空_a075da941a	Chiave di firma (facoltativa)
+加粗_f670b2adc0	Grassetto
+加载中_300ee3dee4	Caricamento…
+加载中_ce56f617e4	Caricamento
+加载单元日志_faba070327	Carica i log delle unit
+加载失败_f6b7a41e56	Caricamento non riuscito
+加载日志源_e64e9c0145	Caricamento delle sorgenti di log…
+加载详情失败_02c28cd84c	Impossibile caricare i dettagli
+劣化_07f00d1b46	Degradato
+动作_d9d9827827	Azione
+动作历史_探测_拉起_恢复_放弃_ced77539db	Cronologia azioni (rilevamento / avvio / ripristino / abbandono)
+勾选后可批量操作_执行前照常预览变更_过程中显示_8b4692abd7	Spunta le caselle per le operazioni di gruppo: le modifiche come di consueto vengono anteprimate prima dell'esecuzione, con barra di avanzamento complessiva e log in tempo reale durante l'attività (max 500 pacchetti per esecuzione, suddivisi automaticamente)
+包名_03c2d07a24	Nome del pacchetto
+包含数据_1cf1ae1b58	Contiene dati
+区域_17fc93c9cd	Regione
+区间_2e8dd83da0	Intervallo
+升序_c0276ec9a7	Crescente
+升级_2e8e70958c	Aggiorna
+协议_b0c431675b	Protocollo
+单价表_etc_relay_pricing_j_2bb5e45a84	Listino prezzi: /etc/relay/pricing.json, supporta i caratteri jolly mimo-*; i modelli con -free sono addebitati a 0.
+单位_mb_du_只统计同一文件系统内的内容_fbcbac3988	Unità: MB; du conta solo i contenuti all'interno dello stesso file system
+单元_9abfa4fb70	Unità
+单次_6fe4ab9915	Singola esecuzione
+单次时长_分钟_0e95dd9d82	Durata per esecuzione (minuti)
+单次时间段_ee80d47d80	Fascia oraria singola
+单次超时_毫秒_6917a6a5b4	Timeout per esecuzione (millisecondi)
+单表备份_a2ec5e9278	Backup di una sola tabella
+单请求_token_e856ed3d96	Token per richiesta
+占用_0_50085c6df1	Usato {0}
+占用_7b81023b68	Usato
+占用_fmt_bytes_totalsize_c86f7a479b	Usato ${Fmt.bytes(totalSize)}
+占用分析_003851e93c	Analisi dell'utilizzo
+危险操作会弹出确认框_所有操作都会写入审计日志_762239eaff	Le operazioni pericolose mostrano una finestra di conferma. Tutte le operazioni vengono registrate nell'audit log.
+即将_f48bcfb627	A breve
+卸载_200cf1550d	Disinstalla
+卸载不再被任何软件包依赖的软件包_8ed32b0b41	Rimuovi i pacchetti non più richiesti da alcun altro pacchetto
+历史加载失败_26115dcd28	Impossibile caricare la cronologia
+历史记录_19e0e3f3df	Cronologia
+历史趋势_83a53b6a5f	Andamento storico
+压缩_4b8163f527	Comprimi
+压缩集合_3a8375459c	Comprimi la collection
+原位置_00e56f7a13	Posizione originale
+原因_1ff9c3d001	Motivo
+原因备注_0a726bdb00	Nota sul motivo
+原密码_2bd80322a5	Password attuale
+原配置备份_0_45dc9a773d	\n\nBackup della configurazione originale: {0}
+原配置备份_it_bc51af7b89	\n\nBackup della configurazione originale: $it
+去登录_6c01b0cfd0	Vai al login
+去重_sess_c93d23e294	Deduplica sess
+参数值_所有者_连接数_5fbebb4ba1	Valore del parametro / Proprietario / Connessioni
+参数名_如_work_mem_search_5337d4de4f	Nome del parametro (es. work_mem / search_path)
+参数已保存_5252465cd0	Parametro salvato
+发件人名_c1dac198b4	Nome del mittente
+发件人地址_e83d394caa	Indirizzo del mittente
+发件人显示名_可空_cf0818ed1b	Nome visualizzato del mittente (facoltativo)
+发件账号_c4c54b3c06	Account di invio
+发现不可用_d0375abbf5	Rilevato non disponibile
+发行版_6ef5fc415c	Distribuzione
+发送中_c1b894480d	Invio…
+发送失败_e767d34c78	Invio non riuscito
+发送测试邮件_1eace6fb59	Invia email di test
+发送记录_90ed819b22	Cronologia degli invii
+发送详情邮件_ad8277f7a5	Invia email con i dettagli
+取下一个值_0101cf2ed1	Ottieni il valore successivo
+取尾中_d2a2c10e52	Recupero della coda…
+取消_4d0b4688c7	Annulla
+取消共享_2b2e551005	Annulla la condivisione
+取消对该用户的共享_67e86f5c00	Annullare la condivisione con questo utente?
+取消选择_f02e943954	Deseleziona
+受保护_9505edfd06	Protetto
+受窗口内上限约束_b1435a79c4	Soggetto al limite per finestra

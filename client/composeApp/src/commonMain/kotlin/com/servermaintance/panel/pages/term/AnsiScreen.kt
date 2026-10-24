@@ -1,4 +1,5 @@
 package com.servermaintance.panel.pages.term
+import com.servermaintance.panel.i18n.L
 
 /**
  * Native ANSI/VT100 terminal emulator — Kotlin equivalent of the xterm.js used
@@ -440,15 +441,15 @@ class AnsiScreen(
             'Z' -> tabBackward(p(0, 1))
             'a' -> cursorCol = (cursorCol + p(0, 1)).coerceAtMost(cols - 1)
             'b' -> repeatLast(p(0, 1))
-            'c' -> onResponse(if (priv == '>') ESC + "[1;2c" else ESC + "[?62;4;6;9;15;22c")
+            'c' -> onResponse(if (priv == '>') ESC + L["1_2c_ac7418eddf"] else ESC + L["62_4_6_9_15_22c_db579f09e2"])
             'd' -> cursorRow = (p(0, 1) - 1).coerceIn(0, rows - 1)
             'e' -> cursorRow = (cursorRow + p(0, 1)).coerceIn(0, rows - 1)
             'h' -> setMode(p(0, 0), true, priv == '?')
             'l' -> setMode(p(0, 0), false, priv == '?')
             'm' -> applySgr()
             'n' -> when (p(0, 0)) {
-                5 -> onResponse(ESC + "[0n")
-                6 -> onResponse(ESC + "[" + (cursorRow + 1) + ";" + (cursorCol + 1) + "R")
+                5 -> onResponse(ESC + L["0n_143a8c6bad"])
+                6 -> onResponse(ESC + L["s_1e5c2f367f"] + (cursorRow + 1) + L["s_2d14ab97cc"] + (cursorCol + 1) + "R")
             }
             'p' -> if (csiInter.toString() == "!") fullReset()
             'r' -> {

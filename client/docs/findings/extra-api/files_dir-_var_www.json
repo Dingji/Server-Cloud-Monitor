@@ -1,0 +1,26 @@
+{
+ "dir": "/var/www/",
+ "entries": [
+  {
+   "mode": "drwxr-xr-x",
+   "name": "11 10:33 .",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "11 10:33 ..",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  },
+  {
+   "mode": "drwxr-xr-x",
+   "name": "11 10:33 html",
+   "isDir": true,
+   "isLink": false,
+   "target": null
+  }
+ ]
+}

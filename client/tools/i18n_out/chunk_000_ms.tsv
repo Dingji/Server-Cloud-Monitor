@@ -1,0 +1,120 @@
+0_6_每6小时_任务写入_e_369a8da904	0 */6 * * * Setiap 6 jam. Tugas ditulis ke /etc/cron.d/cm-<nama> dan dijalankan sebagai root.
+0_个文件_81d82139e8	 · {0} fail
+0_将进入回收站_保留_1_天_0a8a244509	«{0}» akan masuk tong sampah dan disimpan selama {1} hari.
+0_条展示_命中_1_条_0e114bc461	({0} dipaparkan / sepadan {1})
+0_表示立即_189b797c4f	0 bermaksud serta-merta
+10分钟_b82d31194e	10 minit
+14_4_表示约_2_天烧完_sre_常用告_681c4dc86d	≥14.4× bermaksud bajet akan habis dalam kira-kira 2 hari (ambang amaran lazim dalam SRE). 4xx ialah masalah pihak klien dan tidak dikira dalam bajet.
+163_邮箱_设置_pop3_smtp_2cd036d08b	E-mel 163: Tetapan → POP3/SMTP → aktifkan dan jana «kod pengesahan», isi di bawah (bukan kata laluan log masuk).
+1_列表_522d9cc510	1. Senarai
+1小时_3a9a579a96	1 jam
+24_小时发送_8e6d358b2e	Dihantar dalam 24 jam
+24_小时失败_f23fa2b0e3	Gagal dalam 24 jam
+24_小时拉起次数_8c19db84c7	Bilangan dijalankan semula dalam 24 jam
+24_小时通知_ed50056bf1	Pemberitahuan dalam 24 jam
+24小时_45a2727884	24 jam
+2_秒_5198950435	2 saat
+30_天_9401eee769	30 hari
+30_天后自动清除_b6c489a29c	Dipadam automatik selepas 30 hari
+33m_会话已关闭_be33fffa31	[33m[Sesi ditutup]
+402_额度_fbd56d7158	Kuota 402
+403_权限_bd93595602	Kebenaran 403
+429_拦截_0_7a460e2aa8	429 disekat {0}
+429_拦截_563bec273d	429 disekat
+429_次数_9333e8c60f	Bilangan 429
+429_限流_5bd5af3cd2	429 dihadkan kadar
+499_中断_8a0629ae88	499 terputus
+4xx_0_499_中断_1_817ee52e07	4xx {0} · 499 terputus {1}
+4xx_0_5xx_1_未授权_4116249143	4xx {0} · 5xx {1} · tidak dibenarkan {2}
+4xx_0_无响应_1_cd8a2943ad	4xx {0} · tiada maklum balas {1}
+4xx_错误_2368d2493d	Ralat 4xx
+500_毫秒_cc7da43bcf	500 ms
+5xx_无响应_2355276e0d	5xx/tiada maklum balas
+5xx_错误_6ed859ac67	Ralat 5xx
+6小时_57937ccefc	6 jam
+7_天_e45a81074f	7 hari
+account_lock_锁定_bbeaf242af	ACCOUNT LOCK (dikunci)
+account_unlock_解锁_b001d58ec0	ACCOUNT UNLOCK (dibuka kunci)
+acl_用户_0_b7e2c3ae45	Pengguna ACL ({0})
+acl_用户_roles_size_8df0ffb733	Pengguna ACL (${roles.size})
+act_服务_a3ebd5a4a1	Perkhidmatan $act
+analyze_会真实执行该语句以采集实际行数与_7e2c3ab4f2	ANALYZE benar-benar menjalankan pernyataan itu untuk mengumpul bilangan baris dan masa sebenar. Sahkan ia ialah pertanyaan baca sahaja; jalankan pernyataan yang mengandungi operasi tulis dalam konsol SQL.
+analyze_更新统计_ae3c35e60c	ANALYZE (kemas kini statistik)
+api_地址_acd8a50431	Alamat API
+api_基础地址_走代理时填_5c7aa1a51e	Alamat asas API (isi apabila guna proksi)
+app.description	Klien panel pemantauan dan konfigurasi pelayan
+app_连接的_cloud_monitor_面板_0ee7660770	Alamat panel Cloud Monitor yang disambungkan oleh app. Default ialah http://8.153.153.176/panel; boleh ditukar kepada mana-mana alamat panel yang telah digunakan.
+apt_任务进行中_0_6028d2fbd3	Tugas apt sedang berjalan: {0}
+apt_缓存_c1fb672ce3	Cache APT
+auditd_未启用_2ca17006e2	auditd tidak didayakan
+auditd_记录的敏感文件变更_谁_用什么命令_de2731982f	Perubahan fail sensitif yang direkod oleh auditd: siapa, arahan apa, fail mana yang diubah
+badprov_个供应商配额耗尽_363bea5ae6	$badProv kuota pembekal telah habis
+banner_能顺带看到对端_openssh_版_6a7382b65e	Banner turut menunjukkan versi OpenSSH pihak sebaliknya, berguna untuk menilai keperluan naik taraf
+bgsave_会在后台生成_rdb_文件_flu_221d58038d	BGSAVE menjana fail RDB di latar belakang; FLUSHDB/ALL memadam semua data dan memerlukan pengesahan kedua.
+bgsave_后台快照_7679d32e01	BGSAVE (snapshot latar belakang)
+bilibili_视频_7fcd50c628	Video Bilibili
+certbot_安装日志_1bf087319a	Log pemasangan certbot
+certbot_已安装_7690d6f09a	certbot dipasang
+certbot_未安装_b2dd3df63b	certbot tidak dipasang
+chat_id_或_频道名_beb6893b9b	Chat ID atau @nama_saluran
+check_校验_8a646f2a85	CHECK (sahkan)
+common.loading	Memuatkan…
+corecount_核高负载_cores_afc43a96da	$coreCount teras beban tinggi · $coresTotal teras
+cpu_使用率_35b17729e2	Kadar penggunaan CPU %
+cpu_使用率_bdf91f384b	Kadar penggunaan CPU
+cpu_占用_89f8a08e80	Penggunaan CPU
+cpu_占用_top_52d0789676	Top penggunaan CPU
+cpu_核数_2a5bc46dd3	Bilangan teras CPU
+cron_表达式_6859f82ab2	Ungkapan cron
+crontab_l_条目_6be8b3d177	Entri crontab -l
+csv_内容_粘贴_17c5b7dbff	Kandungan CSV (tampal)
+csv_导入结果_3a4d7db0d7	Hasil import CSV
+ctrl_shift_c_v_复制粘贴_会话_7c3872ffae	Ctrl+Shift+C/V untuk salin/tampal · sesi kekal selama 2 minit selepas anda meninggalkan halaman ini (server/shell.js GRACE_MS)· 
+curlabel_按天_12556e7b0c	$curLabel · sehari
+curlabel_按天_可复用_vs_8cc7c3562a	$curLabel · sehari · guna semula vs. baharu
+days_天_a6409fc14f	$days hari
+db2_sql_以实例用户执行_51f6dbcefb	SQL Db2 (dijalankan sebagai pengguna instance)
+db2_授权_grant_revoke_eb50e06ee0	Kebenaran Db2 (GRANT / REVOKE)
+db2_用_grant_revoke_管理权限_209a33078b	Db2 mengurus kebenaran dengan GRANT/REVOKE; pengguna perlu dahulu dicipta pada instance (db2 CREATE USER atau akaun sistem pengendali).
+ddl_定义_可编辑后执行_20bea6e0ac	Definisi DDL (boleh disunting sebelum dijalankan)
+ddl_执行结果_d203cf40d4	Hasil pelaksanaan DDL
+dirty_待写盘_a3b33885f4	Dirty (menunggu tulisan ke cakera)
+docker_system_prune_af_ead57cbf4c	docker system prune -af: membuang image/rangkaian/contena yang tidak digunakan
+docker_安装日志_08ccdea4e9	Log pemasangan Docker
+docker_容器_4372ba1200	Contena Docker
+docker_引擎_755076c561	Enjin Docker
+docker_清理_795b9faf02	Pembersihan Docker
+drop_table_删除表_0a38c31f25	DROP TABLE (padam jadual)
+du_尚未返回结果_0af775f143	du masih belum memulangkan hasil
+e_name_将进入回收站_保留_f_b07c62be90	«${e.name}» akan masuk tong sampah dan disimpan selama ${FileStore.trashDays.value} hari.
+else_dat_3b7177d8b6	\n            else -> dateTime(t)\n        }\n    }\n\n    /** Paparan peratusan: `99.1%` (ketepatan ≤0.1, buang sifar berlebihan). */\n    fun pct(p: Number?, suffix: String = 
+error_log_累计_40739fb64e	Jumlah error.log
+etc_cron_d_其它任务_1075d72b5f	/etc/cron.d tugas lain
+etc_cron_daily_cron_h_0b91b3ac69	· skrip /etc/cron.daily, cron.hourly:
+explain_分析_5739bed548	Analisis EXPLAIN
+fail2ban_未启用_dba20ac8ac	fail2ban tidak didayakan
+fail2ban_未安装_未运行_006151f653	fail2ban tidak dipasang/tidak berjalan
+fail2ban_监狱_fd16fed272	Jail fail2ban
+fail2ban_运行中_401151de3a	fail2ban berjalan
+fail2ban_防爆破_e5d811ec15	Fail2ban perlindungan brute-force
+failedcount_个服务失败_4bb48044cc	$failedCount perkhidmatan gagal
+failing_项失败_c0f4c9b479	$failing item gagal
+flushall_清空全部_d122dc5ecd	FLUSHALL (kosongkan semua)
+flushdb_清空当前库_4587c55eaa	FLUSHDB (kosongkan pangkalan data semasa)
+gzip_归档_39fcde3a7b	Arkib gzip
+h_label_采集完成_a374e6c968	Pengumpulan {0} selesai
+hmac_签名密钥_可空_d93d6e2984	Kunci tandatangan HMAC (pilihan)
+http_方法_b1d337493c	Kaedah HTTP
+inode_使用_0_小文件过多时会先耗尽_241698504d	Penggunaan inode {0}% (terlalu banyak fail kecil akan habis inode dahulu)
+inode_使用_m_inodeusedpc_cd43f1cf53	Penggunaan inode ${m.inodeUsedPct}% (terlalu banyak fail kecil akan habis inode dahulu)
+inode_使用率_5279b4b61c	Kadar penggunaan inode
+ip_或域名_6ebd1799de	IP atau nama domain
+ip_来源_f387b79f3d	Sumber IP
+journal_apt_轮转日志_093250e13f	journal + APT + log berputar
+journal_上限_0_1_天_d18e51fc4e	Had journal {0} / {1} hari
+journal_上限_1f54a3217f	Had journal
+journal_上限_s_journalsi_1ef09f8f8d	Had journal ${s.journalSize} / ${s.journalDays} hari
+journal_保留天数_e74cafd94c	Hari pengekalan journal
+journal_日志_b4bd477c2c	Log journal
+json_文档_e422afa510	Dokumen JSON
+label_失败_4c06e7d781	<label> gagal

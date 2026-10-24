@@ -1,0 +1,120 @@
+执行计划树_2a66c47766	Albero del piano di esecuzione
+扩展名_如_pgcrypto_83ec8b404a	Nome estensione, ad es. pgcrypto
+扩展安装_3587656bb2	Installazione estensioni
+扩展监控_wal_bgwriter_in_b526852c31	Monitoraggio esteso (WAL / BGWriter / InnoDB / slot di replicazione)
+扫描_0_张表_命中_1_张_ddc51ef2c9	Scansionate {0} tabelle · trovate {1}
+扫描_998c936377	Scansiona
+扫描中_7c81ab45e3	Scansione in corso…
+扫描根目录一级_二级目录及大于_100mb_的文_60e4bd3b99	Scansiona le cartelle di primo/secondo livello della root e i file più grandi di 100MB
+批次_0_1_a517254bd8	 · Lotto {0}/{1}
+批量删除_362aedce37	Elimina in blocco
+批量卸载_n_65d9c20918	Disinstalla in blocco ($n)
+批量卸载_rem_3ccf4b0014	Disinstalla in blocco ($rem)
+批量安装_ins_d21155177e	Installa in blocco ($ins)
+批量操作_eae7c2c8a9	Operazioni in blocco
+批量操作结果_c3c60aaa7e	Risultati delle operazioni in blocco
+批量表操作_9ac7c449b3	Operazioni in blocco sulle tabelle
+找出占空间的东西_按项清理并核对实际释放量_可开_0fdb33dd38	Individua ciò che occupa spazio, elimina voce per voce e verifica lo spazio effettivamente liberato; è possibile attivare la manutenzione automatica giornaliera
+把_0_从台账移除_cfcfa0347b	Rimuovere "{0}" dall'inventario?
+把_0_项移入回收站_保留_1_天_可还_34b70d7414	Sposta {0} elementi nel cestino (conservati {1} giorni, ripristinabili).
+把_h_label_从台账移除_3366b95a93	Rimuovere "${h.label}" dall'inventario?
+把_selected_size_项移入回收_0cf24b0894	Sposta ${selected.size} elementi nel cestino (conservati ${FileStore.trashDays.value} giorni, ripristinabili).
+把仓库_ops_server_部署到面板_se_085f78330b	Distribuisci il repository ops-server/ nel pannello in server/ops/ e riavvia dopo il montaggio in index.js per utilizzarlo:\n
+把告警送到人_webhook_企业微信_c503ab6c52	Invia gli avvisi alle persone: Webhook / WeCom / DingTalk / Feishu / Telegram / e-mail, le credenziali restano solo sul server
+抖动_a60f92b8bb	Jitter
+报文大小分布_响应_eb73297921	Distribuzione della dimensione dei pacchetti (risposta)
+报文大小分布_请求_978ad9741c	Distribuzione della dimensione dei pacchetti (richiesta)
+报错退出_e9bcdb3450	Uscita con errore
+拉起命令_可空_8598bf93c8	Comando di avvio (facoltativo)
+拒绝_deny_15eaa6f7a5	− Rifiuta (DENY)
+拥有者_0f0558fe5a	Proprietario
+拨测_0_台不可用_faf5bff7d3	{0} target di probe non disponibili
+拨测_0c26df31f3	Probe
+拨测_o_probedown_台不可用_6f5279e1a9	${o.probeDown} target di probe non disponibili
+拨测与_sla_自定义告警规则_通知渠道_静默与_be90e55995	Probe con SLA, regole di allarme personalizzate, canali di notifica, silenziamenti e finestre di manutenzione.
+拨测任务_aca6ce04f6	Attività di probe
+拨测任务已保存_c628e8f14a	Attività di probe salvata
+拨测失败_7b0bb7893f	Probe non riuscita
+拨测类型_4ed688984c	Tipo di probe
+拨测间隔_秒_7c2e24962c	Intervallo di probe (secondi)
+持续_0_s_冷却_1_s_2_a238875611	Durata {0}s · attesa {1}s · {2}
+持续增长_ab21b96aa8	Crescita continua
+持续多少秒才告警_9624b095e1	Quanti secondi deve durare prima di generare un allarme
+挂载点_8517da781f	Punto di mount
+指定指标_efb37dcdc8	Metrica specificata
+指定指标_作用范围_指定指标时_2b528db368	Metrica specificata (ambito = metrica specificata)
+指定源_c1701e5ea0	 · Origine specificata
+指定规则_e050a72f42	Regola specificata
+指定规则_作用范围_指定规则时_a4bbca73a1	Regola specificata (ambito = regola specificata)
+指标_0_89d6aad554	Metrica: {0}
+指标_1dfc810a7b	Metrica
+指标_opsstate_metriclabe_fef507e4db	Metrica: ${OpsState.metricLabel(it.metric)}
+按_cpu_ed77c666c4	Per CPU
+按_etc_relay_pricing_jso_a1872b6ad6	Per /etc/relay/pricing.json
+按_pid_c594df6b43	Per PID
+按_sch_执行_act_c9ffbfae51	Eseguire $act secondo $sch?
+按_内存_ee559401b3	Per memoria
+按_用户_fc09815a27	Per utente
+按一级标题拆分_cffaaceb8e	Dividi per titoli di primo livello
+按今日计划执行一次_c9294b2b15	Esegui una volta secondo il programma di oggi
+按分组_008e3a2b0b	Per gruppo
+按名称_0ea96767da	Per nome
+按大小_ee9a3bcc8e	Per dimensione
+按天_6a0d40d657	Per giorno
+按天用量_4fac34d248	Consumo giornaliero
+按小时_3ae9822387	Per ora
+按模型_token_分布图_a371a816cb	Grafico della distribuzione di Token per modello
+按模型_token_统计_日_周_月_并_1820d55c9f	Statistiche di Token per modello (giorno / settimana / mese affiancati)
+按模型_复用率_vs_真实命中率_c4c8c68680	Per modello: tasso di riutilizzo vs tasso di hit reale
+按此速率耗尽_b0a756faa9	Esaurito a questo ritmo
+按每次探测结果聚合_030b2e6a6a	Aggrega per ogni risultato di probe
+按版本_f04ae00cab	Per versione
+授予_afc60b6b80	Concedi
+授予_sudo_b17c8ef2b8	Concedi sudo
+授予数据库权限_fa513839dd	Concedi privilegi sul database
+授权_3a6e607f0c	Autorizza
+授权库_4d0119c773	Libreria autorizzata
+授权码_886b52b1db	Codice di autorizzazione
+排序_d797283645	Ordina:
+排序_dc35af8d69	Ordina
+排序规则_cba9ca5a18	Regola di ordinamento
+排队中_4dcbbcfa61	In coda
+排除表_逗号分隔_可选_c3fbff6bed	Escludi tabelle (separate da virgola, facoltativo)
+探活_自动拉起_超过上限停止并告警_每次_042dac10cd	Health check → riavvio automatico → arresta e segnala al superamento del limite; ogni azione conserva lo storico delle esecuzioni
+探活方式_ccd56454d3	Metodo di health check
+探活间隔_秒_3b83fe753f	Intervallo di health check (secondi)
+探测_b5ef40a22d	Probe
+探测只打开端口读_banner_不发送任何凭据_a9cc98b513	La prova apre solo la porta per leggere il banner, non invia alcuna credenziale
+探测地址_556833efb5	Indirizzo di probe
+探测失败_1e2b42cb65	Probe non riuscita
+探测完成_c51494c626	Probe completata
+接口端点_a8989ccc29	Punto di accesso API
+推理_0_输出占比_1_0dae9a01a8	Inferenza {0} · quota in output {1}
+推理_c9d3b085e2	Inferenza
+推荐_e8fcb9bb63	\n\n--- Consigliati ---\n
+推荐包_d834496b57	Pacchetti consigliati
+描述_412f54dc38	Descrizione
+提前提醒_分钟_0c4a512c91	Promemoria anticipato (minuti)
+提示_ab3656a956	Suggerimento
+提醒邮件已发送_含详情_子任务与日历邀请_7359e6549a	E-mail di promemoria inviata (con dettagli, sottoattività e invito al calendario)
+插入_022bf3283d	Inserisci
+插入文档_6d53393c50	Inserisci documento
+搜索_c85d9132a4	Cerca…
+搜索_f04090805c	Cerca
+搜索_pid_用户_命令_f1c406afb9	Cerca PID/utente/comando…
+搜索事项_a5b34743c2	Cerca voci…
+搜索变量名_a66a6cba87	Cerca nome variabile…
+搜索失败_b9786d51c3	Ricerca non riuscita
+搜索安装_7bede136f7	Cerca e installa
+搜索服务名_9646f29b1b	Cerca nome servizio…
+搜索笔记_8699c6b13f	Cerca note…
+搜索结果_0_1_项_bc8aaa1631	Risultati della ricerca · "{0}" {1} elementi
+搜索结果_0_99e3cf5dae	Risultati della ricerca (0)
+搜索结果_query_hits_si_3d502bbdbe	Risultati della ricerca · "$query" ${hits.size} elementi
+搜索结果_total_71fe2c69d1	Risultati della ricerca ($total)
+搜索范围_全部已启用源_共_0_个源_按名_b786d5dc17	Ambito: tutte le origini attivate ({0} origini), confronto per nome e descrizione. Vai alla pagina "Origini software" per passare ai mirror locali.
+搜索范围_全部已启用源_共_srclist_2017990f2b	Ambito: tutte le origini attivate (${srcList.size} origini), confronto per nome e descrizione. Vai alla pagina "Origini software" per passare ai mirror locali.
+搜索软件包_a162c7cf8d	Cerca pacchetti
+搜索软件包_名称或描述_如_nginx_ht_320fde8b40	Cerca pacchetti: nome o descrizione, ad es. nginx / htop / python3
+搜索邮箱_8dad475e2f	Cerca e-mail…
+搜索页面或命令_ctrl_cmd_k_84c6582b79	Cerca pagine o comandi… (Ctrl/Cmd+K)

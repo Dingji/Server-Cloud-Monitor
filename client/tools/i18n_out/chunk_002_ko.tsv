@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	relay 백업을 사용할 수 없음
+relay_备份结果_0cf7f02f06	relay 백업 결과
+relay_每日状态备份_32dee8ba2b	relay 일일 상태 백업
+reorg_重建索引_2b9d2e3b0e	REORG(인덱스 재구축)
+reorg_重组表_6195b56608	REORG(테이블 재구성)
+reorgchk_校验_010830b6a4	REORGCHK(검증)
+repair_修复_8dd157c84c	REPAIR(복구)
+restart_值_77d45b4c24	RESTART 값
+root_密码登录_df671edd13	Root 비밀번호 로그인
+root_权限的交互式_shell_经_ssh_724c53e674	root 권한의 대화형 Shell(SSH PTY 경유, 네이티브 ANSI 터미널 렌더링)
+running_运行中_contain_7d4c0797f6	$running 실행 중 · ${containers.size - running} 중지됨
+runstats_reorg_针对整库或所选表执_d40a81b4e9	RUNSTATS/REORG은 전체 데이터베이스 또는 선택한 테이블에 대해 실행됩니다. 큰 테이블은 시간이 오래 걸릴 수 있습니다.
+runstats_全库统计_e9fcb7b8fd	RUNSTATS 전체 데이터베이스 통계
+runstats_更新统计_a6a6663709	RUNSTATS(통계 갱신)
+save_同步快照_afc91773af	SAVE(스냅샷 동기화)
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\n작업 이름: cm-$n
+settings.language.changed	언어가 업데이트되었습니다
+settings.language.hint	전환 즉시 적용되며 선택 내용이 기억됩니다. 아랍어 인터페이스는 레이아웃을 자동으로 반전합니다.
+settings.language.label	언어
+settings.language.title	인터페이스 언어
+setval_值_938e9aa8cf	setval 값
+shell_控制台_6f576115f4	Shell 콘솔
+sites_enabled_为空_4516b41170	sites-enabled가 비어 있음
+slo_与用量_a308fd44ff	SLO 및 사용량
+slo_目标已更新为_0_1_天_41ec05d358	SLO 목표가 {0}% / {1}일로 업데이트되었습니다
+slo_目标已更新为_t_dy_天_7716799870	SLO 목표가 $t% / $dy일로 업데이트되었습니다
+slo_目标应为_0_100_之间的百分数_254085fd3b	SLO 목표는 0~100 사이의 백분율이어야 합니다
+slo_错误预算_47d719e135	SLO 오류 예산
+smtp_主机_9cb2a0f9f3	SMTP 호스트
+smtp_已配置_70f40873a7	SMTP 구성됨
+smtp_授权码_273299a5a3	SMTP 인증 코드
+smtp_服务器_941346a5f4	SMTP 서버
+smtp_未配置_先填账号授权码_c97b712442	SMTP 미구성(계정과 인증 코드를 먼저 입력)
+smtp_状态_8658366a9a	SMTP 상태
+smtp_设置已保存_e5e2238754	SMTP 설정이 저장되었습니다
+smtp_账号_163_邮箱_4bbcd0b1d0	SMTP 계정(163 메일)
+sql_控制台_a3458fb2ad	SQL 콘솔
+sql_文本_gzip_通用_可编辑_48f716760f	SQL 텍스트 + gzip(범용, 편집 가능)
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	SQLite는 단일 파일 데이터베이스입니다. 파일이 없으면 새로 생성되며, 파일 이름은 .db/.sqlite로 끝나야 합니다.
+sqlite_搜索目录_49521cf800	SQLite 검색 디렉터리
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	SQLite는 단일 파일 임베디드 데이터베이스로 사용자/역할 개념이 없으며, 접근 제어는 운영체제의 파일 권한으로 결정됩니다.
+sqlite_生成_sql_文本_gzi_f960464be7	· SQLite는 SQL 텍스트 + gzip을 생성하여 새 파일로 바로 복원할 수 있습니다.
+sqlite_语法_支持_tables_sc_41d445ac53	SQLite 구문(.tables/.schema 같은 점 명령 지원)
+ssh2_可用_efe0e7bbc7	ssh2 사용 가능
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys 승인 키 · relay_scripts 릴레이 스크립트 · ufw_conf 방화벽 · cron_conf 예약 작업.
+ssh_凭据_0_527cdbdfec	SSH 자격증명 · {0}
+ssh_凭据_h_label_24a0886915	SSH 자격증명 · ${h.label}
+ssh_可达_df28fdb916	SSH 연결 가능
+ssh_密码认证_f22e3cd826	SSH 비밀번호 인증
+ssh_授权密钥_authorized_key_4fee36881a	SSH 승인 키(authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	SSH 노출면, 방화벽, 계정 및 권한, 업데이트, 로그, 시간 동기화 등의 읽기 전용 점검; 복구 작업은 서버 보안 검증 후 실행됩니다
+ssh_服务配置_sshd_有效配置_b5a2f5733e	SSH 서비스 설정(sshd 유효 설정)
+ssh_端口_db451b3851	SSH 포트
+ssh_设置已保存_a65c44f49c	SSH 설정이 저장되었습니다
+ssh_连接_用于_web_终端的_pty_b26f43db91	SSH 연결(Web 터미널용 PTY)
+ssh_通道_dbd1043d39	SSH 채널
+ssh_配置应用_c35c2ef2bf	SSH 설정 적용
+ssh_防爆破_3e3c79eef0	SSH 무차별 대입 방지
+ssl_证书_let_s_encrypt_332fd65bdb	SSL 인증서(Let's Encrypt)
+sudo_权限_e03e1e61f9	sudo 권한
+swap_控制_12c3f63c98	Swap 제어
+systemd_单元名_c8ea5d11ad	systemd 유닛 이름
+systemd_定时器_0_dc0dc6e637	Systemd 타이머({0})
+systemd_定时器_f8d95995f8	Systemd 타이머
+systemd_定时器_timers_si_6ade92f31f	Systemd 타이머(${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· Systemd 타이머는 systemd가 관리하며 읽기 전용으로만 표시됩니다;
+systemd_日志总占用_f776a05861	systemd 로그 총 사용량
+systemd_服务_fe73189369	systemd 서비스
+tcp_主机_c307455515	TCP 호스트
+tcp_端口_468daa15c6	TCP 포트
+tcp_端口探活_731f0297a0	TCP 포트 활동 확인
+title_names_size_个_acb99452ee	$title · ${names.size}개 패키지
+tls_证书_43af3d4e3c	TLS 인증서
+tmp_保留_0_天_f32c9b5407	/tmp 보관 {0}일
+tmp_保留_s_tmpdays_天_86426f5281	/tmp 보관 ${s.tmpDays}일
+tmp_保留天数_0d11396618	/tmp 보관 일수
+token_命中率_2bfb8e83db	Token 적중률
+token_总量_3f5fa71b8e	Token 총량
+token_构成_9af64ae64e	Token 구성
+token_用量归集_81e6ced52c	Token 사용량 집계
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	Token 통계는 롤링 윈도우로 집계 · 데이터는 {0} 기준
+top_会话_3c40651605	상위 세션
+top_进程_17603f0ba3	상위 프로세스
+truncate_清空数据_2b621f28d2	TRUNCATE(데이터 비우기)
+ttfb_按线路_dd77200ec0	TTFB(회선별)
+ua_族_886e5b0cbd	UA 계열
+ufwrulescount_条规则_4d66159719	$ufwRulesCount개 규칙
+user_或_user_group_dab37bbd5c	user 또는 user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE 전체 데이터베이스
+vacuum_full_全部库_7cb397ec45	VACUUM FULL 전체 데이터베이스
+vacuum_full_重写表_6eacd637a2	VACUUM FULL(테이블 재작성)
+vacuum_回收空间_1fab10fe60	VACUUM(공간 회수)
+vacuum_重建文件_7a9b0fc30b	VACUUM(파일 재구축)
+w_a_个异常找到疑似变更_072ff64ee0	$w / $a개의 이상에서 변경 가능성이 있는 항목을 발견했습니다
+wal_检查点_2010a0cc44	WAL 체크포인트
+web_终端_7a3963643f	Web 터미널
+where_条件_如_id_10_211cc8803d	WHERE 조건, 예: id > 10
+where_条件_必填_d024e40edd	WHERE 조건(필수)
+where_条件_必填_禁止分号_de5b786116	WHERE 조건(필수, 세미콜론 금지)
+win.client.close_label	창을 닫을 때
+win.client.desc_ask	닫을 때마다 선택: 백그라운드 유지 또는 종료.
+win.client.desc_quit	닫은 후 즉시 Cloud Monitor를 종료합니다.
+win.client.desc_tray	닫은 후 주 창을 숨기고 트레이에서 알림을 계속 수신합니다.
+win.client.desc_tray_no_tray	닫은 후 작업 표시줄로 최소화하고 백그라운드에서 알림을 계속 수신합니다.
+win.client.hint	창 닫기 버튼을 클릭할 때의 동작. 닫기 대화 상자에서 처음 선택한 내용도 여기에 자동으로 기록됩니다.
+win.client.title	Windows 클라이언트
+win.client.updated_toast	닫기 동작이 업데이트되었습니다
+win.close.ask	매번 묻기
+win.close.quit	프로그램 즉시 종료
+win.close.tray	닫을 때 시스템 트레이에 유지
+win.close.tray_taskbar	닫을 때 작업 표시줄로 최소화
+win.dialog.body_taskbar	프로그램을 종료하거나 작업 표시줄로 최소화하여 백그라운드에서 서버 알림을 계속 수신합니다.
+win.dialog.body_tray	프로그램을 종료하거나 시스템 트레이에 남아 백그라운드에서 서버 알림을 계속 수신합니다.
+win.dialog.cancel	취소
+win.dialog.minimize	작업 표시줄로 최소화
+win.dialog.quit	종료
+win.dialog.stay_tray	트레이에 유지
+win.dialog.title	Cloud Monitor 닫기
+youtube_视频_70a0be3df0	YouTube 동영상
+一_d274eee8a1	1

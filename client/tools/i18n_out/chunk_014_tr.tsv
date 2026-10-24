@@ -1,0 +1,120 @@
+执行计划树_2a66c47766	Yürütme planı ağacı
+扩展名_如_pgcrypto_83ec8b404a	Eklenti adı, örn. pgcrypto
+扩展安装_3587656bb2	Eklenti kurulumu
+扩展监控_wal_bgwriter_in_b526852c31	Genişletilmiş izleme (WAL / BGWriter / InnoDB / replikasyon yuvaları)
+扫描_0_张表_命中_1_张_ddc51ef2c9	{0} tablo tarandı · {1} eşleşme
+扫描_998c936377	Tara
+扫描中_7c81ab45e3	Taranıyor…
+扫描根目录一级_二级目录及大于_100mb_的文_60e4bd3b99	Kök dizinin birinci/ikinci seviye dizinlerini ve 100MB'tan büyük dosyaları tara
+批次_0_1_a517254bd8	 · Parti {0}/{1}
+批量删除_362aedce37	Toplu silme
+批量卸载_n_65d9c20918	Toplu kaldırma ($n)
+批量卸载_rem_3ccf4b0014	Toplu kaldırma ($rem)
+批量安装_ins_d21155177e	Toplu kurma ($ins)
+批量操作_eae7c2c8a9	Toplu işlemler
+批量操作结果_c3c60aaa7e	Toplu işlem sonuçları
+批量表操作_9ac7c449b3	Toplu tablo işlemleri
+找出占空间的东西_按项清理并核对实际释放量_可开_0fdb33dd38	Alan kaplayan şeyleri bul, öğe öğe temizle ve gerçekten boşalan alanı doğrula; günlük otomatik bakım açılabilir
+把_0_从台账移除_cfcfa0347b	"{0}" envanterden kaldırılsın mı?
+把_0_项移入回收站_保留_1_天_可还_34b70d7414	{0} öğe çöp kutusuna taşınsın ({1} gün saklanır, geri yüklenebilir).
+把_h_label_从台账移除_3366b95a93	"${h.label}" envanterden kaldırılsın mı?
+把_selected_size_项移入回收_0cf24b0894	${selected.size} öğe çöp kutusuna taşınsın (${FileStore.trashDays.value} gün saklanır, geri yüklenebilir).
+把仓库_ops_server_部署到面板_se_085f78330b	ops-server/ deposunu panelde server/ops/ altına deploy edin ve index.js'e mount ettikten sonra yeniden başlatın:\n
+把告警送到人_webhook_企业微信_c503ab6c52	Uyarıları insanlara ulaştırın: Webhook / WeCom / DingTalk / Feishu / Telegram / e-posta, kimlik bilgileri yalnızca sunucuda saklanır
+抖动_a60f92b8bb	Jitter
+报文大小分布_响应_eb73297921	Paket boyutu dağıtımı (yanıt)
+报文大小分布_请求_978ad9741c	Paket boyutu dağıtımı (istek)
+报错退出_e9bcdb3450	Hata ile çık
+拉起命令_可空_8598bf93c8	Başlatma komutu (isteğe bağlı)
+拒绝_deny_15eaa6f7a5	− Reddet (DENY)
+拥有者_0f0558fe5a	Sahip
+拨测_0_台不可用_faf5bff7d3	{0} probe hedefi kullanılamıyor
+拨测_0c26df31f3	probe
+拨测_o_probedown_台不可用_6f5279e1a9	${o.probeDown} probe hedefi kullanılamıyor
+拨测与_sla_自定义告警规则_通知渠道_静默与_be90e55995	probe, SLA, özel uyarı kuralları, bildirim kanalları, susturmalar ve bakım pencereleri.
+拨测任务_aca6ce04f6	probe görevi
+拨测任务已保存_c628e8f14a	probe görevi kaydedildi
+拨测失败_7b0bb7893f	probe başarısız
+拨测类型_4ed688984c	probe türü
+拨测间隔_秒_7c2e24962c	probe aralığı (saniye)
+持续_0_s_冷却_1_s_2_a238875611	Süre {0}s · bekleme {1}s · {2}
+持续增长_ab21b96aa8	Sürekli artış
+持续多少秒才告警_9624b095e1	Uyarı vermeden önce kaç saniye sürmeli
+挂载点_8517da781f	Bağlama noktası
+指定指标_efb37dcdc8	Belirtilen metrik
+指定指标_作用范围_指定指标时_2b528db368	Belirtilen metrik (kapsam = belirtilen metrik)
+指定源_c1701e5ea0	 · Belirtilen kaynak
+指定规则_e050a72f42	Belirtilen kural
+指定规则_作用范围_指定规则时_a4bbca73a1	Belirtilen kural (kapsam = belirtilen kural)
+指标_0_89d6aad554	Metrik: {0}
+指标_1dfc810a7b	Metrik
+指标_opsstate_metriclabe_fef507e4db	Metrik: ${OpsState.metricLabel(it.metric)}
+按_cpu_ed77c666c4	CPU'ya göre
+按_etc_relay_pricing_jso_a1872b6ad6	/etc/relay/pricing.json'a göre
+按_pid_c594df6b43	PID'ye göre
+按_sch_执行_act_c9ffbfae51	$sch'a göre $act çalıştırılsın mı?
+按_内存_ee559401b3	Belleğe göre
+按_用户_fc09815a27	Kullanıcıya göre
+按一级标题拆分_cffaaceb8e	Üst düzey başlıklara göre böl
+按今日计划执行一次_c9294b2b15	Bugünkü plana göre bir kez çalıştır
+按分组_008e3a2b0b	Gruba göre
+按名称_0ea96767da	Ada göre
+按大小_ee9a3bcc8e	Boyuta göre
+按天_6a0d40d657	Güne göre
+按天用量_4fac34d248	Günlük kullanım
+按小时_3ae9822387	Saate göre
+按模型_token_分布图_a371a816cb	Model bazında Token dağılım grafiği
+按模型_token_统计_日_周_月_并_1820d55c9f	Model bazında Token istatistikleri (gün / hafta / ay yan yana)
+按模型_复用率_vs_真实命中率_c4c8c68680	Model bazında: yeniden kullanım oranı vs gerçek isabet oranı
+按此速率耗尽_b0a756faa9	Bu hızda tükenir
+按每次探测结果聚合_030b2e6a6a	Her probe sonucuna göre topla
+按版本_f04ae00cab	Sürüme göre
+授予_afc60b6b80	Ver
+授予_sudo_b17c8ef2b8	sudo ver
+授予数据库权限_fa513839dd	Veritabanı izinleri ver
+授权_3a6e607f0c	Yetkilendir
+授权库_4d0119c773	Yetkili kütüphane
+授权码_886b52b1db	Yetkilendirme kodu
+排序_d797283645	Sırala:
+排序_dc35af8d69	Sırala
+排序规则_cba9ca5a18	Sıralama kuralı
+排队中_4dcbbcfa61	Kuyrukta
+排除表_逗号分隔_可选_c3fbff6bed	Tabloları hariç tut (virgülle ayrılmış, isteğe bağlı)
+探活_自动拉起_超过上限停止并告警_每次_042dac10cd	Health check → otomatik yeniden başlat → sınır aşılınca durdur ve uyar; her işlem yürütme geçmişi tutar
+探活方式_ccd56454d3	Health check yöntemi
+探活间隔_秒_3b83fe753f	Health check aralığı (saniye)
+探测_b5ef40a22d	probe
+探测只打开端口读_banner_不发送任何凭据_a9cc98b513	probe yalnızca portu açıp banner'ı okur; kimlik bilgisi göndermez
+探测地址_556833efb5	probe adresi
+探测失败_1e2b42cb65	probe başarısız
+探测完成_c51494c626	probe tamamlandı
+接口端点_a8989ccc29	API uç noktası
+推理_0_输出占比_1_0dae9a01a8	Çıkarım {0} · çıktı payı {1}
+推理_c9d3b085e2	Çıkarım
+推荐_e8fcb9bb63	\n\n--- Önerilenler ---\n
+推荐包_d834496b57	Önerilen paketler
+描述_412f54dc38	Açıklama
+提前提醒_分钟_0c4a512c91	Önceden hatırlatma (dakika)
+提示_ab3656a956	İpucu
+提醒邮件已发送_含详情_子任务与日历邀请_7359e6549a	Hatırlatma e-postası gönderildi (ayrıntılar, alt görevler ve takvim davetiyesiyle)
+插入_022bf3283d	Ekle
+插入文档_6d53393c50	Belge ekle
+搜索_c85d9132a4	Ara…
+搜索_f04090805c	Ara
+搜索_pid_用户_命令_f1c406afb9	PID/kullanıcı/komut ara…
+搜索事项_a5b34743c2	Öğe ara…
+搜索变量名_a66a6cba87	Değişken adı ara…
+搜索失败_b9786d51c3	Arama başarısız
+搜索安装_7bede136f7	Ara ve kur
+搜索服务名_9646f29b1b	Hizmet adı ara…
+搜索笔记_8699c6b13f	Not ara…
+搜索结果_0_1_项_bc8aaa1631	Sonuçlar · "{0}" {1} öğe
+搜索结果_0_99e3cf5dae	Sonuçlar (0)
+搜索结果_query_hits_si_3d502bbdbe	Sonuçlar · "$query" ${hits.size} öğe
+搜索结果_total_71fe2c69d1	Sonuçlar ($total)
+搜索范围_全部已启用源_共_0_个源_按名_b786d5dc17	Kapsam: etkinleştirilmiş tüm kaynaklar ({0} kaynak), ad ve açıklama eşleştirmesi. Yerel yansımalara geçmek için "Yazılım Kaynakları" sayfasına gidin.
+搜索范围_全部已启用源_共_srclist_2017990f2b	Kapsam: etkinleştirilmiş tüm kaynaklar (${srcList.size} kaynak), ad ve açıklama eşleştirmesi. Yerel yansımalara geçmek için "Yazılım Kaynakları" sayfasına gidin.
+搜索软件包_a162c7cf8d	Paket ara
+搜索软件包_名称或描述_如_nginx_ht_320fde8b40	Paket ara: ad veya açıklama, örn. nginx / htop / python3
+搜索邮箱_8dad475e2f	E-posta ara…
+搜索页面或命令_ctrl_cmd_k_84c6582b79	Sayfa veya komut ara… (Ctrl/Cmd+K)

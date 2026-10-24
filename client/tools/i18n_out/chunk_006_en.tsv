@@ -1,0 +1,120 @@
+分析_9c00c951b8	Analyze
+分析数据库_27120f4e22	Analyze database
+分类_435c5259e4	Category
+分组_97d8a6c05b	Group
+分节_0_72a336b550	Section {0}
+分节_cc61ad798e	Section
+分节_i_1_f0d1636fb2	Section ${i + 1}
+切换使用_440dcd4a60	Toggle use
+切换到_dcfa6ff76a	Switch to
+切换到此源_6a51392f3d	Switch to this source
+切换到浅色主题_68c147dbb8	Switch to light theme
+切换到深色主题_81f29dbac3	Switch to dark theme
+切换告警中心_6ee18893d6	Toggle alert center
+切换失败_9e2fdc4fee	Switch failed
+切换失败_已回滚_c0cfb2c6b5	Switch failed (rolled back)
+切换并刷新索引_90b6357c92	Switch and refresh index
+切换强调色_750952d685	Switch accent color
+切换成功后会清理旧镜像残留索引_避免搜索结果_3a16b0a93b	· After a successful switch, stale indexes from the old mirror are cleaned up so search results don’t mix sources.
+切换数据库_a1ab00957c	Switch database
+切换率_0_5f66fea7ee	Switch rate {0}%
+切换率_0_尝试_请求_1_549548a929	Switch rate {0}% · Attempts/requests {1}
+切换软件源_1d685b5c20	Switch software source
+切换镜像会先备份源文件_改写后立即执行_ap_b31cb7b626	· Switching mirrors backs up the source file first and runs apt-get update right after rewriting; if the refresh fails, it automatically rolls back to the original mirror.
+列_ad3ee64830	Column
+列_逗号分隔_e6b76472d6	Column (comma-separated)
+列a_列b_276b732289	\n| Column A | Column B |\n| --- | --- |\n|  |  |\n
+列列表_逗号分隔_3fbb861c18	Column list (comma-separated)
+列名_56dc7e14b9	Column name
+列名_目标列_93b57e8329	Column name / target column
+列注释_9f54addfdc	Column comment
+列目录中_1d7fe661c3	Listing directory…
+列结构_d6bcf00979	Column structure
+列表_7d9b515037	• List
+刚刚_9e636642d6	Just now
+创建_0_b962ace170	Create {0}
+创建_0_f7fa88a48a	Create {0}?
+创建_acl_用户_cd96ef0588	Create ACL user
+创建_fcbd093292	Create
+创建_notebox_账号并分配角色_2911541ceb	Create NoteBox account and assign roles
+创建_替换_c8d121c449	Create/replace
+创建于_f3b01f3f1a	Created at
+创建任务_cf42fd678f	Create task
+创建备份_f4587bf8b2	Create backup
+创建失败_deb3990191	Create failed
+创建定时任务_cc992174ac	Create scheduled task
+创建数据库_1bf70a1209	Create database
+创建时间_84e3802f60	Creation time
+创建每日自动备份_7c94d434a4	Create daily automatic backup
+创建用户_315315d695	Create user
+创建用户_name_sudosuffix_423f11e860	Create user $name$sudoSuffix?
+创建用户_角色_87bba5f559	Create user/role
+创建的用户拥有_all_全部键_全_2da1a3462f	The created user has ~* +@all (all keys + all commands); refine permissions with ACL SETUSER.
+创建索引_39988166a9	Create index
+创建维护计划_04a82258e7	Create maintenance plan
+创建角色_24cf247879	Create role
+创建计划_bddda94d14	Create plan
+删_38cadf487e	Del
+删凭据_578de9d115	Del credentials
+删除_0_1fbd66c221	Delete {0}?
+删除_0_a1ee4b1af0	Delete {0} ?
+删除_0_c27e726e6d	Delete “{0}”?
+删除_0_on_1_fb3815f989	Delete {0} on {1} ?
+删除_0_不可恢复_122855ffb8	Delete {0}? This cannot be undone.
+删除_0_不可恢复_935f255ade	Delete {0} ? This cannot be undone!
+删除_0_其中的待办与子清单会移动到上一级_a7634c43e7	Delete “{0}”? Its to-dos and sub-lists move up one level and are not deleted.
+删除_0_其中的笔记与子归类会移动到上一级_327496c4d8	Delete “{0}”? Its notes and subcategories move up one level and are not deleted.
+删除_0_历史事件仍保留_d3e46884f0	Delete “{0}”? Historical events are kept.
+删除_0_及其全部集合_不可恢复_27bf2aa4e3	Delete {0} and all its collections? This cannot be undone!
+删除_0_及其后续统计_已归档的按日数据仍保_79a549e6e8	Delete “{0}” and its subsequent statistics? Archived daily data is kept.
+删除_0_引用它的规则将不再向该渠道推送_2a68290638	Delete “{0}”? Rules referencing it will stop pushing to this channel.
+删除_0_该角色拥有的对象可能变为无主_81db941aef	Delete {0} ? Objects owned by this role may become orphaned.
+删除_3755f56f2f	Delete
+删除_c_name_引用它的规则将不再向_a15854651b	Delete “${c.name}”? Rules referencing it will stop pushing to this channel.
+删除_e_name_历史事件仍保留_7c4f97a765	Delete “${e.name}”? Historical events are kept.
+删除_folder_name_其中的待办_8acd8d3681	Delete “${folder.name}”? Its to-dos and sub-lists move up one level and are not deleted.
+删除_folder_name_其中的笔记_02f00181b7	Delete “${folder.name}”? Its notes and subcategories move up one level and are not deleted.
+删除_h_label_的_ssh_凭据_采_714dcba255	Delete the SSH credentials for “{0}”? Collection stops until reconfigured.
+删除_id_0_5757172d9f	Delete _id = {0} ?
+删除_id_id_9f0c4ee411	Delete _id = $id ?
+删除_it_name_不可恢复_2e58b9d314	Delete ${it.name}? This cannot be undone.
+删除_item_name_不可恢复_196f667e1b	Delete ${item.name}? This cannot be undone.
+删除_job_file_0df6f1b1c0	Delete ${job.file}?
+删除_k_不可恢复_7f04e8d988	Delete $k ? This cannot be undone!
+删除_n_447134e66a	Delete $n ?
+删除_n_及其全部集合_不可恢复_75c0387e71	Delete $n and all its collections? This cannot be undone!
+删除_name_该角色拥有的对象可能变为无主_444ea2ccd8	Delete $name ? Objects owned by this role may become orphaned.
+删除_r_name_历史事件仍保留_d216275bef	Delete “${r.name}”? Historical events are kept.
+删除_s_name_62446c983c	Delete “${s.name}”?
+删除_tgname_trim_on_61b891ec54	Delete ${tgName.trim()} on ${tgTable.trim()} ?
+删除_ufw_规则_n_969e18703f	Delete UFW rule #$n?
+删除_var_cache_apt_archiv_4cd0531496	Delete downloaded packages under /var/cache/apt/archives
+删除_x_name_及其后续统计_已归档的_f9923c3d24	Delete “${x.name}” and its subsequent statistics? Archived daily data is kept.
+删除主机_643f7d4bb9	Delete host
+删除事项_0_fd51d58bcb	Delete item “{0}”?
+删除事项_baf69ed21f	Delete item
+删除事项_t_title_86546066a3	Delete item “${t.title}”?
+删除全部_0_条已完成事项_edea779a77	Delete all {0} completed items?
+删除全部_n_条已完成事项_c6c82b6be8	Delete all $n completed items?
+删除公钥_b83efa4dbe	Delete public key
+删除凭据_35bc7d6ff1	Delete credentials
+删除列_16f1347814	Delete column
+删除到回收站_f418fcf1e6	Move to recycle bin
+删除后持有该密钥的客户端将无法登录_1d472813e0	After deletion, clients holding this key can no longer log in.
+删除后无法恢复_确认删除该密钥_68e3c91b1d	This cannot be undone. Delete this key?
+删除告警规则_fb9b26e21f	Delete alert rule
+删除备份_749438d2de	Delete backup
+删除备份文件_df6543f316	Delete backup file
+删除失败_72250c5922	Delete failed
+删除子任务_165f2995e1	Delete subtask
+删除定时任务_cbbfd7d59d	Delete scheduled task
+删除容器_c1cbe14e79	Delete container
+删除密钥_8017614a47	Delete key
+删除已下载的_deb_安装包_释放_0_不_dc8e1f42c6	Delete downloaded .deb packages to free {0}. Installed software is not affected.
+删除归类_f282b52e6b	Delete category
+删除拨测任务_2193297dfe	Delete probe task
+删除数据库_f0f7b49980	Delete database
+删除文档_e7adbd575b	Delete document
+删除时间_8d55c8d894	Deletion time
+删除模式_0_及其全部对象_cascade_6336954e53	Delete schema {0} and all its objects (CASCADE)?
+删除模式_77bed2385b	Delete schema

@@ -1,0 +1,61 @@
+{
+ "total": 2,
+ "offset": 0,
+ "limit": 3,
+ "sections": [
+  "admin",
+  "comm",
+  "database",
+  "default",
+  "devel",
+  "doc",
+  "editors",
+  "fonts",
+  "gnome",
+  "httpd",
+  "interpreters",
+  "introspection",
+  "javascript",
+  "kernel",
+  "libdevel",
+  "libs",
+  "localization",
+  "math",
+  "metapackages",
+  "misc",
+  "net",
+  "non-free-firmware/admin",
+  "oldlibs",
+  "otherosfs",
+  "perl",
+  "python",
+  "rust",
+  "shells",
+  "text",
+  "utils",
+  "vcs",
+  "web",
+  "x11",
+  "zope"
+ ],
+ "rows": [
+  {
+   "name": "nginx",
+   "version": "1.28.3-2ubuntu1.11",
+   "section": "httpd",
+   "size_kb": 1593,
+   "status": "ii",
+   "installed": true,
+   "size": "1.6 MB"
+  },
+  {
+   "name": "nginx-common",
+   "version": "1.28.3-2ubuntu1.11",
+   "section": "httpd",
+   "size_kb": 227,
+   "status": "ii",
+   "installed": true,
+   "size": "227 KB"
+  }
+ ]
+}

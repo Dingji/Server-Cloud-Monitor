@@ -1,0 +1,120 @@
+当前索引更新于_0_1c82f67640	Dizin {0} tarihinde güncellendi
+当前采集到的指标_8e4e47b457	Şu anda toplanan metrikler
+当前镜像_ed71a792a7	Mevcut imaj
+当前页面_b7d5886b05	 · Mevcut sayfa
+彻底删除_0_项_无法恢复_9f56fcff22	{0} öğeyi kalıcı olarak sil, geri getirilemez.
+彻底删除_8c0b37b684	Kalıcı olarak sil
+彻底删除_trash_size_项_无法恢_87a3623728	${trash.size} öğeyi kalıcı olarak sil, geri getirilemez.
+彻底卸载_33072f5e11	Tamamen kaldır
+待办_csv_3308e95082	Yapılacaklar CSV'si
+待办_未完成_已完成_7422fade10	Yapılacaklar (tamamlanmamış / tamamlanmış)
+待办清单_febc09d1b1	Yapılacaklar listesi
+待探测_51805a6f50	Sondaj bekliyor
+待检测_05fb47fc35	Kontrol bekliyor
+待邮箱验证_bada0c2e46	E-posta doğrulaması bekliyor
+待验证_0b48e4bdd8	Doğrulama bekliyor
+必须带_http_或_https_e74acdc586	http:// veya https:// ile başlamalıdır
+快捷_14249f75ba	Hızlı
+快捷模板_423595bef4	Hızlı şablonlar:
+快速备份_1cbe05845d	Hızlı yedekleme
+性能洞察_71fa3a4ff8	Performans içgörüleri
+总_0_新增_1_1fd58b4e12	Toplam {0} · Yeni {1}
+总_token_2d5ae33603	Toplam Token
+总占用_3da7163a84	 Toplam kullanım
+总大小_0_a2c8d9634b	Toplam boyut {0}
+总大小_fmt_bytes_totalsiz_53ae231269	Toplam boyut ${Fmt.bytes(totalSize)}
+总容量_8b60ba80ea	Toplam kapasite
+总尝试_56d2a2d4f5	Toplam deneme
+总成功率_0_重试_1_32f597c3de	Genel başarı oranı {0}% · Yeniden deneme {1}
+总成功率_322a0370e9	Genel başarı oranı
+总成功率_61b76516e3	Genel başarı oranı 
+总探测_572bee6277	Toplam sondaj
+总流量_出_6efb4930fb	Toplam trafik (giden)
+总耗时_2db420d198	Toplam süre
+总览_c122e1758c	Genel bakış
+总览与监控_70e2feb12d	Genel bakış ve izleme
+总计_3af1ac5b4e	Toplam
+总请求_d1cac3ca3b	Toplam istek
+总账号_02ceb243fe	Toplam hesap
+恢复_79748ca1c6	Geri yükle
+恢复_mongodb_归档_ad961869c7	MongoDB arşivini geri yükle
+恢复_redis_7dd20f103c	Redis'i geri yükle
+恢复中_176238056c	Geri yükleniyor…
+恢复中_d6426a51e5	Geri yükleniyor
+恢复于_0_57aae0c315	{0} tarihinde geri yüklendi
+恢复于_rtmrecover_recover_471df21a46	${rTmRecover(recoverAt)} tarihinde geri yüklendi
+恢复备份到目标数据库_00fbc874c2	Yedeği hedef veritabanına geri yükle
+恢复失败_08c8ed5980	Geri yükleme başarısız:
+恢复失败_76842a0348	Geri yükleme başarısız
+恢复完成_笔记_0_条_待办_1_条_7aa19232cf	Geri yükleme tamamlandı: {0} not, {1} yapılacak
+恢复完整备份_640eea92dc	Tam yedeği geri yükle
+恢复方式_4a0ce48265	Geri yükleme yöntemi
+恢复时是否通知_e60cfd9684	Geri yüklerken bildir
+恢复结果_25404d8096	Geri yükleme sonucu
+恢复通知_9d088c33ba	Geri yükleme bildirimi
+恢复默认地址_4c7fd3785e	Varsayılan adresi geri yükle
+想到什么_立刻记下来_c54f483edc	Aklına geleni hemen not al…
+慢查询_slowlog_89cb405eab	Yavaş sorgular (SLOWLOG)
+慢查询_剖析_e7d6b1beb3	Yavaş sorgular (profil çıkarma)
+慢查询_热点语句_e4c8bb10fe	Yavaş sorgular / popüler ifadeler
+成功_0_错误_1_超时_2_4e74aeecc7	Başarılı {0} · Hata {1} · Zaman aşımı {2}
+成功_51991a5d11	Başarılı
+成功导入_0_条待办_0f7f47eb57	{0} yapılacak içe aktarıldı
+成功导入_0_条笔记_f1edf5b407	{0} not içe aktarıldı
+成功导入_n_条待办_37eadf2708	$n yapılacak içe aktarıldı
+成功导入_n_条笔记_2f9691a596	$n not içe aktarıldı
+成功率_0_047cd91c6c	Başarı oranı {0}%
+成功率_2xx_占比_服务可用性_非_5_a3d7b27e95	Başarı oranı = 2xx oranı; hizmet kullanılabilirliği = 5xx dışı oran. Aradaki fark büyükse hatalar büyük ölçüde upstream arızasından değil, istemci parametrelerinden veya kotasından kaynaklanıyordur.
+成功率_df9dc72f2d	Başarı oranı
+成功率_monfmt_fixed_sr_1_4fbf1cc803	Başarı oranı ${MonFmt.fixed(sr, 1)}%
+成功率_延迟分位_错误分布_配额消耗与_toke_9c60795c78	Başarı oranı, gecikme yüzdelikleri, hata dağılımı, kota tüketimi ve token kullanımı özeti
+成功登录_last_d5df9592bd	Başarılı oturum açmalar (son)
+我_34f201bc50	Ben
+我已知晓风险_强制执行_cd4e2f773d	Risklerin farkındayım, yine de yürüt
+我明白风险_执行_a77f5cd3f3	Risklerin farkındayım, yürüt
+或_systemd_单元_nginx_serv_14c65e1864	veya systemd birimi: nginx.service
+或点左上角_新建笔记_创建_4bb6db19d3	veya sol üstteki "Yeni Not"a tıklayın
+截止日期_9b3177f0b7	Son tarih
+截止时间_864048b32f	Son saat
+所有操作均被审计记录_511c89f737	Tüm işlemler denetim kaydına alınır
+所有管理操作均写入审计日志_logs_a_e2b87d13a1	 · Tüm yönetici işlemleri denetim günlüğüne yazılır (logs/audit.log)
+所有者_ff3beb8e45	Sahip
+所有软件包均为最新版本_ee413e3b4c	Tüm paketler güncel sürümdedir.
+手动_2a4a4de806	El ile
+手动编辑的_root_crontab_请通过_72bfbdde79	· root crontab'ı Web terminali üzerinden düzenleyin (crontab -e)
+手动进程_040082d08d	Elle çalışan süreç
+打包_0_项到_1_29836a27f5	{0} öğeyi {1} içine paketle
+打包_selected_size_项到_e42700bf89	${selected.size} öğeyi ${l.dir} içine paketle
+打包_tar_gz_ff1dd64457	tar.gz paketle
+打包为_tar_gz_3ea0166662	tar.gz olarak paketle
+打包完成_be69db469a	Paketleme tamamlandı
+打开_65fc81e161	Aç
+打开所在目录_b4bf69d6b9	Bulunduğu klasörü aç
+执行_0_70b4feea4a	{0} çalıştırılsın mı?
+执行_28febba225	Çalıştır
+执行_act_a3e97e4bee	$act çalıştırılsın mı?
+执行_action_b272ecea51	$action çalıştırılsın mı?
+执行_apt_get_install_y_ce_6568cc1ca1	apt-get install -y certbot komutunu çalıştırın; yaklaşık 1-3 dakika sürer.
+执行_b_0_b_1695afa501	<b>{0}</b> çalıştırılsın mı?
+执行_b_name_b_67f5a659e6	<b>$name</b> çalıştırılsın mı?
+执行_create_extension_if_n_aac00658d4	CREATE EXTENSION IF NOT EXISTS $n çalıştırılsın mı?
+执行_create_extension_pg_s_6d03312f5d	CREATE EXTENSION pg_stat_statements çalıştırılsın mı? Etkinleştirdikten sonra istatistiklerin başlaması için bunu shared_preload_libraries ekleyip veritabanını yeniden başlatmanız gerekir.
+执行_ctrl_enter_ecfb73b4d6	Çalıştır (Ctrl+Enter)
+执行_daemon_stop_dfe266a216	daemon-stop çalıştırılsın mı?
+执行_ddl_769fdda3d6	DDL çalıştır
+执行_ddl_操作_0ed0a31f65	DDL işlemi çalıştır
+执行_prune_6b4f1926c7	prune çalıştırılsın mı?
+执行_trim_de3f191099	TRIM çalıştır
+执行一次_relay_状态热备份_sqlite_8bc4bec089	relay durumunun anlık yedeğini alın (SQLite çevrimiçi yedekleme, aktarma hizmeti durdurulmadan).
+执行中_1f425b6bf0	Çalıştırılıyor
+执行修复_18ad6adf19	Onarımı çalıştır
+执行单元_2466ded40e	Birimi çalıştır
+执行命令_bf162782f5	Komutu çalıştır
+执行失败_9746cfc7d2	Çalıştırma başarısız
+执行异常_f5990190d3	Çalıştırma hatası
+执行拉起_24779c513a	Başlatmayı çalıştır
+执行清理_bebeb0649b	Temizlemeyi çalıştır
+执行结果_1b213f405b	Çalıştırma sonucu
+执行自愈_d499e88a86	Kendi kendini onarmayı çalıştır
+执行计划_analyze_cc0577dcef	Çalıştırma planı (ANALYZE)
+执行计划_json_5d921dfd27	Çalıştırma planı JSON

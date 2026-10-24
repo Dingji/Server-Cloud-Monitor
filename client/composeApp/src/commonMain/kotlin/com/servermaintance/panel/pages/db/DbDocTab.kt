@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.db
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -69,21 +72,21 @@ fun DocOverviewTab(st: DbState, scope: CoroutineScope) {
         val stt = s.obj("stats") ?: JsonObject(emptyMap())
         val totalSize = dbs.sumOf { it.num("size_bytes") }
         GridLayout(4) {
-            StatTile("引擎状态", "运行中", sub = v.str("version").take(46))
-            StatTile("连接", stt.str("connections").ifEmpty { "0" }, sub = "上限 ${stt.str("max_connections").ifEmpty { "-" }}")
-            StatTile("数据库", dbs.size.toString(), sub = "占用 ${Fmt.bytes(totalSize)}")
-            StatTile("主机 / 运行时间", v.str("host").ifEmpty { "-" }, sub = v.str("uptime"))
+            StatTile(L["引擎状态_fbb8ddd570"], L["运行中_5942497005"], sub = v.str("version").take(46))
+            StatTile(L["连接_7328deebb5"], stt.str("connections").ifEmpty { "0" }, sub = trf("上限_0_70bdcc315a", stt.str("max_connections").ifEmpty { "-" }))
+            StatTile(L["nav.databases"], dbs.size.toString(), sub = trf("占用_0_50085c6df1", Fmt.bytes(totalSize)))
+            StatTile(L["主机_运行时间_0e24d2fafa"], v.str("host").ifEmpty { "-" }, sub = v.str("uptime"))
         }
-        PanelCard(title = "数据库列表", cardKey = "mo-dbs", right = { DbBtn("刷新") { st.bump() } }) {
+        PanelCard(title = L["数据库列表_04a9b8f2c3"], cardKey = "mo-dbs", right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } }) {
             DynamicTable(
                 columns = listOf("name"),
                 rows = dbs,
-                extra = TableCol("操作", weight = 1.2f) { row ->
+                extra = TableCol(L["操作_f3ea6d345e"], weight = 1.2f) { row ->
                     val n = row.str("name")
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        DbBtn("进入") { st.database = n; st.table = null; st.tab = "tables" }
+                        DbBtn(L["进入_0e25578e8f"]) { st.database = n; st.table = null; st.tab = "tables" }
                         if (!row.flag("is_template")) {
-                            DbBtn("删除", tone = DbBtnTone.Danger) { dropMongoDb(scope, st, n) }
+                            DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) { dropMongoDb(scope, st, n) }
                         }
                     }
                 },
@@ -101,29 +104,29 @@ fun DocDatabasesTab(st: DbState, scope: CoroutineScope) {
         loadKey = "modb|${st.tick}",
         load = { dbs = runCatching { AppState.api.get("/db/databases?engine=mongo", 10_000) }.getOrNull().asObjList() },
     ) {
-        PanelCard(title = "新建数据库", cardKey = "mo-new", right = {
-            DbBtn("创建", tone = DbBtnTone.Primary) {
+        PanelCard(title = L["新建数据库_42e4ee46d5"], cardKey = "mo-new", right = {
+            DbBtn(L["创建_fcbd093292"], tone = DbBtnTone.Primary) {
                 val n = name.trim()
-                if (n.isEmpty()) AppState.toast("请输入数据库名", ToastKind.Warn)
+                if (n.isEmpty()) AppState.toast(tr("请输入数据库名_51e5882b0e"), ToastKind.Warn)
                 else scope.launch {
                     runDb("/db/database/create", jsonObjectOf("engine" to "mongo", "name" to n), reload = { st.bump() })
                 }
             }
         }) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Bottom) {
-                Field(name, { name = it }, Modifier.width(200.dp), label = "数据库名", hint = "mydb", mono = true)
-                Text("MongoDB 在首次写入集合时才真正创建数据库，这里会创建 _cm_init 集合占位。", style = dbMuted, fontSize = 11.sp)
+                Field(name, { name = it }, Modifier.width(200.dp), label = L["数据库名_8a98ff0618"], hint = "mydb", mono = true)
+                Text(L["mongodb_在首次写入集合时才真正创建数据库_786d0aea73"], style = dbMuted, fontSize = 11.sp)
             }
         }
-        PanelCard(title = "数据库 (${dbs.size})", cardKey = "mo-dblist", right = { DbBtn("刷新") { st.bump() } }) {
+        PanelCard(title = trf("数据库_0_38b5c31d37", dbs.size), cardKey = "mo-dblist", right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } }) {
             DynamicTable(
                 columns = listOf("name"),
                 rows = dbs,
-                extra = TableCol("操作", weight = 1.2f) { row ->
+                extra = TableCol(L["操作_f3ea6d345e"], weight = 1.2f) { row ->
                     val n = row.str("name")
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        DbBtn("进入") { st.database = n; st.table = null; st.tab = "tables" }
-                        DbBtn("删除", tone = DbBtnTone.Danger, enabled = !row.flag("is_template")) { dropMongoDb(scope, st, n) }
+                        DbBtn(L["进入_0e25578e8f"]) { st.database = n; st.table = null; st.tab = "tables" }
+                        DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger, enabled = !row.flag("is_template")) { dropMongoDb(scope, st, n) }
                     }
                 },
             )
@@ -141,8 +144,8 @@ fun DocCollectionsTab(st: DbState, scope: CoroutineScope) {
                 loadKey = "mopick|${st.tick}",
                 load = { dbs = runCatching { AppState.api.get("/db/databases?engine=mongo", 10_000) }.getOrNull().asObjList() },
             ) {
-                PanelCard(title = "选择数据库", cardKey = "mo-pick", collapsible = false) {
-                    if (dbs.isEmpty()) EmptyState("暂无数据库")
+                PanelCard(title = L["选择数据库_86095a4763"], cardKey = "mo-pick", collapsible = false) {
+                    if (dbs.isEmpty()) EmptyState(L["暂无数据库_9b93de555b"])
                     else Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         dbs.forEach { d ->
                             DbPill(false, { st.database = d.str("name"); st.table = null }) {
@@ -170,13 +173,13 @@ private fun DocCollList(st: DbState, scope: CoroutineScope) {
             colls = AppState.api.get("/db/tables?engine=mongo&database=${q(st.database ?: "")}").asObjList()
         },
     ) {
-        PanelCard(title = "集合", cardKey = "mo-colls", collapsible = false, right = {
+        PanelCard(title = L["集合_f8dd3e84b8"], cardKey = "mo-colls", collapsible = false, right = {
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                SearchField(q, { q = it }, Modifier.width(180.dp), "搜索…")
-                DbBtn("切换数据库") { st.database = null }
-                DbBtn("+ 新建集合", tone = DbBtnTone.Ok) {
+                SearchField(q, { q = it }, Modifier.width(180.dp), L["搜索_c85d9132a4"])
+                DbBtn(L["切换数据库_a1ab00957c"]) { st.database = null }
+                DbBtn(L["新建集合_ee18952ecb"], tone = DbBtnTone.Ok) {
                     scope.launch {
-                        val r = Modal.prompt("新建集合", listOf(FormField.Text("name", "集合名", hint = "users", mono = true)), okText = "创建")
+                        val r = Modal.prompt(L["新建集合_5952f4c234"], listOf(FormField.Text("name", L["集合名_c399d8867e"], hint = "users", mono = true)), okText = L["创建_fcbd093292"])
                             ?: return@launch
                         val n = r["name"]?.trim().orEmpty()
                         if (n.isEmpty()) return@launch
@@ -186,21 +189,21 @@ private fun DocCollList(st: DbState, scope: CoroutineScope) {
             }
         }) {
             Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("当前数据库", style = dbMuted, fontSize = 11.sp)
+                Text(L["当前数据库_df2f4d6c3c"], style = dbMuted, fontSize = 11.sp)
                 Text(st.database ?: "", style = dbMono)
-                Chip("${colls.size} 个集合")
+                Chip(trf("0_个集合_4a5a5adc54", colls.size))
             }
             val filtered = if (q.isEmpty()) colls else colls.filter { it.str("name").contains(q, true) }
             DynamicTable(
                 columns = listOf("name", "rows", "size", "indexes"),
                 rows = filtered,
-                extra = TableCol("操作", weight = 1.2f) { row ->
+                extra = TableCol(L["操作_f3ea6d345e"], weight = 1.2f) { row ->
                     val n = row.str("name")
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        DbBtn("打开", tone = DbBtnTone.Primary) { st.table = n }
-                        DbBtn("删除", tone = DbBtnTone.Danger) {
+                        DbBtn(L["打开_65fc81e161"], tone = DbBtnTone.Primary) { st.table = n }
+                        DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) {
                             scope.launch {
-                                val okc = Modal.confirm("删除集合", "删除集合 $n 及其全部文档？", okText = "删除", danger = true)
+                                val okc = Modal.confirm(L["删除集合_e86f0eec01"], trf("删除集合_0_及其全部文档_3a1fd80488", n), okText = L["删除_3755f56f2f"], danger = true)
                                 if (!okc) return@launch
                                 runDb(
                                     "/db/table/action",
@@ -241,36 +244,36 @@ private fun DocDocuments(st: DbState, scope: CoroutineScope) {
     ) {
         PanelCard(title = "${st.database}.${st.table}", cardKey = "mo-docs", collapsible = false, right = {
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                Field(filter, { filter = it }, Modifier.width(300.dp), hint = "过滤，如 {\"status\":\"active\"} 或 id=5", mono = true)
-                DbBtn("查询", tone = DbBtnTone.Primary) { st.bump() }
-                DbBtn("+ 插入", tone = DbBtnTone.Ok) {
+                Field(filter, { filter = it }, Modifier.width(300.dp), hint = L["过滤_如_status_active_9546a0bc91"], mono = true)
+                DbBtn(L["查询_711363c424"], tone = DbBtnTone.Primary) { st.bump() }
+                DbBtn(L["插入_993805353c"], tone = DbBtnTone.Ok) {
                     scope.launch {
-                        val r = Modal.prompt("插入文档", listOf(FormField.Text("value", "JSON 文档", value = "{\"name\":\"example\"}", mono = true)), okText = "插入")
+                        val r = Modal.prompt(L["插入文档_6d53393c50"], listOf(FormField.Text("value", L["json_文档_e422afa510"], value = L["name_example_56b776791a"], mono = true)), okText = L["插入_022bf3283d"])
                             ?: return@launch
                         runDb("/db/doc/insert", jsonObjectOf("database" to st.database, "table" to st.table, "values" to r["value"]), reload = { st.bump() })
                     }
                 }
-                DbBtn("← 返回集合列表") { st.table = null }
+                DbBtn(L["返回集合列表_6cb3b7faf7"]) { st.table = null }
             }
         }) {
             val cols = data?.arr("columns")?.map { (it as? JsonPrimitive)?.content.orEmpty() }?.filter { it.isNotEmpty() } ?: emptyList()
             val rows = data?.arr("rows")?.filterIsInstance<JsonObject>() ?: emptyList()
             val raw = data?.arr("raw")?.filterIsInstance<JsonObject>() ?: rows
-            if (data?.str("total")?.isNotEmpty() == true) Text("${data?.str("total")} 个文档", style = dbMuted, fontSize = 11.sp)
+            if (data?.str("total")?.isNotEmpty() == true) Text(trf("0_个文档_3743ee0570", data?.str("total")), style = dbMuted, fontSize = 11.sp)
             DynamicTable(
                 columns = cols,
                 rows = rows,
                 maxHeight = 420,
-                extra = TableCol("操作", weight = 1.2f) { row ->
-                    val id = row.cell("_id")
+                extra = TableCol(L["操作_f3ea6d345e"], weight = 1.2f) { row ->
+                    val id = row.cell(L["id_a6526f25fb"])
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        DbBtn("编辑") {
+                        DbBtn(L["编辑_a7f814c0a4"]) {
                             scope.launch {
-                                val doc = raw.firstOrNull { it.cell("_id") == id } ?: row
+                                val doc = raw.firstOrNull { it.cell(L["id_a6526f25fb"]) == id } ?: row
                                 val r = Modal.prompt(
-                                    "更新文档（JSON，可用 \$set）",
-                                    listOf(FormField.Text("value", "更新内容", value = "{\"\$set\": $doc}", mono = true)),
-                                    okText = "更新",
+                                    L["更新文档_json_可用_set_a5bcf4c3cb"],
+                                    listOf(FormField.Text("value", L["更新内容_e86c7cc37a"], value = L["set_doc_e61f987e2d"], mono = true)),
+                                    okText = L["更新_d9db02d07a"],
                                 ) ?: return@launch
                                 runDb(
                                     "/db/doc/update",
@@ -279,9 +282,9 @@ private fun DocDocuments(st: DbState, scope: CoroutineScope) {
                                 )
                             }
                         }
-                        DbBtn("删除", tone = DbBtnTone.Danger) {
+                        DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) {
                             scope.launch {
-                                val okc = Modal.confirm("删除文档", "删除 _id = $id ？", okText = "删除", danger = true)
+                                val okc = Modal.confirm(L["删除文档_e7adbd575b"], trf("删除_id_0_5757172d9f", id), okText = L["删除_3755f56f2f"], danger = true)
                                 if (!okc) return@launch
                                 runDb("/db/doc/delete", jsonObjectOf("database" to st.database, "table" to st.table, "where" to id), reload = { st.bump() })
                             }
@@ -291,16 +294,16 @@ private fun DocDocuments(st: DbState, scope: CoroutineScope) {
             )
         }
         GridLayout(2) {
-            PanelCard(title = "索引 (${idx.size})", cardKey = "mo-idx") {
+            PanelCard(title = trf("索引_0_3cc54b03cb", idx.size), cardKey = "mo-idx") {
                 DynamicTable(
                     columns = listOf("name", "key", "unique"),
                     rows = idx,
                     extra = TableCol("", weight = 0.7f) { row ->
                         val n = row.str("name")
                         if (n != "_id_") {
-                            DbBtn("删除", tone = DbBtnTone.Danger) {
+                            DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) {
                                 scope.launch {
-                                    val okc = Modal.confirm("删除索引", "删除索引 $n ？", okText = "删除", danger = true)
+                                    val okc = Modal.confirm(L["删除索引_b35a3521e8"], trf("删除索引_0_603822ce94", n), okText = L["删除_3755f56f2f"], danger = true)
                                     if (!okc) return@launch
                                     runDb("/db/doc/index/drop", jsonObjectOf("database" to st.database, "table" to st.table, "name" to n), reload = { st.bump() })
                                 }
@@ -310,19 +313,19 @@ private fun DocDocuments(st: DbState, scope: CoroutineScope) {
                 )
                 Spacer(Modifier.size(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Field(newIdx, { newIdx = it }, Modifier.width(200.dp), hint = "{\"field\":1}", mono = true)
-                    CheckRow(uniq, { uniq = it }, "唯一")
-                    DbBtn("建索引", tone = DbBtnTone.Primary) {
+                    Field(newIdx, { newIdx = it }, Modifier.width(200.dp), hint = L["field_1_20e3a66eea"], mono = true)
+                    CheckRow(uniq, { uniq = it }, L["唯一_e805014aa5"])
+                    DbBtn(L["建索引_ba4fa8969d"], tone = DbBtnTone.Primary) {
                         val k = newIdx.trim()
-                        if (k.isEmpty()) AppState.toast("请输入索引键", ToastKind.Warn)
+                        if (k.isEmpty()) AppState.toast(tr("请输入索引键_b6a17465e7"), ToastKind.Warn)
                         else scope.launch {
                             runDb("/db/doc/index", jsonObjectOf("database" to st.database, "table" to st.table, "keys" to k, "unique" to uniq), reload = { st.bump() })
                         }
                     }
                 }
             }
-            PanelCard(title = "说明", cardKey = "mo-help") {
-                Text("MongoDB 的过滤条件支持 {\"字段\":值} 形式（内部转为查询条件）或 字段=值 简写。文档以 JSON 展示，_id 为文档标识。", style = dbMuted, fontSize = 12.sp)
+            PanelCard(title = L["说明_26670dda42"], cardKey = "mo-help") {
+                Text(L["mongodb_的过滤条件支持_字段_值_558264a7d8"], style = dbMuted, fontSize = 12.sp)
             }
         }
     }
@@ -346,56 +349,56 @@ fun DocAdvancedTab(st: DbState, scope: CoroutineScope) {
     ) {
         val names = dbs.map { it.str("name") }.ifEmpty { listOf("admin") }
         GridLayout(2) {
-            PanelCard(title = "维护操作", cardKey = "mo-ma") {
+            PanelCard(title = L["维护操作_7a7b416bde"], cardKey = "mo-ma") {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Bottom) {
-                    SelectField(dbSel, names, { dbSel = it }, Modifier.width(180.dp), label = "数据库")
+                    SelectField(dbSel, names, { dbSel = it }, Modifier.width(180.dp), label = L["数据库_f4dbbc63a5"])
                     SelectField(
                         value = when (act) {
-                            "validate" -> "校验全部集合"
-                            "reindex" -> "重建全部索引"
-                            "compact" -> "压缩集合"
-                            else -> "数据库统计"
+                            "validate" -> L["校验全部集合_f0db88cf97"]
+                            "reindex" -> L["重建全部索引_2a72978110"]
+                            "compact" -> L["压缩集合_3a8375459c"]
+                            else -> L["数据库统计_35f181019a"]
                         },
-                        options = listOf("数据库统计", "校验全部集合", "重建全部索引", "压缩集合"),
+                        options = listOf(L["数据库统计_35f181019a"], L["校验全部集合_f0db88cf97"], L["重建全部索引_2a72978110"], L["压缩集合_3a8375459c"]),
                         onValueChange = {
-                            act = when {
-                                it.startsWith("校验") -> "validate"
-                                it.startsWith("重建") -> "reindex"
-                                it.startsWith("压缩") -> "compact"
+                            act = when (it) {
+                                L["校验全部集合_f0db88cf97"] -> "validate"
+                                L["重建全部索引_2a72978110"] -> "reindex"
+                                L["压缩集合_3a8375459c"] -> "compact"
                                 else -> "stats"
                             }
                         },
                         modifier = Modifier.width(180.dp),
                     )
-                    DbBtn("执行", tone = DbBtnTone.Primary) {
+                    DbBtn(L["执行_28febba225"], tone = DbBtnTone.Primary) {
                         scope.launch {
-                            runDb("/db/maintenance", jsonObjectOf("engine" to "mongo", "database" to dbSel, "action" to act), outputTitle = "MongoDB 维护结果")
+                            runDb("/db/maintenance", jsonObjectOf("engine" to "mongo", "database" to dbSel, "action" to act), outputTitle = L["mongodb_维护结果_aaeb39f907"])
                         }
                     }
                 }
                 Spacer(Modifier.size(6.dp))
-                Text("MongoDB 不做空间回收，validate/reindex 是常用的例行维护。", style = dbMuted, fontSize = 11.sp)
+                Text(L["mongodb_不做空间回收_validate_634509e00a"], style = dbMuted, fontSize = 11.sp)
             }
-            PanelCard(title = "慢查询（剖析）", cardKey = "mo-prof") {
+            PanelCard(title = L["慢查询_剖析_e7d6b1beb3"], cardKey = "mo-prof") {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Bottom) {
                     SelectField(
-                        value = when (prof) { "1" -> "仅慢查询 (1)"; "2" -> "全部 (2)"; else -> "关闭 (0)" },
-                        options = listOf("关闭 (0)", "仅慢查询 (1)", "全部 (2)"),
-                        onValueChange = { prof = it.substringAfterLast("(").removeSuffix(")") },
+                        value = when (prof) { "1" -> L["仅慢查询_1_bafa223e9e"]; "2" -> L["全部_2_e5060e9fe1"]; else -> L["关闭_0_9aa50629e4"] },
+                        options = listOf(L["关闭_0_9aa50629e4"], L["仅慢查询_1_bafa223e9e"], L["全部_2_e5060e9fe1"]),
+                        onValueChange = { prof = it.substringAfterLast(L["s_28ed3a797d"]).removeSuffix(")") },
                         modifier = Modifier.width(220.dp),
                     )
-                    DbBtn("设置 setProfilingLevel", tone = DbBtnTone.Primary) {
+                    DbBtn(L["设置_setprofilinglevel_0fa6b3a320"], tone = DbBtnTone.Primary) {
                         scope.launch {
                             runDb(
                                 "/db/console",
                                 jsonObjectOf("engine" to "mongo", "database" to "admin", "sql" to "db.setProfilingLevel($prof, {slowms: 100})"),
-                                outputTitle = "剖析设置",
+                                outputTitle = L["剖析设置_3fa475fa54"],
                             )
                         }
                     }
                 }
                 Spacer(Modifier.size(6.dp))
-                Text("开启后可用 db.system.profile.find().limit(20) 查看慢操作。", style = dbMuted, fontSize = 11.sp)
+                Text(L["开启后可用_db_system_profile_439d38a566"], style = dbMuted, fontSize = 11.sp)
             }
         }
         SectionsCards(extra?.arr("sections") ?: emptyList(), "mo-mon")
@@ -404,7 +407,7 @@ fun DocAdvancedTab(st: DbState, scope: CoroutineScope) {
 
 private fun dropMongoDb(scope: CoroutineScope, st: DbState, n: String) {
     scope.launch {
-        val okc = Modal.confirm("删除数据库", "删除 $n 及其全部集合？不可恢复！", okText = "删除", danger = true)
+        val okc = Modal.confirm(L["删除数据库_f0f7b49980"], trf("删除_0_及其全部集合_不可恢复_27bf2aa4e3", n), okText = L["删除_3755f56f2f"], danger = true)
         if (!okc) return@launch
         runDb("/db/database/drop", jsonObjectOf("engine" to "mongo", "name" to n), reload = { st.bump() })
     }

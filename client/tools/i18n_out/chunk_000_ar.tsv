@@ -1,0 +1,120 @@
+0_6_每6小时_任务写入_e_369a8da904	0 */6 * * * كل 6 ساعات. تُكتب المهمة في /etc/cron.d/cm-<اسم> وتُنفَّذ بصلاحيات root.
+0_个文件_81d82139e8	 · {0} ملفات
+0_将进入回收站_保留_1_天_0a8a244509	سيُنقل «{0}» إلى سلة المهملات ويُحفظ لمدة {1} يومًا.
+0_条展示_命中_1_条_0e114bc461	({0} معروضة / {1} مطابقة)
+0_表示立即_189b797c4f	0 تعني فورًا
+10分钟_b82d31194e	10 دقائق
+14_4_表示约_2_天烧完_sre_常用告_681c4dc86d	≥14.4× تعني نفاد الميزانية خلال يومين تقريبًا (عتبة تنبيه شائعة لدى فرق SRE). مشكلات 4xx تعود للعميل ولا تُحتسب في الميزانية.
+163_邮箱_设置_pop3_smtp_2cd036d08b	بريد 163: الإعدادات → POP3/SMTP → التفعيل وإنشاء «رمز التفويض»، ثم إدخاله أدناه (وليست كلمة مرور تسجيل الدخول).
+1_列表_522d9cc510	1. القائمة
+1小时_3a9a579a96	ساعة واحدة
+24_小时发送_8e6d358b2e	المرسلة خلال 24 ساعة
+24_小时失败_f23fa2b0e3	الفشل خلال 24 ساعة
+24_小时拉起次数_8c19db84c7	مرات إعادة التشغيل خلال 24 ساعة
+24_小时通知_ed50056bf1	التنبيهات خلال 24 ساعة
+24小时_45a2727884	24 ساعة
+2_秒_5198950435	ثانيتان
+30_天_9401eee769	30 يومًا
+30_天后自动清除_b6c489a29c	يُمسح تلقائيًا بعد 30 يومًا
+33m_会话已关闭_be33fffa31	[33m[تم إغلاق الجلسة]
+402_额度_fbd56d7158	حصة 402
+403_权限_bd93595602	صلاحية 403
+429_拦截_0_7a460e2aa8	429 محظور {0}
+429_拦截_563bec273d	429 محظور
+429_次数_9333e8c60f	عدد 429
+429_限流_5bd5af3cd2	429 مقيّد بالمعدل
+499_中断_8a0629ae88	499 مقطوع
+4xx_0_499_中断_1_817ee52e07	4xx {0} · 499 مقطوع {1}
+4xx_0_5xx_1_未授权_4116249143	4xx {0} · 5xx {1} · غير مصرّح {2}
+4xx_0_无响应_1_cd8a2943ad	4xx {0} · بلا استجابة {1}
+4xx_错误_2368d2493d	أخطاء 4xx
+500_毫秒_cc7da43bcf	500 ms
+5xx_无响应_2355276e0d	5xx/بلا استجابة
+5xx_错误_6ed859ac67	أخطاء 5xx
+6小时_57937ccefc	6 ساعات
+7_天_e45a81074f	7 أيام
+account_lock_锁定_bbeaf242af	ACCOUNT LOCK (مقفل)
+account_unlock_解锁_b001d58ec0	ACCOUNT UNLOCK (مفتوح)
+acl_用户_0_b7e2c3ae45	مستخدمو ACL ({0})
+acl_用户_roles_size_8df0ffb733	مستخدمو ACL (${roles.size})
+act_服务_a3ebd5a4a1	خدمة $act
+analyze_会真实执行该语句以采集实际行数与_7e2c3ab4f2	تنفّذ ANALYZE العبارة فعليًا لجمع عدد الصفوف والأزمنة الحقيقية. تأكد أن الاستعلام للقراءة فقط؛ ونفّذ العبارات التي تحتوي على عمليات كتابة من وحدة SQL.
+analyze_更新统计_ae3c35e60c	ANALYZE (تحديث الإحصاءات)
+api_地址_acd8a50431	عنوان API
+api_基础地址_走代理时填_5c7aa1a51e	عنوان API الأساسي (املأه عند استخدام وسيط)
+app.description	عميل لوحة مراقبة وتكوين الخوادم
+app_连接的_cloud_monitor_面板_0ee7660770	عنوان لوحة Cloud Monitor التي يتصل بها التطبيق. الافتراضي http://8.153.153.176/panel، ويمكن تغييره إلى أي لوحة مُوزّعة.
+apt_任务进行中_0_6028d2fbd3	مهمة apt قيد التنفيذ: {0}
+apt_缓存_c1fb672ce3	ذاكرة APT المؤقتة
+auditd_未启用_2ca17006e2	auditd غير مُفعّل
+auditd_记录的敏感文件变更_谁_用什么命令_de2731982f	تغييرات الملفات الحساسة المسجّلة بواسطة auditd: من، بأي أمر، وأي ملف تغيّر
+badprov_个供应商配额耗尽_363bea5ae6	نفدت حصة $badProv من المزوّد
+banner_能顺带看到对端_openssh_版_6a7382b65e	يكشف البانر أيضًا عن إصدار OpenSSH على الطرف الآخر، وهو مفيد لتقييم حاجة الترقية
+bgsave_会在后台生成_rdb_文件_flu_221d58038d	تنشئ BGSAVE ملف RDB في الخلفية؛ أما FLUSHDB/ALL فيحذفان كل البيانات ويتطلبان تأكيدًا.
+bgsave_后台快照_7679d32e01	BGSAVE (لقطة في الخلفية)
+bilibili_视频_7fcd50c628	فيديو Bilibili
+certbot_安装日志_1bf087319a	سجل تثبيت certbot
+certbot_已安装_7690d6f09a	certbot مُثبّت
+certbot_未安装_b2dd3df63b	certbot غير مُثبّت
+chat_id_或_频道名_beb6893b9b	Chat ID أو @اسم_القناة
+check_校验_8a646f2a85	CHECK (تحقق)
+common.loading	جارٍ التحميل…
+corecount_核高负载_cores_afc43a96da	$coreCount نواة بحمل مرتفع · $coresTotal نواة إجمالًا
+cpu_使用率_35b17729e2	استخدام CPU %
+cpu_使用率_bdf91f384b	استخدام CPU
+cpu_占用_89f8a08e80	إشغال CPU
+cpu_占用_top_52d0789676	أعلى إشغال CPU
+cpu_核数_2a5bc46dd3	عدد نوى CPU
+cron_表达式_6859f82ab2	تعبير cron
+crontab_l_条目_6be8b3d177	مدخلات crontab -l
+csv_内容_粘贴_17c5b7dbff	محتوى CSV (لصق)
+csv_导入结果_3a4d7db0d7	نتيجة استيراد CSV
+ctrl_shift_c_v_复制粘贴_会话_7c3872ffae	Ctrl+Shift+C/V للنسخ/اللصق · تبقى الجلسة لمدة دقيقتين بعد مغادرة هذه الصفحة (server/shell.js GRACE_MS)· 
+curlabel_按天_12556e7b0c	$curLabel · يوميًا
+curlabel_按天_可复用_vs_8cc7c3562a	$curLabel · يوميًا · إعادة استخدام مقابل جديد
+days_天_a6409fc14f	$days يومًا
+db2_sql_以实例用户执行_51f6dbcefb	SQL الخاص بـ Db2 (يُنفَّذ بصلاحيات مستخدم الـ instance)
+db2_授权_grant_revoke_eb50e06ee0	صلاحيات Db2 (GRANT / REVOKE)
+db2_用_grant_revoke_管理权限_209a33078b	تدير Db2 الصلاحيات باستخدام GRANT/REVOKE؛ ويجب أولًا إنشاء المستخدم على الـ instance (باستخدام db2 CREATE USER أو حساب نظام التشغيل).
+ddl_定义_可编辑后执行_20bea6e0ac	تعريف DDL (قابل للتحرير قبل التنفيذ)
+ddl_执行结果_d203cf40d4	نتيجة تنفيذ DDL
+dirty_待写盘_a3b33885f4	Dirty (بانتظار الكتابة على القرص)
+docker_system_prune_af_ead57cbf4c	docker system prune -af: يحذف الصور/الشبكات/الحاويات المتوقفة غير المستخدمة
+docker_安装日志_08ccdea4e9	سجل تثبيت Docker
+docker_容器_4372ba1200	حاويات Docker
+docker_引擎_755076c561	محرك Docker
+docker_清理_795b9faf02	تنظيف Docker
+drop_table_删除表_0a38c31f25	DROP TABLE (حذف الجدول)
+du_尚未返回结果_0af775f143	لم يُرجع du أي نتائج بعد
+e_name_将进入回收站_保留_f_b07c62be90	سيُنقل «${e.name}» إلى سلة المهملات ويُحفظ لمدة ${FileStore.trashDays.value} يومًا.
+else_dat_3b7177d8b6	\n            else -> dateTime(t)\n        }\n    }\n\n    /** عرض النسبة المئوية: `99.1%` (دقة ≤0.1 وإزالة الأصفار الزائدة). */\n    fun pct(p: Number?, suffix: String = 
+error_log_累计_40739fb64e	إجمالي error.log
+etc_cron_d_其它任务_1075d72b5f	/etc/cron.d مهام أخرى
+etc_cron_daily_cron_h_0b91b3ac69	· سكربتات /etc/cron.daily و cron.hourly:
+explain_分析_5739bed548	تحليل EXPLAIN
+fail2ban_未启用_dba20ac8ac	fail2ban غير مُفعّل
+fail2ban_未安装_未运行_006151f653	fail2ban غير مُثبّت/غير قيد التشغيل
+fail2ban_监狱_fd16fed272	سجون fail2ban
+fail2ban_运行中_401151de3a	fail2ban قيد التشغيل
+fail2ban_防爆破_e5d811ec15	Fail2ban حماية من الهجمات المكثفة
+failedcount_个服务失败_4bb48044cc	$failedCount خدمة فشلت
+failing_项失败_c0f4c9b479	$failing عنصر فشل
+flushall_清空全部_d122dc5ecd	FLUSHALL (تفريغ الكل)
+flushdb_清空当前库_4587c55eaa	FLUSHDB (تفريغ قاعدة البيانات الحالية)
+gzip_归档_39fcde3a7b	أرشيف gzip
+h_label_采集完成_a374e6c968	اكتملت جمع {0}
+hmac_签名密钥_可空_d93d6e2984	مفتاح توقيع HMAC (اختياري)
+http_方法_b1d337493c	طريقة HTTP
+inode_使用_0_小文件过多时会先耗尽_241698504d	استخدام inode {0}% (تنفد الـ inode أولًا عند كثرة الملفات الصغيرة)
+inode_使用_m_inodeusedpc_cd43f1cf53	استخدام inode ${m.inodeUsedPct}% (تنفد الـ inode أولًا عند كثرة الملفات الصغيرة)
+inode_使用率_5279b4b61c	معدل استخدام inode
+ip_或域名_6ebd1799de	IP أو اسم النطاق
+ip_来源_f387b79f3d	مصدر IP
+journal_apt_轮转日志_093250e13f	journal + APT + السجلات الدوّارة
+journal_上限_0_1_天_d18e51fc4e	حد journal {0} / {1} يومًا
+journal_上限_1f54a3217f	حد journal
+journal_上限_s_journalsi_1ef09f8f8d	حد journal ${s.journalSize} / ${s.journalDays} يومًا
+journal_保留天数_e74cafd94c	أيام الاحتفاظ بـ journal
+journal_日志_b4bd477c2c	سجلات journal
+json_文档_e422afa510	مستند JSON
+label_失败_4c06e7d781	<label> فشل

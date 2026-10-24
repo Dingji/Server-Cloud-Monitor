@@ -1,0 +1,120 @@
+仅本地_5c28a4b5d1	Somente local
+仅结构_15c49958e4	Somente estrutura
+仅结构_8cdf512d85	(Somente estrutura)
+仅结构_不含数据_86341bfbf0	Somente estrutura (sem dados)
+仅运行_affb726f94	Somente em execução
+仅面板铃铛_3ecf2a6ea9	Somente sino do painel
+今天_17e83cc25e	Hoje
+今天_hm_b5123a00e4	Hoje $hm
+今天到期_fb2cb94029	Vence hoje
+今日_0_会话_1_客户端_2_dfa0d41ced	Hoje {0} · Sessões {1} · Clientes {2}
+今日_0_新增_1_e17159d28e	Hoje {0} · Novos {1}
+今日_0_请求_f79a1b4d82	{0} solicitações hoje
+今日_24_小时分布_d5b7360f18	Distribuição por hora de hoje (24 h)
+今日_574cd4fb79	Hoje
+今日_token_d0b5adbe07	Token de hoje
+今日出站_ae22fbbb49	Saída de hoje
+今日成功率_70d58b9151	Taxa de sucesso de hoje
+今日请求_0_8e7833564f	Solicitações de hoje {0}
+今日请求_731c00a176	Solicitações de hoje
+今日邮件发送成功_060f80e076	E-mails enviados com sucesso hoje
+今日错误_97f268b84a	Erros de hoje
+从_0_切换到_94f8b2509a	Alterado de {0} para:\n\n
+从未发信_d605d91365	Nunca enviado
+从镜像站拉取最新软件包列表_安装新包前建议先刷新_18f22cecb1	Obtém a lista mais recente de pacotes do mirror; recomenda-se atualizar antes de instalar pacotes novos.
+代码_21cdbf098d	 〔Código〕 
+代码_33246dda76	Código
+以_0_执行_结果支持多语句_1_052948bd3b	Executar como {0} · O resultado aceita várias instruções · {1}
+以_dbmeta_label_st_engi_c4aac0c4ce	Executar como ${DbMeta.label(st.engineId)} · O resultado aceita várias instruções · $dialect
+以下已安装包依赖它_卸载可能连带移除或导致异常_f26237adcd	Os pacotes instalados a seguir dependem dele; removê-lo também pode removê-los ou causar falhas:\n
+以后_ac5d03ece3	Mais tarde
+仪表盘_2c0ab88554	Painel
+任何拿到链接的人_无需登录_可查看_3f77643748	Qualquer pessoa com o link (sem login) pode visualizá-lo
+任务_3172b317f9	Tarefas
+任务名_c8d6eeaa4c	Nome da tarefa
+任务名称_2e30469899	Nome da tarefa
+任务启动失败_服务端未返回任务_id_500799f8a2	Falha ao iniciar a tarefa: o servidor não retornou o id da tarefa
+任务执行失败_97312db4c3	Falha na execução da tarefa
+任务文件_8f4e93dc3d	Arquivo da tarefa
+任务状态已丢失_服务端可能重启过_请重新发起该_3a4e99bf96	Estado da tarefa perdido (o servidor pode ter reiniciado), tente novamente a operação
+休眠_0_c11a981edd	Suspender {0}
+优先级_7cabe771eb	Prioridade
+优秀_3e61f36792	Excelente
+会自动执行配置校验_d447aa930e	(a validação da configuração é executada automaticamente)
+会话_1_497c4ea2d5	Sessão 1
+会话_836ffe0e10	Sessão
+会话_titleseq_33244bea87	Sessão $titleSeq
+会话上下文明细_内存视图_22c78a29f0	Detalhes do contexto da sessão (visão na memória)
+会话上下文构成_ce6fae8e45	Composição do contexto da sessão
+会话内存视图_fcd9415f11	Visão de memória da sessão
+会话分布_按请求数_b85c7c435b	Distribuição de sessões (por número de solicitações)
+会话已关闭_095a652630	Sessão encerrada
+会话已过期_请重新登录_32f89bb43c	Sessão expirada, faça login novamente
+会话批量清理_55815972d3	Limpeza em massa de sessões
+会话排行_按上下文字节_0_1_6f0f0e51a3	Ranking de sessões (por bytes de contexto)  {0} · {1} sessões / {2} rodadas · total {3}
+会话排行_按上下文字节_e47849da63	Ranking de sessões (por bytes de contexto)
+会话数_4d72abd2e9	Número de sessões
+会话数_今日_9cd79de908	Número de sessões (hoje)
+估算成本_f05235023c	Custo estimado
+位置_88c34452cc	Local
+低_b9ee259b7f	Baixo
+低于告警线的证书任务_695579ce30	Tarefas de certificados abaixo do limite de alerta
+作用范围_95a5e61424	Escopo
+使用_ssl_465_端口勾选_316a136e99	Usar SSL (marcar para a porta 465)
+使用率_8ca02f90d1	Uso
+例如_工作_项目资料_190eafea68	ex.: Trabalho, arquivos de projetos
+供应商状态_ed8f7c5676	Status do provedor
+依赖_0_推荐依赖_1_反向依赖_2507ad6a45	Dependências {0} · Recomendadas {1} · Inversas {2}
+依赖_2ebf56c207	\n\n--- Dependências ---\n
+依赖_depn_推荐依赖_recn_684b03c97f	Dependências $depN · Recomendadas $recN · Inversas $revN
+保存_fadf24dbc5	Salvar
+保存_smtp_设置_31e1de2129	Salvar configurações SMTP
+保存中_6644f06197	Salvando…
+保存地址_b4507bac53	Salvar endereço
+保存失败_40525a7328	Falha ao salvar
+保存失败_b12163000c	Falha ao salvar:
+保存失败或被取消_7e2bbcfe18	Falha ao salvar ou cancelado
+保存并重连_a440c33bd4	Salvar e reconectar
+保存数据库连接_ccfc22f810	Salvar conexão do banco de dados
+保存文件_184adfdabf	Salvar arquivo
+保存被取消_82f61f25b1	Salvamento cancelado
+保存通知规则_81afc138cf	Salvar regras de notificação
+保存阈值_1a6c3945df	Salvar limite
+保留_0_份_6f62f9cd31	Manter {0} cópias
+保留_30_份_relay_backup_tim_b625d85371	Manter 30 cópias; relay-backup.timer executa diariamente às 03:30.
+保留最近_n_个_855e3ce9c7	Manter os últimos N
+修复失败_3d6dfbe1ad	Falha na reparação
+修复执行记录_2669e0f726	Registro de execução da reparação
+修复未成功_d8d320b456	Reparação não concluída
+修改_c9c77517fe	Editar
+修改会写入_etc_ssh_sshd_conf_4cb39a7a47	As alterações são gravadas em /etc/ssh/sshd_config.d/99-cloud-monitor.conf; primeiro o sshd -t é executado para validar e, em caso de falha, a alteração é descartada automaticamente. Configure as chaves antes de desativar a autenticação por senha.
+修改列_类型_默认值_可空_8bebfff9e5	Editar coluna (tipo/padrão/nullable)
+修改失败_9abb465039	Falha ao editar
+修改密码_0_1a306d5990	Alterar senha - {0}
+修改密码_0ae20ac3af	Alterar senha
+修改密码_n_00b25b96ac	Alterar senha - $n
+修改密码_name_d9c700cba6	Alterar senha - $name
+修改所有者_3876d6ab1f	Alterar proprietário
+修改时间_af71bc5cc4	Data de modificação
+修改登录密码_321d9d86f6	Alterar senha de login
+修改端口_路径需编辑_config_json_后_983be325ee	Para alterar porta/caminho, edite config.json e reinicie
+修改限流阈值_编辑_00_limits_conf_1152af13c3	Para alterar os limites de taxa: edite 00-limits.conf e depois nginx -t && systemctl reload nginx.
+修改面板密码_17fc433ccc	Alterar senha do painel
+倒计时_80176c18f3	Contagem regressiva
+候选_0461e4db19	Candidatos
+值_321b955840	Valor
+值越小越倾向使用物理内存_数据库服务器常用_10_d669b666d0	Quanto menor o valor, mais a memória física é usada; servidores de banco de dados costumam usar 10.
+偏快_8900d928c6	Um pouco rápido
+停止_0_e0be2c8b16	Parar {0}
+停止_a17f70a8d3	Parar
+停止_fail2ban_c4775a3abd	Parar Fail2ban
+停止_label_8f0e06c363	Parar $label
+停止_容器_c97111b01f	Parar contêiner
+停止分享_55c70caa51	Parar compartilhamento
+停止后将失去_ssh_防爆破保护_cf3e594655	Ao parar, a proteção SSH contra força bruta será perdida.
+停止引擎_f83e27f9a5	Parar mecanismo
+停止自愈_8e53c62499	Parar autorreparação
+停止跟随_72312418e3	Parar de seguir
+停用_0_其会话将立即失效_bd25e844b8	Desativar {0}? As sessões dele ficarão inválidas imediatamente.
+停用_d989e55188	Desativar
+停用用户_3f2f67ac37	Desativar usuário

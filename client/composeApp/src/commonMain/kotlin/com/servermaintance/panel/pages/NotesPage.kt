@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -214,7 +217,7 @@ private fun NotesInner() {
             throw e
         } catch (e: Exception) {
             if ((e as? ApiException)?.isAuth != true) {
-                error = e.message ?: "加载失败"
+                error = e.message ?: L["加载失败_f6b7a41e56"]
             }
         } finally {
             loading = false
@@ -267,7 +270,7 @@ private fun NotesInner() {
             throw e
         } catch (e: Exception) {
             saveState = "err"
-            NoteBoxState.toast("保存失败：" + (e.message ?: ""), ToastKind.Err)
+            NoteBoxState.toast(tr("保存失败_b12163000c") + (e.message ?: ""), ToastKind.Err)
         }
     }
 
@@ -314,7 +317,7 @@ private fun NotesInner() {
         val usable = files.filter { it.bytes.isNotEmpty() }
         if (usable.isEmpty()) return
         scope.launch {
-            NoteBoxState.toast("上传中…（${usable.size} 个文件）")
+            NoteBoxState.toast(tr("上传中_usable_size_个文件_79da89118e"))
             var ok = 0
             for (f in usable) {
                 try {
@@ -328,17 +331,17 @@ private fun NotesInner() {
                     else insertAt("\n[$label]($url)\n")
                     ok++
                 } catch (e: Exception) {
-                    NoteBoxState.toast("上传失败：" + (e.message ?: ""), ToastKind.Err)
+                    NoteBoxState.toast(tr("上传失败_e3f9c342c6") + (e.message ?: ""), ToastKind.Err)
                     break
                 }
             }
-            if (ok > 0) NoteBoxState.toast("已插入 $ok 个文件", ToastKind.Ok)
+            if (ok > 0) NoteBoxState.toast(tr("已插入_ok_个文件_5032d55e92"), ToastKind.Ok)
         }
     }
 
     PageScaffold(
-        title = "笔记",
-        desc = "NoteBox 云端笔记（多级归类 · 回收站 · Markdown · 共享）",
+        title = L["笔记_697dbde096"],
+        desc = L["notebox_云端笔记_多级归类_回收站_df77794405"],
         scrollBody = false, // 列表/编辑器各自在有界区域内滚动
         actions = { NoteUserChip() },
     ) {
@@ -352,29 +355,29 @@ private fun NotesInner() {
                 val blocked = emptySet<Int>()
                 val opts = folderParentOptions(folders)
                     .filter { it.first == null || it.first !in blocked }
-                val initial = opts.firstOrNull { it.first == parent }?.second ?: "（顶层）"
+                val initial = opts.firstOrNull { it.first == parent }?.second ?: L["顶层_8dcb7af51d"]
                 val r = Modal.prompt(
-                    "新建归类",
+                    L["新建归类_e4ffdeb063"],
                     listOf(
-                        FormField.Text("name", "名称", "", "例如：工作、项目资料"),
-                        FormField.Select("parent", "上级归类", opts.map { it.second }, initial),
-                        FormField.Select("color", "颜色", folderColorNames, "默认"),
+                        FormField.Text("name", L["名称_1be7ae4fc2"], "", L["例如_工作_项目资料_190eafea68"]),
+                        FormField.Select("parent", L["上级归类_974c15f8d9"], opts.map { it.second }, initial),
+                        FormField.Select("color", L["颜色_8ef4886033"], folderColorNames, L["默认_c8d09cf955"]),
                     ),
-                    okText = "创建",
+                    okText = L["创建_fcbd093292"],
                 ) ?: return@launch
                 val name = r["name"].orEmpty().trim()
                 if (name.isEmpty()) {
-                    NoteBoxState.toast("归类名称不能为空", ToastKind.Err)
+                    NoteBoxState.toast(tr("归类名称不能为空_8aeba11184"), ToastKind.Err)
                     return@launch
                 }
                 val pid = opts.firstOrNull { it.second == r["parent"] }?.first
-                val hex = NB_NOTE_COLORS[folderColorNames.indexOf(r["color"] ?: "默认").coerceAtLeast(0)]
+                val hex = NB_NOTE_COLORS[folderColorNames.indexOf(r["color"] ?: L["默认_c8d09cf955"]).coerceAtLeast(0)]
                 try {
                     withContext(Dispatchers.IO) { NoteBoxState.api.createFolder(name, "note", pid, hex) }
-                    NoteBoxState.toast("已创建归类「$name」", ToastKind.Ok)
+                    NoteBoxState.toast(tr("已创建归类_name_4dcdef1d04"), ToastKind.Ok)
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "创建失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("创建失败_deb3990191"), ToastKind.Err)
                 }
             }
         }
@@ -383,40 +386,40 @@ private fun NotesInner() {
                 val blocked = folderSubtree(folder.id)
                 val opts = folderParentOptions(folders)
                     .filter { it.first == null || it.first !in blocked }
-                val initial = opts.firstOrNull { it.first == folder.parentId }?.second ?: "（顶层）"
+                val initial = opts.firstOrNull { it.first == folder.parentId }?.second ?: L["顶层_8dcb7af51d"]
                 val r = Modal.prompt(
-                    "编辑归类",
+                    L["编辑归类_c2e1877f39"],
                     listOf(
-                        FormField.Text("name", "名称", folder.name),
-                        FormField.Select("parent", "上级归类", opts.map { it.second }, initial),
-                        FormField.Select("color", "颜色", folderColorNames, colorNameOf(folder.color)),
+                        FormField.Text("name", L["名称_1be7ae4fc2"], folder.name),
+                        FormField.Select("parent", L["上级归类_974c15f8d9"], opts.map { it.second }, initial),
+                        FormField.Select("color", L["颜色_8ef4886033"], folderColorNames, colorNameOf(folder.color)),
                     ),
-                    okText = "保存",
+                    okText = L["保存_fadf24dbc5"],
                 ) ?: return@launch
                 val name = r["name"].orEmpty().trim()
                 if (name.isEmpty()) {
-                    NoteBoxState.toast("归类名称不能为空", ToastKind.Err)
+                    NoteBoxState.toast(tr("归类名称不能为空_8aeba11184"), ToastKind.Err)
                     return@launch
                 }
                 val pid = opts.firstOrNull { it.second == r["parent"] }?.first
-                val hex = NB_NOTE_COLORS[folderColorNames.indexOf(r["color"] ?: "默认").coerceAtLeast(0)]
+                val hex = NB_NOTE_COLORS[folderColorNames.indexOf(r["color"] ?: L["默认_c8d09cf955"]).coerceAtLeast(0)]
                 try {
                     withContext(Dispatchers.IO) {
                         NoteBoxState.api.updateFolder(folder.id, name, pid, hex, folder.position)
                     }
-                    NoteBoxState.toast("归类已更新", ToastKind.Ok)
+                    NoteBoxState.toast(tr("归类已更新_219432c27a"), ToastKind.Ok)
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "保存失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("保存失败_40525a7328"), ToastKind.Err)
                 }
             }
         }
         fun removeFolder(folder: NoteFolder) {
             scope.launch {
                 val ok = Modal.confirm(
-                    "删除归类",
-                    "删除「${folder.name}」？其中的笔记与子归类会移动到上一级，不会被删除。",
-                    okText = "删除", danger = true,
+                    L["删除归类_f282b52e6b"],
+                    trf("删除_0_其中的笔记与子归类会移动到上一级_327496c4d8", folder.name),
+                    okText = L["删除_3755f56f2f"], danger = true,
                 )
                 if (!ok) return@launch
                 try {
@@ -427,10 +430,10 @@ private fun NotesInner() {
                             folderSel = folder.parentId?.let { "f:$it" } ?: "all"
                         }
                     }
-                    NoteBoxState.toast("归类已删除，内容已移到上一级", ToastKind.Ok)
+                    NoteBoxState.toast(tr("归类已删除_内容已移到上一级_933faa2f08"), ToastKind.Ok)
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "删除失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("删除失败_72250c5922"), ToastKind.Err)
                 }
             }
         }
@@ -441,23 +444,23 @@ private fun NotesInner() {
         fun moveNoteToFolder(note: NoteRec) {
             scope.launch {
                 val all = folderFlat(folders)
-                val labels = listOf("未归类") + all.map { folderPathName(folders, it.id) }
+                val labels = listOf(L["未归类_9af2c7babc"]) + all.map { folderPathName(folders, it.id) }
                 val current = folderPathName(folders, note.folderId)
                 val r = Modal.prompt(
-                    "移动到归类",
-                    listOf(FormField.Select("folder", "选择归类", labels, current)),
-                    okText = "移动",
+                    L["移动到归类_cbd544b32e"],
+                    listOf(FormField.Select("folder", L["选择归类_a34a4beaca"], labels, current)),
+                    okText = L["移动_591f3aa55f"],
                 ) ?: return@launch
-                val label = r["folder"] ?: "未归类"
-                val target = if (label == "未归类") null else
+                val label = r["folder"] ?: L["未归类_9af2c7babc"]
+                val target = if (label == L["未归类_9af2c7babc"]) null else
                     all.firstOrNull { folderPathName(folders, it.id) == label }?.id
                 try {
                     val updated = withContext(Dispatchers.IO) { NoteBoxState.api.moveNote(note.id, target) }
                     replaceNote(updated)
-                    NoteBoxState.toast("已移动到「$label」", ToastKind.Ok)
+                    NoteBoxState.toast(tr("已移动到_label_6617d663be"), ToastKind.Ok)
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "移动失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("移动失败_5ff5a6803e"), ToastKind.Err)
                 }
             }
         }
@@ -467,25 +470,26 @@ private fun NotesInner() {
                     val updated = withContext(Dispatchers.IO) { NoteBoxState.api.setNoteColor(note.id, hex) }
                     replaceNote(updated)
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "颜色修改失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("颜色修改失败_184c2f8e4b"), ToastKind.Err)
                 }
             }
         }
         fun trashNote(note: NoteRec) {
             scope.launch {
                 val ok = Modal.confirm(
-                    "移入回收站", "将「${note.title.ifEmpty { "未命名笔记" }}」移入回收站？可随时恢复。",
-                    okText = "移入回收站",
+                    L["移入回收站_298cbe31d3"],
+                    trf("将_0_移入回收站_可随时恢复_b035da26b3", note.title.ifEmpty { L["未命名笔记_044c507dcb"] }),
+                    okText = L["移入回收站_298cbe31d3"],
                 )
                 if (!ok) return@launch
                 try {
                     withContext(Dispatchers.IO) { NoteBoxState.api.trashNote(note.id) }
                     notes = notes.filterNot { it.id == note.id }
                     if (currentId == note.id) { currentId = null; loadedId = null }
-                    NoteBoxState.toast("已移入回收站", ToastKind.Ok)
+                    NoteBoxState.toast(tr("已移入回收站_54e2ac947c"), ToastKind.Ok)
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "操作失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("操作失败_09e424b5e8"), ToastKind.Err)
                 }
             }
         }
@@ -493,29 +497,31 @@ private fun NotesInner() {
             scope.launch {
                 try {
                     withContext(Dispatchers.IO) { NoteBoxState.api.restoreNote(note.id) }
-                    NoteBoxState.toast("已恢复「${note.title.ifEmpty { "未命名笔记" }}」", ToastKind.Ok)
+                    NoteBoxState.toast(trf("已恢复_0_120218aebb", note.title.ifEmpty { L["未命名笔记_044c507dcb"] }), ToastKind.Ok)
                     if (currentId == note.id) { currentId = null; loadedId = null }
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "恢复失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("恢复失败_76842a0348"), ToastKind.Err)
                 }
             }
         }
         fun purgeNote(note: NoteRec) {
             scope.launch {
                 val ok = Modal.confirm(
-                    "永久删除", "永久删除「${note.title.ifEmpty { "未命名笔记" }}」？此操作不可恢复。",
-                    okText = "永久删除", danger = true,
+                    L["永久删除_a7fadbe126"],
+                    trf("永久删除_0_此操作不可恢复_c22836ea42", note.title.ifEmpty { L["未命名笔记_044c507dcb"] }),
+                    okText = L["永久删除_a7fadbe126"],
+                    danger = true,
                 )
                 if (!ok) return@launch
                 try {
                     withContext(Dispatchers.IO) { NoteBoxState.api.deleteNote(note.id) }
                     notes = notes.filterNot { it.id == note.id }
                     if (currentId == note.id) { currentId = null; loadedId = null }
-                    NoteBoxState.toast("已永久删除", ToastKind.Ok)
+                    NoteBoxState.toast(tr("已永久删除_b2e5fd714f"), ToastKind.Ok)
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "删除失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("删除失败_72250c5922"), ToastKind.Err)
                 }
             }
         }
@@ -527,25 +533,25 @@ private fun NotesInner() {
                     if (folderSel == "trash" || folderSel == "shared") folderSel = "all"
                     notes = listOf(rec) + notes
                     selectNote(rec.id)
-                    NoteBoxState.toast("已复制笔记", ToastKind.Ok)
+                    NoteBoxState.toast(tr("已复制笔记_578fe5f530"), ToastKind.Ok)
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast(e.message ?: "复制失败", ToastKind.Err)
+                    NoteBoxState.toast(e.message ?: tr("复制失败_f2c6b5167b"), ToastKind.Err)
                 }
             }
         }
 
         /* 工具行：搜索 + 归类 + 标签 + 排序 + 新建（底板容器，视觉归组） */
         val barShape = RoundedCornerShape(nbCardRadius(10.dp))
-        val folderLabels = listOf("全部笔记", "未归类", "共享给我", "回收站") +
+        val folderLabels = listOf(L["全部笔记_be5bc30cf8"], L["未归类_9af2c7babc"], L["共享给我_6863118293"], L["回收站_64ea8751fb"]) +
             folderFlat(folders).map { folderPathName(folders, it.id) }
         val currentFolderLabel = when {
-            folderSel == "all" -> "全部笔记"
-            folderSel == "unfiled" -> "未归类"
-            folderSel == "shared" -> "共享给我"
-            folderSel == "trash" -> "回收站"
+            folderSel == "all" -> L["全部笔记_be5bc30cf8"]
+            folderSel == "unfiled" -> L["未归类_9af2c7babc"]
+            folderSel == "shared" -> L["共享给我_6863118293"]
+            folderSel == "trash" -> L["回收站_64ea8751fb"]
             else -> folderSel.removePrefix("f:").toIntOrNull()
-                ?.let { folderPathName(folders, it) } ?: "全部笔记"
+                ?.let { folderPathName(folders, it) } ?: L["全部笔记_be5bc30cf8"]
         }
         val createNewNote: () -> Unit = {
             scope.launch {
@@ -553,7 +559,7 @@ private fun NotesInner() {
                     if (folderSel == "trash" || folderSel == "shared") folderSel = "all"
                     val n = withContext(Dispatchers.IO) {
                         NoteBoxState.api.createNote(
-                            "未命名笔记",
+                            L["未命名笔记_044c507dcb"],
                             folderId = folderParam.toIntOrNull(),
                         )
                     }
@@ -564,31 +570,31 @@ private fun NotesInner() {
                     NoteBoxState.refreshStats()
                     load()
                 } catch (e: Exception) {
-                    NoteBoxState.toast("新建失败：" + (e.message ?: ""), ToastKind.Err)
+                    NoteBoxState.toast(tr("新建失败_ae047a3e45") + (e.message ?: ""), ToastKind.Err)
                 }
             }
         }
         val folderSelect: @Composable () -> Unit = {
             Box(Modifier.widthIn(max = if (platformHandheld) 160.dp else 150.dp)) {
-                SelectField(currentFolderLabel, folderLabels + "＋ 新建归类…", {
+                SelectField(currentFolderLabel, folderLabels + L["新建归类_64cf5b76fb"], {
                     when (it) {
-                        "全部笔记" -> folderSel = "all"
-                        "未归类" -> folderSel = "unfiled"
-                        "共享给我" -> folderSel = "shared"
-                        "回收站" -> folderSel = "trash"
-                        "＋ 新建归类…" -> createFolder(folderSel.removePrefix("f:").toIntOrNull())
+                        L["全部笔记_be5bc30cf8"] -> folderSel = "all"
+                        L["未归类_9af2c7babc"] -> folderSel = "unfiled"
+                        L["共享给我_6863118293"] -> folderSel = "shared"
+                        L["回收站_64ea8751fb"] -> folderSel = "trash"
+                        L["新建归类_64cf5b76fb"] -> createFolder(folderSel.removePrefix("f:").toIntOrNull())
                         else -> folderFlat(folders)
                             .firstOrNull { f -> folderPathName(folders, f.id) == it }
                             ?.let { f -> folderSel = "f:${f.id}" }
                     }
-                }, placeholder = "归类")
+                }, placeholder = L["归类_6a9b5537c6"])
             }
         }
         val tagSelect: @Composable () -> Unit = {
             Box(Modifier.widthIn(max = 130.dp)) {
-                SelectField(tag, listOf("全部标签") + tags, {
-                    tag = if (it == "全部标签") "" else it
-                }, placeholder = "全部标签")
+                SelectField(tag, listOf(L["全部标签_ffd92f5524"]) + tags, {
+                    tag = if (it == L["全部标签_ffd92f5524"]) "" else it
+                }, placeholder = L["全部标签_ffd92f5524"])
             }
         }
         val barModifier = Modifier.fillMaxWidth().padding(bottom = 10.dp)
@@ -607,9 +613,9 @@ private fun NotesInner() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    SearchField(q, { q = it }, Modifier.weight(1f), placeholder = "搜索笔记…")
+                    SearchField(q, { q = it }, Modifier.weight(1f), placeholder = L["搜索笔记_8699c6b13f"])
                     Box(Modifier.nbPressScale(0.96f)) {
-                        PrimaryBtn(text = "新建", icon = "plus", onClick = createNewNote)
+                        PrimaryBtn(text = L["新建_0cda8d1c71"], icon = "plus", onClick = createNewNote)
                     }
                 }
                 Row(
@@ -627,26 +633,26 @@ private fun NotesInner() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                SearchField(q, { q = it }, Modifier.weight(1f), placeholder = "搜索笔记…")
+                SearchField(q, { q = it }, Modifier.weight(1f), placeholder = L["搜索笔记_8699c6b13f"])
                 folderSelect()
                 tagSelect()
                 Box(Modifier.widthIn(max = 110.dp)) {
-                    val sortLabels = listOf("最近更新", "标题", "创建时间")
+                    val sortLabels = listOf(L["最近更新_80920cd667"], L["标题_748d7dc7e3"], L["创建时间_84e3802f60"])
                     SelectField(
                         if (sort == "title") sortLabels[1] else if (sort == "created") sortLabels[2] else sortLabels[0],
                         sortLabels,
                         {
                             sort = when (it) {
-                                "标题" -> "title"
-                                "创建时间" -> "created"
+                                L["标题_748d7dc7e3"] -> "title"
+                                L["创建时间_84e3802f60"] -> "created"
                                 else -> ""
                             }
                         },
-                        placeholder = "排序",
+                        placeholder = L["排序_dc35af8d69"],
                     )
                 }
                 Box(Modifier.nbPressScale(0.96f)) {
-                    PrimaryBtn(text = "新建笔记", icon = "plus", onClick = createNewNote)
+                    PrimaryBtn(text = L["新建笔记_14fd2fe5ca"], icon = "plus", onClick = createNewNote)
                 }
             }
         }
@@ -662,7 +668,7 @@ private fun NotesInner() {
                             NbSkeletonList(rows = 9, modifier = Modifier.fillMaxWidth(), rowHeight = 54.dp)
                         }
                         Box(Modifier.weight(1f).fillMaxHeight().padding(start = 12.dp), contentAlignment = Alignment.Center) {
-                            NbEmptyGlow(icon = "note", title = "正在加载笔记…")
+                            NbEmptyGlow(icon = "note", title = L["正在加载笔记_d95b85e311"])
                         }
                     }
                 }
@@ -696,14 +702,14 @@ private fun NotesInner() {
                                 notes, currentId, onSelect = { selectNote(it) },
                                 viewKey = folderSel,
                                 emptyTitle = when (folderSel) {
-                                    "trash" -> "回收站是空的"
-                                    "shared" -> "还没有共享给你的笔记"
-                                    else -> "这里还没有笔记"
+                                    "trash" -> L["回收站是空的_e872522628"]
+                                    "shared" -> L["还没有共享给你的笔记_fc493b2671"]
+                                    else -> L["这里还没有笔记_159b548769"]
                                 },
                                 emptySubtitle = when (folderSel) {
-                                    "trash" -> "删除的笔记会先放到这里，可随时恢复"
-                                    "shared" -> "其他用户共享给你的笔记会出现在这里"
-                                    else -> "点右上角「新建笔记」开始"
+                                    "trash" -> L["删除的笔记会先放到这里_可随时恢复_1e1ce2f496"]
+                                    "shared" -> L["其他用户共享给你的笔记会出现在这里_864edb3def"]
+                                    else -> L["点右上角_新建笔记_开始_96865806de"]
                                 },
                             )
                         } else {
@@ -724,9 +730,9 @@ private fun NotesInner() {
                                             val rec = NoteRec(updated)
                                             notes = notes.map { if (it.id == rec.id) rec else it }
                                             ePinned = rec.pinned
-                                            NoteBoxState.toast(if (rec.pinned) "已置顶" else "已取消置顶")
+                                            NoteBoxState.toast(if (rec.pinned) tr("已置顶_d7d97038a3") else tr("已取消置顶_64ca5ea597"))
                                         } catch (e: Exception) {
-                                            NoteBoxState.toast(e.message ?: "操作失败", ToastKind.Err)
+                                            NoteBoxState.toast(e.message ?: tr("操作失败_09e424b5e8"), ToastKind.Err)
                                         }
                                     }
                                 },
@@ -775,14 +781,14 @@ private fun NotesInner() {
                                     notes, currentId, onSelect = { selectNote(it) },
                                     viewKey = folderSel,
                                     emptyTitle = when (folderSel) {
-                                        "trash" -> "回收站是空的"
-                                        "shared" -> "还没有共享给你的笔记"
-                                        else -> "这里还没有笔记"
+                                        "trash" -> L["回收站是空的_e872522628"]
+                                        "shared" -> L["还没有共享给你的笔记_fc493b2671"]
+                                        else -> L["这里还没有笔记_159b548769"]
                                     },
                                     emptySubtitle = when (folderSel) {
-                                        "trash" -> "删除的笔记会先放到这里，可随时恢复"
-                                        "shared" -> "其他用户共享给你的笔记会出现在这里"
-                                        else -> "点左上角「新建笔记」创建"
+                                        "trash" -> L["删除的笔记会先放到这里_可随时恢复_1e1ce2f496"]
+                                        "shared" -> L["其他用户共享给你的笔记会出现在这里_864edb3def"]
+                                        else -> L["点左上角_新建笔记_创建_90394355e9"]
                                     },
                                 )
                             }
@@ -792,8 +798,8 @@ private fun NotesInner() {
                                     Box(Modifier.align(Alignment.Center)) {
                                         NbEmptyGlow(
                                             icon = "note",
-                                            title = "选择一条笔记开始编辑",
-                                            subtitle = "或点左上角「新建笔记」创建",
+                                            title = L["选择一条笔记开始编辑_ee98f376fb"],
+                                            subtitle = L["或点左上角_新建笔记_创建_4bb6db19d3"],
                                         )
                                     }
                                 } else {
@@ -814,9 +820,9 @@ private fun NotesInner() {
                                                     val rec = NoteRec(updated)
                                                     notes = notes.map { if (it.id == rec.id) rec else it }
                                                     ePinned = rec.pinned
-                                                    NoteBoxState.toast(if (rec.pinned) "已置顶" else "已取消置顶")
+                                                    NoteBoxState.toast(if (rec.pinned) tr("已置顶_d7d97038a3") else tr("已取消置顶_64ca5ea597"))
                                                 } catch (e: Exception) {
-                                                    NoteBoxState.toast(e.message ?: "操作失败", ToastKind.Err)
+                                                    NoteBoxState.toast(e.message ?: tr("操作失败_09e424b5e8"), ToastKind.Err)
                                                 }
                                             }
                                         },
@@ -869,14 +875,14 @@ private fun handleToolbar(
         "ol" -> togglePrefix("1. ")
         "task" -> togglePrefix("- [ ] ")
         "quote" -> togglePrefix("> ")
-        "bold" -> wrapSel("**", "**", "加粗")
-        "italic" -> wrapSel("*", "*", "斜体")
-        "strike" -> wrapSel("~~", "~~", "删除线")
-        "inline-code" -> wrapSel("`", "`", "代码")
+        "bold" -> wrapSel(L["s_bc2f74c22f"], L["s_bc2f74c22f"], L["加粗_f670b2adc0"])
+        "italic" -> wrapSel(L["s_df58248c41"], L["s_df58248c41"], L["斜体_af5a2c8bff"])
+        "strike" -> wrapSel(L["s_41677611e1"], L["s_41677611e1"], L["删除线_c85de9e58a"])
+        "inline-code" -> wrapSel(L["s_7e15bb5c01"], L["s_7e15bb5c01"], L["代码_33246dda76"])
         "hr" -> insertAt("\n\n---\n\n", null)
-        "table" -> insertAt("\n| 列A | 列B |\n| --- | --- |\n|  |  |\n", null)
-        "codeblock" -> insertAt("\n```\n\n```\n", "\n```\n".length + 1)
-        "link" -> wrapSel("[", "](https://)", "链接文字")
+        "table" -> insertAt(L["列a_列b_276b732289"], null)
+        "codeblock" -> insertAt(L["s_553f6f447e"], L["s_5d72819b21"].length + 1)
+        "link" -> wrapSel(L["s_1e5c2f367f"], "](https://)", L["链接文字_154a364e41"])
     }
 }
 
@@ -906,7 +912,7 @@ private suspend fun handleShare(
                 val code = note.shareCode ?: return
                 val url = NoteBoxState.api.shareUrl(code)
                 platformClipboard.copy(url)
-                NoteBoxState.toast("链接已复制：$url", ToastKind.Ok)
+                NoteBoxState.toast(tr("链接已复制_url_bbec15f531"), ToastKind.Ok)
             }
             ShareEvent.EnablePublic -> {
                 val r = withContext(Dispatchers.IO) { NoteBoxState.api.shareNote(note.id) }
@@ -914,39 +920,39 @@ private suspend fun handleShare(
                 note.shareCode = code
                 val url = NoteBoxState.api.shareUrl(code)
                 platformClipboard.copy(url)
-                NoteBoxState.toast("公开链接已开启，已复制：$url", ToastKind.Ok)
+                NoteBoxState.toast(tr("公开链接已开启_已复制_url_519f2b78bb"), ToastKind.Ok)
             }
             ShareEvent.DisablePublic -> {
                 withContext(Dispatchers.IO) { NoteBoxState.api.unshareNote(note.id) }
                 note.shareCode = null
-                NoteBoxState.toast("已停止公开分享")
+                NoteBoxState.toast(tr("已停止公开分享_9a9cf049a9"))
             }
             is ShareEvent.AddUser -> {
                 val r = withContext(Dispatchers.IO) {
                     NoteBoxState.api.addShare(note.id, ev.email.trim(), ev.perm)
                 }
                 setShares(r.filterIsInstance<JsonObject>())
-                NoteBoxState.toast("已共享给 ${ev.email}（${permText(ev.perm)}）", ToastKind.Ok)
+                NoteBoxState.toast(tr("已共享给_ev_email_permt_77651d6ed4"), ToastKind.Ok)
             }
             is ShareEvent.SetPerm -> {
                 val r = withContext(Dispatchers.IO) {
                     NoteBoxState.api.updateShare(note.id, ev.sid, ev.perm)
                 }
                 setShares(r.filterIsInstance<JsonObject>())
-                NoteBoxState.toast("权限已改为「${permText(ev.perm)}」", ToastKind.Ok)
+                NoteBoxState.toast(tr("权限已改为_permtext_ev_perm_bde45d2842"), ToastKind.Ok)
             }
             is ShareEvent.RemoveUser -> {
-                val ok = Modal.confirm("取消共享", "取消对该用户的共享？", okText = "移除", danger = true)
+                val ok = Modal.confirm(L["取消共享_2b2e551005"], L["取消对该用户的共享_67e86f5c00"], okText = L["移除_2f752c005e"], danger = true)
                 if (!ok) return
                 val r = withContext(Dispatchers.IO) {
                     NoteBoxState.api.deleteShare(note.id, ev.sid)
                 }
                 setShares(r.filterIsInstance<JsonObject>())
-                NoteBoxState.toast("已移除共享")
+                NoteBoxState.toast(tr("已移除共享_830fcc049b"))
             }
         }
     } catch (e: Exception) {
-        NoteBoxState.toast(e.message ?: "操作失败", ToastKind.Err)
+        NoteBoxState.toast(e.message ?: tr("操作失败_09e424b5e8"), ToastKind.Err)
     }
 }
 
@@ -960,8 +966,8 @@ private fun NoteList(
     currentId: Int?,
     onSelect: (Int) -> Unit,
     viewKey: String = "",
-    emptyTitle: String = "还没有笔记",
-    emptySubtitle: String = "点右上角「新建笔记」开始",
+    emptyTitle: String = L["还没有笔记_6682d75366"],
+    emptySubtitle: String = L["点右上角_新建笔记_开始_96865806de"],
 ) {
     val shape = RoundedCornerShape(nbCardRadius(12.dp))
     /* 每张卡片在滚动内容坐标系中的几何，用于选中指示条的滑动定位 */
@@ -981,13 +987,13 @@ private fun NoteList(
                 )
                 Spacer(Modifier.size(8.dp))
                 Text(
-                    "笔记",
+                    L["nav.notes"],
                     color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold, letterSpacing = 0.7.sp,
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-                    "${nbCountUp(notes.size)} 条",
+                    trf("0_条_1932375aa5", nbCountUp(notes.size)),
                     color = Palette.muted, fontSize = 10.sp, fontFamily = FontFamily.Monospace,
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
@@ -1144,7 +1150,7 @@ private fun NoteCard(
                     Spacer(Modifier.size(5.dp))
                 }
                 Text(
-                    n.title.ifEmpty { "未命名笔记" },
+                    n.title.ifEmpty { L["未命名笔记_044c507dcb"] },
                     color = titleColor,
                     fontSize = 13.sp, fontWeight = FontWeight.Medium,
                     maxLines = 1, overflow = TextOverflow.Ellipsis,
@@ -1157,7 +1163,7 @@ private fun NoteCard(
             }
             Spacer(Modifier.size(3.dp))
             Text(
-                stripMd(n.content).take(140).ifEmpty { "（空笔记）" },
+                stripMd(n.content).take(140).ifEmpty { L["空笔记_185f0fabc6"] },
                 color = Palette.muted, fontSize = 11.5.sp, lineHeight = 16.sp,
                 maxLines = 2, overflow = TextOverflow.Ellipsis,
             )
@@ -1187,7 +1193,7 @@ private fun NoteCard(
                 }
                 if (!n.isOwner && n.ownerEmail.isNotEmpty()) {
                     Text(
-                        "来自 ${n.ownerEmail}",
+                        trf("来自_0_9f6c45367f", n.ownerEmail),
                         color = Palette.muted, fontSize = 10.sp, fontFamily = FontFamily.Monospace,
                         maxLines = 1, overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.widthIn(max = 120.dp),
@@ -1291,9 +1297,9 @@ private fun NoteEditor(
 
             /* 来自共享 / 回收站 徽标 */
             if (inTrash) {
-                LevelBadge("回收站", Level.Muted)
+                LevelBadge(L["回收站_64ea8751fb"], Level.Muted)
             } else if (access.perm != null) {
-                LevelBadge("来自 ${note.ownerEmail.ifEmpty { "?" }} · ${permText(access.perm)}", permTone(access.perm))
+                LevelBadge(trf("来自_0_1_1f0e9aa76c", note.ownerEmail.ifEmpty { "?" }, permText(access.perm)), permTone(access.perm))
             }
 
             Spacer(Modifier.weight(1f))
@@ -1304,7 +1310,7 @@ private fun NoteEditor(
             if (content.text.isNotEmpty() && !platformHandheld) {
                 Spacer(Modifier.size(7.dp))
                 Text(
-                    "${content.text.length} 字",
+                    trf("0_字_fc4148893b", content.text.length),
                     color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                     maxLines = 1,
                 )
@@ -1356,7 +1362,7 @@ private fun NoteEditor(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
-                "归类", color = Palette.muted, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace,
+                L["归类_6a9b5537c6"], color = Palette.muted, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace,
                 modifier = Modifier.width(44.dp),
             )
             val fColor = noteColorOf(folderColor).takeIf { it != Color.Transparent }
@@ -1377,7 +1383,7 @@ private fun NoteEditor(
                 PanelIcon("folder", 11.dp, fColor ?: Palette.muted)
                 Spacer(Modifier.size(5.dp))
                 Text(
-                    folderText.ifEmpty { "未归类" },
+                    folderText.ifEmpty { L["未归类_9af2c7babc"] },
                     color = Palette.text, fontSize = 11.5.sp,
                     maxLines = 1, overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.widthIn(max = 240.dp),
@@ -1390,7 +1396,7 @@ private fun NoteEditor(
             Spacer(Modifier.weight(1f))
             if (onColor != null && !inTrash) {
                 Text(
-                    "颜色", color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
+                    L["颜色_8ef4886033"], color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                     NB_NOTE_COLORS.forEach { hex ->
@@ -1421,9 +1427,9 @@ private fun NoteEditor(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text("标签", color = Palette.muted, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace,
+            Text(L["标签_ae0a7afece"], color = Palette.muted, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace,
                 modifier = Modifier.width(44.dp))
-            Field(tags, { if (access.canEdit) onTags(it) }, Modifier.weight(1f), hint = "逗号分隔标签，如：运维,周报", singleLine = true, enabled = access.canEdit)
+            Field(tags, { if (access.canEdit) onTags(it) }, Modifier.weight(1f), hint = L["逗号分隔标签_如_运维_周报_8871ad8a3f"], singleLine = true, enabled = access.canEdit)
         }
 
         /* 工具栏（只读时不显示，同 app.js） */
@@ -1454,7 +1460,7 @@ private fun NoteEditor(
                             .padding(horizontal = 20.dp, vertical = 16.dp),
                     ) {
                         if (content.text.isBlank()) {
-                            Text("（空笔记）", color = Palette.muted, fontSize = 12.5.sp)
+                            Text(L["空笔记_185f0fabc6"], color = Palette.muted, fontSize = 12.5.sp)
                         } else {
                             NoteMarkdown(content.text, Modifier.fillMaxSize(), fontSize = 14)
                         }
@@ -1463,7 +1469,7 @@ private fun NoteEditor(
                     NoteContentField(
                         value = content, onValueChange = { if (access.canEdit) onContent(it) },
                         modifier = Modifier.fillMaxSize(),
-                        hint = "开始写…支持 Markdown（# 标题、**加粗**、- 列表、``` 代码块）",
+                        hint = L["开始写_支持_markdown_标题_加_333c0c0d41"],
                         enabled = access.canEdit,
                     )
                 }
@@ -1491,7 +1497,7 @@ private fun TitleInput(value: String, onValueChange: (String) -> Unit, enabled: 
             decorationBox = { inner ->
                 Box(Modifier.fillMaxWidth().padding(bottom = 2.dp)) {
                     if (value.isEmpty()) {
-                        Text("未命名笔记", color = Palette.muted.copy(alpha = 0.6f), fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
+                        Text(L["未命名笔记_044c507dcb"], color = Palette.muted.copy(alpha = 0.6f), fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
                     }
                     inner()
                 }
@@ -1517,7 +1523,7 @@ private fun TitleInput(value: String, onValueChange: (String) -> Unit, enabled: 
 @Composable
 private fun PreviewToggle(preview: Boolean, onToggle: () -> Unit) {
     NbSegmented(
-        options = listOf("编辑", "预览"),
+        options = listOf(L["编辑_a7f814c0a4"], L["预览_de61aa8e1c"]),
         selected = if (preview) 1 else 0,
         onSelect = { onToggle() },
         compact = true,
@@ -1586,11 +1592,11 @@ private fun SaveIndicator(saveState: String, readonly: Boolean) {
         }
     }
     val (text, baseColor) = when {
-        readonly -> "只读" to Palette.muted
-        saveState == "saving" -> "保存中…" to Palette.warn
-        saveState == "saved" -> "已保存" to Palette.ok
-        saveState == "err" -> "保存失败" to Palette.bad
-        else -> "已保存" to Palette.muted
+        readonly -> L["只读_ffc1d065fb"] to Palette.muted
+        saveState == "saving" -> L["保存中_6644f06197"] to Palette.warn
+        saveState == "saved" -> L["已保存_cdfab96f75"] to Palette.ok
+        saveState == "err" -> L["保存失败_40525a7328"] to Palette.bad
+        else -> L["已保存_cdfab96f75"] to Palette.muted
     }
     val color by animateColorAsState(baseColor, tween(260), label = "saveColor")
     val dotScale = (if (saveState == "saving") 0.65f + 0.35f * pulseV else 1f) * pop.value
@@ -1612,16 +1618,16 @@ private fun SaveIndicator(saveState: String, readonly: Boolean) {
 
 private data class ToolbarItem(val label: String, val cmd: String, val sep: Boolean = false, val icon: String? = null)
 
-private val TOOLBAR_ITEMS = listOf(
+private val TOOLBAR_ITEMS  get() = listOf(
     ToolbarItem("H1", "h1"), ToolbarItem("H2", "h2"), ToolbarItem("H3", "h3"),
-    ToolbarItem("", "", sep = true),
+    ToolbarItem(L["s_3eb416223e"], "", sep = true),
     ToolbarItem("B", "bold"), ToolbarItem("I", "italic"), ToolbarItem("S", "strike"), ToolbarItem("</>", "inline-code"),
-    ToolbarItem("", "", sep = true),
-    ToolbarItem("• 列表", "ul"), ToolbarItem("1. 列表", "ol"), ToolbarItem("任务", "task", icon = "checkSquare"),
-    ToolbarItem("> 引用", "quote"), ToolbarItem("— 分割线", "hr", icon = "minus"), ToolbarItem("表格", "table", icon = "table"),
-    ToolbarItem("", "", sep = true),
-    ToolbarItem("代码", "codeblock", icon = "code2"), ToolbarItem("", "link", icon = "link"),
-    ToolbarItem("图片", "image", icon = "image"), ToolbarItem("视频", "video", icon = "video"),
+    ToolbarItem(L["s_3eb416223e"], "", sep = true),
+    ToolbarItem(L["列表_7d9b515037"], "ul"), ToolbarItem(L["1_列表_522d9cc510"], "ol"), ToolbarItem(L["任务_3172b317f9"], "task", icon = "checkSquare"),
+    ToolbarItem(L["引用_4cfa595c2a"], "quote"), ToolbarItem(L["分割线_985282b3aa"], "hr", icon = "minus"), ToolbarItem(L["表格_150074c2e8"], "table", icon = "table"),
+    ToolbarItem(L["s_3eb416223e"], "", sep = true),
+    ToolbarItem(L["代码_33246dda76"], "codeblock", icon = "code2"), ToolbarItem(L["链接_7150220549"], "link", icon = "link"),
+    ToolbarItem(L["图片_be8da62ea1"], "image", icon = "image"), ToolbarItem(L["视频_fa4e33b698"], "video", icon = "video"),
 )
 
 @Composable
@@ -1739,7 +1745,7 @@ private fun NoteContentField(
  * 共享面板
  * ------------------------------------------------------------------ */
 
-private val PERM_OPTIONS = listOf("read" to "只读", "edit" to "可编辑", "admin" to "管理")
+private val PERM_OPTIONS  get() = listOf("read" to L["只读_ffc1d065fb"], "edit" to L["可编辑_bff55f2cd9"], "admin" to L["管理_4989b5cf94"])
 
 @Composable
 private fun SharePanel(
@@ -1748,7 +1754,7 @@ private fun SharePanel(
     onEvent: (ShareEvent) -> Unit,
 ) {
     var shareEmail by remember { mutableStateOf("") }
-    var sharePermLabel by remember { mutableStateOf("只读") }
+    var sharePermLabel by remember { mutableStateOf(L["只读_ffc1d065fb"]) }
     val shape = RoundedCornerShape(nbCardRadius(10.dp))
 
     Column(
@@ -1762,10 +1768,10 @@ private fun SharePanel(
         Row(verticalAlignment = Alignment.CenterVertically) {
             PanelIcon("link", 13.dp, AccentState.current.secondary)
             Spacer(Modifier.size(6.dp))
-            Text("公开链接", color = Palette.text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+            Text(L["公开链接_093bb537a9"], color = Palette.text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
         Text(
-            "任何拿到链接的人（无需登录）可查看",
+            L["任何拿到链接的人_无需登录_可查看_3f77643748"],
             color = Palette.muted, fontSize = 11.sp, modifier = Modifier.padding(top = 2.dp, bottom = 6.dp),
         )
         if (note.shareCode != null) {
@@ -1784,19 +1790,19 @@ private fun SharePanel(
                     color = AccentState.current.secondary, fontSize = 11.sp, fontFamily = FontFamily.Monospace,
                     maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f),
                 )
-                GhostBtn(text = "复制", onClick = { onEvent(ShareEvent.CopyLink) })
+                GhostBtn(text = L["复制_4edd1d0087"], onClick = { onEvent(ShareEvent.CopyLink) })
                 Spacer(Modifier.size(6.dp))
-                DangerBtn(text = "停止分享", onClick = { onEvent(ShareEvent.DisablePublic) })
+                DangerBtn(text = L["停止分享_55c70caa51"], onClick = { onEvent(ShareEvent.DisablePublic) })
             }
         } else {
-            PrimaryBtn(text = "开启公开链接", icon = "link", onClick = { onEvent(ShareEvent.EnablePublic) })
+            PrimaryBtn(text = L["开启公开链接_5594f75324"], icon = "link", onClick = { onEvent(ShareEvent.EnablePublic) })
         }
 
         Spacer(Modifier.size(10.dp))
         /* 共享给用户 */
-        Text("共享给用户", color = Palette.text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+        Text(L["共享给用户_f0425c626f"], color = Palette.text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         Text(
-            "只读＝仅查看 · 可编辑＝可修改 · 管理＝可修改删除并管理共享",
+            L["只读_仅查看_可编辑_可修改_管理_可修_7350c52b3d"],
             color = Palette.muted, fontSize = 11.sp, modifier = Modifier.padding(bottom = 6.dp),
         )
         Row(
@@ -1804,15 +1810,15 @@ private fun SharePanel(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Field(shareEmail, { shareEmail = it }, Modifier.weight(1f), hint = "对方邮箱（需已注册并验证）", singleLine = true)
+            Field(shareEmail, { shareEmail = it }, Modifier.weight(1f), hint = L["对方邮箱_需已注册并验证_a4de8e4a8f"], singleLine = true)
             Box(Modifier.widthIn(max = 110.dp)) {
                 SelectField(sharePermLabel, PERM_OPTIONS.map { it.second }, {
                     sharePermLabel = it
-                }, placeholder = "权限")
+                }, placeholder = L["权限_560165a6d7"])
             }
-            PrimaryBtn(text = "共享", onClick = {
+            PrimaryBtn(text = L["共享_9a236964e8"], onClick = {
                 if (shareEmail.isBlank()) {
-                    NoteBoxState.toast("请填写对方邮箱", ToastKind.Warn)
+                    NoteBoxState.toast(tr("请填写对方邮箱_41d8e0f582"), ToastKind.Warn)
                 } else {
                     onEvent(ShareEvent.AddUser(shareEmail, permCodeOf(sharePermLabel)))
                     shareEmail = ""
@@ -1822,7 +1828,7 @@ private fun SharePanel(
 
         Spacer(Modifier.size(6.dp))
         if (shares.isEmpty()) {
-            Text("还没有共享给其他用户", color = Palette.muted, fontSize = 11.5.sp)
+            Text(L["还没有共享给其他用户_dde3059062"], color = Palette.muted, fontSize = 11.5.sp)
         } else {
             shares.forEachIndexed { si, s ->
                 val sid = s.int("id")
@@ -1846,7 +1852,7 @@ private fun SharePanel(
                         }, placeholder = label)
                     }
                     Spacer(Modifier.size(6.dp))
-                    DangerBtn(text = "移除", onClick = { onEvent(ShareEvent.RemoveUser(sid)) })
+                    DangerBtn(text = L["移除_2f752c005e"], onClick = { onEvent(ShareEvent.RemoveUser(sid)) })
                 }
             }
         }
@@ -1854,6 +1860,6 @@ private fun SharePanel(
 }
 
 private fun permCodeOf(labelOrCode: String): String = when (labelOrCode) {
-    "只读" -> "read"; "可编辑" -> "edit"; "管理" -> "admin"
+    L["只读_ffc1d065fb"] -> "read"; L["可编辑_bff55f2cd9"] -> "edit"; L["管理_4989b5cf94"] -> "admin"
     else -> labelOrCode
 }

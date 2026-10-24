@@ -1,0 +1,120 @@
+该引擎无_systemd_服务_文件型数据库_13948e1a08	This engine has no systemd service (file-based database); it is ready to use right after installation.
+该引擎无可用维护操作_513087fb85	No maintenance actions are available for this engine.
+该操作不可逆或影响较大_a73f2eb338	\nThis action is irreversible or highly impactful.
+该操作可能删除所有数据或短暂阻塞服务_75750ad855	\nThis action may delete all data or briefly block the service.
+该操作可能造成数据丢失或结构破坏_2963c8b443	\nThis action may cause data loss or structural damage.
+该操作已被安全策略拦截_b8ca2b42da	The action was blocked by a security policy
+该时段_0_请求_44f386fcd1	{0} requests in this period
+该时段前无变更记录_23a4785650	No change records before this period
+该时间范围内无_4xx_5xx_38fe9cba85	No 4xx/5xx in this time range
+该服务器未提供_ip_统计端点_relay_ip_892a40b184	This server does not provide the IP statistics endpoint (relay/ips unavailable)
+该目录下没有超过阈值的大文件_8a81741c45	No large files above the threshold in this directory
+该窗口内没有会话数据_ed9d181c42	No session data in this window
+该窗口内没有请求记录_d39f782090	No request records in this window
+该窗口无_token_数据_edac8cd9eb	No token data in this window
+该表暂无_ddl_定义_可在此输入_90f3e35b6d	(This table has no DDL definition yet; you can enter one here)
+该页没有行_2e9fb45b6f	This page has no rows
+详情_4f55ee1e68	Details
+说明_26670dda42	Description
+请先到_表与数据_选择一个表_8b4ab3af68	Select a table under "Tables & data" first
+请先勾选表_67dedd58c3	Check at least one table first
+请填写完整_0e68428a12	Fill in all fields
+请填写对方邮箱_41d8e0f582	Enter the recipient's email
+请填写用户名和密码_85362f2da5	Enter username and password
+请填写视图名_ca59c15e18	Enter a view name
+请填写触发器名与表名_bef72ee834	Enter the trigger name and table name
+请求_0_命中_1_未命中_2_8eacf0ebe5	Requests {0} · hits {1} · misses {2} · client 4xx {3}
+请求_926f6b6b6a	Requests
+请求失败_8fdc4112a4	Request failed
+请求数_b28376ff80	Request count
+请求数区间_7850a34a07	Request count interval
+请粘贴公钥_f95fd35ee8	Paste the public key
+请粘贴文件内容_9c360ce221	Paste the file content
+请输入_ip_338f1d98f9	Enter an IP
+请输入_sql_dca642d73d	Enter SQL
+请输入_systemd_单元名_a2e89b958d	Enter a systemd unit name
+请输入名称_c2afb255a5	Enter a name
+请输入命令_9feb449c6d	Enter a command
+请输入密码_713b738250	Enter a password
+请输入扩展名_dc56cdb689	Enter an extension
+请输入搜索值_81d6a6e379	Enter a search value
+请输入数据库名_51e5882b0e	Enter a database name
+请输入模式名_ecb41293d4	Enter a schema name
+请输入正确的邮箱地址_60d23edd4e	Enter a valid email address
+请输入用户_组名_2b012efd38	Enter a user/group name
+请输入用户名_ad5f05f1cf	Enter a username
+请输入端口规格_747e55b43b	Enter a port spec
+请输入索引键_b6a17465e7	Enter an index key
+请输入邮箱_f2dc24deb8	Enter an email
+请输入邮箱和密码_36ec7ea481	Enter email and password
+请选择_382f4b5559	Please select
+请选择表_a6c10434c8	Select a table
+读取_iops_0b3c539023	Read IOPS
+读取失败_d9f607a200	Read failed
+读取拨测任务_99a5f23cd0	Reading probe tasks…
+读取最近一次巡检_7cabc948d4	Reading the latest inspection…
+读取目录_5bfbf3e6d6	Reading directory…
+读取看护项_568920c074	Reading watch items…
+读取磁盘状态_2a1b417a78	Reading disk state…
+读取速率_602daacd93	Read rate
+调度器已启动_25195cb637	Scheduler started
+调度器未运行_2fc322a581	Scheduler not running
+调整参数_1e87f07d30	Adjust parameters
+调用_b1fb011bbf	Calls
+负责人_974d383f36	Owner
+负载_4d5e4d7797	Load
+负载_a00778c140	Load 
+账号与服务器连接_91b559cbe1	Account & server connection
+账户_c3d92b20c8	Account
+账户管理_0_3d8c9ea2f9	Account management - {0}
+账户管理_name_6003a0ba9e	Account management - $name
+质量分析_1bbbc5f3b4	Quality analysis
+走面板既有依赖_492e0f34ba	Uses the panel's existing dependencies
+起始值_532cd474d1	Start value
+起始目录_pathforbig_67b80d1243	Starting directory: $pathForBig
+超级用户_b429b65128	Superuser
+超级用户_cf4469a6db	 (superuser)
+超过阈值时页面右上角铃铛会弹出告警_同一指标在冷_3d09697f8d	When a threshold is exceeded, an alert pops up on the bell at the top right; the same metric does not re-alert within its cooldown.
+超阈值_未达持续时长_2e2aa99f19	Above threshold (duration not met)
+跨库复制_7b0247bbe4	Cross-database copy
+跨库复制结果_b78049a5ad	Cross-database copy result
+跨库复制表_0bc3b3f3f8	Copy table across databases
+路径_9132e087f1	Path
+路由_19da0c94ef	Routes
+路由_dns_ab170c66cb	Routes / DNS
+路由可靠性_455408ed92	Route reliability
+跳转路径_f881d3d381	Redirect path
+跳过_31a98593f1	Skip
+轮数_2a8445ec1c	Rounds
+轮次_3d6450af6f	Turns
+轮转历史_0_个_估算可回收约_1_629717142e	{0} rotated file(s), estimated reclaim ≈ {1}
+轮转历史_diskstate_rotated_777672411c	${DiskState.rotatedCount.value} rotated file(s), estimated reclaim ≈ ${Fmt.bytes(DiskState.reclaimableKb.value * 1024)}
+轮转日志保留_0_天_ab8e8e9071	Rotated logs retained {0} day(s)
+轮转日志保留_s_rotdays_天_4a650eb51c	Rotated logs retained ${s.rotDays} day(s)
+轮转日志保留天数_378cfbfd9d	Retention days for rotated logs
+软件包管理_dc0eed4bee	Package management
+软件源_d6d000ca92	Repositories
+软件源索引_376afe36ab	Repository index
+载入规则_etc_audit_rules_4d2ab15d25	# load rules /etc/audit/rules.d/90-relay.rules\n
+输入_e8850440f2	Input
+输入_mongosh_脚本_当前作用域内已有_d_b277742b42	Enter a mongosh script (db is already available in the current scope, bound to the selected database)
+输入_redis_命令_自动分词_例如_get_0b46219105	Enter Redis commands (auto-tokenized), e.g. GET user:1:name, LRANGE list:1 0 10, INFO memory
+输入_月_e27a6074cd	Input (months)
+输入_输出_337468db22	Input / output
+输入关键词查找软件包_或指定某个源后仅在该源内搜_f4777e948a	Type a keyword to search packages, or pick a source to search only within it.
+输出_ded698ae1e	Output
+输出_月_8701d8542e	Output (months)
+边界说明_ccc6bb88d9	Scope notes
+过期秒数_0_不过期_c3e59e1315	Expiry seconds (0 = never expire)
+过滤_如_status_active_9546a0bc91	Filter, e.g. {"status":"active"} or id=5
+过滤与排序_77a35ebb60	Filter & sort
+过滤关键字_9f513909e2	Filter keyword…
+过滤已安装包_名称或分组_7ecdc6b62e	Filter installed packages (name or group)
+运行_0_d2a28237c8	Run {0}
+运行_0c3acd446f	Run
+运行_51b0e86fe6	Run 
+运行_running_43df56390e	Run $running
+运行中_5942497005	Running
+运行时配置_e2821f3acc	Runtime configuration
+运行时长_66836c8fb3	Uptime
+运行时间_8b16a1fc0b	Run time

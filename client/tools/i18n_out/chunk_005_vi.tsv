@@ -1,0 +1,120 @@
+健康_28ff5ffe95	Khỏe mạnh
+健康告警_a3932fd7ea	Cảnh báo sức khỏe
+健康警告_36e38f0344	Cảnh cáo sức khỏe
+僵尸_0_350f669b6a	Zombie {0}
+允许_0_4xx_1_不计入_2c75f2ef75	Cho phép {0} · 4xx {1} (không tính)
+允许_null_613ffb2b0f	Cho phép NULL
+允许搜索的根目录_冒号分隔_9f54070414	Thư mục gốc được phép tìm kiếm (cách nhau bằng dấu hai chấm)
+允许范围由服务器的_cm_files_roots_1e4f0369fa	Phạm vi cho phép do CM_FILES_ROOTS của máy chủ quyết định (mặc định là toàn bộ hệ thống tệp); bảng điều khiển đã có Web terminal (tương đương shell root),
+允许错误率_b1b11f31c6	Tỷ lệ lỗi cho phép
+先配私钥路径或密码才能采集_1c4899bb70	Cần cấu hình đường dẫn khóa riêng tư hoặc mật khẩu trước khi thu thập
+入库_0_1_运行_2_6103dc0494	Đã lưu {0}/{1} · Đang chạy {2}
+入站_0_均值_请求_1_406a6865d4	Vào {0} · TB/yêu cầu {1}
+入站_1057bbf420	Vào
+全局_a5644f4bbf	Toàn cục
+全库备份_db2_backup_3a9089df6c	Sao lưu toàn bộ (db2 backup)
+全库备份_db_sql_gz_acafceba07	Sao lưu toàn bộ (.db -> sql.gz)
+全库备份_mysqldump_1ed22a1def	Sao lưu toàn bộ (mysqldump)
+全库备份_pg_dumpall_1bd23a039b	Sao lưu toàn bộ (pg_dumpall)
+全库数据搜索_beda6555aa	Tìm kiếm dữ liệu toàn bộ cơ sở dữ liệu
+全选_3e44b2a933	Chọn tất cả
+全选本页_b82f2ebbd9	Chọn tất cả trang này
+全部_0_33a02d8846	Tất cả {0}
+全部_0_910e2f37bc	Tất cả ({0})
+全部_2_e5060e9fe1	Tất cả (2)
+全部_778fc8f994	Tất cả
+全部_alerts_size_83c38547e2	Tất cả ${alerts.size}
+全部_仅显示有规则标记的事件_c50328c4bb	Tất cả (chỉ hiển thị sự kiện có gắn dấu quy tắc)
+全部分组_eb8d23fedf	Tất cả nhóm
+全部发送成功_66de2386e0	Tất cả gửi thành công
+全部合规_59b806d265	Tất cả tuân thủ
+全部在线_44e9a836b2	Tất cả trực tuyến
+全部在阈值内_3b9654881f	Tất cả trong ngưỡng
+全部安全升级_31ec522e55	Tất cả bản vá bảo mật
+全部探测_ccb06057e1	Tất cả lần dò
+全部数据库_服务器级全量_488b444221	Tất cả cơ sở dữ liệu (toàn bộ cấp máy chủ)
+全部标签_ffd92f5524	Tất cả thẻ
+全部标记已读_5645f09d67	Đánh dấu tất cả đã đọc
+全部检查一次_0a5f08235e	Kiểm tra tất cả một lần
+全部正常_d02882ad7e	Tất cả bình thường
+全部清单_54e487ccc0	Tất cả danh mục kiểm kê
+全部源_全局搜索_252f184452	Tất cả nguồn (tìm kiếm toàn cục)
+全部状态_1a4c26d92d	Tất cả trạng thái
+全部立即采集_49af47e239	Thu thập tất cả ngay
+全部笔记_be5bc30cf8	Tất cả ghi chú
+全部规则_33c1cd2c36	Tất cả quy tắc
+全部角色_9adaf88c6d	Tất cả vai trò
+全部解除锁定_fc0465ac55	Mở khóa tất cả
+全部通过_3b6e5a1267	Tất cả đạt
+公开链接_093bb537a9	Liên kết công khai
+公开链接已开启_已复制_url_519f2b78bb	Đã bật liên kết công khai, đã sao chép: $url
+公网ip_de8bbe24d6	IP công cộng
+公钥_b6965e119c	Khóa công khai
+六_3d72c724e0	Sáu
+共_0_6de8606170	Tổng {0}
+共_0_个常用包_已装_1_2_e967a843a6	{0} gói phổ biến · đã cài {1} · {2} danh mục
+共_0_字符_f3f4105419	Tổng {0} ký tự
+共_0_条_c3ba901cd9	Tổng {0} mục
+共_0_条记录_41eef6780b	Tổng {0} bản ghi
+共_0_次请求_有效_1_次_29c1aa705f	Tổng {0} yêu cầu · hợp lệ {1}
+共_0_行_a4e8522340	Tổng {0} dòng
+共_alerts_size_条_560bb53bad	Tổng ${alerts.size} mục
+共_editdraft_length_字符_7c1eadf347	Tổng ${editDraft.length} ký tự
+共_fmt_count_totaln_c03f4c77be	Tổng ${Fmt.count(totalN ?: 0)} dòng
+共_services_size_71096c72f6	Tổng ${services.size}
+共享_9a236964e8	Đã chia sẻ
+共享给我_6863118293	Được chia sẻ cho tôi
+共享给用户_f0425c626f	Chia sẻ cho người dùng
+关于_bed172efc9	Giới thiệu
+关注_7ac0d5c9c3	Theo dõi
+关自启_b871a656d2	Tự động khởi động Tắt
+关闭_0_9aa50629e4	Đã đóng (0)
+关闭_0_9d7b014ef2	Đã đóng {0}
+关闭_6c14bd7f6f	Đóng
+关闭_tab_title_43b16ac3b7	Đóng ${tab.title}
+关闭网卡_62663eaa23	Tắt giao diện mạng
+关闭跟随或离开本页会自动退订_72c6084027	Tắt theo dõi hoặc rời khỏi trang này sẽ tự động hủy đăng ký.
+其中_0_条失败_c5eef2f155	Trong đó {0} thất bại
+其中_0_项已触发重启仍失败_9b68a5e334	Trong đó {0} vẫn thất bại sau khi đã khởi động lại
+其中_s_failing_项已触发重启仍_f01141d4a9	Trong đó ${s?.failing} vẫn thất bại sau khi đã khởi động lại
+其中_t_failed24h_条失败_42b755439b	Trong đó ${t?.failed24h} thất bại
+其他用户共享给你的笔记会出现在这里_864edb3def	Các ghi chú được người dùng khác chia sẻ cho bạn sẽ xuất hiện ở đây
+其它_295c71ff98	Khác
+内存_a8fa8ac31a	Bộ nhớ %
+内存_ba57ca4da5	Bộ nhớ ≥ %
+内存_d014ab7703	Bộ nhớ
+内存_交换_mb_69caca4bab	Bộ nhớ / Hoán đổi (MB)
+内存与交换分区用量_进程占用与维护操作_a12dd4174d	Mức sử dụng bộ nhớ và vùng hoán đổi, mức chiếm dụng tiến trình và thao tác bảo trì
+内存使用_c5281dc2e1	Mức sử dụng bộ nhớ
+内存使用率_51cc7e4578	Tỷ lệ sử dụng bộ nhớ
+内存占用_871ca4fff4	Mức chiếm dụng bộ nhớ
+内存占用_top_15_rss_180f27c927	Mức chiếm dụng bộ nhớ Top 15 (RSS)
+内存管理_dd6f618330	Quản lý bộ nhớ
+内存维护_4a93296df5	Bảo trì bộ nhớ
+内存详情_proc_meminfo_6fc684a759	Chi tiết bộ nhớ (/proc/meminfo)
+内容_163aec9194	Nội dung
+内核_8f190c51d6	Nhân hệ
+内核_系统安全参数_sysctl_1d74700ad7	Tham số bảo mật nhân hệ/hệ thống (sysctl)
+写入_9e93bdccb2	Ghi
+写入_drop_caches_3_清空页缓存_目_545feeaf1e	Ghi drop_caches=3 để xóa bộ nhớ đệm trang/mục thư mục/inode (chậm tạm thời)
+写入_iops_c0257973a8	IOPS ghi
+写入_p_f48e1e9bc1	Ghi vào $p?
+写入系统定时任务_etc_cron_d_cm_7b1a14bf5a	Ghi vào tác vụ cron hệ thống (/etc/cron.d/cm-dbmaint-*). Ví dụ: 0 4 * * * = 4 giờ hàng ngày. Xem/xóa tại trang "Tác vụ cron".
+写入速率_2836adc578	Tốc độ ghi
+冷却_分钟_c84b0ae919	Thời gian làm mát (phút)
+凭据_131caf7289	Thông tin xác thực
+凭据已保存_只存服务器_ef4af72acf	Đã lưu thông tin xác thực (chỉ lưu trên máy chủ)
+凭据已删除_7546bc5222	Đã xóa thông tin xác thực
+出于安全考虑_必须至少指定_数据库_用户_f479eba94a	Vì lý do bảo mật, phải chỉ định ít nhất một trong cơ sở dữ liệu / người dùng / thời lượng; mỗi lần khớp giới hạn 200 phiên.
+出口带宽上限_mbps_0_不限_333a869c1c	Giới hạn băng thông ra (Mbps, 0 = không giới hạn)
+出口带宽上限已设为_0_mbps_8e30001052	Đã đặt giới hạn băng thông ra thành {0} Mbps
+出口带宽上限已设为_mbps_mbps_1643606623	Đã đặt giới hạn băng thông ra thành $mbps Mbps
+出站_c9b439d70a	Ra
+分_decb3b3262	 phút
+分割线_985282b3aa	— Đường phân cách
+分区_016c7a3b77	/ phân vùng
+分区与挂载点_f1ca26a5e8	Phân vùng và điểm gắn
+分区容量_6a3c635ae9	Dung lượng phân vùng
+分区容量_块设备与磁盘维护操作_80c0745041	Dung lượng phân vùng, thiết bị khối và thao tác bảo trì ổ đĩa
+分区数量_0933d5f9ce	Số lượng phân vùng
+分时成功率_ccd648d6f2	Tỷ lệ thành công theo giờ

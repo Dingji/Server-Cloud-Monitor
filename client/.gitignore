@@ -1,0 +1,59 @@
+# ---- Toolchain (downloaded locally, reproducible via build.ps1 / wrapper) ----
+.toolchain/
+
+# ---- Gradle / build outputs ----
+.gradle/
+build/
+**/build/
+local.properties
+
+# ---- Reference dumps (large, regenerable via tools/) ----
+api-dump/
+upstream/
+
+# ---- Secrets ----
+tools/.token
+*.token
+# 密钥库/证书私钥（含根目录那份历史遗留的 PKCS#12 文件）
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.keystore.*
+Keystone
+*.pem
+
+# ---- node_modules for local tooling ----
+ops-server/node_modules/
+
+# ---- IDE / OS ----
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ---- Kotlin / Compose ----
+.kotlin/
+captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# ---- Gate / build logs (版本官统一收集，勿入库) ----
+build-log.txt
+build-*.txt
+errors.json
+tests/gate-last.log
+*.log
+gradle-out.txt
+tasks.txt
+
+# ---- Python bytecode (tools/tests 脚本产物) ----
+__pycache__/
+*.pyc
+
+# ---- 部署包产物（内含依赖，按需由 tools/build_panel_package.py 重建）----
+/deploy/*.tar.gz
+

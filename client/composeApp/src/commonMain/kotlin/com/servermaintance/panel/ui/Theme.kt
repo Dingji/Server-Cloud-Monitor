@@ -1,4 +1,5 @@
 package com.servermaintance.panel.ui
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -191,10 +192,10 @@ data class Accent(val id: String, val primary: Color, val secondary: Color, val 
 }
 
 object Accents {
-    val all = listOf(
-        Accent("blue", Color(0xFF4370F0), Color(0xFF7A9BFF), "67,112,240"),
-        Accent("green", Color(0xFF10B981), Color(0xFF34D399), "16,185,129"),
-        Accent("purple", Color(0xFF8B5CF6), Color(0xFFA78BFA), "139,92,246"),
+    val all  get() = listOf(
+        Accent("blue", Color(0xFF4370F0), Color(0xFF7A9BFF), L["67_112_240_5b0a28d6b3"]),
+        Accent("green", Color(0xFF10B981), Color(0xFF34D399), L["16_185_129_6c59f1a121"]),
+        Accent("purple", Color(0xFF8B5CF6), Color(0xFFA78BFA), L["139_92_246_83d5e69a95"]),
         Accent("orange", Color(0xFFF59E0B), Color(0xFFFBBF24), "245,158,11"),
         Accent("red", Color(0xFFEF4444), Color(0xFFF87171), "239,68,68"),
         Accent("cyan", Color(0xFF06B6D4), Color(0xFF22D3EE), "6,182,212"),

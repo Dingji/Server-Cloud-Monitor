@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -71,35 +74,35 @@ private fun TransferInner() {
     var exporting by remember { mutableStateOf<String?>(null) }
 
     PageScaffold(
-        title = "导入 / 导出",
-        desc = "NoteBox 数据迁移",
+        title = L["导入_导出_995e254175"],
+        desc = L["notebox_数据迁移_362725f18e"],
         actions = { NoteUserChip() },
     ) {
         GridLayout(columns = 2, spacing = 12.dp) {
 
         TransferCard(
             icon = "note",
-            title = "导入笔记",
-            desc = "支持 Markdown / 纯文本 / HTML，HTML 自动转成可编辑的 Markdown。含多个一级标题时自动拆分成多条笔记。",
-            formats = listOf(".md", ".markdown", ".txt", ".html", ".htm"),
+            title = L["导入笔记_ef0dc85571"],
+            desc = L["支持_markdown_纯文本_html_305bf19136"],
+            formats = listOf(L["md_a2c73572c9"], L["markdown_710c683239"], L["txt_39cb42ed04"], L["html_4af551145f"], L["htm_93358b0bb6"]),
         ) {
-            CheckRow(split, { split = it }, "按一级标题拆分")
+            CheckRow(split, { split = it }, L["按一级标题拆分_cffaaceb8e"])
             Spacer(Modifier.size(10.dp))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                PrimaryBtn(text = "选择文件导入", icon = "import", onClick = {
+                PrimaryBtn(text = L["选择文件导入_e25b7bbd7f"], icon = "import", onClick = {
                     pickTextFiles(listOf("md", "markdown", "txt", "text", "html", "htm"), multiple = true) { files ->
                         if (files.isEmpty()) return@pickTextFiles
                         scope.launch {
-                            notesStatus = "导入中…"
+                            notesStatus = L["导入中_de56a0bf71"]
                             try {
                                 val n = withContext(Dispatchers.IO) {
                                     NoteBoxState.api.importNotes(files.map { it.name to it.content }, split)
                                 }
-                                notesStatus = "成功导入 $n 条笔记"
-                                NoteBoxState.toast("已导入 $n 条笔记", ToastKind.Ok)
+                                notesStatus = trf("成功导入_0_条笔记_f1edf5b407", n)
+                                NoteBoxState.toast(tr("已导入_n_条笔记_09e6db7128"), ToastKind.Ok)
                                 NoteBoxState.refreshStats()
                             } catch (e: Exception) {
-                                notesStatus = "导入失败：" + (e.message ?: "")
+                                notesStatus = L["导入失败_aeec838ca4"] + (e.message ?: "")
                                 NoteBoxState.toast(notesStatus, ToastKind.Err)
                             }
                         }
@@ -111,25 +114,25 @@ private fun TransferInner() {
 
         TransferCard(
             icon = "checkSquare",
-            title = "导入待办",
-            desc = "支持 CSV（有/无表头均可，列名支持 标题/截止/优先级/备注/状态）、纯文本清单（- [x] 语法）、JSON 数组。",
-            formats = listOf(".csv", ".txt", ".json", ".md"),
+            title = L["导入待办_1a771a17b3"],
+            desc = L["支持_csv_有_无表头均可_列名支持_标题_截_564b0aa879"],
+            formats = listOf(L["csv_896e10d3ef"], L["txt_39cb42ed04"], L["json_2568884586"], L["md_a2c73572c9"]),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                PrimaryBtn(text = "选择文件导入", icon = "import", onClick = {
+                PrimaryBtn(text = L["选择文件导入_e25b7bbd7f"], icon = "import", onClick = {
                     pickTextFiles(listOf("csv", "txt", "json", "md"), multiple = false) { files ->
                         val f = files.firstOrNull() ?: return@pickTextFiles
                         scope.launch {
-                            todosStatus = "导入中…"
+                            todosStatus = L["导入中_de56a0bf71"]
                             try {
                                 val n = withContext(Dispatchers.IO) {
                                     NoteBoxState.api.importTodos(f.name, f.content, "auto")
                                 }
-                                todosStatus = "成功导入 $n 条待办"
-                                NoteBoxState.toast("已导入 $n 条待办", ToastKind.Ok)
+                                todosStatus = trf("成功导入_0_条待办_0f7f47eb57", n)
+                                NoteBoxState.toast(tr("已导入_n_条待办_c3352cbaa8"), ToastKind.Ok)
                                 NoteBoxState.refreshStats()
                             } catch (e: Exception) {
-                                todosStatus = "导入失败：" + (e.message ?: "")
+                                todosStatus = L["导入失败_aeec838ca4"] + (e.message ?: "")
                                 NoteBoxState.toast(todosStatus, ToastKind.Err)
                             }
                         }
@@ -141,38 +144,38 @@ private fun TransferInner() {
 
         TransferCard(
             icon = "archive",
-            title = "恢复完整备份",
-            desc = "导入 NoteBox 导出的 .json 备份文件，包含全部笔记和待办。",
-            formats = listOf(".json"),
+            title = L["恢复完整备份_640eea92dc"],
+            desc = L["导入_notebox_导出的_json_备份文_9e7560aff1"],
+            formats = listOf(L["json_2568884586"]),
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                RadioRow(backupMode == "merge", "合并（保留现有数据）") { backupMode = "merge" }
-                RadioRow(backupMode == "replace", "覆盖（清空现有笔记和待办）") { backupMode = "replace" }
+                RadioRow(backupMode == "merge", L["合并_保留现有数据_01a4d7c1d8"]) { backupMode = "merge" }
+                RadioRow(backupMode == "replace", L["覆盖_清空现有笔记和待办_dc20dbc52a"]) { backupMode = "replace" }
             }
             Spacer(Modifier.size(10.dp))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                PrimaryBtn(text = "选择备份恢复", icon = "import", onClick = {
+                PrimaryBtn(text = L["选择备份恢复_da323f9941"], icon = "import", onClick = {
                     pickTextFiles(listOf("json"), multiple = false) { files ->
                         val f = files.firstOrNull() ?: return@pickTextFiles
                         scope.launch {
                             if (backupMode == "replace") {
                                 val ok = Modal.confirm(
-                                    "覆盖恢复",
-                                    "覆盖模式会清空现有全部笔记和待办，确定？",
-                                    okText = "覆盖导入", danger = true,
+                                    L["覆盖恢复_83c574b3b0"],
+                                    L["覆盖模式会清空现有全部笔记和待办_确定_70547ed81c"],
+                                    okText = L["覆盖导入_62808bb73a"], danger = true,
                                 )
                                 if (!ok) return@launch
                             }
-                            backupStatus = "恢复中…"
+                            backupStatus = L["恢复中_176238056c"]
                             try {
                                 val r = withContext(Dispatchers.IO) {
                                     NoteBoxState.api.importBackup(f.content, backupMode)
                                 }
-                                backupStatus = "恢复完成：笔记 ${r.int("notes")} 条，待办 ${r.int("todos")} 条"
-                                NoteBoxState.toast("备份恢复成功", ToastKind.Ok)
+                                backupStatus = trf("恢复完成_笔记_0_条_待办_1_条_7aa19232cf", r.int("notes"), r.int("todos"))
+                                NoteBoxState.toast(tr("备份恢复成功_01abfe5b6c"), ToastKind.Ok)
                                 NoteBoxState.refreshStats()
                             } catch (e: Exception) {
-                                backupStatus = "恢复失败：" + (e.message ?: "")
+                                backupStatus = L["恢复失败_08c8ed5980"] + (e.message ?: "")
                                 NoteBoxState.toast(backupStatus, ToastKind.Err)
                             }
                         }
@@ -184,18 +187,18 @@ private fun TransferInner() {
 
         TransferCard(
             icon = "export",
-            title = "导出",
-            desc = "随时把数据下载到本地备份。",
+            title = L["导出_188896795f"],
+            desc = L["随时把数据下载到本地备份_8e95a3fbc8"],
             formats = null,
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 listOf(
-                    Triple("完整备份 JSON", "/api/export", "notebox-backup.json"),
-                    Triple("笔记 Markdown", "/api/export/markdown", "notebox-notes.md"),
-                    Triple("待办 CSV", "/api/export/csv", "notebox-todos.csv"),
+                    Triple(L["完整备份_json_cbe231e819"], "/api/export", "notebox-backup.json"),
+                    Triple(L["笔记_markdown_f0f9aad2ff"], "/api/export/markdown", "notebox-notes.md"),
+                    Triple(L["待办_csv_3308e95082"], "/api/export/csv", "notebox-todos.csv"),
                 ).forEach { (label, path, name) ->
                     GhostBtn(
-                        text = if (exporting == path) "下载中…" else label,
+                        text = if (exporting == path) L["下载中_65188d08a2"] else label,
                         icon = "fileDown",
                         enabled = exporting == null,
                         onClick = {
@@ -204,10 +207,10 @@ private fun TransferInner() {
                                 try {
                                     val bytes = withContext(Dispatchers.IO) { NoteBoxState.api.download(path) }
                                     val saved = platformExporter.saveFile(name, bytes)
-                                    if (saved != null) NoteBoxState.toast("已保存：$saved", ToastKind.Ok)
-                                    else NoteBoxState.toast("保存被取消", ToastKind.Warn)
+                                    if (saved != null) NoteBoxState.toast(tr("已保存_saved_36d870566a"), ToastKind.Ok)
+                                    else NoteBoxState.toast(tr("保存被取消_82f61f25b1"), ToastKind.Warn)
                                 } catch (e: Exception) {
-                                    NoteBoxState.toast("导出失败：" + (e.message ?: ""), ToastKind.Err)
+                                    NoteBoxState.toast(tr("导出失败_38ab583870") + (e.message ?: ""), ToastKind.Err)
                                 } finally {
                                     exporting = null
                                 }
@@ -285,8 +288,8 @@ private fun TransferCard(
 private fun StatusText(text: String) {
     if (text.isEmpty()) return
     val color = when {
-        text.startsWith("导入中") || text.startsWith("恢复中") -> Palette.muted
-        text.contains("失败") -> Palette.bad
+        text == L["导入中_de56a0bf71"] || text == L["恢复中_176238056c"] -> Palette.muted
+        com.servermaintance.panel.i18n.textHasI18nKey(text, "失败_3e3c8068bb") -> Palette.bad
         else -> Palette.ok
     }
     Text(text, color = color, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace)

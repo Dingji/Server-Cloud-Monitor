@@ -1,0 +1,120 @@
+已添加_57828673c0	Đã thêm
+已清屏_刷新可重新加载_01eb7fac6f	(Đã xóa màn hình, làm mới để tải lại)
+已清理_deleted_条_4c23a20ddb	Đã dọn $deleted mục
+已清空_f8a66770bf	Đã xóa
+已用_0_c96f2dd5c9	Đã dùng {0}%
+已用_0_da8610464a	Đã dùng {0}
+已用_11ab4c52e3	Đã dùng 
+已用_4c9426f3cb	Đã dùng
+已用_d_pct_2dbf36e2b0	Đã dùng ${d.pct}
+已用_m_usedpct_61d820fe07	Đã dùng ${m.usedPct}%
+已用内存_5018e93ffc	Bộ nhớ đã dùng
+已移入回收站_54e2ac947c	Đã chuyển vào thùng rác
+已移动_3bf6e46e2d	Đã di chuyển
+已移动到_label_6617d663be	Đã di chuyển đến "$label"
+已移除共享_830fcc049b	Đã bỏ chia sẻ
+已置顶_d7d97038a3	Đã ghim
+已装_3647e1394b	Đã cài
+已装版本_9bdb334d0c	Phiên bản đã cài
+已解压到_0_51e4ef2361	Đã giải nén tới {0}
+已解压到_l_dir_9244cad0e5	Đã giải nén tới ${l.dir}
+已过去_745c1695da	Đã trôi qua
+已过期_1354374f76	Đã hết hạn
+已过期_今天到期_86491fdf75	Đã hết hạn / hết hạn hôm nay
+已还原到原位置_88f9ffd058	Đã khôi phục về vị trí gốc
+已连接_65fe35c45e	Đã kết nối
+已连接客户端_ce32897c53	Client đang kết nối
+已送达_da986b8ec5	Đã gửi
+已选_0_项_1a922f0ed8	Đã chọn {0} mục
+已选_17f3287f61	Đã chọn 
+已选_selected_size_项_d7a48434fc	Đã chọn ${selected.size} mục
+已配凭据_beb6c5256b	Đã cấu hình thông tin xác thực
+已配置_dc7cd22f34	Đã cấu hình
+已采集_2e78019082	Đã thu thập
+已重命名_dc9fe43fb7	Đã đổi tên
+已锁定_3cc7a5af4c	Đã khóa
+常用_ee2804c36b	Thường dùng:
+常用命令_8b3f736710	Lệnh thường dùng
+常用推荐_f9420928eb	Gợi ý phổ biến
+平均_0_ttfb_1_08d238b10f	TB {0} · TTFB {1}
+平均耗时_397236acf6	Thời lượng trung bình
+并发_09d869d15d	Đồng thời
+并授予_sudo_权限_8b30bef02a	 và cấp quyền sudo
+序列操作_6b82faed5c	Thao tác tuần tự
+序列管理_c7e70c52dd	Quản lý tuần tự
+库_87eedee459	Thư viện
+应用_4562024dde	Áp dụng
+应用_ssh_配置_6630ee6205	Áp dụng cấu hình SSH
+应用_swappiness_20e25ed211	Áp dụng swappiness
+应用_sysctl_e2dac5275c	Áp dụng sysctl
+应用位置_0_48979a348d	Vị trí đã áp dụng ({0})
+应用位置_applied_size_3f8bff0c58	Vị trí đã áp dụng (${applied.size})
+应用带宽_15d87c726e	Băng thông đã áp dụng
+应用并重载_ssh_68c70d62a3	Áp dụng và tải lại SSH
+延迟_e9f0921480	Độ trễ
+建索引_ba4fa8969d	Tạo chỉ mục
+建议_c_warn_427c849e3e	Nên dùng: $c.warn
+建议先用_web_终端确认现有登录方式可用_12826a1b60	\n\nNên dùng Web terminal để xác nhận cách đăng nhập hiện có còn hoạt động trước.
+建议处理_43d0209c9a	Hành động đề xuất
+建议尽快更新_4434051095	Nên cập nhật trong thời gian sớm nhất
+开发_eb3774e356	Phát triển
+开启公开链接_5594f75324	Bật liên kết công khai
+开启后可用_db_system_profile_439d38a566	Sau khi bật, dùng db.system.profile.find().limit(20) để xem các thao tác chậm.
+开启网卡_e65c5b5c1b	Bật card mạng
+开始写_支持_markdown_标题_加_333c0c0d41	Bắt đầu nhập… hỗ trợ Markdown (# tiêu đề, **đậm**, - danh sách, ``` khối mã)
+开始备份_bf05cce62d	Bắt đầu sao lưu
+开始复制_3cd62ecee5	Bắt đầu sao chép
+开始安装_d109e7cc01	Bắt đầu cài đặt
+开始导入_3d04880897	Bắt đầu nhập dữ liệu
+开始导出_86c599fe6e	Bắt đầu xuất dữ liệu
+开始恢复_86cc2051a7	Bắt đầu khôi phục
+开始打包_ec3abb06f3	Bắt đầu nén lưu trữ
+开始搜索_8fdc065eda	Bắt đầu tìm kiếm
+开机启动_b995f88661	Khởi động cùng hệ thống
+开机自启_e0f2218651	Tự khởi động
+开自启_afbb1e3032	Bật tự khởi động
+异常_5caf279339	Bất thường
+异常与变更关联_ad0cd881a4	Tương quan bất thường-thay đổi
+异常时段_fb93a8934a	Khoảng thời gian bất thường
+引擎_9413bdc38c	Engine
+引擎状态_fbb8ddd570	Trạng thái engine
+引擎还没跑完一轮_新建规则后约_15_秒_或服_4db3fea74e	Engine chưa hoàn thành một vòng (khoảng 15 giây sau khi tạo quy tắc), hoặc chưa triển khai collector trên máy chủ
+引用_4cfa595c2a	> Trích dẫn
+引用列_00382a55a7	Cột tham chiếu
+引用表_7d6cb137c9	Bảng tham chiếu
+强制删除_53ddf21fc7	Xóa cưỡng chế
+强制断开连接_b751ba3828	Ngắt kết nối cưỡng chế?
+强制终止后端进程_0_e49e9c414a	Chấm dứt cưỡng chế tiến trình backend {0}?
+强制终止后端进程_pid_eb7db97147	Chấm dứt cưỡng chế tiến trình backend $pid?
+强调色_6f67371e05	Màu nhấn
+归档文件名_2a8d06976b	Tên tệp lưu trữ
+归类_6a9b5537c6	Phân loại
+归类名称不能为空_8aeba11184	Tên phân loại không được để trống
+归类已删除_内容已移到上一级_933faa2f08	Phân loại đã xóa, nội dung đã chuyển lên cấp trên
+归类已更新_219432c27a	Phân loại đã cập nhật
+当前_25e74dceac	Hiện tại
+当前不可用_bd15b2e133	Hiện không khả dụng
+当前令牌会在切换到不同服务器时自动失效_需重新登_faee75ab2a	Token hiện tại sẽ tự động hết hạn khi chuyển sang máy chủ khác; bạn cần đăng nhập lại.
+当前使用_297318c276	Đang dùng hiện tại
+当前值_8b0db67871	Giá trị hiện tại
+当前实例_185db6ac3b	Instance hiện tại
+当前密码_33abf70fd5	Mật khẩu hiện tại
+当前密钥_0_a6dc721288	Khóa hiện tại {0} · 
+当前密钥_0_刷新于_1_b44dce11d6	Khóa hiện tại {0} · làm mới {1}
+当前密钥_暂不可用_698a7394eb	Khóa hiện tại: chưa khả dụng
+当前封禁_4f4e3ab4f7	Đang chặn hiện tại
+当前封禁_ip_c5ccad72be	IP đang bị chặn
+当前库_db0_db15_全量_rdb_8e1d4e62b1	DB hiện tại (db0-db15) RDB đầy đủ
+当前数据库_df2f4d6c3c	Cơ sở dữ liệu hiện tại
+当前日志全部_8615243b08	Toàn bộ nhật ký hiện tại
+当前服务器未启用运维模块_api_ops_a1afd4f100	Máy chủ này chưa bật mô-đun ops (/api/ops/… trả về 404).\n
+当前未配置私钥_将使用密码认证_修改后新终端会话_e7d9729ea6	Chưa cấu hình khóa riêng tư, sẽ dùng xác thực bằng mật khẩu. Thay đổi có hiệu lực với phiên terminal mới.
+当前条件下没有事件_f37e5eca2a	Không có sự kiện nào khớp bộ lọc hiện tại
+当前没有锁定的包_e812929549	Hiện không có gói nào bị khóa
+当前版本_46e66f6321	Phiên bản hiện tại
+当前状态_045859e792	Trạng thái hiện tại
+当前状态起始_ec8a451989	Bắt đầu từ trạng thái hiện tại
+当前用户权限_show_grants_e8e7d7d1e2	Quyền người dùng hiện tại (SHOW GRANTS)
+当前窗口占比_903b7cd486	Tỷ lệ cửa sổ hiện tại
+当前筛选_8936ccc663	Bộ lọc hiện tại
+当前系统不支持软件源切换_718bf56e6b	Hệ thống này không hỗ trợ chuyển nguồn phần mềm

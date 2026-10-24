@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,12 +43,12 @@ import com.servermaintance.panel.ui.PanelCard
  * 端点：GET /relayops/hitrate?range=<1h|6h|24h|7d|all>
  * ========================================================================= */
 
-private val HR_RANGES = listOf(
-    "1h" to "近 1 小时",
-    "6h" to "近 6 小时",
-    "24h" to "近 24 小时",
-    "7d" to "近 7 天",
-    "all" to "全部",
+private val HR_RANGES  get() = listOf(
+    "1h" to L["近_1_小时_9b122efc5b"],
+    "6h" to L["近_6_小时_72ecdebccc"],
+    "24h" to L["近_24_小时_05c6f396a2"],
+    "7d" to L["近_7_天_f297b996de"],
+    "all" to L["全部_778fc8f994"],
 )
 
 private fun hrRateLevel(v: Double?): Level = when {
@@ -57,18 +60,18 @@ private fun hrRateLevel(v: Double?): Level = when {
 
 @Composable
 fun RelayHitrateTab() {
-    var range by remember { mutableStateOf("24h") }
+    var range by remember { mutableStateOf(L["24h_0277959611"]) }
     val paths = remember(range) { mapOf("hitrate" to "/relayops/hitrate?range=$range") }
     val feed = rememberRelayFeed(paths, intervalMs = 2000L)
 
-    var status by remember { mutableStateOf("连接中…") }
+    var status by remember { mutableStateOf(L["连接中_9d02d12157"]) }
     val marker = feed.data["hitrate"]
     val err = feed.err("hitrate")
     LaunchedEffect(marker, err, range) {
         status = when {
-            err != null && marker == null -> "● 更新失败: $err"
-            marker != null -> "● 更新于 ${Fmt.clock()} · 每 2 秒"
-            else -> "连接中…"
+            err != null && marker == null -> trf("更新失败_0_97268fd8ec", err)
+            marker != null -> trf("更新于_0_每_2_秒_664974959b", Fmt.clock())
+            else -> L["连接中_9d02d12157"]
         }
     }
 
@@ -90,7 +93,7 @@ fun RelayHitrateTab() {
     )
 
     Text(
-        "真实命中率 = 2xx ÷（2xx + 套餐/上游拒绝）",
+        L["真实命中率_2xx_2xx_套餐_上_012c560f58"],
         color = Palette.muted,
         style = MaterialTheme.typography.labelSmall,
         modifier = Modifier.padding(bottom = 12.dp),
@@ -101,39 +104,39 @@ fun RelayHitrateTab() {
     val t = h.obj("totals") ?: JsonObject(emptyMap())
     val plans = h.arr("plans").filterIsInstance<JsonObject>()
     val rangeLabel = HR_RANGES.firstOrNull { it.first == range }?.second ?: ""
-    val gran = if (range == "7d" || range == "all") "按天" else "按小时"
+    val gran = if (range == "7d" || range == "all") L["按天_6a0d40d657"] else L["按小时_3ae9822387"]
 
     StatRow(
         listOf(
             StatItem(
-                label = "真实命中率",
+                label = L["真实命中率_d32623c189"],
                 value = fixed(t.num("hitRate"), 2) + "%",
-                sub = "总成功率 " + if (t.key("rawSuccessRate") == null) "-"
-                else pct1(t.num("rawSuccessRate")) + " · 重试 ${rNum(t.num("retried"))}",
+                sub = L["总成功率_61b76516e3"] + if (t.key("rawSuccessRate") == null) "-"
+                else pct1(t.num("rawSuccessRate")) + trf("重试_0_49cb25bbbf", rNum(t.num("retried"))),
             ),
             StatItem(
-                label = "有效请求",
+                label = L["有效请求_9f9f7aec83"],
                 value = rNum(t.num("denominator")),
-                sub = "命中 ${rNum(t.num("hit"))} · 未命中 ${rNum(t.num("miss"))}",
+                sub = trf("命中_0_未命中_1_994cc4fd62", rNum(t.num("hit")), rNum(t.num("miss"))),
             ),
             StatItem(
-                label = "未命中(套餐原因)",
+                label = L["未命中_套餐原因_5492c99555"],
                 value = rNum(t.num("miss")),
-                sub = "有效请求中未拿到响应的次数",
+                sub = L["有效请求中未拿到响应的次数_b0eba0d9ff"],
             ),
             StatItem(
-                label = "客户端错误(不计入)",
+                label = L["客户端错误_不计入_71aa68fd1c"],
                 value = rNum(t.num("client4xx") + t.num("abort")),
-                sub = "4xx ${rNum(t.num("client4xx"))} · 499 中断 ${rNum(t.num("abort"))}",
+                sub = trf("4xx_0_499_中断_1_817ee52e07", rNum(t.num("client4xx")), rNum(t.num("abort"))),
             ),
         ),
     )
 
     /* ---------------- 各套餐命中率（卡片） + 趋势折线 ---------------- */
     GridLayout(columns = 2, spacing = 14.dp) {
-        PanelCard(title = "各套餐命中率 $rangeLabel", cardKey = "hr-cards") {
+        PanelCard(title = trfn("各套餐命中率_rangelabel_cb1ad2971f", "rangeLabel" to rangeLabel), cardKey = "hr-cards") {
             if (plans.isEmpty()) {
-                Muted("该窗口内没有请求记录")
+                Muted(L["该窗口内没有请求记录_d39f782090"])
             } else {
                 GridLayout(columns = 2, spacing = 10.dp) {
                     plans.forEach { p -> HitPlanCard(p) }
@@ -141,7 +144,7 @@ fun RelayHitrateTab() {
             }
         }
 
-        PanelCard(title = "命中率趋势 $rangeLabel · $gran", cardKey = "hr-trend") {
+        PanelCard(title = trfn("命中率趋势_rangelabel_gra_4543952724", "rangeLabel" to rangeLabel, "gran" to gran), cardKey = "hr-trend") {
             val series = h.arr("series").filterIsInstance<JsonObject>()
             MultiLineChart(
                 series = series.map { s ->
@@ -158,49 +161,49 @@ fun RelayHitrateTab() {
 
     /* ---------------- 套餐明细 ---------------- */
     RelaySection(
-        title = "套餐明细 $rangeLabel · 共 ${rNum(t.num("calls"))} 次请求 · 有效 ${rNum(t.num("denominator"))} 次",
+        title = trf("套餐明细_0_共_1_次请求_有_1190dbaf57", rangeLabel, rNum(t.num("calls")), rNum(t.num("denominator"))),
         cardKey = "hr-table",
     ) {
         relayTable(
             rows = plans,
             cols = listOf(
-                RCol("label", "套餐 / 线路", mono = true, width = 1.5f),
-                RCol("calls", "请求", num = true),
-                RCol("hit", "命中", num = true),
-                RCol("miss", "未命中", num = true),
-                RCol("e402", "402 额度", num = true),
-                RCol("e403", "403 权限", num = true),
-                RCol("e429", "429 限流", num = true),
-                RCol("e5", "5xx", num = true),
-                RCol("e0", "无响应", num = true),
-                RCol("client4xx", "客户端4xx", num = true),
-                RCol("abort", "499 中断", num = true),
-                RCol("retried", "重试", num = true),
+                RCol("label", L["套餐_线路_36fd12ba05"], mono = true, width = 1.5f),
+                RCol("calls", L["请求_926f6b6b6a"], num = true),
+                RCol("hit", L["命中_7a130d7fde"], num = true),
+                RCol("miss", L["未命中_786d17cf29"], num = true),
+                RCol("e402", L["402_额度_fbd56d7158"], num = true),
+                RCol("e403", L["403_权限_bd93595602"], num = true),
+                RCol("e429", L["429_限流_5bd5af3cd2"], num = true),
+                RCol("e5", L["5xx_0749258bd2"], num = true),
+                RCol("e0", L["无响应_585c257481"], num = true),
+                RCol("client4xx", L["客户端4xx_499dc47a60"], num = true),
+                RCol("abort", L["499_中断_8a0629ae88"], num = true),
+                RCol("retried", L["重试_e2d53a6d3a"], num = true),
                 RCol(
-                    "rawSuccessRate", "总成功率", num = true,
+                    "rawSuccessRate", L["总成功率_322a0370e9"], num = true,
                     fmt = { if (it == null || it is kotlinx.serialization.json.JsonNull) "—" else pct1(jnum(it)) },
                 ),
                 RCol(
-                    "hitRate", "真实命中率", num = true,
+                    "hitRate", L["真实命中率_d32623c189"], num = true,
                     fmt = { v -> if (jnull(v)) "—" else fixed(jnum(v), 2) + "%" },
                     tone = { v -> if (jnull(v)) Level.Muted else hrRateLevel(jnum(v)) },
                 ),
                 RCol(
-                    "avgRt", "均延迟", num = true,
+                    "avgRt", L["均延迟_c17351f67e"], num = true,
                     fmt = { if (jnull(it)) "—" else fixed(jnum(it), 2) + "s" },
                 ),
                 RCol(
                     "avgTtfb", "TTFB", num = true,
                     fmt = { if (jnull(it)) "—" else fixed(jnum(it), 2) + "s" },
                 ),
-                RCol("modelCoverage", "模型解析率", num = true, fmt = { pct1(jnum(it)) }),
+                RCol("modelCoverage", L["模型解析率_4d7c65560a"], num = true, fmt = { pct1(jnum(it)) }),
             ),
-            emptyText = "无数据",
+            emptyText = L["无数据_6ffa7e6d35"],
         )
     }
 
     /* ---------------- 口径说明 ---------------- */
-    RelaySection(title = "口径说明", cardKey = "hr-note") {
+    RelaySection(title = L["口径说明_53a989d8cc"], cardKey = "hr-note") {
         HitRateNotes()
     }
 }
@@ -243,7 +246,7 @@ private fun HitPlanCard(p: JsonObject) {
         ColorBar(pct = hitRate ?: 0.0, color = if (hitRate == null) Palette.border else null)
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                "请求 ${rNum(p.num("calls"))} · 命中 ${rNum(p.num("hit"))} · 未命中 ${rNum(p.num("miss"))} · 客户端4xx ${rNum(p.num("client4xx"))}",
+                trf("请求_0_命中_1_未命中_2_8eacf0ebe5", rNum(p.num("calls")), rNum(p.num("hit")), rNum(p.num("miss")), rNum(p.num("client4xx"))),
                 color = Palette.muted,
                 style = MaterialTheme.typography.bodySmall,
             )
@@ -253,13 +256,13 @@ private fun HitPlanCard(p: JsonObject) {
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 val chips = listOf(
-                    "402 额度" to p.num("e402"),
-                    "403 权限" to p.num("e403"),
-                    "429 限流" to p.num("e429"),
+                    L["402_额度_fbd56d7158"] to p.num("e402"),
+                    L["403_权限_bd93595602"] to p.num("e403"),
+                    L["429_限流_5bd5af3cd2"] to p.num("e429"),
                     "5xx" to p.num("e5"),
-                    "无响应" to p.num("e0"),
+                    L["无响应_585c257481"] to p.num("e0"),
                 ).filter { it.second > 0 }
-                if (chips.isEmpty()) Muted("无未命中")
+                if (chips.isEmpty()) Muted(L["无未命中_f377902d85"])
                 else chips.forEach { (l, v) -> Chip(text = "$l ${rNum(v)}") }
             }
         }
@@ -270,11 +273,11 @@ private fun HitPlanCard(p: JsonObject) {
 @Composable
 private fun HitRateNotes() {
     val lines = listOf(
-        "· 命中：上游返回 2xx，真正拿到了模型响应。",
-        "· 未命中（套餐/上游原因）：402 额度耗尽、403 权限或密钥失效、429 限流、5xx 上游故障、0 无响应 —— 这些才算「套餐没干活」。",
-        "· 不计入分母：400/401/404 等客户端自身错误与 499 客户端中断，单独列出，避免把用户侧问题算到套餐头上。",
-        "· 真实命中率 = 命中 ÷（命中 + 未命中）；表中「总成功率」= 命中 ÷ 全部请求，口径更保守，两者并列便于对照。",
-        "· 数据来自 nginx 访问日志（含 \$upstream_status）写入的 relay.db，套餐按 route 区分：go=OpenCode Go、zen=OpenCode Zen、glm=GLM Coding Plan、mimo=MiMo Token Plan。",
+        L["命中_上游返回_2xx_真正拿到了模型响应_479b4a776d"],
+        L["未命中_套餐_上游原因_402_额度耗尽_e0a313bdcc"],
+        L["不计入分母_400_401_404_等客户端_a9a408385b"],
+        L["真实命中率_命中_命中_未命中_63e8d6ad96"],
+        L["数据来自_nginx_访问日志_含_ups_a5a09ba2e4"],
     )
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         lines.forEach { Text(it, color = Palette.muted, style = MaterialTheme.typography.bodySmall) }

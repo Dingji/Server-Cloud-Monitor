@@ -1,4 +1,8 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -204,32 +208,32 @@ fun SecurityPage() {
         }
     }
 
-    PageScaffold(title = "安全管理") {
+    PageScaffold(title = L["安全管理_27a60a5c86"]) {
 
-        if (d == null && loading) { Text("加载中…", color = Palette.muted, fontSize = 13.sp) }
+        if (d == null && loading) { Text(L["加载中_300ee3dee4"], color = Palette.muted, fontSize = 13.sp) }
         if (d == null && !loading && error != null) {
-            ErrorState(message = error ?: "加载失败", onRetry = { scope.launch { loadSecurity() } })
+            ErrorState(message = error ?: L["加载失败_f6b7a41e56"], onRetry = { scope.launch { loadSecurity() } })
         }
 
         if (d != null) {
             /* S1 姿态四联 */
             GridLayout(columns = 4, spacing = 12.dp) {
                 StatTile(
-                    label = "主机防火墙 UFW",
-                    value = if (ufwOn) "已启用" else "未启用",
-                    sub = "$ufwRulesCount 条规则",
+                    label = L["主机防火墙_ufw_28b14f25fa"],
+                    value = if (ufwOn) L["已启用_25d2843150"] else L["未启用_8bb38ef00c"],
+                    sub = trfn("ufwrulescount_条规则_4d66159719", "ufwRulesCount" to ufwRulesCount),
                     valueColor = if (ufwOn) Color(0xFF4ADE80) else Color(0xFFFACC15),
                     icon = "firewall",
                 )
                 StatTile(
-                    label = "Root 密码登录",
+                    label = L["root_密码登录_df671edd13"],
                     value = sshd.str("permitrootlogin").ifEmpty { "?" },
                     sub = "PermitRootLogin",
                     valueColor = if (sshd.str("permitrootlogin") == "yes") Color(0xFFF87171) else Color(0xFF4ADE80),
                     icon = "key",
                 )
                 StatTile(
-                    label = "SSH 密码认证",
+                    label = L["ssh_密码认证_f22e3cd826"],
                     value = sshd.str("passwordauthentication").ifEmpty { "?" },
                     sub = "PasswordAuthentication",
                     valueColor = if (sshd.str("passwordauthentication") == "yes") Color(0xFFFACC15) else Color(0xFF4ADE80),
@@ -237,8 +241,8 @@ fun SecurityPage() {
                 )
                 StatTile(
                     label = "Fail2ban",
-                    value = if (f2b?.bool("active") == true) "防护中" else "未防护",
-                    sub = "SSH 防爆破",
+                    value = if (f2b?.bool("active") == true) L["防护中_a8d7b5d826"] else L["未防护_ba54f04f59"],
+                    sub = L["ssh_防爆破_3e3c79eef0"],
                     valueColor = if (f2b?.bool("active") == true) Color(0xFF4ADE80) else Color(0xFFF87171),
                     icon = "shield",
                 )
@@ -247,11 +251,11 @@ fun SecurityPage() {
             /* S2 + S3 */
             GridLayout(columns = 2, spacing = 12.dp) {
                 PanelCard(
-                    title = "SSH 服务配置 (sshd 有效配置)",
+                    title = L["ssh_服务配置_sshd_有效配置_b5a2f5733e"],
                     cardKey = "sec-sshd",
                     right = {
                         PrimaryBtn(
-                            text = "应用并重载 SSH",
+                            text = L["应用并重载_ssh_68c70d62a3"],
                             onClick = {
                                 scope.launch {
                                     val params = jsonObjectOf(
@@ -266,19 +270,19 @@ fun SecurityPage() {
                                         "$k = ${(params[k] as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""}"
                                     }
                                     val warn = if (pwAuth == "no") {
-                                        "\n\n警告：将关闭密码认证，请确认已配置 SSH 密钥，否则可能无法再登录！"
+                                        L["警告_将关闭密码认证_请确认已配置_ssh_38bc29023e"]
                                     } else ""
                                     val ok = Modal.confirm(
-                                        title = "应用 SSH 配置",
-                                        text = "将写入并重载 sshd：\n$body$warn",
-                                        okText = "确认",
+                                        title = L["应用_ssh_配置_6630ee6205"],
+                                        text = L["将写入并重载_sshd_body_warn_b8307d441d"],
+                                        okText = L["确认_b56d9ac6c5"],
                                         danger = true,
                                     )
                                     if (!ok) return@launch
                                     secAction(
                                         action = "sshd-apply",
                                         params = params,
-                                        title = "SSH 配置应用",
+                                        title = L["ssh_配置应用_c35c2ef2bf"],
                                         reload = { loadSecurity() },
                                     )
                                 }
@@ -290,7 +294,7 @@ fun SecurityPage() {
                         Field(
                             value = portText,
                             onValueChange = { portText = it.filter(Char::isDigit) },
-                            label = "SSH 端口",
+                            label = L["ssh_端口_db451b3851"],
                             mono = true,
                             modifier = Modifier.width(120.dp),
                         )
@@ -338,14 +342,14 @@ fun SecurityPage() {
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "修改会写入 /etc/ssh/sshd_config.d/99-cloud-monitor.conf，先执行 sshd -t 校验，失败自动放弃。建议先配好密钥再关闭密码认证。",
+                        L["修改会写入_etc_ssh_sshd_conf_4cb39a7a47"],
                         color = Palette.muted,
                         fontSize = 12.sp,
                     )
                 }
 
                 PanelCard(
-                    title = "Fail2ban 防爆破",
+                    title = L["fail2ban_防爆破_e5d811ec15"],
                     cardKey = "sec-f2b",
                     right = {
                         Row(
@@ -355,15 +359,15 @@ fun SecurityPage() {
                         ) {
                             val active = f2b?.bool("active") == true
                             if (active) {
-                                LevelBadge("运行中", Level.Ok)
+                                LevelBadge(L["运行中_5942497005"], Level.Ok)
                                 DangerBtn(
-                                    text = "停止",
+                                    text = L["停止_a17f70a8d3"],
                                     onClick = {
                                         scope.launch {
                                             val ok = Modal.confirm(
-                                                title = "停止 Fail2ban",
-                                                text = "停止后将失去 SSH 防爆破保护。",
-                                                okText = "确认",
+                                                title = L["停止_fail2ban_c4775a3abd"],
+                                                text = L["停止后将失去_ssh_防爆破保护_cf3e594655"],
+                                                okText = L["确认_b56d9ac6c5"],
                                                 danger = true,
                                             )
                                             if (ok) secAction("fail2ban-stop", reload = { loadSecurity() })
@@ -371,15 +375,15 @@ fun SecurityPage() {
                                     },
                                 )
                             } else {
-                                LevelBadge("未运行", Level.Bad)
+                                LevelBadge(L["未运行_b2ba9634d9"], Level.Bad)
                                 PrimaryBtn(
-                                    text = "安装并启动",
+                                    text = L["安装并启动_d20e3e1fda"],
                                     onClick = {
                                         scope.launch {
                                             val ok = Modal.confirm(
-                                                title = "安装 Fail2ban",
-                                                text = "将执行 apt-get install fail2ban 并启动服务（需要外网连接，可能需要 1-2 分钟）。",
-                                                okText = "安装",
+                                                title = L["安装_fail2ban_38aa818b73"],
+                                                text = L["将执行_apt_get_install_fail_e1244066c3"],
+                                                okText = L["安装_087db63ab1"],
                                             )
                                             if (ok) {
                                                 secAction(
@@ -391,7 +395,7 @@ fun SecurityPage() {
                                     },
                                 )
                                 GhostBtn(
-                                    text = "启动服务",
+                                    text = L["启动服务_f5f2a0dd6f"],
                                     onClick = { scope.launch { secAction("fail2ban-start", reload = { loadSecurity() }) } },
                                 )
                             }
@@ -399,7 +403,7 @@ fun SecurityPage() {
                     },
                 ) {
                     MonoBox(
-                        text = f2b?.str("status")?.ifEmpty { "fail2ban 未安装/未运行" } ?: "fail2ban 未安装/未运行",
+                        text = f2b?.str("status")?.ifEmpty { L["fail2ban_未安装_未运行_006151f653"] } ?: L["fail2ban_未安装_未运行_006151f653"],
                         height = 130.dp,
                     )
                     Spacer(Modifier.height(8.dp))
@@ -411,17 +415,17 @@ fun SecurityPage() {
                         Field(
                             value = unbanIp,
                             onValueChange = { unbanIp = it },
-                            hint = "要解封的 IP",
+                            hint = L["要解封的_ip_32d685e891"],
                             mono = true,
                             modifier = Modifier.weight(1f),
                         )
                         GhostBtn(
-                            text = "解封 IP",
+                            text = L["解封_ip_af385638f1"],
                             onClick = {
                                 scope.launch {
                                     val ip = unbanIp.trim()
                                     if (ip.isEmpty()) {
-                                        AppState.toast("请输入 IP", ToastKind.Warn)
+                                        AppState.toast(tr("请输入_ip_338f1d98f9"), ToastKind.Warn)
                                         return@launch
                                     }
                                     secAction("fail2ban-unban", params = jsonObjectOf("ip" to ip))
@@ -431,7 +435,7 @@ fun SecurityPage() {
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "最近封禁：${f2b?.str("banned")?.ifEmpty { "无数据" } ?: "无数据"}",
+                        trf("最近封禁_0_073f233150", f2b?.str("banned")?.ifEmpty { L["无数据_6ffa7e6d35"] } ?: L["无数据_6ffa7e6d35"]),
                         color = Palette.muted,
                         fontSize = 12.sp,
                     )
@@ -450,31 +454,31 @@ fun SecurityPage() {
 
                 GridLayout(columns = 4, spacing = 12.dp) {
                     StatTile(
-                        label = "429 拦截",
+                        label = L["429_拦截_563bec273d"],
                         value = "${r.long("limited429")}",
-                        sub = "最近 ${r.str("windowLines")} 条请求中",
+                        sub = trf("最近_0_条请求中_22b35b84eb", r.str("windowLines")),
                     )
                     StatTile(
-                        label = "限流日志",
+                        label = L["限流日志_cadf589c16"],
                         value = "${r.long("errorLimitCount")}",
-                        sub = "error.log 累计",
+                        sub = L["error_log_累计_40739fb64e"],
                     )
                     StatTile(
-                        label = "限流区域",
+                        label = L["限流区域_f6cdd5f94a"],
                         value = "${rateZones.size}",
-                        sub = "limit_req / limit_conn",
+                        sub = L["limit_req_limit_conn_03b8dfa986"],
                     )
                     StatTile(
-                        label = "当前封禁 IP",
-                        value = "$banned",
-                        sub = "${jails.size} 个 jail",
+                        label = L["当前封禁_ip_c5ccad72be"],
+                        value = trfn("banned_df7f6e7b0c", "banned" to banned),
+                        sub = trf("0_个_jail_b6895cfd78", jails.size),
                         valueColor = if (banned > 0) Color(0xFFEF4444) else null,
                         icon = "firewall",
                     )
                 }
 
                 PanelCard(
-                    title = "限流 / CC 防护",
+                    title = L["限流_cc_防护_1cacc191c4"],
                     cardKey = "sec-rl",
                     right = {
                         Row(
@@ -482,28 +486,28 @@ fun SecurityPage() {
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.horizontalScroll(rememberScrollState()),
                         ) {
-                            if (r.bool("present")) LevelBadge("已启用", Level.Ok)
-                            else LevelBadge("未配置", Level.Bad)
-                            GhostBtn(text = "刷新", onClick = { scope.launch { reloadAll() } })
+                            if (r.bool("present")) LevelBadge(L["已启用_25d2843150"], Level.Ok)
+                            else LevelBadge(L["未配置_63595e95b7"], Level.Bad)
+                            GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { reloadAll() } })
                         }
                     },
                 ) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                         Column(Modifier.weight(1f)) {
-                            SectionTitle("限流区域 (${rateZones.size})")
+                            SectionTitle(trf("限流区域_0_2073b98a9e", rateZones.size))
                             val zoneRows = rateZones + zones.filter { it.str("type") == "global" }
                             DataTable(
                                 columns = listOf(
-                                    TableCol<JsonObject>(title = "类型", weight = 1f) {
+                                    TableCol<JsonObject>(title = L["类型_e4e46c7235"], weight = 1f) {
                                         val t = it.str("type")
                                         val (label, tone) = when (t) {
-                                            "req" -> "速率" to Level.Ok
-                                            "conn" -> "并发" to Level.Ok
-                                            else -> "全局" to Level.Muted
+                                            "req" -> L["速率_8ec7c4ba74"] to Level.Ok
+                                            "conn" -> L["并发_09d869d15d"] to Level.Ok
+                                            else -> L["全局_a5644f4bbf"] to Level.Muted
                                         }
                                         LevelBadge(label, tone)
                                     },
-                                    TableCol<JsonObject>(title = "名称 / 值", weight = 3f, mono = true) {
+                                    TableCol<JsonObject>(title = L["名称_值_576e23fba3"], weight = 3f, mono = true) {
                                         val extra = when {
                                             it.str("rate").isNotEmpty() -> " · ${it.str("rate")}"
                                             it.str("size").isNotEmpty() -> " · ${it.str("size").trim()}"
@@ -516,10 +520,10 @@ fun SecurityPage() {
                             )
                         }
                         Column(Modifier.weight(1f)) {
-                            SectionTitle("应用位置 (${applied.size})")
+                            SectionTitle(trf("应用位置_0_48979a348d", applied.size))
                             DataTable(
                                 columns = listOf(
-                                    TableCol<JsonObject>(title = "上下文", weight = 2f, mono = true) {
+                                    TableCol<JsonObject>(title = L["上下文_d9aa9fe0d6"], weight = 2f, mono = true) {
                                         Text(
                                             it.str("context").trimEnd(' ', '{').trim(),
                                             fontSize = 11.5.sp,
@@ -527,7 +531,7 @@ fun SecurityPage() {
                                             overflow = TextOverflow.Ellipsis,
                                         )
                                     },
-                                    TableCol<JsonObject>(title = "区域", weight = 3f, mono = true) {
+                                    TableCol<JsonObject>(title = L["区域_17fc93c9cd"], weight = 3f, mono = true) {
                                         val extra = if (it.str("kind") == "req") {
                                             " burst=${it.str("burst").ifEmpty { "-" }}" +
                                                 (if (it.bool("nodelay")) " nodelay" else "")
@@ -545,25 +549,25 @@ fun SecurityPage() {
                     Spacer(Modifier.height(8.dp))
                     SectionTitle("Fail2ban jail (${jails.size})")
                     if (jails.isEmpty()) {
-                        Text("无", color = Palette.muted, fontSize = 12.sp)
+                        Text(L["无_72077749f7"], color = Palette.muted, fontSize = 12.sp)
                     } else {
                         DataTable(
                             columns = listOf(
                                 TableCol<JsonObject>(title = "Jail", weight = 2f, mono = true) {
                                     Text(it.str("name"), fontSize = 12.sp)
                                 },
-                                TableCol<JsonObject>(title = "当前封禁", weight = 1f, align = TextAlign.End, mono = true) {
+                                TableCol<JsonObject>(title = L["当前封禁_4f4e3ab4f7"], weight = 1f, align = TextAlign.End, mono = true) {
                                     Text("${it.long("currentlyBanned")}", fontSize = 12.sp)
                                 },
-                                TableCol<JsonObject>(title = "累计封禁", weight = 1f, align = TextAlign.End, mono = true) {
+                                TableCol<JsonObject>(title = L["累计封禁_27b6c8449a"], weight = 1f, align = TextAlign.End, mono = true) {
                                     Text("${it.long("totalBanned")}", fontSize = 12.sp)
                                 },
-                                TableCol<JsonObject>(title = "被封 IP", weight = 2f, mono = true) {
+                                TableCol<JsonObject>(title = L["被封_ip_906f300fbd"], weight = 2f, mono = true) {
                                     val ips = it.arr("ips").mapNotNull { p ->
                                         (p as? kotlinx.serialization.json.JsonPrimitive)?.content
                                     }
-                                    if (ips.isEmpty()) Text("无", color = Palette.muted, fontSize = 12.sp)
-                                    else Text(ips.joinToString(", "), fontSize = 11.5.sp)
+                                    if (ips.isEmpty()) Text(L["无_72077749f7"], color = Palette.muted, fontSize = 12.sp)
+                                    else Text(ips.joinToString(L["s_d3bc9a378d"]), fontSize = 11.5.sp)
                                 },
                             ),
                             rows = jails,
@@ -573,7 +577,7 @@ fun SecurityPage() {
                     val logs = r.obj("logFiles")
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "配置：${logs?.str("conf") ?: "—"} · 访问日志：${logs?.str("access") ?: "—"}",
+                        trf("配置_0_访问日志_1_67aaf6d9b8", logs?.str("conf") ?: "—", logs?.str("access") ?: "—"),
                         color = Palette.muted,
                         fontSize = 12.sp,
                         fontFamily = FontFamily.Monospace,
@@ -581,13 +585,13 @@ fun SecurityPage() {
 
                     if (byHour.isNotEmpty()) {
                         Spacer(Modifier.height(8.dp))
-                        SectionTitle("最近按小时的 429 拦截")
+                        SectionTitle(L["最近按小时的_429_拦截_cd3fc0518c"])
                         DataTable(
                             columns = listOf(
-                                TableCol<JsonObject>(title = "小时", weight = 1f, mono = true) {
+                                TableCol<JsonObject>(title = L["小时_99f6904ff3"], weight = 1f, mono = true) {
                                     Text(it.str("hour"), fontSize = 12.sp)
                                 },
-                                TableCol<JsonObject>(title = "429 次数", weight = 1f, align = TextAlign.End, mono = true) {
+                                TableCol<JsonObject>(title = L["429_次数_9333e8c60f"], weight = 1f, align = TextAlign.End, mono = true) {
                                     Text("${it.long("count")}", fontSize = 12.sp)
                                 },
                             ),
@@ -597,7 +601,7 @@ fun SecurityPage() {
 
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "修改限流阈值：编辑 00-limits.conf，然后 nginx -t && systemctl reload nginx。",
+                        L["修改限流阈值_编辑_00_limits_conf_1152af13c3"],
                         color = Palette.muted,
                         fontSize = 12.sp,
                     )
@@ -607,10 +611,10 @@ fun SecurityPage() {
             }
 
             /* S6 sysctl */
-            PanelCard(title = "内核/系统安全参数 (sysctl)", cardKey = "sec-sysctl") {
+            PanelCard(title = L["内核_系统安全参数_sysctl_1d74700ad7"], cardKey = "sec-sysctl") {
                 val keys = sysctlObj?.keys?.toList() ?: emptyList()
                 if (keys.isEmpty()) {
-                    Text("暂无参数", color = Palette.muted, fontSize = 12.5.sp)
+                    Text(L["暂无参数_8ff5e03996"], color = Palette.muted, fontSize = 12.5.sp)
                 } else {
                     keys.forEach { key ->
                         Row(
@@ -633,14 +637,14 @@ fun SecurityPage() {
                                 modifier = Modifier.width(140.dp),
                             )
                             GhostBtn(
-                                text = "应用",
+                                text = L["nav.section.app"],
                                 onClick = {
                                     scope.launch {
                                         val v = sysctlEdits[key] ?: ""
                                         val ok = Modal.confirm(
-                                            title = "应用 sysctl",
-                                            text = "设置 $key=$v 并持久化？",
-                                            okText = "确认",
+                                            title = L["应用_sysctl_e2dac5275c"],
+                                            text = L["设置_key_v_并持久化_090be0bfab"],
+                                            okText = L["确认_b56d9ac6c5"],
                                         )
                                         if (ok) {
                                             secAction(
@@ -660,9 +664,9 @@ fun SecurityPage() {
             /* S7 + S8 */
             GridLayout(columns = 2, spacing = 12.dp) {
                 PanelCard(
-                    title = "用户管理 (${users.size})",
+                    title = trf("用户管理_0_9d8d092e16", users.size),
                     cardKey = "sec-users",
-                    right = { GhostBtn(text = "刷新", onClick = { scope.launch { loadSecurity() } }) },
+                    right = { GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { loadSecurity() } }) },
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -672,14 +676,14 @@ fun SecurityPage() {
                         Field(
                             value = newUser,
                             onValueChange = { newUser = it },
-                            hint = "用户名",
+                            hint = L["用户名_a1aaf352cb"],
                             mono = true,
                             modifier = Modifier.weight(1f),
                         )
                         Field(
                             value = newUserPw,
                             onValueChange = { newUserPw = it },
-                            hint = "密码",
+                            hint = L["密码_c839a8ff17"],
                             password = true,
                             modifier = Modifier.weight(1.2f),
                         )
@@ -690,21 +694,21 @@ fun SecurityPage() {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        CheckRow(checked = newUserSudo, onChange = { newUserSudo = it }, label = "sudo 权限")
+                        CheckRow(checked = newUserSudo, onChange = { newUserSudo = it }, label = L["sudo_权限_e03e1e61f9"])
                         PrimaryBtn(
-                            text = "创建用户",
+                            text = L["创建用户_315315d695"],
                             onClick = {
                                 scope.launch {
                                     val name = newUser.trim()
                                     if (name.isEmpty() || newUserPw.isEmpty()) {
-                                        AppState.toast("请填写用户名和密码", ToastKind.Warn)
+                                        AppState.toast(tr("请填写用户名和密码_85362f2da5"), ToastKind.Warn)
                                         return@launch
                                     }
-                                    val sudoSuffix = if (newUserSudo) " 并授予 sudo 权限" else ""
+                                    val sudoSuffix = if (newUserSudo) L["并授予_sudo_权限_8b30bef02a"] else ""
                                     val ok = Modal.confirm(
-                                        title = "创建用户",
-                                        text = "创建用户 $name$sudoSuffix？",
-                                        okText = "确认",
+                                        title = L["创建用户_315315d695"],
+                                        text = trfn("创建用户_name_sudosuffix_423f11e860", "name" to name, "sudoSuffix" to sudoSuffix),
+                                        okText = L["确认_b56d9ac6c5"],
                                     )
                                     if (!ok) return@launch
                                     opsRunAction(
@@ -726,37 +730,37 @@ fun SecurityPage() {
                     Spacer(Modifier.height(8.dp))
                     DataTable(
                         columns = listOf(
-                            TableCol<JsonObject>(title = "用户", weight = 1.4f, mono = true) {
+                            TableCol<JsonObject>(title = L["用户_9ba763ea34"], weight = 1.4f, mono = true) {
                                 Text(it.str("name"), fontSize = 12.sp)
                             },
                             TableCol<JsonObject>(title = "UID", weight = 0.8f, align = TextAlign.End, mono = true) {
                                 Text("${it.long("uid")}", fontSize = 12.sp)
                             },
-                            TableCol<JsonObject>(title = "家目录", weight = 1.6f, mono = true) {
+                            TableCol<JsonObject>(title = L["家目录_f273ea575f"], weight = 1.6f, mono = true) {
                                 Text(it.str("home"), fontSize = 11.5.sp, color = Palette.muted)
                             },
                             TableCol<JsonObject>(title = "Shell", weight = 1.4f, mono = true) {
                                 Text(it.str("shell"), fontSize = 11.5.sp, color = Palette.muted)
                             },
-                            TableCol<JsonObject>(title = "操作", weight = 1.8f) { row ->
+                            TableCol<JsonObject>(title = L["操作_f3ea6d345e"], weight = 1.8f) { row ->
                                 val name = row.str("name")
                                 if (name == "root") {
                                     Text("—", color = Palette.muted, fontSize = 12.sp)
                                 } else {
                                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                         GhostBtn(
-                                            text = "改密",
+                                            text = L["改密_bb974d3064"],
                                             onClick = {
                                                 scope.launch {
                                                     val r = Modal.prompt(
-                                                        title = "修改密码 - $name",
+                                                        title = trfn("修改密码_name_d9c700cba6", "name" to name),
                                                         fields = listOf(
                                                             FormField.Password(
                                                                 name = "password",
-                                                                label = "新密码",
+                                                                label = L["新密码_d22c9c0085"],
                                                             ),
                                                         ),
-                                                        okText = "修改",
+                                                        okText = L["修改_c9c77517fe"],
                                                     )
                                                     val pw = r?.get("password")
                                                     if (pw.isNullOrEmpty()) return@launch
@@ -775,9 +779,9 @@ fun SecurityPage() {
                                             onClick = {
                                                 scope.launch {
                                                     val ok = Modal.confirm(
-                                                        title = "授予 sudo",
-                                                        text = "将 $name 加入 sudo 组？",
-                                                        okText = "确认",
+                                                        title = L["授予_sudo_b17c8ef2b8"],
+                                                        text = trfn("将_name_加入_sudo_组_e6b5bf2823", "name" to name),
+                                                        okText = L["确认_b56d9ac6c5"],
                                                         danger = true,
                                                     )
                                                     if (ok) {
@@ -790,13 +794,13 @@ fun SecurityPage() {
                                             },
                                         )
                                         DangerBtn(
-                                            text = "删除",
+                                            text = L["删除_3755f56f2f"],
                                             onClick = {
                                                 scope.launch {
                                                     val ok = Modal.confirm(
-                                                        title = "删除用户",
-                                                        text = "将删除用户 $name 及其家目录（userdel -r），不可恢复！",
-                                                        okText = "删除",
+                                                        title = L["删除用户_bcfca951a1"],
+                                                        text = trfn("将删除用户_name_及其家目录_userde_38f9f46e9a", "name" to name),
+                                                        okText = L["删除_3755f56f2f"],
                                                         danger = true,
                                                     )
                                                     if (ok) {
@@ -819,11 +823,11 @@ fun SecurityPage() {
                         rows = users,
                     )
                     Spacer(Modifier.height(6.dp))
-                    Text("sudoers：", color = Palette.muted, fontSize = 12.sp)
+                    Text(L["sudoers_21c467b0a2"], color = Palette.muted, fontSize = 12.sp)
                     Spacer(Modifier.height(3.dp))
                     val sudoers = d.arr("sudoers").mapNotNull { (it as? kotlinx.serialization.json.JsonPrimitive)?.content }
                     Text(
-                        sudoers.joinToString("\n").ifEmpty { "(无)" },
+                        sudoers.joinToString("\n").ifEmpty { L["无_3f83251907"] },
                         color = Palette.text,
                         fontSize = 12.sp,
                         fontFamily = FontFamily.Monospace,
@@ -834,14 +838,14 @@ fun SecurityPage() {
                 }
 
                 PanelCard(
-                    title = "SSH 授权密钥 (authorized_keys)",
+                    title = L["ssh_授权密钥_authorized_key_4fee36881a"],
                     cardKey = "sec-keys",
-                    right = { GhostBtn(text = "刷新", onClick = { scope.launch { loadKeys() } }) },
+                    right = { GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { loadKeys() } }) },
                 ) {
                     if (keyError != null) {
                         Text(keyError ?: "", color = Palette.bad, fontSize = 12.sp)
                     } else if (keyLines.isEmpty()) {
-                        Text("暂无授权密钥（使用密钥登录更安全）", color = Palette.muted, fontSize = 12.5.sp)
+                        Text(L["暂无授权密钥_使用密钥登录更安全_07e7ba27d0"], color = Palette.muted, fontSize = 12.5.sp)
                     } else {
                         val parsed = keyLines.map { line ->
                             val p = line.split(Regex("\\s+"))
@@ -849,24 +853,24 @@ fun SecurityPage() {
                         }
                         DataTable(
                             columns = listOf(
-                                TableCol<Triple<String, String, String>>(title = "类型", weight = 1.2f, mono = true) {
+                                TableCol<Triple<String, String, String>>(title = L["类型_e4e46c7235"], weight = 1.2f, mono = true) {
                                     Text(it.first, fontSize = 12.sp)
                                 },
-                                TableCol<Triple<String, String, String>>(title = "公钥", weight = 3f, mono = true) {
-                                    Text(it.second.take(60) + "…", fontSize = 11.5.sp, color = Palette.muted)
+                                TableCol<Triple<String, String, String>>(title = L["公钥_b6965e119c"], weight = 3f, mono = true) {
+                                    Text(it.second.take(60) + L["s_df316e17de"], fontSize = 11.5.sp, color = Palette.muted)
                                 },
-                                TableCol<Triple<String, String, String>>(title = "备注", weight = 1.6f) {
+                                TableCol<Triple<String, String, String>>(title = L["备注_e0361480e3"], weight = 1.6f) {
                                     Text(it.third, fontSize = 12.sp, color = Palette.muted)
                                 },
                                 TableCol<Triple<String, String, String>>(title = "", weight = 1f) { row ->
                                     DangerBtn(
-                                        text = "删除",
+                                        text = L["删除_3755f56f2f"],
                                         onClick = {
                                             scope.launch {
                                                 val ok = Modal.confirm(
-                                                    title = "删除公钥",
-                                                    text = "删除后持有该密钥的客户端将无法登录。",
-                                                    okText = "删除",
+                                                    title = L["删除公钥_b83efa4dbe"],
+                                                    text = L["删除后持有该密钥的客户端将无法登录_1d472813e0"],
+                                                    okText = L["删除_3755f56f2f"],
                                                     danger = true,
                                                 )
                                                 if (!ok) return@launch
@@ -891,18 +895,18 @@ fun SecurityPage() {
                     Field(
                         value = newKey,
                         onValueChange = { newKey = it },
-                        hint = "粘贴公钥 (ssh-ed25519 AAAA... user@host)",
+                        hint = L["粘贴公钥_ssh_ed25519_aaaa_2134dc2324"],
                         mono = true,
                         singleLine = false,
                     )
                     Spacer(Modifier.height(6.dp))
                     PrimaryBtn(
-                        text = "添加公钥",
+                        text = L["添加公钥_3121954aea"],
                         onClick = {
                             scope.launch {
                                 val key = newKey.trim()
                                 if (key.isEmpty()) {
-                                    AppState.toast("请粘贴公钥", ToastKind.Warn)
+                                    AppState.toast(tr("请粘贴公钥_f95fd35ee8"), ToastKind.Warn)
                                     return@launch
                                 }
                                 val r = Actions.run(
@@ -913,7 +917,7 @@ fun SecurityPage() {
                                     ),
                                 )
                                 if (r != null) {
-                                    AppState.toast(r.str("output").ifEmpty { "操作成功" }, ToastKind.Ok)
+                                    AppState.toast(r.str("output").ifEmpty { tr("操作成功_3c5be5f2a1") }, ToastKind.Ok)
                                     newKey = ""
                                     loadKeys()
                                 }
@@ -924,16 +928,16 @@ fun SecurityPage() {
             }
 
             /* S9 最近登录与失败尝试 */
-            PanelCard(title = "最近登录与失败尝试", cardKey = "sec-logins") {
-                Text("成功登录 (last)", color = Palette.muted, fontSize = 12.sp)
+            PanelCard(title = L["最近登录与失败尝试_d575d4606c"], cardKey = "sec-logins") {
+                Text(L["成功登录_last_d5df9592bd"], color = Palette.muted, fontSize = 12.sp)
                 Spacer(Modifier.height(3.dp))
                 val logins = d.arr("recentLogins").mapNotNull { (it as? kotlinx.serialization.json.JsonPrimitive)?.content }
-                MonoBox(text = logins.joinToString("\n").ifEmpty { "(无)" }, height = 150.dp)
+                MonoBox(text = logins.joinToString("\n").ifEmpty { L["无_3f83251907"] }, height = 150.dp)
                 Spacer(Modifier.height(8.dp))
-                Text("失败尝试 (lastb)", color = Palette.muted, fontSize = 12.sp)
+                Text(L["失败尝试_lastb_56a9bc43bc"], color = Palette.muted, fontSize = 12.sp)
                 Spacer(Modifier.height(3.dp))
                 val failed = d.arr("recentFailed").mapNotNull { (it as? kotlinx.serialization.json.JsonPrimitive)?.content }
-                MonoBox(text = failed.joinToString("\n").ifEmpty { "(无记录)" }, height = 180.dp)
+                MonoBox(text = failed.joinToString("\n").ifEmpty { L["无记录_3c275e011f"] }, height = 180.dp)
             }
         }
     }

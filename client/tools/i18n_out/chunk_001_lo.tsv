@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label ຕິດຕັ້ງສຳເລັດ, ກຳລັງໂຫຼດຂໍ້ມູນໃໝ່…
+label_安装日志_13ce1b1029	$label ປະຫວັດການຕິດຕັ້ງ
+label_实现中_70505f7ef8	“$label” ກຳລັງພັດທະນາ…
+llm_api_中继的请求量_token_用量_6b89d708ea	ຈຳນວນຄຳຂໍ, ການນຳໃຊ້ Token, ຂີດຈຳກັດກອງຄ້ຳ, ຄວາມພ້ອມຂອງແບບແລະການວິເຄາະຄຸນນະພາບຂອງ LLM API relay
+location_块_不要停用该站点以免面板与_4ae164b62b	ບລັອກ location), ຫ້າມປິດເວັບໄຊນີ້ ເພາະໜ້າວຽກແລະບໍລິການ relay ຈະດັບພ້ອມກັນ.
+login.access_token	ໂທກັນເຂົ້າເຖິງ
+login.advanced	ຂັ້ນສູງ
+login.audit_notice	ການດຳເນີນງານທັງໝົດຖືກບັນທຶກເພື່ອການກວດສອບ
+login.connect_failed	ເຊື່ອມຕໍ່ລົ້ນເຫຼວ:
+login.failed	ເຂົ້າສູ່ລະບົບລົ້ນເຫຼວ
+login.normalized_url	ທີ່ຢູ່ປັບມາດຕະຖານ
+login.not_logged_in	ຍັງບໍ່ໄດ້ເຂົ້າສູ່ລະບົບ
+login.password_required	ກະລຸນາໃສ່ລະຫັດຜ່ານ
+login.remember_password	ຈື່ລະຫັດຜ່ານ
+login.restore_default_url	ກູ້ຄືນທີ່ຢູ່ເລີ່ມຕົ້ນ
+login.save_on_test_hint	ຫຼັງຈາກປ່ຽນທີ່ຢູ່ ກົດ “ທົດສອບການເຊື່ອມຕໍ່” ເພື່ອບັນທຶກ
+login.server_config	ການຕັ້ງຄ່າເຊື່ອມຕໍ່ເຊີບເວີ
+login.sign_in	ເຂົ້າສູ່ລະບົບ
+login.signing_in	ກຳລັງເຂົ້າສູ່ລະບົບ…
+login.subtitle	ກອງປານການຕິດຕາມແບບເວລາຈິງແລະການຕັ້ງຄ່າເຊີບເວີ
+login.test_connection	ທົດສອບການເຊື່ອມຕໍ່
+login.testing	ກຳລັງທົດສອບ…
+login_可登录_0e617ada9b	LOGIN (ສາມາດເຂົ້າສູ່ລະບົບ)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(bytes ຂອງວົງການກ່ອນ, bytes ຂອງວົງການນີ້) ແມ່ນເນື້ອຫາທີ່ໄດ້ສົ່ງໄປແລ້ວໃນວົງການກ່ອນໆ — ນີ້ແມ່ນຂີດຈຳກັດສູງສຸດທີ່ແຄສຄວນຈະເຂົ້າເຖິງ ໂດຍບໍ່ຂຶ້ນກັບຂໍ້ມູນທີ່ຜູ້ໃຫ້ບໍລິການລາຍງານ.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB ບໍ່ຄືນພື້ນທີ່; validate/reindex ແມ່ນການບຳລຸງປົກກະຕິທົ່ວໄປ.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB ໃຊ້ mongodump ເພື່ອສ້າງບັນທຶກ gzip (ຕ້ອງການ mongodump).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB ສ້າງຖານຂໍ້ມູນແທ້ໆເມື່ອຂຽນເຂົ້າ collection ເທື່ອທຳອິດ ເທິງນີ້ຈະສ້າງ collection ທີ່ທຳມາດຕະຖານ _cm_init.
+mongodb_的过滤条件支持_字段_值_558264a7d8	ຕົວກອງຂອງ MongoDB ຮັບຮູ້ຮູບແບບ {"ຊ່ອງ":ຄ່າ} (ພາຍໃນປ່ຽນເປັນເງື່ອນໄຂຄຳສັງຫັນ) ຫຼືຮູບສັ້ນ ຊ່ອງ=ຄ່າ. ເອກະສານສະແດງໃນຮູບແບບ JSON; _id ແມ່ນລະຫັບກຳນົດເອກະສານ.
+mongodb_维护结果_aaeb39f907	ຜົນການບຳລຸງ MongoDB
+ms_毫秒_7ade5ab3a4	$ms ມິນລິວິນາທີ
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (ເລີ່ມຕົ້ນ root + socket)
+mysql_语法_8200e34cb7	ວັດຈະນານຸກົມ MySQL
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a ສະຖິຕິ
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c ກວດສອບ
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o ແນະນຳປັບປຸງ
+name_ver_连接正常_33d0a44ec7	$name $ver ເຊື່ອມຕໍ່ປົກກະຕິ
+name_关闭_c8e887ebc0	$name: ປິດ
+name_开启_54ce939603	$name: ເປີດ
+nav.audit	ປະຫວັດການກວດສອບ
+nav.backups	ສູນການສຳຮອງຂໍ້ມູນ
+nav.cron	ງານຕາມກຳນົດເວລາ
+nav.dashboard	ແຜງຂໍ້ມູນ
+nav.databases	ຖານຂໍ້ມູນ
+nav.disks	ການຈັດການດິສກ
+nav.docker	ຄອນເນນເນີ Docker
+nav.health_alerts	ການແຈ້ງເຕືອນສຸຂະພາບ
+nav.logs	ສູນບັນທຶກ
+nav.memory	ການຈັດການໜ່ວຍຄວາມຈຳ
+nav.network	ການຈັດການເຄືອຂ່າຍ
+nav.note_mail	ການແຈ້ງທາງອີເມວ
+nav.note_settings	ການຕັ້ງຄ່າ NoteBox
+nav.note_transfer	ນຳເຂົ້າ / ສົ່ງອອກ
+nav.note_users	ການຈັດການຜູ້ໃຊ້
+nav.notes	ບັນທຶກ
+nav.ops_channels	ຊ່ອງທາງການແຈ້ງເຕືອນ
+nav.ops_disk	ການຄຸ້ມຄອງດິສກ
+nav.ops_files	ການຈັດການໄຟລ໌
+nav.ops_hosts	ເຊີບເວີທີ່ຄຸ້ມຄອງ
+nav.ops_remote	ຕົວຊີ້ວັດເຊີບເວີໄກ
+nav.ops_rules	ກົດລະບຽບການແຈ້ງເຕືອນ
+nav.ops_sec	ການກວດສອບມາດຕະຖານຄວາມປອດໄພ
+nav.ops_uptime	ການວັດຄວາມພ້ອມໃຊ້ງານ
+nav.ops_watch	ການເບິ່ງແຍງບໍລິການ
+nav.packages	ການຈັດການແພກເກຈ
+nav.page_placeholder	ໜ້າ {0} ກຳລັງພັດທະນາ…
+nav.pinned_hint	(ຕິດໄວ້ແລ້ວ, ກົດຄ່າຍໃຫ້ເພື່ອຖອນອອກ)
+nav.processes	ການຈັດການຂະບວນການ
+nav.relay	OpenCode relay
+nav.section.app	ແອັບ
+nav.section.monitor	ການຕິດຕາມ
+nav.section.notes	ບັນທຶກ
+nav.section.server	ເຊີບເວີ
+nav.section.system	ລະບົບ
+nav.section.tools	ເຄື່ອງມື
+nav.security	ການຈັດການຄວາມປອດໄພ
+nav.services	ບໍລິການລະບົບ
+nav.settings	ການຕັ້ງຄ່າແຜງ
+nav.slo	SLO ແລະການນຳໃຊ້
+nav.terminal	ເທີມິນັລ Web
+nav.todos	ລາຍການຕ້ອງເຮັດ
+nav.web	ເວັບໄຊ / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf ການຕັ້ງຄ່າ Nginx · sshd_config ການຕັ້ງຄ່າ SSH · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	ການຕັ້ງຄ່າ nginx/sshd/fstab ຈະຖືກກວດສອບອັດຕະໂນມັດຫຼັງບັນທຶກ
+nginx_站点_0_6bcfddef71	ເວັບໄຊ Nginx ({0})
+nginx_站点_sites_size_2db3c2b5be	ເວັບໄຊ Nginx (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP ແລະກົດລະບຽບແຈ້ງເຕືອນ
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox ບັນທຶກຄລາວດ໌ (ແບ່ງຊັ້ນຫຼາຍລະດັບ · ຖັງຂີ້ເຫຍື້ອ · Markdown · ການແບ່ງປັນ)
+notebox_地址未配置_3d37258011	ຍັງບໍ່ໄດ້ຕັ້ງຄ່າທີ່ຢູ່ NoteBox
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox ງານທີ່ຕ້ອງເຮັດ (ຖ້າກຳນົດເວລາ ແລະ ການແຈ້ງທາງອີເມວ)
+notebox_数据迁移_362725f18e	ການຍ້າຍຂໍ້ມູນ NoteBox
+notebox_服务可达_6a7506d6ac	ບໍລິການ NoteBox ສາມາດເຂົ້າເຖິງໄດ້
+notebox_服务可达_未登录_e023d68cad	ບໍລິການ NoteBox ສາມາດເຂົ້າເຖິງໄດ້ (ຍັງບໍ່ໄດ້ເຂົ້າສູ່ລະບົບ)
+notebox_服务地址_默认端口_13345_e0880dfda6	ທີ່ຢູ່ບໍລິການ NoteBox (ພອດເລີ່ມຕົ້ນ 13345). ຕ້ອງເຂົ້າສູ່ລະບົບໃໝ່ຫຼັງຈາກປ່ຽນແປງ.
+notebox_登录成功_013138644f	ເຂົ້າສູ່ລະບົບ NoteBox ສຳເລັດ
+notebox_设置_efb5a47b98	ການຕັ້ງຄ່າ NoteBox
+notebox_账号_仅管理员_81b8d4ca26	ບັນຊີ NoteBox (ສະເພາະຜູ້ບໍລິຫານ)
+online_台有近期数据_1fefff8cdc	$online ເຊີບເວີມີຂໍ້ມູນຫຼ້າສຸດ
+opencode_中继_2e021ee797	OpenCode relay
+p95_延迟_57d63f8b46	ຄວາມໜ້ວງ P95
+p95_延迟_ba65a873bc	ຄວາມໜ້ວງ p95
+palette.accent_hint	ຮູບລັກສະນະ · ປັດຈຸບັນ {0}
+palette.open_page	ເປີດໜ້າ {0}
+palette.pin	ຕິດໄວ້ “{0}”
+palette.pin_hint	ບ່ອນເຮັດວຽກ · ກົດຄ່າຍໃສ່ລາຍການແຖບຂ້າງເພື່ອສະຫຼັບ
+palette.reload_hint	F5 / Ctrl+R · ໂຫຼດໃໝ່
+palette.theme_hint	ຮູບລັກສະນະ · ປັດຈຸບັນ {0}
+palette.unpin	ຖອນ “{0}”
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (ບັງຄັບປ່ຽນລະຫັດຜ່ານ)
+pg_自定义格式_0cc41d0ea4	ຮູບແບບທີ່ກຳນົດເອງ PG
+postgresql_mysql_sql_42e513fca9	ການຄຸ້ມຄອງຖານຂໍ້ມູນ/ຕາຕະລາງ, ໂຄງການ SQL, ການວິເຄາະປະສິດທິພາບ ແລະ ການສຳຮອງ/ກູ້ຄືນສຳລັບ PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	ຮູບແບບທີ່ກຳນົດເອງຂອງ PostgreSQL -Fc (ກູ້ຄືນໄວຂຶ້ນ)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (ເລີ່ມຕົ້ນໃຊ້ peer authentication: su - postgres)
+rdb_快照_62f218ed40	ບັນທຶກ RDB
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis ຈະຮັບໃຊ້ BGSAVE ແລະ ຄັດລອກໄຟລ໌ RDB; ການກູ້ຄືນຈະຂຽນທັບໄດເຣັກຕົຣີຂໍ້ມູນ ແລະ ຕ້ອງເລີ່ມ Redis ໃໝ່ເພື່ອໃຫ້ມີຜົນ.
+redis_命令控制台_fa42019a53	ໂຄງການບັນສັ່ງ Redis
+redis_维护_d2a01bfbd3	ການບຳລຸງ Redis
+reindex_全部库_90545e1eeb	REINDEX ທຸກຖານຂໍ້ມູນ
+reindex_重建索引_256956f94e	REINDEX / ສ້າງດັດຊະນະໃໝ່
+reindex_重建索引_d81fcbf8d0	REINDEX (ສ້າງດັດຊະນະໃໝ່)
+relay_alert_py_检查_smtp_告_012aaa3373	ການກວດສອບ relay_alert.py, ໂຄງການແຈ້ງເຕືອນ SMTP, ລະດັບ ແລະ ບັນທຶກການແຈ້ງເຕືອນ

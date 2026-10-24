@@ -1,0 +1,3 @@
+{
+ "error": "SQLite 数据库文件必须以 .db/.sqlite/.sqlite3/.db3 结尾"
+}

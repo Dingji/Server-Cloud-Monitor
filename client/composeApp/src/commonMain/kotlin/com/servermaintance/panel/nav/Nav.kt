@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.pages.*
 import com.servermaintance.panel.pages.ops.*
 import com.servermaintance.panel.ui.Palette
@@ -36,9 +37,10 @@ enum class PageId {
  */
 data class NavEntry(
     val id: PageId,
-    val label: String,
+    /** i18n key in `i18n/<locale>.json` */
+    val labelKey: String,
     val icon: String,
-    val section: String,
+    val sectionKey: String,
     val optional: Boolean = false,
     /** 仅 NoteBox 管理员可见（用户管理/邮件通知）；非 admin 时隐藏。 */
     val adminOnly: Boolean = false,
@@ -86,45 +88,56 @@ val PageId.route: String
 
 /** 面板导航（含可选的 relay 项，紧随 dashboard 之后，同 app.js 注释位置）。 */
 val NAV: List<NavEntry> = listOf(
-    NavEntry(PageId.Dashboard, "仪表盘", "dashboard", "监控"),
-    NavEntry(PageId.HealthAlerts, "健康告警", "shieldAlert", "监控"),
-    NavEntry(PageId.SLO, "SLO 与用量", "gauge", "监控"),
-    NavEntry(PageId.OpsUptime, "可用性拨测", "activity", "监控"),
-    NavEntry(PageId.OpsRules, "告警规则", "bell", "监控"),
-    NavEntry(PageId.OpsChannels, "通知渠道", "mail", "监控"),
-    NavEntry(PageId.Relay, "OpenCode 中继", "satellite", "监控", optional = true),
-    NavEntry(PageId.Processes, "进程管理", "process", "服务器"),
-    NavEntry(PageId.Disks, "磁盘管理", "disk", "服务器"),
-    NavEntry(PageId.Memory, "内存管理", "memory", "服务器"),
-    NavEntry(PageId.Network, "网络管理", "network", "服务器"),
-    NavEntry(PageId.Security, "安全管理", "shield", "服务器"),
-    NavEntry(PageId.Services, "系统服务", "gear", "服务器"),
-    NavEntry(PageId.Packages, "软件包管理", "package", "服务器"),
-    NavEntry(PageId.Databases, "数据库", "database", "应用"),
-    NavEntry(PageId.Docker, "Docker 容器", "docker", "应用"),
-    NavEntry(PageId.Web, "网站 / Nginx", "browser", "应用"),
-    NavEntry(PageId.Cron, "定时任务", "clock", "应用"),
-    NavEntry(PageId.Backups, "备份中心", "archive", "应用"),
-    NavEntry(PageId.Logs, "日志中心", "logs", "应用"),
-    NavEntry(PageId.Audit, "审计日志", "list", "应用"),
-    NavEntry(PageId.OpsFiles, "文件管理", "folder", "服务器"),
-    NavEntry(PageId.OpsHosts, "纳管主机", "server", "服务器"),
-    NavEntry(PageId.OpsSec, "安全基线巡检", "shieldAlert", "服务器"),
-    NavEntry(PageId.OpsDisk, "磁盘治理", "disk", "服务器"),
-    NavEntry(PageId.OpsWatch, "服务看护", "shield", "服务器"),
-    NavEntry(PageId.OpsRemote, "远程主机指标", "cloud", "服务器"),
-    NavEntry(PageId.Notes, "笔记", "note", "笔记"),
-    NavEntry(PageId.Todos, "待办清单", "checkSquare", "笔记"),
-    NavEntry(PageId.NoteTransfer, "导入 / 导出", "import", "笔记"),
-    NavEntry(PageId.NoteMail, "邮件通知", "mail", "笔记", adminOnly = true),
-    NavEntry(PageId.NoteSettings, "NoteBox 设置", "sliders", "笔记"),
-    NavEntry(PageId.NoteUsers, "用户管理", "user", "笔记", adminOnly = true),
-    NavEntry(PageId.Terminal, "Web 终端", "terminal", "工具"),
-    NavEntry(PageId.Settings, "面板设置", "sliders", "系统"),
+    NavEntry(PageId.Dashboard, "nav.dashboard", "dashboard", "nav.section.monitor"),
+    NavEntry(PageId.HealthAlerts, "nav.health_alerts", "shieldAlert", "nav.section.monitor"),
+    NavEntry(PageId.SLO, "nav.slo", "gauge", "nav.section.monitor"),
+    NavEntry(PageId.OpsUptime, "nav.ops_uptime", "activity", "nav.section.monitor"),
+    NavEntry(PageId.OpsRules, "nav.ops_rules", "bell", "nav.section.monitor"),
+    NavEntry(PageId.OpsChannels, "nav.ops_channels", "mail", "nav.section.monitor"),
+    NavEntry(PageId.Relay, "nav.relay", "satellite", "nav.section.monitor", optional = true),
+    NavEntry(PageId.Processes, "nav.processes", "process", "nav.section.server"),
+    NavEntry(PageId.Disks, "nav.disks", "disk", "nav.section.server"),
+    NavEntry(PageId.Memory, "nav.memory", "memory", "nav.section.server"),
+    NavEntry(PageId.Network, "nav.network", "network", "nav.section.server"),
+    NavEntry(PageId.Security, "nav.security", "shield", "nav.section.server"),
+    NavEntry(PageId.Services, "nav.services", "gear", "nav.section.server"),
+    NavEntry(PageId.Packages, "nav.packages", "package", "nav.section.server"),
+    NavEntry(PageId.Databases, "nav.databases", "database", "nav.section.app"),
+    NavEntry(PageId.Docker, "nav.docker", "docker", "nav.section.app"),
+    NavEntry(PageId.Web, "nav.web", "browser", "nav.section.app"),
+    NavEntry(PageId.Cron, "nav.cron", "clock", "nav.section.app"),
+    NavEntry(PageId.Backups, "nav.backups", "archive", "nav.section.app"),
+    NavEntry(PageId.Logs, "nav.logs", "logs", "nav.section.app"),
+    NavEntry(PageId.Audit, "nav.audit", "list", "nav.section.app"),
+    NavEntry(PageId.OpsFiles, "nav.ops_files", "folder", "nav.section.server"),
+    NavEntry(PageId.OpsHosts, "nav.ops_hosts", "server", "nav.section.server"),
+    NavEntry(PageId.OpsSec, "nav.ops_sec", "shieldAlert", "nav.section.server"),
+    NavEntry(PageId.OpsDisk, "nav.ops_disk", "disk", "nav.section.server"),
+    NavEntry(PageId.OpsWatch, "nav.ops_watch", "shield", "nav.section.server"),
+    NavEntry(PageId.OpsRemote, "nav.ops_remote", "cloud", "nav.section.server"),
+    NavEntry(PageId.Notes, "nav.notes", "note", "nav.section.notes"),
+    NavEntry(PageId.Todos, "nav.todos", "checkSquare", "nav.section.notes"),
+    NavEntry(PageId.NoteTransfer, "nav.note_transfer", "import", "nav.section.notes"),
+    NavEntry(PageId.NoteMail, "nav.note_mail", "mail", "nav.section.notes", adminOnly = true),
+    NavEntry(PageId.NoteSettings, "nav.note_settings", "sliders", "nav.section.notes"),
+    NavEntry(PageId.NoteUsers, "nav.note_users", "user", "nav.section.notes", adminOnly = true),
+    NavEntry(PageId.Terminal, "nav.terminal", "terminal", "nav.section.tools"),
+    NavEntry(PageId.Settings, "nav.settings", "sliders", "nav.section.system"),
 )
 
 /** 分组出现顺序（照抄 app.js 的 sep 顺序；「笔记」为 NoteBox 新增分组）。 */
-val NAV_SECTIONS: List<String> = listOf("监控", "服务器", "应用", "笔记", "工具", "系统")
+val NAV_SECTIONS: List<String> = listOf(
+    "nav.section.monitor",
+    "nav.section.server",
+    "nav.section.app",
+    "nav.section.notes",
+    "nav.section.tools",
+    "nav.section.system",
+)
+
+fun NavEntry.labelText(): String = L[labelKey]
+
+fun NavEntry.sectionText(): String = L[sectionKey]
 
 /** 按 id 取注册项（含 label/icon/section）。 */
 fun entryOf(id: PageId): NavEntry = NAV.first { it.id == id }
@@ -144,7 +157,7 @@ fun visibleNav(relayAvailable: Boolean, isAdmin: Boolean = true): List<NavEntry>
 /** 按分组整理（只含可见项），侧栏按此顺序渲染分组标题与条目。 */
 fun groupedNav(relayAvailable: Boolean, isAdmin: Boolean = true): List<Pair<String, List<NavEntry>>> =
     NAV_SECTIONS.mapNotNull { sec ->
-        visibleNav(relayAvailable, isAdmin).filter { it.section == sec }
+        visibleNav(relayAvailable, isAdmin).filter { it.sectionKey == sec }
             .takeIf { it.isNotEmpty() }?.let { sec to it }
     }
 
@@ -201,7 +214,7 @@ fun PagePlaceholder(title: String) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "「$title」页面实现中…",
+            text = L.fmt("nav.page_placeholder", title),
             color = Palette.muted,
             fontSize = 13.sp,
             textAlign = TextAlign.Center,

@@ -1,0 +1,120 @@
+删除模式_n_及其全部对象_cascade_7be2ccf5c3	Excluir o esquema $n e todos os seus objetos (CASCADE)?
+删除清单_9ef1393048	Excluir o manifesto
+删除用户_0_其全部笔记_待办与共享将一并_2bdfec376d	Excluir o usuário {0}? Todas as suas notas, tarefas e compartilhamentos também serão excluídos e não poderão ser recuperados!
+删除用户_bcfca951a1	Excluir usuário
+删除的笔记会先放到这里_可随时恢复_1e1ce2f496	Notas excluídas ficam primeiro aqui e podem ser restauradas a qualquer momento
+删除看护项_a25ad06abe	Excluir item monitorado
+删除索引_0_603822ce94	Excluir o índice {0}?
+删除索引_b35a3521e8	Excluir índice
+删除索引_n_36f8faee06	Excluir o índice $n?
+删除约束_79e25fc4b0	Excluir restrição
+删除线_c85de9e58a	Tachado
+删除结果_1e53f0d130	Excluir resultado
+删除行_3a7d5b0104	Excluir linha
+删除表_b9fd2c7a44	Excluir tabela
+删除视图_3bcc039f64	Excluir visualização
+删除角色_89dab40d48	Excluir papel
+删除触发器_74803e962b	Excluir gatilho
+删除该行_定位_0_b6bfea70ab	Excluir esta linha?\nLocalização: {0}
+删除该行_定位_loc_b3f2f5d90e	Excluir esta linha?\nLocalização: $loc
+删除轮转日志_f8de13f44b	Excluir logs rotacionados
+删除通知渠道_5fb682fc27	Excluir canal de notificações
+删除键_ea51f84dd1	Excluir chave
+删除防火墙规则_f1c7ac57e4	Excluir regra de firewall
+删除集合_0_及其全部文档_3a1fd80488	Excluir a coleção {0} e todos os seus documentos?
+删除集合_e86f0eec01	Excluir coleção
+删除集合_n_及其全部文档_3e6b9c73f5	Excluir a coleção $n e todos os seus documentos?
+删除静默窗口_ec702916cf	Excluir janela de silêncio
+到期提醒_ce425cc527	Lembrete de expiração
+到期提醒_截止前_n_分钟发送_每日摘要_在设定_0805f20d0d	Lembrete de expiração: enviado N minutos antes do vencimento; resumo diário: resume os itens «expirados + que vencem hoje» no horário configurado.
+到期时间_3144a998f0	Hora de expiração
+到期邮件提醒_4e76e9fec7	Lembrete de expiração por e-mail
+制定方案_fabaee1920	Criar plano
+刷新_38108eaa1d	Atualizar
+刷新中_ea0ab1492c	Atualizando…
+刷新全部配额_076a4d3565	Atualizar todas as cotas
+刷新分析_6a65ab904e	Atualizar análises
+刷新引擎信息_022b2c17cd	Atualizar informações do mecanismo
+刷新当前页面_ea66e5616b	Atualizar a página atual
+刷新状态_7cc7f07a2c	Atualizar status
+刷新配额_851859899a	Atualizar cota
+刷新间隔已更新为_0_0bc513729c	Intervalo de atualização alterado para {0}
+刷新间隔已更新为_refreshlabel_e742c6c081	Intervalo de atualização alterado para ${refreshLabel(v)}
+前往_23926d6146	Ir para
+剖析设置_3fa475fa54	Configurações de profiling
+剩余_0_共_1_a04477cc45	{0} restantes de {1}
+剩余_fmt_bytes_d_availkb_fd7a85ca9b	${Fmt.bytes(d.availKb * 1024)} disponíveis de ${Fmt.bytes(d.totalKb * 1024)}
+剩余天数_fb0ca9d4ed	Dias restantes
+加密方式_4bf1dc061d	Método de criptografia
+加签密钥_sec_开头_63ebeb3c8d	Chave de assinatura (começa com SEC)
+加签密钥_可空_a075da941a	Chave de assinatura (opcional)
+加粗_f670b2adc0	Negrito
+加载中_300ee3dee4	Carregando…
+加载中_ce56f617e4	Carregando
+加载单元日志_faba070327	Carregar logs da unidade
+加载失败_f6b7a41e56	Falha ao carregar
+加载日志源_e64e9c0145	Carregando fontes de log…
+加载详情失败_02c28cd84c	Falha ao carregar os detalhes
+劣化_07f00d1b46	Degradado
+动作_d9d9827827	Ação
+动作历史_探测_拉起_恢复_放弃_ced77539db	Histórico de ações (sondagem / inicialização / recuperação / abandono)
+勾选后可批量操作_执行前照常预览变更_过程中显示_8b4692abd7	Marque as caixas para operações em lote: as alterações são pré-visualizadas antes da execução, como de costume, com barra de progresso total e logs em tempo real durante o processo (máx. 500 pacotes por execução, agrupados automaticamente)
+包名_03c2d07a24	Nome do pacote
+包含数据_1cf1ae1b58	Contém dados
+区域_17fc93c9cd	Região
+区间_2e8dd83da0	Intervalo
+升序_c0276ec9a7	Crescente
+升级_2e8e70958c	Atualizar
+协议_b0c431675b	Protocolo
+单价表_etc_relay_pricing_j_2bb5e45a84	Tabela de preços: /etc/relay/pricing.json, aceita curingas mimo-*; modelos com -free são cobrados a 0.
+单位_mb_du_只统计同一文件系统内的内容_fbcbac3988	Unidade: MB; du conta apenas o conteúdo dentro do mesmo sistema de arquivos
+单元_9abfa4fb70	Unidade
+单次_6fe4ab9915	Execução única
+单次时长_分钟_0e95dd9d82	Duração por execução (minutos)
+单次时间段_ee80d47d80	Período único
+单次超时_毫秒_6917a6a5b4	Tempo limite por execução (milissegundos)
+单表备份_a2ec5e9278	Backup de uma única tabela
+单请求_token_e856ed3d96	Tokens por requisição
+占用_0_50085c6df1	Ocupado {0}
+占用_7b81023b68	Ocupado
+占用_fmt_bytes_totalsize_c86f7a479b	Ocupado ${Fmt.bytes(totalSize)}
+占用分析_003851e93c	Análise de ocupação
+危险操作会弹出确认框_所有操作都会写入审计日志_762239eaff	Operações perigosas mostram uma caixa de confirmação. Todas as operações são registradas no audit log.
+即将_f48bcfb627	Em breve
+卸载_200cf1550d	Desinstalar
+卸载不再被任何软件包依赖的软件包_8ed32b0b41	Remover pacotes que não são mais necessários para nenhum outro pacote
+历史加载失败_26115dcd28	Falha ao carregar o histórico
+历史记录_19e0e3f3df	Histórico
+历史趋势_83a53b6a5f	Tendência histórica
+压缩_4b8163f527	Comprimir
+压缩集合_3a8375459c	Compactar a coleção
+原位置_00e56f7a13	Localização original
+原因_1ff9c3d001	Motivo
+原因备注_0a726bdb00	Observação do motivo
+原密码_2bd80322a5	Senha atual
+原配置备份_0_45dc9a773d	\n\nBackup da configuração original: {0}
+原配置备份_it_bc51af7b89	\n\nBackup da configuração original: $it
+去登录_6c01b0cfd0	Ir para o login
+去重_sess_c93d23e294	Deduplicar sess
+参数值_所有者_连接数_5fbebb4ba1	Valor do parâmetro / Proprietário / Conexões
+参数名_如_work_mem_search_5337d4de4f	Nome do parâmetro (ex. work_mem / search_path)
+参数已保存_5252465cd0	Parâmetro salvo
+发件人名_c1dac198b4	Nome do remetente
+发件人地址_e83d394caa	Endereço do remetente
+发件人显示名_可空_cf0818ed1b	Nome de exibição do remetente (opcional)
+发件账号_c4c54b3c06	Conta de envio
+发现不可用_d0375abbf5	Detectado como indisponível
+发行版_6ef5fc415c	Distribuição
+发送中_c1b894480d	Enviando…
+发送失败_e767d34c78	Falha ao enviar
+发送测试邮件_1eace6fb59	Enviar e-mail de teste
+发送记录_90ed819b22	Histórico de envios
+发送详情邮件_ad8277f7a5	Enviar e-mail com detalhes
+取下一个值_0101cf2ed1	Obter o próximo valor
+取尾中_d2a2c10e52	Obtendo o final…
+取消_4d0b4688c7	Cancelar
+取消共享_2b2e551005	Cancelar o compartilhamento
+取消对该用户的共享_67e86f5c00	Cancelar o compartilhamento com este usuário?
+取消选择_f02e943954	Desmarcar seleção
+受保护_9505edfd06	Protegido
+受窗口内上限约束_b1435a79c4	Sujeito ao limite por janela

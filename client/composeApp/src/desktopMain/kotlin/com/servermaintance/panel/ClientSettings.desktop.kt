@@ -14,6 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.servermaintance.panel.core.AppState
 import com.servermaintance.panel.core.ToastKind
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.LocaleState
+import com.servermaintance.panel.i18n.tr
 import com.servermaintance.panel.ui.PanelCard
 import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.SelectField
@@ -27,11 +30,12 @@ actual fun ClientSettingsSection() {
     if (!isWindowsDesktop) return
     val traySupported = remember { SystemTray.isSupported() }
     var action by remember { mutableStateOf(WindowsCloseBehavior.load()) }
-    val labels = remember(traySupported) { WindowsCloseBehavior.allLabels(traySupported) }
+    val lang = LocaleState.current
+    val labels = remember(traySupported, lang) { WindowsCloseBehavior.allLabels(traySupported) }
 
-    PanelCard(title = "Windows 客户端") {
+    PanelCard(title = L["win.client.title"]) {
         Text(
-            "点击窗口关闭按钮时的行为。首次在关闭对话框中的选择也会自动记在这里。",
+            L["win.client.hint"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )
@@ -43,22 +47,18 @@ actual fun ClientSettingsSection() {
                 val next = WindowsCloseBehavior.fromLabel(picked, traySupported)
                 action = next
                 WindowsCloseBehavior.save(next)
-                AppState.toast("关闭行为已更新", ToastKind.Ok)
+                AppState.toast(tr("win.client.updated_toast"), ToastKind.Ok)
             },
             modifier = Modifier.fillMaxWidth(),
-            label = "关闭窗口时",
+            label = L["win.client.close_label"],
         )
         Spacer(Modifier.height(6.dp))
         Text(
             when (action) {
-                WindowsCloseAction.Ask -> "每次关闭时弹出选择：驻留后台或退出。"
+                WindowsCloseAction.Ask -> L["win.client.desc_ask"]
                 WindowsCloseAction.Tray ->
-                    if (traySupported) {
-                        "关闭后隐藏主窗口，在托盘继续接收告警通知。"
-                    } else {
-                        "关闭后最小化到任务栏，继续在后台接收告警通知。"
-                    }
-                WindowsCloseAction.Quit -> "关闭后立即退出 Cloud Monitor。"
+                    if (traySupported) L["win.client.desc_tray"] else L["win.client.desc_tray_no_tray"]
+                WindowsCloseAction.Quit -> L["win.client.desc_quit"]
             },
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,

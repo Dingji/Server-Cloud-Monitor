@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.ops
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -97,48 +100,48 @@ fun OpsFilesPage() {
     }
 
     PageScaffold(
-        title = "文件管理",
-        desc = "服务器文件系统操作：浏览、编辑、上传下载、权限、打包、回收站（删除保留 30 天）",
+        title = L["文件管理_3f2244c98f"],
+        desc = L["服务器文件系统操作_浏览_编辑_上传下载_权限_66f94fd459"],
         actions = {
-            GhostBtn(text = "上级", onClick = {
+            GhostBtn(text = L["上级_205300782e"], onClick = {
                 selected = emptySet()
                 scope.launch { FileStore.up(1); pathInput = FileStore.dir.value }
             }, icon = "arrowLeft")
             Spacer(Modifier.size(6.dp))
-            GhostBtn(text = "刷新", onClick = { scope.launch { FileStore.refresh() } }, icon = "refresh")
+            GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { FileStore.refresh() } }, icon = "refresh")
             Spacer(Modifier.size(6.dp))
-            GhostBtn(text = "回收站${if (trash.isEmpty()) "" else " ${trash.size}"}", onClick = { showTrash = !showTrash }, icon = "trash")
+            GhostBtn(text = trf("回收站_0_c62b3efd3d", if (trash.isEmpty()) "" else " (${trash.size})"), onClick = { showTrash = !showTrash }, icon = "trash")
             Spacer(Modifier.size(6.dp))
-            GhostBtn(text = "上传", onClick = {
+            GhostBtn(text = L["上传_a977650db1"], onClick = {
                 pickBinaryFiles(emptyList(), true) { picked ->
                     if (picked.isEmpty()) return@pickBinaryFiles
                     scope.launch {
                         picked.forEach { f ->
                             val err = FileStore.upload(f.name, f.bytes)
-                            if (err != null && err.contains("已存在")) {
-                                if (Modal.confirm("同名文件已存在", "${f.name}：覆盖？", okText = "覆盖", danger = true)) {
-                                    toast(FileStore.upload(f.name, f.bytes, overwrite = true), "已上传并覆盖 ${f.name}")
+                            if (err != null && com.servermaintance.panel.i18n.textHasI18nKey(err, "已存在_a867d42ddf")) {
+                                if (Modal.confirm(L["同名文件已存在_19c091cec7"], trf("0_覆盖_ba416bc36f", f.name), okText = L["覆盖_a26056298a"], danger = true)) {
+                                    toast(FileStore.upload(f.name, f.bytes, overwrite = true), trf("已上传并覆盖_0_56609744b2", f.name))
                                 }
                             } else {
-                                toast(err, "已上传 ${f.name}")
+                                toast(err, trf("已上传_0_62e7aadbe5", f.name))
                             }
                         }
                     }
                 }
             }, icon = "upload")
             Spacer(Modifier.size(6.dp))
-            PrimaryBtn(text = "新建目录", onClick = {
+            PrimaryBtn(text = L["新建目录_80e05af6a0"], onClick = {
                 scope.launch {
-                    val f = Modal.prompt("在 ${listing?.dir ?: ""} 下新建目录", listOf(FormField.Text("name", "目录名称")), okText = "创建") ?: return@launch
-                    toast(FileStore.mkdir(f["name"].orEmpty()), "目录已创建")
+                    val f = Modal.prompt(trf("在_0_下新建目录_fcaf22904d", listing?.dir ?: ""), listOf(FormField.Text("name", L["目录名称_b4c0418914"])), okText = L["创建_fcbd093292"]) ?: return@launch
+                    toast(FileStore.mkdir(f["name"].orEmpty()), L["目录已创建_bec7e97f72"])
                 }
             }, icon = "plus")
-            GhostBtn(text = "新建文件", onClick = {
+            GhostBtn(text = L["新建文件_d4526eb925"], onClick = {
                 scope.launch {
-                    val f = Modal.prompt("在 ${listing?.dir ?: ""} 下新建文件", listOf(FormField.Text("name", "文件名", hint = "如 index.html")), okText = "创建") ?: return@launch
+                    val f = Modal.prompt(trf("在_0_下新建文件_cfb4d5dd9f", listing?.dir ?: ""), listOf(FormField.Text("name", L["文件名_1275f6feb7"], hint = L["如_index_html_e76a6ff3ae"])), okText = L["创建_fcbd093292"]) ?: return@launch
                     val name = f["name"].orEmpty()
                     val err = FileStore.createFile(name)
-                    toast(err, "文件已创建")
+                    toast(err, L["文件已创建_3e2240f609"])
                 }
             }, icon = "fileDown")
         },
@@ -149,11 +152,11 @@ fun OpsFilesPage() {
         }
         val l = listing
         if (l == null) {
-            LoadingState("读取目录…")
+            LoadingState(L["读取目录_5bfbf3e6d6"])
             return@PageScaffold
         }
 
-        PanelCard("位置", cardKey = "files-loc", collapsible = false) {
+        PanelCard(title = L["位置_88c34452cc"], cardKey = "files-loc", collapsible = false) {
             Row(
                 Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 verticalAlignment = Alignment.CenterVertically,
@@ -169,13 +172,13 @@ fun OpsFilesPage() {
                 Field(
                     value = pathInput,
                     onValueChange = { pathInput = it },
-                    label = "跳转路径",
-                    hint = "绝对路径，如 /var/www/html",
+                    label = L["跳转路径_f881d3d381"],
+                    hint = L["绝对路径_如_var_www_html_a7724c2089"],
                     mono = true,
                     modifier = Modifier.weight(1f),
                 )
-                GhostBtn(text = "前往", onClick = { go(pathInput.trim()) }, icon = "external")
-                GhostBtn(text = "占用分析", onClick = { scope.launch { FileStore.loadUsage(l.dir) } }, icon = "chart")
+                GhostBtn(text = L["前往_23926d6146"], onClick = { go(pathInput.trim()) }, icon = "external")
+                GhostBtn(text = L["占用分析_003851e93c"], onClick = { scope.launch { FileStore.loadUsage(l.dir) } }, icon = "chart")
             }
             Spacer(Modifier.size(6.dp))
             Row(
@@ -183,7 +186,7 @@ fun OpsFilesPage() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                Text(text = "常用：", color = Palette.muted, fontSize = 11.5.sp)
+                Text(text = L["常用_ee2804c36b"], color = Palette.muted, fontSize = 11.5.sp)
                 l.bookmarks.forEach { b ->
                     GhostBtn(text = b.label, onClick = { go(b.path) }, icon = "folder")
                 }
@@ -191,9 +194,9 @@ fun OpsFilesPage() {
             l.df?.let { d ->
                 Spacer(Modifier.size(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(text = "文件系统 ${d.filesystem}", color = Palette.muted, fontSize = 11.5.sp)
-                    Text(text = "已用 ${d.pct}", color = Palette.text, fontSize = 11.5.sp)
-                    Text(text = "剩余 ${Fmt.bytes(d.availKb * 1024)} / 共 ${Fmt.bytes(d.totalKb * 1024)}", color = Palette.muted, fontSize = 11.5.sp)
+                    Text(text = trf("文件系统_0_0938484ae2", d.filesystem), color = Palette.muted, fontSize = 11.5.sp)
+                    Text(text = trf("已用_0_da8610464a", d.pct), color = Palette.text, fontSize = 11.5.sp)
+                    Text(text = trf("剩余_0_共_1_a04477cc45", Fmt.bytes(d.availKb * 1024), Fmt.bytes(d.totalKb * 1024)), color = Palette.muted, fontSize = 11.5.sp)
                 }
                 Spacer(Modifier.size(4.dp))
                 PctBar(pct = d.pct.replace("%", "").toDoubleOrNull() ?: 0.0, height = 5.dp, showLabel = false)
@@ -202,93 +205,93 @@ fun OpsFilesPage() {
 
         if (busy) {
             Row(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-                LevelBadge("操作进行中", Level.Info)
+                LevelBadge(L["操作进行中_a31331bbf2"], Level.Info)
             }
         }
 
         if (selected.isNotEmpty()) {
-            PanelCard("已选 ${selected.size} 项", cardKey = "files-bulk", collapsible = false) {
+            PanelCard(title = trf("已选_0_项_1a922f0ed8", selected.size), cardKey = "files-bulk", collapsible = false) {
                 Row(
                     Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    GhostBtn(text = "移动到…", onClick = {
+                    GhostBtn(text = L["移动到_60f0d6d5b6"], onClick = {
                         scope.launch {
-                            val f = Modal.prompt("移动 ${selected.size} 项", listOf(FormField.Text("to", "目标目录（绝对路径）", value = l.dir, mono = true)), okText = "移动") ?: return@launch
-                            toast(FileStore.move(selected.toList(), f["to"].orEmpty()), "已移动")
+                            val f = Modal.prompt(trf("移动_0_项_22ff772325", selected.size), listOf(FormField.Text("to", L["目标目录_绝对路径_029159ba90"], value = l.dir, mono = true)), okText = L["移动_591f3aa55f"]) ?: return@launch
+                            toast(FileStore.move(selected.toList(), f["to"].orEmpty()), L["已移动_3bf6e46e2d"])
                             selected = emptySet()
                         }
                     }, icon = "arrowRight")
-                    GhostBtn(text = "复制到…", onClick = {
+                    GhostBtn(text = L["复制到_33771a2df3"], onClick = {
                         scope.launch {
-                            val f = Modal.prompt("复制 ${selected.size} 项", listOf(FormField.Text("to", "目标目录（绝对路径）", value = l.dir, mono = true)), okText = "复制") ?: return@launch
-                            toast(FileStore.copy(selected.toList(), f["to"].orEmpty()), "已复制")
+                            val f = Modal.prompt(trf("复制_0_项_24fd395315", selected.size), listOf(FormField.Text("to", L["目标目录_绝对路径_029159ba90"], value = l.dir, mono = true)), okText = L["复制_4edd1d0087"]) ?: return@launch
+                            toast(FileStore.copy(selected.toList(), f["to"].orEmpty()), L["已复制_e381a5763d"])
                             selected = emptySet()
                         }
                     }, icon = "copy")
-                    GhostBtn(text = "打包 tar.gz", onClick = {
+                    GhostBtn(text = L["打包_tar_gz_ff1dd64457"], onClick = {
                         scope.launch {
                             val stamp = Fmt.dateTime(nowEpochMillis()).substringBefore(' ').replace("-", "")
-                            val f = Modal.prompt("打包 ${selected.size} 项到 ${l.dir}", listOf(
-                                FormField.Text("name", "归档文件名", value = "backup-$stamp.tar.gz", mono = true),
-                            ), okText = "开始打包") ?: return@launch
-                            toast(FileStore.archive(f["name"].orEmpty(), selected.toList()), "打包完成")
+                            val f = Modal.prompt(trf("打包_0_项到_1_29836a27f5", selected.size, l.dir), listOf(
+                                FormField.Text("name", L["归档文件名_2a8d06976b"], value = L["backup_stamp_tar_gz_54d7148040"], mono = true),
+                            ), okText = L["开始打包_ec3abb06f3"]) ?: return@launch
+                            toast(FileStore.archive(f["name"].orEmpty(), selected.toList()), L["打包完成_be69db469a"])
                             selected = emptySet()
                         }
                     }, icon = "archive")
-                    GhostBtn(text = "改权限", onClick = {
+                    GhostBtn(text = L["改权限_6d524368de"], onClick = {
                         scope.launch {
-                            val f = Modal.prompt("权限（八进制）", listOf(
-                                FormField.Text("mode", "如 755 / 644", value = "644", mono = true),
-                                FormField.Select("rec", "范围", options = listOf("仅所选", "递归子项"), value = "仅所选"),
-                            ), okText = "应用") ?: return@launch
-                            toast(FileStore.chmod(selected.toList(), f["mode"].orEmpty(), f["rec"] == "递归子项"), "权限已更新")
+                            val f = Modal.prompt(L["权限_八进制_2b99f80c15"], listOf(
+                                FormField.Text("mode", L["如_755_644_13c07b9c99"], value = "644", mono = true),
+                                FormField.Select("rec", L["范围_785b52eb97"], options = listOf(L["仅所选_d662746763"], L["递归子项_80fb31d52a"]), value = L["仅所选_d662746763"]),
+                            ), okText = L["应用_4562024dde"]) ?: return@launch
+                            toast(FileStore.chmod(selected.toList(), f["mode"].orEmpty(), f["rec"] == L["递归子项_80fb31d52a"]), L["权限已更新_c799b75cb4"])
                         }
                     }, icon = "lock")
-                    GhostBtn(text = "改属主", onClick = {
+                    GhostBtn(text = L["改属主_962ff54eef"], onClick = {
                         scope.launch {
-                            val f = Modal.prompt("属主", listOf(
-                                FormField.Text("owner", "user 或 user:group", value = "www-data:www-data", mono = true),
-                                FormField.Select("rec", "范围", options = listOf("仅所选", "递归子项"), value = "仅所选"),
-                            ), okText = "应用") ?: return@launch
-                            toast(FileStore.chown(selected.toList(), f["owner"].orEmpty(), f["rec"] == "递归子项"), "属主已更新")
+                            val f = Modal.prompt(L["属主_444fd7bd13"], listOf(
+                                FormField.Text("owner", L["user_或_user_group_dab37bbd5c"], value = L["www_data_www_data_e9574ab5c8"], mono = true),
+                                FormField.Select("rec", L["范围_785b52eb97"], options = listOf(L["仅所选_d662746763"], L["递归子项_80fb31d52a"]), value = L["仅所选_d662746763"]),
+                            ), okText = L["应用_4562024dde"]) ?: return@launch
+                            toast(FileStore.chown(selected.toList(), f["owner"].orEmpty(), f["rec"] == L["递归子项_80fb31d52a"]), L["属主已更新_dce00bf89c"])
                         }
                     }, icon = "user")
-                    GhostBtn(text = "移入回收站", onClick = {
+                    GhostBtn(text = L["移入回收站_298cbe31d3"], onClick = {
                         scope.launch {
-                            if (Modal.confirm("删除到回收站", "把 ${selected.size} 项移入回收站（保留 ${FileStore.trashDays.value} 天，可还原）。", okText = "移入回收站", danger = true)) {
-                                toast(FileStore.delete(selected.toList()), "已移入回收站")
+                            if (Modal.confirm(L["删除到回收站_f418fcf1e6"], trf("把_0_项移入回收站_保留_1_天_可还_34b70d7414", selected.size, FileStore.trashDays.value), okText = L["移入回收站_298cbe31d3"], danger = true)) {
+                                toast(FileStore.delete(selected.toList()), L["已移入回收站_54e2ac947c"])
                                 selected = emptySet()
                             }
                         }
                     }, icon = "trash")
-                    GhostBtn(text = "取消选择", onClick = { selected = emptySet() }, icon = "close")
+                    GhostBtn(text = L["取消选择_f02e943954"], onClick = { selected = emptySet() }, icon = "close")
                 }
             }
         }
 
         editing?.let { path ->
-            PanelCard("在线编辑 · ${path.substringAfterLast('/')}", cardKey = "files-edit", collapsible = false) {
+            PanelCard(title = trf("在线编辑_0_60ab9fcf96", path.substringAfterLast('/')), cardKey = "files-edit", collapsible = false) {
                 Text(text = path, color = Palette.muted, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace)
                 Spacer(Modifier.size(6.dp))
-                Field(value = editDraft, onValueChange = { editDraft = it }, mono = true, singleLine = false, hint = "共 ${editDraft.length} 字符")
+                Field(value = editDraft, onValueChange = { editDraft = it }, mono = true, singleLine = false, hint = trf("共_0_字符_f3f4105419", editDraft.length))
                 Spacer(Modifier.size(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    PrimaryBtn(text = "保存", onClick = {
-                        scope.launch { toast(FileStore.saveEdit(path, editDraft), "已保存") }
+                    PrimaryBtn(text = L["保存_fadf24dbc5"], onClick = {
+                        scope.launch { toast(FileStore.saveEdit(path, editDraft), L["已保存_cdfab96f75"]) }
                     }, icon = "save")
-                    GhostBtn(text = "放弃编辑", onClick = { FileStore.editing.value = null }, icon = "close")
-                    GhostBtn(text = "重新读取", onClick = { scope.launch { FileStore.previewFile(path) } }, icon = "refresh")
+                    GhostBtn(text = L["放弃编辑_815725bb66"], onClick = { FileStore.editing.value = null }, icon = "close")
+                    GhostBtn(text = L["重新读取_7784972fc8"], onClick = { scope.launch { FileStore.previewFile(path) } }, icon = "refresh")
                 }
             }
         }
 
         preview?.let { p -> if (editing == null) {
-            PanelCard("预览 · ${p.path}", cardKey = "files-preview", right = {
-                GhostBtn(text = "关闭", onClick = { FileStore.preview.value = null }, icon = "close")
+            PanelCard(title = trf("预览_0_322425d855", p.path), cardKey = "files-preview", right = {
+                GhostBtn(text = L["关闭_6c14bd7f6f"], onClick = { FileStore.preview.value = null }, icon = "close")
                 if (!p.binary && !p.tooLarge) {
-                    GhostBtn(text = "编辑此文件", onClick = {
+                    GhostBtn(text = L["编辑此文件_17388d0bda"], onClick = {
                         scope.launch {
                             val err = FileStore.startEdit(p.path)
                             if (err != null) AppState.toast(err, ToastKind.Warn, ms = 7000)
@@ -297,52 +300,52 @@ fun OpsFilesPage() {
                 }
             }) {
                 when {
-                    p.binary -> Text(text = "二进制文件（${Fmt.bytes(p.size)}），不做预览；可下载后用本地编辑器打开。", color = Palette.muted, fontSize = 12.sp)
-                    p.tooLarge -> Text(text = "文件 ${Fmt.bytes(p.size)} 超过预览上限 ${Fmt.bytes(p.limit)}，请下载或用 Web 终端查看。", color = Palette.warn, fontSize = 12.sp)
+                    p.binary -> Text(text = trf("二进制文件_0_不做预览_可下载后用本地编_f52fe7aaa7", Fmt.bytes(p.size)), color = Palette.muted, fontSize = 12.sp)
+                    p.tooLarge -> Text(text = trf("文件_0_超过预览上限_1_请下载或用_62cd65cbf5", Fmt.bytes(p.size), Fmt.bytes(p.limit)), color = Palette.warn, fontSize = 12.sp)
                     else -> {
                         Column(
                             Modifier.fillMaxWidth().height(320.dp).verticalScroll(rememberScrollState())
                                 .background(Palette.codeBlock, RoundedCornerShape(3.dp)).padding(10.dp),
                         ) {
                             Text(
-                                text = p.text.take(20000) + if (p.truncated) "…（预览截断，共 ${Fmt.bytes(p.size)}）" else "",
+                                text = p.text.take(20000) + if (p.truncated) trf("预览截断_共_0_5ac60ccca7", Fmt.bytes(p.size)) else "",
                                 color = Palette.text,
                                 fontSize = 11.5.sp,
                                 fontFamily = FontFamily.Monospace,
                             )
                         }
-                        Text(text = "${Fmt.dateTime(p.mtimeMs)} · ${p.lines} 行 · 扩展名 ${p.ext.ifBlank { "无" }}", color = Palette.muted, fontSize = 11.sp)
+                        Text(text = trf("0_1_行_扩展名_2_fca39b9bd8", Fmt.dateTime(p.mtimeMs), p.lines, p.ext.ifBlank { L["无_72077749f7"] }), color = Palette.muted, fontSize = 11.sp)
                     }
                 }
             }
         } }
 
         if (showTrash) {
-            PanelCard("回收站（保留 ${FileStore.trashDays.value} 天）", cardKey = "files-trash", right = {
-                GhostBtn(text = "清空", onClick = {
+            PanelCard(title = trf("回收站_保留_0_天_38b488832e", FileStore.trashDays.value), cardKey = "files-trash", right = {
+                GhostBtn(text = L["清空_84fcd70d42"], onClick = {
                     scope.launch {
-                        if (Modal.confirm("清空回收站", "彻底删除 ${trash.size} 项，无法恢复。", okText = "清空", danger = true)) {
-                            toast(FileStore.emptyTrash(), "回收站已清空")
+                        if (Modal.confirm(L["清空回收站_4833ca01fc"], trf("彻底删除_0_项_无法恢复_9f56fcff22", trash.size), okText = L["清空_84fcd70d42"], danger = true)) {
+                            toast(FileStore.emptyTrash(), L["回收站已清空_226ab2d716"])
                         }
                     }
                 }, icon = "warning")
             }) {
-                if (trash.isEmpty()) EmptyState("回收站是空的", icon = "trash")
+                if (trash.isEmpty()) EmptyState(L["回收站是空的_e872522628"], icon = "trash")
                 else DataTable(
                     columns = listOf(
-                        TableCol<TrashItem>("名称", weight = 1.6f) { TableText(it.name) },
-                        TableCol<TrashItem>("原位置", weight = 2.4f, mono = true) { TableText(it.original, mono = true, color = Palette.muted) },
-                        TableCol<TrashItem>("大小", weight = 0.9f, align = TextAlign.End, mono = true) { TableText(Fmt.bytes(it.size), textAlign = TextAlign.End, mono = true) },
-                        TableCol<TrashItem>("删除时间", weight = 1.3f, mono = true) { TableText(Fmt.dateTime(it.at), mono = true) },
-                        TableCol<TrashItem>("操作", weight = 1.7f) { t ->
+                        TableCol<TrashItem>(L["名称_1be7ae4fc2"], weight = 1.6f) { TableText(it.name) },
+                        TableCol<TrashItem>(L["原位置_00e56f7a13"], weight = 2.4f, mono = true) { TableText(it.original, mono = true, color = Palette.muted) },
+                        TableCol<TrashItem>(L["大小_fd20702c73"], weight = 0.9f, align = TextAlign.End, mono = true) { TableText(Fmt.bytes(it.size), textAlign = TextAlign.End, mono = true) },
+                        TableCol<TrashItem>(L["删除时间_8d55c8d894"], weight = 1.3f, mono = true) { TableText(Fmt.dateTime(it.at), mono = true) },
+                        TableCol<TrashItem>(L["操作_f3ea6d345e"], weight = 1.7f) { t ->
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                GhostBtn(text = "还原", onClick = {
-                                    scope.launch { toast(FileStore.restore(listOf(t.id)), "已还原到原位置") }
+                                GhostBtn(text = L["还原_457d449ce1"], onClick = {
+                                    scope.launch { toast(FileStore.restore(listOf(t.id)), L["已还原到原位置_88f9ffd058"]) }
                                 }, icon = "import")
-                                GhostBtn(text = "彻底删除", onClick = {
+                                GhostBtn(text = L["彻底删除_8c0b37b684"], onClick = {
                                     scope.launch {
-                                        if (Modal.confirm("彻底删除", "${t.name} 将无法恢复。", okText = "删除", danger = true)) {
-                                            toast(FileStore.purgeTrash(listOf(t.id)), "已彻底删除")
+                                        if (Modal.confirm(L["彻底删除_8c0b37b684"], trf("0_将无法恢复_cf526ad9a4", t.name), okText = L["删除_3755f56f2f"], danger = true)) {
+                                            toast(FileStore.purgeTrash(listOf(t.id)), L["已彻底删除_21ae7be063"])
                                         }
                                     }
                                 }, icon = "trash")
@@ -357,17 +360,17 @@ fun OpsFilesPage() {
         }
 
         if (hits.isNotEmpty()) {
-            PanelCard("搜索结果 ·「$query」 ${hits.size} 项", cardKey = "files-hits", right = {
-                GhostBtn(text = "清除", onClick = { FileStore.hits.value = emptyList() }, icon = "close")
+            PanelCard(title = trf("搜索结果_0_1_项_bc8aaa1631", query, hits.size), cardKey = "files-hits", right = {
+                GhostBtn(text = L["清除_7b15e5e8e7"], onClick = { FileStore.hits.value = emptyList() }, icon = "close")
             }) {
                 DataTable(
                     columns = listOf(
-                        TableCol<SearchHit>("路径", weight = 3f, mono = true) { TableText(it.path, mono = true) },
-                        TableCol<SearchHit>("类型", weight = 0.7f) { TableText(it.type) },
-                        TableCol<SearchHit>("大小", weight = 0.9f, align = TextAlign.End, mono = true) { TableText(Fmt.bytes(it.size), textAlign = TextAlign.End, mono = true) },
-                        TableCol<SearchHit>("修改", weight = 1.2f, mono = true) { TableText(it.mtimeText, mono = true, color = Palette.muted) },
-                        TableCol<SearchHit>("操作", weight = 1.4f) { h ->
-                            GhostBtn(text = "打开所在目录", onClick = {
+                        TableCol<SearchHit>(L["路径_9132e087f1"], weight = 3f, mono = true) { TableText(it.path, mono = true) },
+                        TableCol<SearchHit>(L["类型_e4e46c7235"], weight = 0.7f) { TableText(it.type) },
+                        TableCol<SearchHit>(L["大小_fd20702c73"], weight = 0.9f, align = TextAlign.End, mono = true) { TableText(Fmt.bytes(it.size), textAlign = TextAlign.End, mono = true) },
+                        TableCol<SearchHit>(L["修改_c9c77517fe"], weight = 1.2f, mono = true) { TableText(it.mtimeText, mono = true, color = Palette.muted) },
+                        TableCol<SearchHit>(L["操作_f3ea6d345e"], weight = 1.4f) { h ->
+                            GhostBtn(text = L["打开所在目录_b4bf69d6b9"], onClick = {
                                 go(h.path.substringBeforeLast('/', "/").ifBlank { "/" })
                             }, icon = "folder")
                         },
@@ -380,7 +383,7 @@ fun OpsFilesPage() {
         }
 
         if (usage.isNotEmpty()) {
-            PanelCard("目录占用 · ${FileStore.usageFor.value}", cardKey = "files-usage") {
+            PanelCard(title = trf("目录占用_0_12ed08ebe7", FileStore.usageFor.value), cardKey = "files-usage") {
                 val topKb = (usage.maxOfOrNull { it.kb } ?: 1L).coerceAtLeast(1L).toDouble()
                 usage.forEach { u ->
                     Row(Modifier.fillMaxWidth().padding(vertical = 3.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -393,37 +396,37 @@ fun OpsFilesPage() {
         }
 
         PanelCard(
-            title = "${l.dir}（${l.count} 项 · ${if (l.usedShell) "服务端 find" else "本地扫描"}）",
+            title = trf("0_1_项_2_72069f61cf", l.dir, l.count, if (l.usedShell) L["服务端_find_9eb5103833"] else L["本地扫描_02b5698fe8"]),
             cardKey = "files-list",
             collapsible = false,
             right = {
-                GhostBtn(text = "全选", onClick = { selected = l.entries.map { it.path }.toSet() }, icon = "checkSquare")
-                GhostBtn(text = "只选目录", onClick = { selected = l.entries.filter { it.isDir }.map { it.path }.toSet() }, icon = "folder")
+                GhostBtn(text = L["全选_3e44b2a933"], onClick = { selected = l.entries.map { it.path }.toSet() }, icon = "checkSquare")
+                GhostBtn(text = L["只选目录_bc8b48ee0e"], onClick = { selected = l.entries.filter { it.isDir }.map { it.path }.toSet() }, icon = "folder")
             },
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Field(
                     value = query,
                     onValueChange = { query = it },
-                    hint = "在本目录内按名称搜索（深度 4）",
+                    hint = L["在本目录内按名称搜索_深度_4_0256e64630"],
                     mono = true,
                     modifier = Modifier.weight(1f),
                 )
-                PrimaryBtn(text = "搜索", onClick = { scope.launch { FileStore.search(query) } }, enabled = query.isNotBlank(), icon = "search")
+                PrimaryBtn(text = L["搜索_f04090805c"], onClick = { scope.launch { FileStore.search(query) } }, enabled = query.isNotBlank(), icon = "search")
             }
             Spacer(Modifier.size(8.dp))
             if (l.entries.isEmpty()) {
-                EmptyState("空目录", icon = "folder")
+                EmptyState(L["空目录_e878e3c87b"], icon = "folder")
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<FileEntry>("选", weight = 0.4f, align = TextAlign.Center) { e ->
+                        TableCol<FileEntry>(L["选_471c7b464c"], weight = 0.4f, align = TextAlign.Center) { e ->
                             Toggle(
                                 checked = e.path in selected,
                                 onCheckedChange = { on -> selected = if (on) selected + e.path else selected - e.path },
                             )
                         },
-                        TableCol<FileEntry>("名称", weight = 2.0f) { e ->
+                        TableCol<FileEntry>(L["名称_1be7ae4fc2"], weight = 2.0f) { e ->
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 PanelIcon(if (e.isDir) "folder" else "fileDown", 13.dp, if (e.isDir) Palette.info else Palette.muted)
                                 Spacer(Modifier.size(6.dp))
@@ -433,34 +436,34 @@ fun OpsFilesPage() {
                                 }
                             }
                         },
-                        TableCol<FileEntry>("类型", weight = 0.7f) { e -> TableText(e.typeLabel, color = if (e.isDir) Palette.info else Palette.muted) },
-                        TableCol<FileEntry>("大小", weight = 0.9f, align = TextAlign.End, mono = true) { e ->
-                            TableText(if (e.isDir) (if (e.entryCount > 0) "${e.entryCount} 项" else "—") else Fmt.bytes(e.size), textAlign = TextAlign.End, mono = true)
+                        TableCol<FileEntry>(L["类型_e4e46c7235"], weight = 0.7f) { e -> TableText(e.typeLabel, color = if (e.isDir) Palette.info else Palette.muted) },
+                        TableCol<FileEntry>(L["大小_fd20702c73"], weight = 0.9f, align = TextAlign.End, mono = true) { e ->
+                            TableText(if (e.isDir) (if (e.entryCount > 0) trf("0_项_2f9578aead", e.entryCount) else "—") else Fmt.bytes(e.size), textAlign = TextAlign.End, mono = true)
                         },
-                        TableCol<FileEntry>("权限", weight = 1.1f, mono = true) { e -> TableText(e.symbolic.ifBlank { e.mode }, mono = true) },
-                        TableCol<FileEntry>("属主", weight = 1.0f, mono = true) { e ->
+                        TableCol<FileEntry>(L["权限_560165a6d7"], weight = 1.1f, mono = true) { e -> TableText(e.symbolic.ifBlank { e.mode }, mono = true) },
+                        TableCol<FileEntry>(L["属主_444fd7bd13"], weight = 1.0f, mono = true) { e ->
                             TableText(
                                 listOf(e.owner, e.group).filter(String::isNotBlank).joinToString(":")
                                     .ifBlank { listOf(e.uid, e.gid).filter(String::isNotBlank).joinToString(":").ifBlank { "—" } },
                                 mono = true,
                             )
                         },
-                        TableCol<FileEntry>("修改时间", weight = 1.4f, mono = true) { e ->
+                        TableCol<FileEntry>(L["修改时间_af71bc5cc4"], weight = 1.4f, mono = true) { e ->
                             TableText(if (e.mtimeMs > 0) Fmt.dateTime(e.mtimeMs) else "—", mono = true, color = Palette.muted)
                         },
-                        TableCol<FileEntry>("操作", weight = 2.8f) { e ->
+                        TableCol<FileEntry>(L["操作_f3ea6d345e"], weight = 2.8f) { e ->
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                 if (e.isDir) {
-                                    GhostBtn(text = "进入", onClick = { go(e.path) }, icon = "chevronRight")
+                                    GhostBtn(text = L["进入_0e25578e8f"], onClick = { go(e.path) }, icon = "chevronRight")
                                 } else {
-                                    GhostBtn(text = "预览", onClick = { scope.launch { FileStore.previewFile(e.path) } }, icon = "eye")
-                                    GhostBtn(text = "编辑", onClick = {
+                                    GhostBtn(text = L["预览_de61aa8e1c"], onClick = { scope.launch { FileStore.previewFile(e.path) } }, icon = "eye")
+                                    GhostBtn(text = L["编辑_a7f814c0a4"], onClick = {
                                         scope.launch {
                                             val err = FileStore.startEdit(e.path)
                                             if (err != null) AppState.toast(err, ToastKind.Warn, ms = 7000)
                                         }
                                     }, icon = "edit")
-                                    GhostBtn(text = "下载", onClick = {
+                                    GhostBtn(text = L["下载_2b9d013177"], onClick = {
                                         scope.launch {
                                             val (bytes, err) = FileStore.download(e.path)
                                             if (err != null) {
@@ -468,25 +471,25 @@ fun OpsFilesPage() {
                                                 return@launch
                                             }
                                             val saved = platformExporter.saveFile(e.name, bytes ?: ByteArray(0))
-                                            AppState.toast(if (saved == null) "已取消保存" else "已保存：$saved", ToastKind.Ok)
+                                            AppState.toast(if (saved == null) tr("已取消保存_1f0e8fda6a") else tr("已保存_saved_36d870566a"), ToastKind.Ok)
                                         }
                                     }, icon = "download")
                                     if (e.name.endsWith(".tar.gz") || e.name.endsWith(".tgz") || e.name.endsWith(".zip")) {
-                                        GhostBtn(text = "解压", onClick = {
-                                            scope.launch { toast(FileStore.extract(e.path, l.dir), "已解压到 ${l.dir}") }
+                                        GhostBtn(text = L["解压_809c04fbd9"], onClick = {
+                                            scope.launch { toast(FileStore.extract(e.path, l.dir), trf("已解压到_0_51e4ef2361", l.dir)) }
                                         }, icon = "box")
                                     }
                                 }
-                                GhostBtn(text = "重命名", onClick = {
+                                GhostBtn(text = L["重命名_1cd80fd7a8"], onClick = {
                                     scope.launch {
-                                        val f = Modal.prompt("重命名", listOf(FormField.Text("name", "新名称", value = e.name)), okText = "确定") ?: return@launch
-                                        toast(FileStore.rename(e.path, f["name"].orEmpty()), "已重命名")
+                                        val f = Modal.prompt(L["重命名_1cd80fd7a8"], listOf(FormField.Text("name", L["新名称_b8659855b0"], value = e.name)), okText = L["确定_f526c89937"]) ?: return@launch
+                                        toast(FileStore.rename(e.path, f["name"].orEmpty()), L["已重命名_dc9fe43fb7"])
                                     }
                                 }, icon = "edit")
-                                GhostBtn(text = "删", onClick = {
+                                GhostBtn(text = L["删_38cadf487e"], onClick = {
                                     scope.launch {
-                                        if (Modal.confirm("移入回收站", "「${e.name}」将进入回收站，保留 ${FileStore.trashDays.value} 天。", okText = "移入回收站", danger = true)) {
-                                            toast(FileStore.delete(listOf(e.path)), "已移入回收站")
+                                        if (Modal.confirm(L["移入回收站_298cbe31d3"], trf("0_将进入回收站_保留_1_天_0a8a244509", e.name, FileStore.trashDays.value), okText = L["移入回收站_298cbe31d3"], danger = true)) {
+                                            toast(FileStore.delete(listOf(e.path)), L["已移入回收站_54e2ac947c"])
                                         }
                                     }
                                 }, icon = "trash")
@@ -503,10 +506,10 @@ fun OpsFilesPage() {
             }
         }
 
-        PanelCard("边界说明", cardKey = "files-notes", collapsible = false) {
+        PanelCard(title = L["边界说明_ccc6bb88d9"], cardKey = "files-notes", collapsible = false) {
             Text(
-                text = "允许范围由服务器的 CM_FILES_ROOTS 决定（默认整个文件系统）；面板本来就有 Web 终端（等同 root shell），" +
-                    "文件管理器不额外扩权。所有写操作都进面板审计日志（ops.files.*），删除先进回收站、30 天内可还原。",
+                text = L["允许范围由服务器的_cm_files_roots_1e4f0369fa"] +
+                    L["文件管理器不额外扩权_所有写操作都进面板审计日志_9856778584"],
                 color = Palette.muted,
                 fontSize = 11.5.sp,
             )
