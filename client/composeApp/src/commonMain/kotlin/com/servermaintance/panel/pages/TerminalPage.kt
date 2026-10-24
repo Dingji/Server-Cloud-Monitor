@@ -162,7 +162,7 @@ private fun TerminalPageDesktop() {
         val tab = DesktopTermTab(
             id = nextTabId++,
             clientId = randomSessionClientId(),
-            title = L["会话_titleseq_33244bea87"],
+            title = L.fmtNamed("会话_titleseq_33244bea87", "titleSeq" to titleSeq),
         )
         tabs.add(tab)
         activeTabId = tab.id
@@ -342,7 +342,7 @@ private fun TerminalSessionPanel(
     }
 
     fun sendToPty(text: String) {
-        sendRaw(L["t_data_d_jsonpr_2eba79f9ce"])
+        sendRaw("""{"t":"data","d":${JsonPrimitive(text).toString()}}""")
     }
 
     SideEffect {
@@ -379,8 +379,8 @@ private fun TerminalSessionPanel(
                     session = this
                     statusKind = TermState.Ok
                     statusText = L["已连接_65fe35c45e"]
-                    send(L["t_attach_id_jso_d3ed36ea2e"])
-                    send(L["t_resize_cols_la_2e8250c6ac"])
+                    send("""{"t":"attach","id":${JsonPrimitive(clientId).toString()}}""")
+                    send("""{"t":"resize","cols":$lastCols,"rows":$lastRows}""")
 
                     for (frame in incoming) {
                         if (frame !is Frame.Text) continue
@@ -409,7 +409,7 @@ private fun TerminalSessionPanel(
                                         statusKind = TermState.Bad
                                         statusText = detail.ifBlank { L["会话已关闭_095a652630"] }
                                         val esc = 27.toChar()
-                                        screen.feed("\r\n" + esc + L["33m_会话已关闭_be33fffa31"] + esc + L["0m_62284f8a40"])
+                                        screen.feed("\r\n$esc[33m[${L["会话已关闭_095a652630"]}]$esc[0m\r\n")
                                     }
                                 }
                             }
