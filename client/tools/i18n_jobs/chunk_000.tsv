@@ -1,0 +1,120 @@
+0_6_每6小时_任务写入_e_369a8da904	0 */6 * * * 每6小时。任务写入 /etc/cron.d/cm-<名>，以 root 执行。
+0_个文件_81d82139e8	 · {0} 个文件
+0_将进入回收站_保留_1_天_0a8a244509	「{0}」将进入回收站，保留 {1} 天。
+0_条展示_命中_1_条_0e114bc461	({0} 条展示 / 命中 {1} 条)
+0_表示立即_189b797c4f	0 表示立即
+10分钟_b82d31194e	10分钟
+14_4_表示约_2_天烧完_sre_常用告_681c4dc86d	≥14.4× 表示约 2 天烧完（SRE 常用告警阈值）。4xx 属客户端问题，不计入预算。
+163_邮箱_设置_pop3_smtp_2cd036d08b	163 邮箱：设置 → POP3/SMTP → 开启并生成「授权码」，填入下方（不是登录密码）。
+1_列表_522d9cc510	1. 列表
+1小时_3a9a579a96	1小时
+24_小时发送_8e6d358b2e	24 小时发送
+24_小时失败_f23fa2b0e3	24 小时失败
+24_小时拉起次数_8c19db84c7	24 小时拉起次数
+24_小时通知_ed50056bf1	24 小时通知
+24小时_45a2727884	24小时
+2_秒_5198950435	2 秒
+30_天_9401eee769	30 天
+30_天后自动清除_b6c489a29c	30 天后自动清除
+33m_会话已关闭_be33fffa31	[33m[会话已关闭]
+402_额度_fbd56d7158	402 额度
+403_权限_bd93595602	403 权限
+429_拦截_0_7a460e2aa8	429 拦截 {0}
+429_拦截_563bec273d	429 拦截
+429_次数_9333e8c60f	429 次数
+429_限流_5bd5af3cd2	429 限流
+499_中断_8a0629ae88	499 中断
+4xx_0_499_中断_1_817ee52e07	4xx {0} · 499 中断 {1}
+4xx_0_5xx_1_未授权_4116249143	4xx {0} · 5xx {1} · 未授权 {2}
+4xx_0_无响应_1_cd8a2943ad	4xx {0} · 无响应 {1}
+4xx_错误_2368d2493d	4xx 错误
+500_毫秒_cc7da43bcf	500 毫秒
+5xx_无响应_2355276e0d	5xx/无响应
+5xx_错误_6ed859ac67	5xx 错误
+6小时_57937ccefc	6小时
+7_天_e45a81074f	7 天
+account_lock_锁定_bbeaf242af	ACCOUNT LOCK(锁定)
+account_unlock_解锁_b001d58ec0	ACCOUNT UNLOCK(解锁)
+acl_用户_0_b7e2c3ae45	ACL 用户 ({0})
+acl_用户_roles_size_8df0ffb733	ACL 用户 (${roles.size})
+act_服务_a3ebd5a4a1	$act 服务
+analyze_会真实执行该语句以采集实际行数与_7e2c3ab4f2	ANALYZE 会真实执行该语句以采集实际行数与耗时。请确认这是只读查询；含写操作的语句请到 SQL 控制台执行。
+analyze_更新统计_ae3c35e60c	ANALYZE（更新统计）
+api_地址_acd8a50431	API 地址
+api_基础地址_走代理时填_5c7aa1a51e	API 基础地址（走代理时填）
+app.description	服务器监控与配置面板客户端
+app_连接的_cloud_monitor_面板_0ee7660770	App 连接的 Cloud Monitor 面板地址。默认 http://8.153.153.176/panel，可改为任意已部署面板的地址。
+apt_任务进行中_0_6028d2fbd3	apt 任务进行中：{0}
+apt_缓存_c1fb672ce3	APT 缓存
+auditd_未启用_2ca17006e2	auditd 未启用
+auditd_记录的敏感文件变更_谁_用什么命令_de2731982f	auditd 记录的敏感文件变更：谁、用什么命令、改了哪个文件
+badprov_个供应商配额耗尽_363bea5ae6	$badProv 个供应商配额耗尽
+banner_能顺带看到对端_openssh_版_6a7382b65e	banner 能顺带看到对端 OpenSSH 版本，便于排查升级需求
+bgsave_会在后台生成_rdb_文件_flu_221d58038d	BGSAVE 会在后台生成 RDB 文件；FLUSHDB/ALL 会删除所有数据，需二次确认。
+bgsave_后台快照_7679d32e01	BGSAVE（后台快照）
+bilibili_视频_7fcd50c628	Bilibili 视频
+certbot_安装日志_1bf087319a	certbot 安装日志
+certbot_已安装_7690d6f09a	certbot 已安装
+certbot_未安装_b2dd3df63b	certbot 未安装
+chat_id_或_频道名_beb6893b9b	Chat ID 或 @频道名
+check_校验_8a646f2a85	CHECK（校验）
+common.loading	加载中…
+corecount_核高负载_cores_afc43a96da	$coreCount 核高负载 · $coresTotal 核
+cpu_使用率_35b17729e2	CPU 使用率 %
+cpu_使用率_bdf91f384b	CPU 使用率
+cpu_占用_89f8a08e80	CPU 占用
+cpu_占用_top_52d0789676	CPU 占用 Top
+cpu_核数_2a5bc46dd3	CPU 核数
+cron_表达式_6859f82ab2	Cron 表达式
+crontab_l_条目_6be8b3d177	crontab -l 条目
+csv_内容_粘贴_17c5b7dbff	CSV 内容（粘贴）
+csv_导入结果_3a4d7db0d7	CSV 导入结果
+ctrl_shift_c_v_复制粘贴_会话_7c3872ffae	Ctrl+Shift+C/V 复制粘贴 · 会话离开本页后保留 2 分钟（server/shell.js GRACE_MS）· 
+curlabel_按天_12556e7b0c	$curLabel · 按天
+curlabel_按天_可复用_vs_8cc7c3562a	$curLabel · 按天 · 可复用 vs 新增
+days_天_a6409fc14f	$days 天
+db2_sql_以实例用户执行_51f6dbcefb	Db2 SQL（以实例用户执行）
+db2_授权_grant_revoke_eb50e06ee0	Db2 授权（GRANT / REVOKE）
+db2_用_grant_revoke_管理权限_209a33078b	Db2 用 GRANT/REVOKE 管理权限；用户本身需先在实例上创建（db2 CREATE USER 或操作系统账号）。
+ddl_定义_可编辑后执行_20bea6e0ac	DDL 定义（可编辑后执行）
+ddl_执行结果_d203cf40d4	DDL 执行结果
+dirty_待写盘_a3b33885f4	Dirty (待写盘)
+docker_system_prune_af_ead57cbf4c	docker system prune -af：删除未使用镜像/网络/停止的容器
+docker_安装日志_08ccdea4e9	Docker 安装日志
+docker_容器_4372ba1200	Docker 容器
+docker_引擎_755076c561	Docker 引擎
+docker_清理_795b9faf02	Docker 清理
+drop_table_删除表_0a38c31f25	DROP TABLE（删除表）
+du_尚未返回结果_0af775f143	du 尚未返回结果
+e_name_将进入回收站_保留_f_b07c62be90	「${e.name}」将进入回收站，保留 ${FileStore.trashDays.value} 天。
+else_dat_3b7177d8b6	\n            else -> dateTime(t)\n        }\n    }\n\n    /** 百分比展示：`99.1%`（≤0.1 精度，去掉多余 0）。 */\n    fun pct(p: Number?, suffix: String = 
+error_log_累计_40739fb64e	error.log 累计
+etc_cron_d_其它任务_1075d72b5f	/etc/cron.d 其它任务
+etc_cron_daily_cron_h_0b91b3ac69	· /etc/cron.daily、cron.hourly 脚本：
+explain_分析_5739bed548	EXPLAIN 分析
+fail2ban_未启用_dba20ac8ac	fail2ban 未启用
+fail2ban_未安装_未运行_006151f653	fail2ban 未安装/未运行
+fail2ban_监狱_fd16fed272	fail2ban 监狱
+fail2ban_运行中_401151de3a	fail2ban 运行中
+fail2ban_防爆破_e5d811ec15	Fail2ban 防爆破
+failedcount_个服务失败_4bb48044cc	$failedCount 个服务失败
+failing_项失败_c0f4c9b479	$failing 项失败
+flushall_清空全部_d122dc5ecd	FLUSHALL（清空全部）
+flushdb_清空当前库_4587c55eaa	FLUSHDB（清空当前库）
+gzip_归档_39fcde3a7b	gzip 归档
+h_label_采集完成_a374e6c968	{0} 采集完成
+hmac_签名密钥_可空_d93d6e2984	HMAC 签名密钥（可空）
+http_方法_b1d337493c	HTTP 方法
+inode_使用_0_小文件过多时会先耗尽_241698504d	inode 使用 {0}%（小文件过多时会先耗尽 inode）
+inode_使用_m_inodeusedpc_cd43f1cf53	inode 使用 ${m.inodeUsedPct}%（小文件过多时会先耗尽 inode）
+inode_使用率_5279b4b61c	inode 使用率
+ip_或域名_6ebd1799de	IP 或域名
+ip_来源_f387b79f3d	IP 来源
+journal_apt_轮转日志_093250e13f	journal + APT + 轮转日志
+journal_上限_0_1_天_d18e51fc4e	journal 上限 {0} / {1} 天
+journal_上限_1f54a3217f	journal 上限
+journal_上限_s_journalsi_1ef09f8f8d	journal 上限 ${s.journalSize} / ${s.journalDays} 天
+journal_保留天数_e74cafd94c	journal 保留天数
+journal_日志_b4bd477c2c	journal 日志
+json_文档_e422afa510	JSON 文档
+label_失败_4c06e7d781	<label> 失败

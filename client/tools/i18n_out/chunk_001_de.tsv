@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label Installation abgeschlossen, wird aktualisiert…
+label_安装日志_13ce1b1029	$label Installationsprotokoll
+label_实现中_70505f7ef8	„$label“ wird umgesetzt…
+llm_api_中继的请求量_token_用量_6b89d708ea	Anfragevolumen, Token-Nutzung, Schlüsselpool-Kontingent, Modellverfügbarkeit und Qualitätsanalyse für das LLM-API-Relay
+location_块_不要停用该站点以免面板与_4ae164b62b	location-Block), deaktivieren Sie diese Site nicht, da sonst Panel und Relay-Dienst gleichzeitig offline gehen.
+login.access_token	Zugriffstoken
+login.advanced	Erweitert
+login.audit_notice	Alle Aktionen werden auditprotokolliert
+login.connect_failed	Verbindung fehlgeschlagen:
+login.failed	Anmeldung fehlgeschlagen
+login.normalized_url	Normalisierte Adresse
+login.not_logged_in	Nicht angemeldet
+login.password_required	Bitte Passwort eingeben
+login.remember_password	Passwort merken
+login.restore_default_url	Standardadresse wiederherstellen
+login.save_on_test_hint	Nach Änderung der Adresse „Verbindung testen“ klicken, um sie zu speichern
+login.server_config	Serververbindungseinstellungen
+login.sign_in	Anmelden
+login.signing_in	Anmeldung läuft…
+login.subtitle	Echtzeit-Serverüberwachung und Konfigurationskonsole
+login.test_connection	Verbindung testen
+login.testing	Test läuft…
+login_可登录_0e617ada9b	LOGIN (anmeldbar)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(Bytes der vorherigen Runde, Bytes dieser Runde) ist der Inhalt, der bereits in früheren Runden gesendet wurde — das ist die Obergrenze, die der Cache eigentlich erreichen sollte, unabhängig von Herstellerangaben.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB gibt keinen Speicherplatz frei; validate/reindex sind übliche Wartungsarbeiten.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB erstellt mit mongodump gzip-Archive (mongodump erforderlich).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB legt die Datenbank erst beim ersten Schreiben in eine Collection an; hier wird eine Platzhalter-Collection _cm_init erstellt.
+mongodb_的过滤条件支持_字段_值_558264a7d8	MongoDB-Filter unterstützen die Form {"Feld":Wert} (intern in eine Suchbedingung umgewandelt) oder die Kurzform Feld=Wert. Dokumente werden als JSON angezeigt; _id ist die Dokumentkennung.
+mongodb_维护结果_aaeb39f907	MongoDB-Wartungsergebnisse
+ms_毫秒_7ade5ab3a4	$ms ms
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (Standard: root + socket)
+mysql_语法_8200e34cb7	MySQL-Syntax
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a Statistik
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c Prüfung
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o Optimierung
+name_ver_连接正常_33d0a44ec7	$name $ver Verbindung OK
+name_关闭_c8e887ebc0	$name: Aus
+name_开启_54ce939603	$name: Ein
+nav.audit	Audit-Log
+nav.backups	Backup-Center
+nav.cron	Zeitgestellte Aufgaben
+nav.dashboard	Dashboard
+nav.databases	Datenbanken
+nav.disks	Datenträgerverwaltung
+nav.docker	Docker-Container
+nav.health_alerts	Gesundheitswarnungen
+nav.logs	Log-Center
+nav.memory	Speicherverwaltung
+nav.network	Netzwerkverwaltung
+nav.note_mail	E-Mail-Benachrichtigungen
+nav.note_settings	NoteBox-Einstellungen
+nav.note_transfer	Import / Export
+nav.note_users	Benutzerverwaltung
+nav.notes	Notizen
+nav.ops_channels	Benachrichtigungskanäle
+nav.ops_disk	Datenträger-Governance
+nav.ops_files	Dateiverwaltung
+nav.ops_hosts	Verwaltete Hosts
+nav.ops_remote	Remote-Host-Metriken
+nav.ops_rules	Alarmregeln
+nav.ops_sec	Sicherheits-Baseline-Prüfung
+nav.ops_uptime	Uptime-Tests
+nav.ops_watch	Dienst-Überwachung
+nav.packages	Paketverwaltung
+nav.page_placeholder	Seite „{0}“ wird umgesetzt…
+nav.pinned_hint	(angepinnt, lange gedrückt halten zum Lösen)
+nav.processes	Prozessverwaltung
+nav.relay	OpenCode-Relay
+nav.section.app	Apps
+nav.section.monitor	Überwachung
+nav.section.notes	Notizen
+nav.section.server	Server
+nav.section.system	System
+nav.section.tools	Tools
+nav.security	Sicherheitsverwaltung
+nav.services	Systemdienste
+nav.settings	Panel-Einstellungen
+nav.slo	SLO & Nutzung
+nav.terminal	Web-Terminal
+nav.todos	To-do-Liste
+nav.web	Websites / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf Nginx-Konfig · sshd_config SSH-Konfig · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	nginx/sshd/fstab-Konfigurationen werden nach dem Speichern automatisch geprüft
+nginx_站点_0_6bcfddef71	Nginx-Site ({0})
+nginx_站点_sites_size_2db3c2b5be	Nginx-Sites (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP & Erinnerungsregeln
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox Cloud-Notizen (gestufte Kategorien · Papierkorb · Markdown · Freigabe)
+notebox_地址未配置_3d37258011	NoteBox-Adresse nicht konfiguriert
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox-Aufgaben (Fälligkeiten & E-Mail-Erinnerungen)
+notebox_数据迁移_362725f18e	NoteBox-Datenmigration
+notebox_服务可达_6a7506d6ac	NoteBox-Dienst erreichbar
+notebox_服务可达_未登录_e023d68cad	NoteBox-Dienst erreichbar (nicht angemeldet)
+notebox_服务地址_默认端口_13345_e0880dfda6	NoteBox-Dienstadresse (Standardport 13345). Nach der Änderung erneut anmelden.
+notebox_登录成功_013138644f	NoteBox-Anmeldung erfolgreich
+notebox_设置_efb5a47b98	NoteBox-Einstellungen
+notebox_账号_仅管理员_81b8d4ca26	NoteBox-Konto (nur Administratoren)
+online_台有近期数据_1fefff8cdc	$online Hosts mit aktuellen Daten
+opencode_中继_2e021ee797	OpenCode-Relay
+p95_延迟_57d63f8b46	P95-Latenz
+p95_延迟_ba65a873bc	p95-Latenz
+palette.accent_hint	Aussehen · aktuell {0}
+palette.open_page	Seite {0} öffnen
+palette.pin	„{0}“ anpinnen
+palette.pin_hint	Arbeitsbereich · langes Drücken auf einem Seitenleisteneintrag schaltet ebenfalls um
+palette.reload_hint	F5 / Ctrl+R · Neu laden
+palette.theme_hint	Aussehen · aktuell {0}
+palette.unpin	„{0}“ nicht mehr anpinnen
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (erzwungene Passwortänderung)
+pg_自定义格式_0cc41d0ea4	PG benutzerdefiniertes Format
+postgresql_mysql_sql_42e513fca9	Datenbank- und Tabellenverwaltung, SQL-Konsole, Performance-Einblicke und Backup/Wiederherstellung für PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	PostgreSQL benutzerdefiniertes Format -Fc (schnellere Wiederherstellung)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (standardmäßig Peer-Authentifizierung: su - postgres)
+rdb_快照_62f218ed40	RDB-Snapshot
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis führt BGSAVE aus und kopiert die RDB-Datei; die Wiederherstellung überschreibt das Datenverzeichnis und erfordert einen Redis-Neustart.
+redis_命令控制台_fa42019a53	Redis-Befehlskonsole
+redis_维护_d2a01bfbd3	Redis-Wartung
+reindex_全部库_90545e1eeb	REINDEX alle Datenbanken
+reindex_重建索引_256956f94e	REINDEX / Indizes neu aufbauen
+reindex_重建索引_d81fcbf8d0	REINDEX (Indizes neu aufbauen)
+relay_alert_py_检查_smtp_告_012aaa3373	relay_alert.py-Prüfung, SMTP-Alarmkanal, Schwellwerte und Alarmprotokolle

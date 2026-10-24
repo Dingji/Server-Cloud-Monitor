@@ -1,0 +1,120 @@
+存在风险_34748d1f0d	Berisiko
+存放位置_182f3cab1b	Lokasi penyimpanan
+孤立依赖清理_3088424930	Pembersihan kebergantungan yatim
+安全升级_只做向上兼容的升级_不卸载其它包_841c2b3607	"Naik taraf selamat" hanya melakukan naik taraf yang serasi ke belakang dan tidak membuang pakej lain; "Naik taraf penuh" boleh membuang pakej yang bertentangan dan lebih berisiko — pratonton perubahan dipaparkan sebelum dilaksanakan.
+安全基线巡检_cb83870cad	Pemeriksaan garis dasar keselamatan
+安全更新_d02224fdc8	Kemas kini keselamatan
+安全管理_27a60a5c86	Pengurusan keselamatan
+安装_087db63ab1	Pasang
+安装_0_340ee35e2a	⬇ Pasang {0}
+安装_0_710b3a3d30	Pasang {0}
+安装_certbot_b472f9adf8	Pasang certbot
+安装_docker_f131e1cdff	Pasang Docker
+安装_engine_name_d4fe147ff5	⬇ Pasang ${engine.name}
+安装_fail2ban_38aa818b73	Pasang Fail2ban
+安装_label_0399b4e4de	Pasang $label
+安装_t_label_36d02c935b	Pasang ${t.label}
+安装中_b2c6913616	Memasang…
+安装大小_85c8cf1c58	Saiz pemasangan
+安装并启动_d20e3e1fda	Pasang dan mula
+安装引擎_e5276cf0a5	＋ Pasang enjin
+安装扩展_354d80ae67	Pasang sambungan
+安装约需_1_3_分钟_取决于网络_完成后此页_75a815fda1	Pemasangan mengambil masa kira-kira 1-3 minit (bergantung pada rangkaian); halaman ini akan tersedia secara automatik apabila selesai.
+安装配置_02517d8d8f	Konfigurasi pemasangan
+完成_33246f6a5e	Selesai
+完成_e982a7473c	 Selesai
+完成进度_722d50c7b4	Kemajuan
+完整_6e6e581133	Penuh
+完整_结构_数据_6aebce144a	Penuh (struktur + data)
+完整升级_05b1a3ac5b	Naik taraf penuh
+完整升级_含移除_3bed74b0f0	Naik taraf penuh (termasuk pembuangan)
+完整升级可能移除与新版本冲突的软件包_请仔细核对_50ce8ea44d	Naik taraf penuh mungkin membuang pakej yang bertentangan dengan versi baharu; sila semak pratonton dengan teliti.
+完整备份_json_cbe231e819	Sandaran penuh JSON
+完整性检查_495199337a	Semakan integriti
+完整日志_4a1b1f9673	Log penuh:
+完整说明与依赖列表_0cf5ceed2a	Penerangan penuh dan senarai kebergantungan
+定时任务_c97ffbda2e	Tugas berjadual
+定时器_70cbf60aeb	Pemasa
+定时维护计划_8560c2fd47	Pelan penyelenggaraan berjadual
+定时采集运行中_4b7159cb16	Pengumpulan berjadual sedang berjalan
+实例用户_6be929149e	Pengguna instans
+实时_每_2_秒刷新_c4c5d531ed	Masa sebenar · segar semula setiap 2 saat
+实时刷新_556a3ffff3	Segar semula masa sebenar
+实时活动_最近请求_d2ee85344c	Aktiviti masa sebenar (permintaan terkini)
+实时流量_近_60_秒_1fa853d958	Trafik masa sebenar (60 saat terakhir)
+实时磁盘_i_o_193640917c	I/O cakera masa sebenar
+实时资源占用_c8bda73ba6	Penggunaan sumber masa sebenar
+实时跟随_8e180d6871	Ikut masa sebenar
+实时跟随经_websocket_订阅_最大保留_5bfbd4a38a	Ikut masa sebenar melalui langganan WebSocket, disimpan sehingga ${Fmt.count(MAX_LINES)} baris;
+实时跟随经_websocket_订阅_最大保留_bb1ab8a92b	Ikut masa sebenar melalui langganan WebSocket, disimpan sehingga {0} baris;
+实时连接_2e937edd01	Sambungan masa sebenar
+审计不可用_5ba8cd56a3	Audit tidak tersedia
+审计日志_7666cd4323	Log audit
+审计服务_17e6a7950d	Perkhidmatan audit
+审计规则_bc6a3d7a3f	Peraturan audit
+客户端4xx_499dc47a60	Klien 4xx
+客户端_09afbbcc9b	Klien
+客户端_4xx_d966c5f146	Klien 4xx
+客户端与会话_fd8ce68403	Klien dan sesi
+客户端数_4821cbdb7b	Bilangan klien
+客户端软件_afcacf7cb8	Perisian klien
+客户端软件构成_aaec3233f0	Komposisi perisian klien
+客户端错误_不计入_71aa68fd1c	Ralat klien (tidak dikira)
+家目录_f273ea575f	Direktori rumah
+容器_d179a3480d	Container
+容器列表_6ee925b478	Senarai container
+容器日志_0_176db5f47c	Log container {0}
+容器日志_2a0f3b0fac	Log container …
+容器日志_id_take_12_faa2c2b1bc	Log container ${id.take(12)}
+容量趋势_近_7_天_d77b3aebd5	Trend kapasiti (7 hari terakhir)
+密码_c839a8ff17	Kata laluan
+密码_授权码_d2c3e3135f	Kata laluan / kod pengesahan
+密码_无_e55f2504ae	Kata laluan (tiada)
+密码_留空_不改_d56e21cbcb	Kata laluan (biarkan kosong = tiada perubahan)
+密码_留空不变_5e4f64d946	Kata laluan (tidak berubah jika dikosongkan)
+密码_留空保持不变_6d05826ea3	Kata laluan (biarkan kosong untuk kekalkan)
+密码_至少_8_位_692b63ec1c	Kata laluan (minimum 8 aksara)
+密码修改成功_f0e65f05ad	Kata laluan berjaya ditukar
+密码已更新_eb5719cf68	Kata laluan dikemas kini
+密码更新后其它设备的登录将会失效_9b16aec699	Selepas kata laluan dikemas kini, log masuk pada peranti lain akan terbatal.
+密码有效期_如_2030_01_01_空_不变_4b3bee9f12	Tempoh sah kata laluan (cth. 2030-01-01, kosong = tiada perubahan)
+密码至少需要_8_位_b6a69b6e34	Kata laluan mesti sekurang-kurangnya 8 aksara
+密钥_0_可用_1_426c7d2a6e	Kunci {0} · tersedia {1}
+密钥_0d1965e139	Kunci
+密钥池_6ab58f884e	Kolam kunci
+对_0_张表执行_1_004762155e	Jalankan {1} pada {0} jadual?
+对_0_执行_1_0df7a13871	Jalankan {1} pada {0}?
+对_selected_size_张表执行_209354c5c6	Jalankan $act pada ${selected.size} jadual?
+对_st_table_执行_label_a6b8052291	Jalankan $label pada ${st.table}?
+对_target_执行_action_d5673f5e8f	Jalankan $action pada $target?
+对_unit_执行_systemctl_ac_ba3c9e7d90	Jalankan systemctl $act pada $unit?
+对外端口_fe3302e0a7	Port luar
+对容器_0_执行_docker_restar_c942faf88e	Jalankan docker restart pada container {0}?
+对容器_0_执行_docker_start_a6406fd5d5	Jalankan docker start pada container {0}?
+对容器_0_执行_docker_stop_02eec7a6e4	Jalankan docker stop pada container {0}?
+对容器_id_take_12_执行_do_558a792531	Jalankan docker start pada container ${id.take(12)}?
+对容器_id_take_12_执行_do_724af26fed	Jalankan docker restart pada container ${id.take(12)}?
+对容器_id_take_12_执行_do_c78695043c	Jalankan docker stop pada container ${id.take(12)}?
+对所有支持的挂载点执行_fstrim_优化_ss_82318eb7af	Jalankan fstrim pada semua titik lekapan yang disokong untuk mengoptimumkan SSD
+对方邮箱_需已注册并验证_a4de8e4a8f	E-mel penerima (mesti didaftarkan dan disahkan)
+对端_58e5dbe70d	Hujung seberang
+对象_539cb3b0a6	Objek
+对象数量_7a08198ac2	Bilangan objek
+对象浏览器_162b30cd08	Pelayar objek
+导入_csv_eee6da0840	Import CSV
+导入_csv_到_0_230452d08d	Import CSV ke {0}
+导入_csv_到_st_table_ffcc6cb46a	Import CSV ke ${st.table}
+导入_notebox_导出的_json_备份文_9e7560aff1	Import fail sandaran .json yang dieksport dari NoteBox, mengandungi semua nota dan tugasan.
+导入_sql_文件_用于恢复_3313acce03	Import fail SQL (untuk pemulihan)
+导入_导出_995e254175	Import / Eksport
+导入中_de56a0bf71	Mengimport…
+导入中_f0a7986c54	Mengimport
+导入中_请稍候_6259769fcb	Mengimport, sila tunggu…
+导入失败_aeec838ca4	Import gagal:
+导入待办_1a771a17b3	Import tugasan
+导入方式_0eac17d654	Kaedah import
+导入笔记_ef0dc85571	Import nota
+导出_0_31a404b60a	Eksport {0}
+导出_0_为_sql_压缩包_078b43a5d3	Eksport {0} sebagai arkib SQL?
+导出_188896795f	Eksport
+导出_db_为_sql_压缩包_28584b981a	Eksport $db sebagai arkib SQL?

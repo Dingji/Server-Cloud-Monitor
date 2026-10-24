@@ -1,0 +1,120 @@
+摘要_46d4c1b4e4	Summary
+摘要发送时间_0eccc15130	Summary send time
+播放_21925350de	Play
+操作_f3ea6d345e	Actions
+操作失败_09e424b5e8	Action failed
+操作失败_0_c81f3f901e	Action failed: {0}
+操作完成_66c6340147	Action completed
+操作成功_3c5be5f2a1	Action succeeded
+操作日志_f4bc877cd2	Action log
+操作进行中_a31331bbf2	Action in progress
+支持_csv_有_无表头均可_列名支持_标题_截_564b0aa879	Supports CSV (with or without a header; column names Title/Due/Priority/Notes/Status), plain-text checklists (- [x] syntax), and JSON arrays.
+支持_markdown_纯文本_html_305bf19136	Supports Markdown / plain text / HTML; HTML is converted automatically into editable Markdown. When there are multiple level-1 headings, it is automatically split into separate notes.
+支持_sql_sql_gz_dum_e07870399d	Supports .sql / .sql.gz / .dump (PostgreSQL custom format). Paste the text, then upload it to the server backup directory.
+支持_变量_函数体_0b11a90fd3	Supports $ variables / function bodies
+收件人_529414cfe5	Recipients
+收件人_逗号分隔_7352ac40b2	Recipients (comma-separated)
+收尾_7c151dbd71	Finish
+收起_5d5815647c	Collapse
+收起完整说明_fedbce873b	Collapse full description
+改值_d6c5664772	Change value
+改地址后点_测试连接_即持久化生效_71864f6613	After changing the address, click "Test Connection" to apply and persist it
+改密_bb974d3064	Change password
+改属主_962ff54eef	Change owner
+改权限_6d524368de	Change permissions
+改表名_5932b4950c	Rename table
+放弃编辑_815725bb66	Discard edits
+数据_54b8a90b3c	Data
+数据刷新间隔_783b4fd825	Data refresh interval
+数据库_0_38b5c31d37	Database ({0})
+数据库_dbs_size_f98d7bbce7	Database (${dbs.size})
+数据库_f4dbbc63a5	Database
+数据库列表_04a9b8f2c3	Database list
+数据库列表_0_fe197e98d3	Database list ({0})
+数据库列表_dbs_size_06771422a0	Database list (${dbs.size})
+数据库名_8a98ff0618	Database name
+数据库大小_ed9a685d54	Database size
+数据库引擎安装_1b953ccc06	Database engine installation
+数据库引擎总览_8dc625b5ae	Database engine overview
+数据库数量_1c82d51d3e	Number of databases
+数据库文件路径_名称_fd6bff11f9	Database file path/name
+数据库管理_9995484fc6	Database management
+数据库级_6e3f81b153	Database level
+数据库统计_35f181019a	Database statistics
+数据库设置_0_8c7ac8f827	Database settings - {0}
+数据库设置_database_882d97c702	Database settings - $database
+数据库连接凭据_6d0ff7df04	Database connection credentials
+数据库连接已保存_68d2c61647	Database connection saved
+数据来自_nginx_访问日志_含_ups_a5a09ba2e4	· Data comes from relay.db written from nginx access logs (including $upstream_status); plans are distinguished by route: go=OpenCode Go, zen=OpenCode Zen, glm=GLM Coding Plan, mimo=MiMo Token Plan.
+数据来自_nginx_访问日志写入的_relay_1cbea10182	Data comes from relay.db written from nginx access logs; plans are distinguished by route: go=OpenCode Go, zen=OpenCode Zen, glm=GLM Coding Plan, mimo=MiMo Token Plan.
+数据每_0_从_proc_实时采集_cf5df3d1ba	 · Data collected in real time from /proc every {0}
+数据浏览_5eba898584	Data browser
+数量_b9ae893190	Count
+文件_0_超过可编辑上限_1_请用终端或_bf27cf6d14	File {0} exceeds the edit limit {1}; use the terminal or upload to overwrite
+文件_0_超过预览上限_1_请下载或用_62cd65cbf5	File {0} exceeds the preview limit {1}; download it or view it in the Web terminal.
+文件_49deaf7da2	File
+文件_fmt_bytes_p_size_0f2f020b75	File ${Fmt.bytes(p.size)} exceeds the preview limit ${Fmt.bytes(p.limit)}; download it or view it in the Web terminal.
+文件_fmt_bytes_p_size_5711488d59	File ${Fmt.bytes(p.size)} exceeds the edit limit ${Fmt.bytes(p.limit)}; use the terminal or upload to overwrite
+文件内容_粘贴_98b4f4a653	File content (paste)
+文件内条目_b4ce600040	Entries in file
+文件名_1275f6feb7	File name
+文件回收站_7a008554ce	File recycle bin
+文件已保存_09f0eaa4ba	File saved
+文件已创建_3e2240f609	File created
+文件管理_3f2244c98f	File manager
+文件管理器不额外扩权_所有写操作都进面板审计日志_9856778584	The file manager grants no extra privileges. All write operations are recorded in the panel audit log (ops.files.*); deletions go to the recycle bin first and can be restored within 30 days.
+文件系统_0_0938484ae2	Filesystem {0}
+文件系统_42949b7f8f	Filesystem
+文件系统_d_filesystem_0b2cd8781e	Filesystem ${d.filesystem}
+文件被截断预览_0_在线编辑会丢失内容_建_1d7dde5641	File preview truncated ({0}); online editing will lose content. Download a backup first.
+文件被截断预览_fmt_bytes_p_si_580f3f9109	File preview truncated (${Fmt.bytes(p.size)}); online editing will lose content. Download a backup first.
+文本文件_0_69e2147621	Text file ({0})
+斜体_af5a2c8bff	Italic
+断开_28fb7cedb1	Disconnect
+断开客户端_ff6093dd26	Disconnect client
+断开客户端_pid_77a2046256	Disconnect client $pid?
+新会话_db44360cd0	New session
+新值_c4f3da96a2	New value
+新名称_b8659855b0	New name
+新名称_索引或约束名_所有者_8779802d2e	New name / index or constraint name / owner
+新告警_ae1159aaec	New alert
+新增_2cd9e6ce81	Add
+新增行_cbc8dab8c3	Add row
+新密码_d22c9c0085	New password
+新密码_至少_8_位_0d551cb025	New password (at least 8 characters)
+新密码至少_8_位_695025596e	New password of at least 8 characters
+新建_0cda8d1c71	Create
+新建会话_3da224c43d	New session
+新建告警规则_4f937923b8	New alert rule
+新建备份_导出_e3160cab07	New backup / export
+新建失败_ae047a3e45	Creation failed:
+新建子归类_fc67a95ee7	New subcategory
+新建字符串键_cfff5f4c43	New string key
+新建定时任务_root_权限执行_d637db8d7b	New scheduled task (runs as root)
+新建归类_64cf5b76fb	＋ New category…
+新建归类_e4ffdeb063	New category
+新建拨测_02d832478b	New probe
+新建拨测任务_cd03f12322	New probe task
+新建数据库_42e4ee46d5	New database
+新建文件_d4526eb925	New file
+新建清单_0f3d4d8665	New checklist
+新建清单_76f9b5e92e	＋ New checklist…
+新建渠道_0_05cd02b38f	New channel · {0}
+新建渠道_5c08b54484	New channel
+新建渠道_typelabel_typek_880e06ee72	New channel · ${typeLabel(typeKey)}
+新建用户_30416407e5	New user
+新建用户需要至少_8_位的密码_59c185c76b	New users require a password of at least 8 characters
+新建目录_80e05af6a0	New directory
+新建看护_ae27bee6ea	New watch
+新建看护项_c8df6a2e03	New watch item
+新建笔记_14fd2fe5ca	New note
+新建表_ddl_7ef91fdfef	New table (DDL)
+新建规则_eae3b2e915	New rule
+新建通知渠道_ce4914887a	New notification channel
+新建集合_5952f4c234	New collection
+新建静默_维护窗口_00c1db257e	New silence / maintenance window
+新建顶层归类_cb49387a03	New top-level category
+新模式名_ae42d0691f	New schema name
+新渠道_fd0cc5a2d3	New channel
+新表名_aa730ef230	New table name
+方式_af90809619	Method

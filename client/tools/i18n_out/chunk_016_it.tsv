@@ -1,0 +1,120 @@
+方式_systemd_时填写_c2e758e99d	Compilare quando Metodo = systemd
+方式_端口时必填_18fb66e1a7	Obbligatorio quando Metodo = Porta
+方式_进程时填_pgrep_f_6f5e68243f	Compilare quando Metodo = Processo, pgrep -f
+方法_b77e2ac8f4	Metodo
+无_3f83251907	(Nessuno)
+无_72077749f7	Nessuno
+无_ipv4_1c7bda176d	Nessun IPv4
+无_systemd_定时器_2cb3ed5b5f	Nessun timer systemd
+无供应商数据_079694fa08	Nessun dato fornitore
+无全局_ipv6_fdeea14453	Nessun IPv6 globale
+无匹配_cd8c79d55c	Nessuna corrispondenza
+无匹配对象_ccaba2ef1b	Nessun oggetto corrispondente
+无变更_f98b030e4c	(Nessuna modifica)
+无响应_585c257481	Nessuna risposta
+无地址_2de7722736	Nessun indirizzo
+无块设备信息_7d38d4c445	Nessuna info sul dispositivo di blocco
+无失败服务_4b73cd3229	Nessun servizio non riuscito
+无失败记录_fc59ed91cc	Nessun registro di guasto
+无密钥_e80f2d522d	Nessuna chiave
+无巡检数据_5f815bb00d	Nessun dato di ispezione
+无已建立连接_28fcae6254	Nessuna connessione stabilita
+无挂载点_99d3f4a93a	Nessun punto di montaggio
+无数据_6ffa7e6d35	Nessun dato
+无数据_需_mysql_8_sys_sche_55b4c320de	Nessun dato (richiede MySQL 8 + schema sys)
+无未命中_f377902d85	Nessuna mancata corrispondenza
+无检查项_3d5aa31af3	Nessun elemento di controllo
+无模型_f7d175950c	Nessun modello
+无模型_token_数据_a505d4ac3a	Nessun dato token del modello
+无法_bc9f0cc8da	Impossibile
+无法定位该行_无主键_a3b09102f7	Impossibile individuare la riga (nessuna chiave primaria)
+无法解析_9262bec0c8	(Impossibile analizzare)
+无法连接_notebox_0_cc669cd82a	Impossibile connettersi a NoteBox: {0}
+无法连接服务器_0_2154d8942a	Impossibile connettersi al server: {0}
+无法连接服务器_0_8f6c19cfd1	Impossibile connettersi al server: {0}
+无法连接服务器_e_message_dea3a7f089	Impossibile connettersi al server: ${e.message}
+无生效配置_e4ffb2c454	Nessuna configurazione attiva
+无监听端口_e179a92a15	Nessuna porta in ascolto
+无记录_3c275e011f	(Nessun record)
+无记录_afaa05cdc4	Nessun record
+无输出_66e9bdf63b	(Nessun output)
+无运行中容器_85fb788d24	Nessun container in esecuzione
+无采样点_920b2e00a7	Nessun punto di campionamento
+日_15917f3b32	Giorno
+日均变化_9dc6a161af	Variazione media giornaliera
+日增量_e7ce94b3ff	Incremento giornaliero
+日增量与预测来自每日配额快照_quota_his_119e99916d	Incrementi e previsioni giornalieri provengono dallo snapshot quota quotidiano (quota-history.jsonl); le previsioni iniziano dopo 2 giorni di dati. Attuale tasso token:
+日志_4de50894b8	Log
+日志中心_b9543b21a6	Centro log
+日志体积_89cbbd3cbe	Dimensione dei log
+日志按_var_log_audit_audit_705976aed4	I log ruotano in /var/log/audit/audit.log; i record più vecchi sono negli archivi audit.log.* nella stessa cartella.
+日志文件与可回收估算_b648c74df1	File di log e stima dello spazio recuperabile
+日志查看器_604706ec79	Visualizzatore log
+日志流已结束_chunk_source_94bab11174	Flusso di log terminato: ${chunk.source}
+日志获取失败_47449d85ad	Recupero dei log non riuscito
+日期_b6fed9af83	Data
+日期_时间格式不对_yyyy_mm_dd_与_h_8b0d431063	Formato data/ora non valido (YYYY-MM-DD e HH:mm)
+日期格式应为_yyyy_mm_dd_565fb221c7	Il formato della data deve essere YYYY-MM-DD
+日本語_c12140a0ff	Giapponese
+旧版面板_1d60ea9964	Pannello legacy
+时_a34801ad9c	Ora
+时区_fb2a23dc16	Fuso orario
+时段_f453a4b294	Periodo
+时长_0_s_78c39c9a18	 · durata>{0} s
+时长_s_2ce70674d1	Durata (s)
+时长_sec_s_9e02794f9f	 · durata>$sec s
+时长_秒_365cba3da3	Durata > secondi
+时间_89b4aa6364	Tempo
+时间格式应为_hh_mm_8820852ef2	Il formato dell'ora deve essere HH:mm
+时间段_7f34462708	Periodo
+时间范围_2be9040878	Intervallo di tempo
+明天_b76ce230d3	Domani
+明天_hm_4adda4dab9	Domani $hm
+明细_0_24c4208e51	Dettagli · {0}
+明细_h_label_99a12f2553	Dettagli · ${h.label}
+是_30160a21b9	Sì
+显示_71b6771bc7	Mostra
+显示权限清单_edc6d375d3	Mostra elenco autorizzazioni
+显示模式_4a8bb8aba3	Modalità di visualizzazione
+显示模式与强调色会立即生效并保存在本机_52e8737036	Modalità di visualizzazione e colore d'accento hanno effetto immediato e vengono salvati su questo computer.
+普通用户_bd8d896aad	Utente normale
+暂无_ip_数据_b2bc157cfb	Nessun dato IP
+暂无中继备份_dacac650ad	Nessun backup di relay
+暂无事件_所有任务都在线_705a26c232	Nessun evento: tutti i job sono online
+暂无会话数据_ea9498e844	Nessun dato sessione
+暂无信息_2f186ec435	Nessuna informazione
+暂无切换记录_cb6e9b8316	Nessun registro di commutazione
+暂无列_6937181dc8	Nessuna colonna
+暂无动作_046f87f240	Nessuna azione
+暂无历史_482a16ecfa	Nessuna cronologia
+暂无参数_8ff5e03996	Nessun parametro
+暂无发送记录_8190202072	Nessun registro di invio
+暂无变量_7c754b0098	Nessuna variabile
+暂无告警事件_5afa22a92c	Nessun evento di allarme
+暂无告警记录_805d7ef9cc	Nessun registro di allarme
+暂无命中率数据_9475fb3493	Nessun dato sul tasso di corrispondenza
+暂无备份_d5392bb044	Nessun backup
+暂无备份_点击上方目录按钮创建_68fce26f69	Nessun backup; fai clic sul pulsante cartella qui sopra per crearne uno
+暂无备份状态记录_f254ce0b6d	Nessun registro stato backup
+暂无容器_96a29bf063	Nessun container
+暂无密钥_0e15befa13	Nessuna chiave
+暂无挂载点_d25afc47c8	Nessun punto di montaggio
+暂无授权密钥_使用密钥登录更安全_07e7ba27d0	Nessuna chiave autorizzata (l'accesso con chiave è più sicuro)
+暂无探测记录_9006abbcd2	Nessun registro di probe
+暂无搜索结果_8f8274c754	Nessun risultato di ricerca
+暂无数据_b246458f20	Nessun dato
+暂无数据库_9b93de555b	Nessun database
+暂无模型数据_0c50fd6d6b	Nessun dato modello
+暂无索引_c86267b32d	Nessun indice
+暂无表_视图_9bc71df029	Nessuna tabella / vista
+暂无请求_c2f4aebbc8	Nessuna richiesta
+暂无进程数据_07202fdf7e	Nessun dato processo
+暂无配额数据_68af8db72c	Nessun dato quota
+暂无错误_cd5f469fc5	Nessun errore
+暂无镜像_dd1ca5cd99	Nessuna immagine
+暂无限流配置数据_9258ebf5d0	Nessun dato sulla configurazione del rate limit
+暂无面板创建的任务_e6b14e96f2	Nessun job creato dal pannello
+更新_d9db02d07a	Aggiorna
+更新于_0_7340e34cda	 · aggiornato {0}
+更新于_0_每_2_秒_664974959b	● Aggiornato {0} · ogni 2 s
+更新于_0_近5分钟_1_轮_0fd646dbb6	● Aggiornato {0} · {1} cicli negli ultimi 5 min /

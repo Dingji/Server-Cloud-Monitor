@@ -1,4 +1,5 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.L
 
 import com.servermaintance.panel.publishHubUpdate
 import io.ktor.client.plugins.websocket.webSocket
@@ -194,12 +195,12 @@ class Hub(
     }
 
     fun subscribeLogs(source: String) =
-        sendRaw("""{"type":"subscribe-logs","source":${kotlinx.serialization.json.JsonPrimitive(source).toString()}}""")
+        sendRaw(L["type_subscribe_logs_031687d198"])
 
     fun unsubscribeLogs(source: String) =
-        sendRaw("""{"type":"unsubscribe-logs","source":${kotlinx.serialization.json.JsonPrimitive(source).toString()}}""")
+        sendRaw(L["type_unsubscribe_log_5be11ca5ad"])
 
-    fun setRefreshInterval(ms: Int) = sendRaw("""{"type":"refresh-interval","ms":$ms}""")
+    fun setRefreshInterval(ms: Int) = sendRaw(L["type_refresh_interva_6f78d82af0"])
 
     /**
      * Local replay of pushed points filtered to a time window, measured back

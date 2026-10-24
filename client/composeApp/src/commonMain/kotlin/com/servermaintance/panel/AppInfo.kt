@@ -7,5 +7,5 @@ object AppInfo {
     const val VERSION_LABEL = "V$VERSION"
     const val COPYRIGHT = "Copyright © DingJi"
     const val VENDOR = "DingJi"
-    const val DESCRIPTION = "服务器监控与配置面板客户端"
+    /** UI copy: [com.servermaintance.panel.i18n.L] `app.description` */
 }

@@ -1,0 +1,120 @@
+仅本地_5c28a4b5d1	Yalnızca yerel
+仅结构_15c49958e4	Yalnızca şema
+仅结构_8cdf512d85	(Yalnızca şema)
+仅结构_不含数据_86341bfbf0	Yalnızca şema (verisiz)
+仅运行_affb726f94	Yalnızca çalışan
+仅面板铃铛_3ecf2a6ea9	Yalnızca panel zili
+今天_17e83cc25e	Bugün
+今天_hm_b5123a00e4	Bugün $hm
+今天到期_fb2cb94029	Bugün doluyor
+今日_0_会话_1_客户端_2_dfa0d41ced	Bugün {0} · Oturum {1} · İstemci {2}
+今日_0_新增_1_e17159d28e	Bugün {0} · Yeni {1}
+今日_0_请求_f79a1b4d82	Bugün {0} istek
+今日_24_小时分布_d5b7360f18	Bugünün 24 saatlik dağılımı
+今日_574cd4fb79	Bugün
+今日_token_d0b5adbe07	Bugünün Token'ı
+今日出站_ae22fbbb49	Bugünün giden trafiği
+今日成功率_70d58b9151	Bugünün başarı oranı
+今日请求_0_8e7833564f	Bugünün istekleri {0}
+今日请求_731c00a176	Bugünün istekleri
+今日邮件发送成功_060f80e076	Bugün gönderilen başarılı e-postalar
+今日错误_97f268b84a	Bugünün hataları
+从_0_切换到_94f8b2509a	{0} adresinden şuna geçildi:\n\n
+从未发信_d605d91365	Hiç gönderilmemiş
+从镜像站拉取最新软件包列表_安装新包前建议先刷新_18f22cecb1	Mirror'dan en son paket listesi alınır; yeni paket yüklemeden önce yenilemeniz önerilir.
+代码_21cdbf098d	 〔Kod〕 
+代码_33246dda76	Kod
+以_0_执行_结果支持多语句_1_052948bd3b	{0} olarak çalıştır · Sonuç birden fazla deyimi destekler · {1}
+以_dbmeta_label_st_engi_c4aac0c4ce	${DbMeta.label(st.engineId)} olarak çalıştır · Sonuç birden fazla deyimi destekler · $dialect
+以下已安装包依赖它_卸载可能连带移除或导致异常_f26237adcd	Aşağıdaki yüklü paketler buna bağımlıdır; kaldırılması bunları da kaldırabilir veya sorunlara yol açabilir:\n
+以后_ac5d03ece3	Daha sonra
+仪表盘_2c0ab88554	Gösterge paneli
+任何拿到链接的人_无需登录_可查看_3f77643748	Bağlantıya sahip herkes (giriş yapmadan) görebilir
+任务_3172b317f9	Görevler
+任务名_c8d6eeaa4c	Görev adı
+任务名称_2e30469899	Görev adı
+任务启动失败_服务端未返回任务_id_500799f8a2	Görev başlatılamadı: sunucu görev id'sini döndürmedi
+任务执行失败_97312db4c3	Görev çalıştırma başarısız oldu
+任务文件_8f4e93dc3d	Görev dosyası
+任务状态已丢失_服务端可能重启过_请重新发起该_3a4e99bf96	Görev durumu kayboldu (sunucu yeniden başlatılmış olabilir), lütfen işlemi yeniden deneyin
+休眠_0_c11a981edd	Uyku {0}
+优先级_7cabe771eb	Öncelik
+优秀_3e61f36792	Mükemmel
+会自动执行配置校验_d447aa930e	(yapılandırma doğrulaması otomatik olarak çalıştırılır)
+会话_1_497c4ea2d5	Oturum 1
+会话_836ffe0e10	Oturum
+会话_titleseq_33244bea87	Oturum $titleSeq
+会话上下文明细_内存视图_22c78a29f0	Oturum bağlam ayrıntıları (bellek görünümü)
+会话上下文构成_ce6fae8e45	Oturum bağlam bileşimi
+会话内存视图_fcd9415f11	Oturum bellek görünümü
+会话分布_按请求数_b85c7c435b	Oturum dağılımı (istek sayısına göre)
+会话已关闭_095a652630	Oturum kapatıldı
+会话已过期_请重新登录_32f89bb43c	Oturumun süresi doldu, lütfen yeniden giriş yapın
+会话批量清理_55815972d3	Toplu oturum temizliği
+会话排行_按上下文字节_0_1_6f0f0e51a3	Oturum sıralaması (bağlam baytlarına göre)  {0} · {1} oturum / {2} tur · toplam {3}
+会话排行_按上下文字节_e47849da63	Oturum sıralaması (bağlam baytlarına göre)
+会话数_4d72abd2e9	Oturum sayısı
+会话数_今日_9cd79de908	Oturum sayısı (bugün)
+估算成本_f05235023c	Tahmini maliyet
+位置_88c34452cc	Konum
+低_b9ee259b7f	Düşük
+低于告警线的证书任务_695579ce30	Uyarı eşiğinin altındaki sertifika görevleri
+作用范围_95a5e61424	Kapsam
+使用_ssl_465_端口勾选_316a136e99	SSL kullan (465 portu için işaretle)
+使用率_8ca02f90d1	Kullanım oranı
+例如_工作_项目资料_190eafea68	örn. İş, proje dosyaları
+供应商状态_ed8f7c5676	Sağlayıcı durumu
+依赖_0_推荐依赖_1_反向依赖_2507ad6a45	Bağımlılıklar {0} · Önerilen {1} · Ters {2}
+依赖_2ebf56c207	\n\n--- Bağımlılıklar ---\n
+依赖_depn_推荐依赖_recn_684b03c97f	Bağımlılıklar $depN · Önerilen $recN · Ters $revN
+保存_fadf24dbc5	Kaydet
+保存_smtp_设置_31e1de2129	SMTP ayarlarını kaydet
+保存中_6644f06197	Kaydediliyor…
+保存地址_b4507bac53	Adresi kaydet
+保存失败_40525a7328	Kaydetme başarısız oldu
+保存失败_b12163000c	Kaydetme başarısız oldu:
+保存失败或被取消_7e2bbcfe18	Kaydetme başarısız oldu veya iptal edildi
+保存并重连_a440c33bd4	Kaydet ve yeniden bağlan
+保存数据库连接_ccfc22f810	Veritabanı bağlantısını kaydet
+保存文件_184adfdabf	Dosyayı kaydet
+保存被取消_82f61f25b1	Kaydetme iptal edildi
+保存通知规则_81afc138cf	Bildirim kurallarını kaydet
+保存阈值_1a6c3945df	Eşiği kaydet
+保留_0_份_6f62f9cd31	{0} kopyayı sakla
+保留_30_份_relay_backup_tim_b625d85371	30 kopya sakla; relay-backup.timer her gün 03:30'da çalışır.
+保留最近_n_个_855e3ce9c7	Son N'ini sakla
+修复失败_3d6dfbe1ad	Onarım başarısız oldu
+修复执行记录_2669e0f726	Onarım yürütme kaydı
+修复未成功_d8d320b456	Onarım başarılı olmadı
+修改_c9c77517fe	Düzenle
+修改会写入_etc_ssh_sshd_conf_4cb39a7a47	Değişiklikler /etc/ssh/sshd_config.d/99-cloud-monitor.conf dosyasına yazılır; önce sshd -t ile doğrulama yapılır, hata olursa değişiklik otomatik olarak geri alınır. Şifreli kimlik doğrulamayı kapatmadan önce anahtarları ayarlayın.
+修改列_类型_默认值_可空_8bebfff9e5	Sütunu düzenle (tür/varsayılan/nullable)
+修改失败_9abb465039	Düzenleme başarısız oldu
+修改密码_0_1a306d5990	Şifreyi değiştir - {0}
+修改密码_0ae20ac3af	Şifreyi değiştir
+修改密码_n_00b25b96ac	Şifreyi değiştir - $n
+修改密码_name_d9c700cba6	Şifreyi değiştir - $name
+修改所有者_3876d6ab1f	Sahibi değiştir
+修改时间_af71bc5cc4	Değiştirme zamanı
+修改登录密码_321d9d86f6	Giriş şifresini değiştir
+修改端口_路径需编辑_config_json_后_983be325ee	Port/yolu değiştirmek için config.json'ı düzenleyip yeniden başlatın
+修改限流阈值_编辑_00_limits_conf_1152af13c3	Hız sınırı eşiğini değiştirmek için: 00-limits.conf dosyasını düzenleyin, ardından nginx -t && systemctl reload nginx çalıştırın.
+修改面板密码_17fc433ccc	Panel şifresini değiştir
+倒计时_80176c18f3	Geri sayım
+候选_0461e4db19	Adaylar
+值_321b955840	Değer
+值越小越倾向使用物理内存_数据库服务器常用_10_d669b666d0	Değer küçük oldukça fiziksel bellek daha çok kullanılır; veritabanı sunucularında sıklıkla 10 kullanılır.
+偏快_8900d928c6	Biraz hızlı
+停止_0_e0be2c8b16	{0} durdur
+停止_a17f70a8d3	Durdur
+停止_fail2ban_c4775a3abd	Fail2ban'ı durdur
+停止_label_8f0e06c363	$label durdur
+停止_容器_c97111b01f	Konteyneri durdur
+停止分享_55c70caa51	Paylaşımı durdur
+停止后将失去_ssh_防爆破保护_cf3e594655	Durdurursanız SSH kaba kuvvet koruması kaybolur.
+停止引擎_f83e27f9a5	Motoru durdur
+停止自愈_8e53c62499	Kendiliğinden onarımı durdur
+停止跟随_72312418e3	Takibi durdur
+停用_0_其会话将立即失效_bd25e844b8	{0} devre dışı bırakılsın mı? Oturumları anında geçersiz olur.
+停用_d989e55188	Devre dışı bırak
+停用用户_3f2f67ac37	Kullanıcıyı devre dışı bırak

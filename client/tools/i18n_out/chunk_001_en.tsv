@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label Installation complete, refreshing…
+label_安装日志_13ce1b1029	$label Install log
+label_实现中_70505f7ef8	“$label” under implementation…
+llm_api_中继的请求量_token_用量_6b89d708ea	Request volume, token usage, key pool quota, model availability and quality analysis for the LLM API relay
+location_块_不要停用该站点以免面板与_4ae164b62b	location block), do not disable this site or the panel and relay service will both go offline.
+login.access_token	Access token
+login.advanced	Advanced
+login.audit_notice	All actions are audit-logged
+login.connect_failed	Connection failed:
+login.failed	Sign-in failed
+login.normalized_url	Normalized address
+login.not_logged_in	Not signed in
+login.password_required	Please enter the password
+login.remember_password	Remember password
+login.restore_default_url	Restore default address
+login.save_on_test_hint	After changing the address, click “Test Connection” to persist it
+login.server_config	Server connection settings
+login.sign_in	Sign In
+login.signing_in	Signing in…
+login.subtitle	Real-time server monitoring and configuration console
+login.test_connection	Test connection
+login.testing	Testing…
+login_可登录_0e617ada9b	LOGIN (sign-in available)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(previous-turn bytes, current-turn bytes) is content already sent in earlier turns — this is the upper bound the cache should hit, independent of vendor reporting.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB does not reclaim space; validate/reindex are routine maintenance.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB uses mongodump to create gzip archives (requires mongodump).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB only actually creates the database on the first write to a collection; a _cm_init placeholder collection is created here.
+mongodb_的过滤条件支持_字段_值_558264a7d8	MongoDB filters support the {"field":value} form (converted internally to a query condition) or the field=value shorthand. Documents are shown as JSON; _id is the document identifier.
+mongodb_维护结果_aaeb39f907	MongoDB maintenance results
+ms_毫秒_7ade5ab3a4	$ms ms
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (default root + socket)
+mysql_语法_8200e34cb7	MySQL syntax
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a statistics
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c check
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o optimize
+name_ver_连接正常_33d0a44ec7	$name $ver connection OK
+name_关闭_c8e887ebc0	$name: Off
+name_开启_54ce939603	$name: On
+nav.audit	Audit log
+nav.backups	Backup center
+nav.cron	Scheduled tasks
+nav.dashboard	Dashboard
+nav.databases	Databases
+nav.disks	Disk management
+nav.docker	Docker containers
+nav.health_alerts	Health alerts
+nav.logs	Log center
+nav.memory	Memory management
+nav.network	Network management
+nav.note_mail	Email notifications
+nav.note_settings	NoteBox settings
+nav.note_transfer	Import / Export
+nav.note_users	User management
+nav.notes	Notes
+nav.ops_channels	Notification channels
+nav.ops_disk	Disk governance
+nav.ops_files	File management
+nav.ops_hosts	Managed hosts
+nav.ops_remote	Remote host metrics
+nav.ops_rules	Alert rules
+nav.ops_sec	Security baseline checks
+nav.ops_uptime	Uptime probing
+nav.ops_watch	Service watchdog
+nav.packages	Package management
+nav.page_placeholder	“{0}” page under implementation…
+nav.pinned_hint	(pinned, long-press to unpin)
+nav.processes	Process management
+nav.relay	OpenCode relay
+nav.section.app	Apps
+nav.section.monitor	Monitoring
+nav.section.notes	Notes
+nav.section.server	Server
+nav.section.system	System
+nav.section.tools	Tools
+nav.security	Security management
+nav.services	System services
+nav.settings	Panel settings
+nav.slo	SLO & usage
+nav.terminal	Web terminal
+nav.todos	To-do list
+nav.web	Websites / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf Nginx config · sshd_config SSH config · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	nginx/sshd/fstab configs are auto-validated after saving
+nginx_站点_0_6bcfddef71	Nginx site ({0})
+nginx_站点_sites_size_2db3c2b5be	Nginx sites (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP & alert rules
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox cloud notes (multi-level categories · recycle bin · Markdown · sharing)
+notebox_地址未配置_3d37258011	NoteBox address not configured
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox to-do items (due dates & email reminders)
+notebox_数据迁移_362725f18e	NoteBox data migration
+notebox_服务可达_6a7506d6ac	NoteBox service reachable
+notebox_服务可达_未登录_e023d68cad	NoteBox service reachable (not signed in)
+notebox_服务地址_默认端口_13345_e0880dfda6	NoteBox service address (default port 13345). Sign in again after changing it.
+notebox_登录成功_013138644f	NoteBox sign-in successful
+notebox_设置_efb5a47b98	NoteBox settings
+notebox_账号_仅管理员_81b8d4ca26	NoteBox account (admins only)
+online_台有近期数据_1fefff8cdc	$online hosts have recent data
+opencode_中继_2e021ee797	OpenCode relay
+p95_延迟_57d63f8b46	P95 latency
+p95_延迟_ba65a873bc	p95 latency
+palette.accent_hint	Appearance · current {0}
+palette.open_page	Open page {0}
+palette.pin	Pin “{0}”
+palette.pin_hint	Workspace · long-press a sidebar item to toggle it too
+palette.reload_hint	F5 / Ctrl+R · Reload
+palette.theme_hint	Appearance · current {0}
+palette.unpin	Unpin “{0}”
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (forced password change)
+pg_自定义格式_0cc41d0ea4	PG custom format
+postgresql_mysql_sql_42e513fca9	Database and table management, SQL console, performance insights and backup/restore for PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	PostgreSQL custom format -Fc (faster restore)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (uses peer authentication by default: su - postgres)
+rdb_快照_62f218ed40	RDB snapshot
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis runs BGSAVE and copies the RDB file; restore overwrites the data directory and requires a Redis restart to take effect.
+redis_命令控制台_fa42019a53	Redis command console
+redis_维护_d2a01bfbd3	Redis maintenance
+reindex_全部库_90545e1eeb	REINDEX all databases
+reindex_重建索引_256956f94e	REINDEX / rebuild indexes
+reindex_重建索引_d81fcbf8d0	REINDEX (rebuild indexes)
+relay_alert_py_检查_smtp_告_012aaa3373	relay_alert.py check, SMTP alert channel, thresholds and alert records

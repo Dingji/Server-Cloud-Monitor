@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import io.ktor.client.HttpClient
 import io.ktor.client.statement.HttpResponse
@@ -97,7 +99,7 @@ class PanelApi(private val config: () -> ServerConfig) {
 
     private fun urlOf(path: String): String {
         val base = config().apiBase()
-        if (base.isEmpty()) throw ApiException("服务器地址未配置", 0)
+        if (base.isEmpty()) throw ApiException(L["服务器地址未配置_18f3debc5d"], 0)
         return base + path
     }
 
@@ -106,7 +108,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         val msg = parsed?.let { (it["error"] as? kotlinx.serialization.json.JsonPrimitive)?.safeContent() }
         val out = parsed?.let { (it["output"] as? kotlinx.serialization.json.JsonPrimitive)?.safeContent() }
         return ApiException(
-            message = if (msg.isNullOrBlank()) "HTTP $code" else msg,
+            message = if (msg.isNullOrBlank()) com.servermaintance.panel.i18n.trf("common.http_code", code) else msg,
             code = code,
             output = out?.takeIf { it.isNotBlank() },
             isAuth = code == 401,
@@ -119,7 +121,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
         val text = try {
             r.bodyAsText()
@@ -130,7 +132,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         }
         if (r.status.value >= 400) throw parseError(path, r.status.value, text)
         return runCatching { Json.parseToJsonElement(text) }.getOrElse {
-            throw ApiException("响应解析失败: ${text.take(300)}", r.status.value)
+            throw ApiException(trf("响应解析失败_0_2b68ffa3e9", text.take(300)), r.status.value)
         }
     }
 
@@ -189,7 +191,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
         val text = try {
             r.bodyAsText()
@@ -201,7 +203,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         if (r.status.value >= 400) throw parseError(path, r.status.value, text)
         invalidate()
         return runCatching { Json.parseToJsonElement(text) }.getOrElse {
-            throw ApiException("响应解析失败: ${text.take(300)}", r.status.value)
+            throw ApiException(trf("响应解析失败_0_2b68ffa3e9", text.take(300)), r.status.value)
         }
     }
 
@@ -216,7 +218,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
         val text = try {
             r.bodyAsText()
@@ -227,7 +229,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         }
         if (r.status.value >= 400) throw parseError(path, r.status.value, text)
         return runCatching { Json.parseToJsonElement(text) }
-            .getOrElse { throw ApiException("响应解析失败: ${text.take(300)}", r.status.value) }
+            .getOrElse { throw ApiException(trf("响应解析失败_0_2b68ffa3e9", text.take(300)), r.status.value) }
     }
 
     /** Binary download (backup archives, SQL dumps, relay backups). */
@@ -237,9 +239,9 @@ class PanelApi(private val config: () -> ServerConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
-        if (r.status == HttpStatusCode.Unauthorized) throw ApiException("未登录或会话过期", 401, isAuth = true)
+        if (r.status == HttpStatusCode.Unauthorized) throw ApiException(L["未登录或会话过期_ae00c4ba08"], 401, isAuth = true)
         if (!r.status.isSuccess()) {
             val txt = runCatching { r.bodyAsText() }.getOrDefault("")
             throw parseError(path, r.status.value, txt)
@@ -250,18 +252,18 @@ class PanelApi(private val config: () -> ServerConfig) {
     /** Reachability probe used when the user edits the server address. */
     suspend fun health(): JsonObject {
         val base = config().normalizedUrl()
-        if (base.isEmpty()) throw ApiException("服务器地址未配置", 0)
+        if (base.isEmpty()) throw ApiException(L["服务器地址未配置_18f3debc5d"], 0)
         val r: HttpResponse = try {
             http.get("$base/api/health")
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("无法连接服务器: ${e.message ?: e::class.simpleName ?: "网络不可达"}", 0)
+            throw ApiException(trf("无法连接服务器_0_2154d8942a", e.message ?: e::class.simpleName ?: L["网络不可达_7e7812414f"]), 0)
         }
         val text = runCatching { r.bodyAsText() }.getOrDefault("")
-        if (r.status.value >= 400) throw ApiException("服务不可达 (HTTP ${r.status.value})", r.status.value)
+        if (r.status.value >= 400) throw ApiException(trf("服务不可达_http_0_6aaaef3706", r.status.value), r.status.value)
         return runCatching { Json.parseToJsonElement(text).jsonObject }
-            .getOrElse { throw ApiException("服务响应异常: ${text.take(200)}", r.status.value) }
+            .getOrElse { throw ApiException(trf("服务响应异常_0_2671b6c611", text.take(200)), r.status.value) }
     }
 
     suspend fun login(password: String): LoginResult {
@@ -273,7 +275,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
         val text = try {
             r.bodyAsText()
@@ -286,7 +288,7 @@ class PanelApi(private val config: () -> ServerConfig) {
         if (r.status.value >= 400 || el == null) throw parseError("/login", r.status.value, text)
         val o = el.jsonObject
         val token = (o["token"] as? kotlinx.serialization.json.JsonPrimitive)?.safeContent().orEmpty()
-        if (token.isEmpty()) throw ApiException("服务器未返回令牌", r.status.value)
+        if (token.isEmpty()) throw ApiException(L["服务器未返回令牌_871c697da3"], r.status.value)
         return LoginResult(
             token = token,
             expiresAt = (o["expiresAt"] as? kotlinx.serialization.json.JsonPrimitive)?.safeContent().orEmpty(),

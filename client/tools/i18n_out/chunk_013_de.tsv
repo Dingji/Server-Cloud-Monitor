@@ -1,0 +1,120 @@
+当前索引更新于_0_1c82f67640	Index aktualisiert am {0}
+当前采集到的指标_8e4e47b457	Aktuell erfasste Metriken
+当前镜像_ed71a792a7	Aktuelles Image
+当前页面_b7d5886b05	 · Aktuelle Seite
+彻底删除_0_项_无法恢复_9f56fcff22	{0} Elemente endgültig löschen, nicht wiederherstellbar.
+彻底删除_8c0b37b684	Endgültig löschen
+彻底删除_trash_size_项_无法恢_87a3623728	${trash.size} Elemente endgültig löschen, nicht wiederherstellbar.
+彻底卸载_33072f5e11	Vollständig deinstallieren
+待办_csv_3308e95082	Aufgaben-CSV
+待办_未完成_已完成_7422fade10	Aufgaben (offen / erledigt)
+待办清单_febc09d1b1	Aufgabenliste
+待探测_51805a6f50	Probe ausstehend
+待检测_05fb47fc35	Prüfung ausstehend
+待邮箱验证_bada0c2e46	E-Mail-Bestätigung ausstehend
+待验证_0b48e4bdd8	Bestätigung ausstehend
+必须带_http_或_https_e74acdc586	Muss mit http:// oder https:// beginnen
+快捷_14249f75ba	Schnell
+快捷模板_423595bef4	Schnellvorlagen:
+快速备份_1cbe05845d	Schnelles Backup
+性能洞察_71fa3a4ff8	Leistungseinblicke
+总_0_新增_1_1fd58b4e12	Gesamt {0} · Neu {1}
+总_token_2d5ae33603	Token gesamt
+总占用_3da7163a84	 Gesamtbelegung
+总大小_0_a2c8d9634b	Gesamtgröße {0}
+总大小_fmt_bytes_totalsiz_53ae231269	Gesamtgröße ${Fmt.bytes(totalSize)}
+总容量_8b60ba80ea	Gesamtkapazität
+总尝试_56d2a2d4f5	Versuche gesamt
+总成功率_0_重试_1_32f597c3de	Erfolgsquote gesamt {0}% · Wiederholungen {1}
+总成功率_322a0370e9	Erfolgsquote gesamt
+总成功率_61b76516e3	Erfolgsquote gesamt 
+总探测_572bee6277	Sonden gesamt
+总流量_出_6efb4930fb	Gesamtverkehr (ausgehend)
+总耗时_2db420d198	Gesamtdauer
+总览_c122e1758c	Übersicht
+总览与监控_70e2feb12d	Übersicht & Überwachung
+总计_3af1ac5b4e	Gesamt
+总请求_d1cac3ca3b	Anfragen gesamt
+总账号_02ceb243fe	Konten gesamt
+恢复_79748ca1c6	Wiederherstellen
+恢复_mongodb_归档_ad961869c7	MongoDB-Archiv wiederherstellen
+恢复_redis_7dd20f103c	Redis wiederherstellen
+恢复中_176238056c	Wird wiederhergestellt…
+恢复中_d6426a51e5	Wird wiederhergestellt
+恢复于_0_57aae0c315	Wiederhergestellt am {0}
+恢复于_rtmrecover_recover_471df21a46	Wiederhergestellt am ${rTmRecover(recoverAt)}
+恢复备份到目标数据库_00fbc874c2	Backup in die Zieldatenbank wiederherstellen
+恢复失败_08c8ed5980	Wiederherstellung fehlgeschlagen:
+恢复失败_76842a0348	Wiederherstellung fehlgeschlagen
+恢复完成_笔记_0_条_待办_1_条_7aa19232cf	Wiederherstellung abgeschlossen: {0} Notizen, {1} Aufgaben
+恢复完整备份_640eea92dc	Vollständiges Backup wiederherstellen
+恢复方式_4a0ce48265	Wiederherstellungsmethode
+恢复时是否通知_e60cfd9684	Bei Wiederherstellung benachrichtigen
+恢复结果_25404d8096	Wiederherstellungsergebnis
+恢复通知_9d088c33ba	Wiederherstellungsbenachrichtigung
+恢复默认地址_4c7fd3785e	Standardadresse wiederherstellen
+想到什么_立刻记下来_c54f483edc	Einfach aufschreiben, was dir einfällt…
+慢查询_slowlog_89cb405eab	Langsame Abfragen (SLOWLOG)
+慢查询_剖析_e7d6b1beb3	Langsame Abfragen (Analyse)
+慢查询_热点语句_e4c8bb10fe	Langsame Abfragen / Hotspot-Anweisungen
+成功_0_错误_1_超时_2_4e74aeecc7	Erfolgreich {0} · Fehler {1} · Zeitüberschreitungen {2}
+成功_51991a5d11	Erfolgreich
+成功导入_0_条待办_0f7f47eb57	{0} Aufgaben erfolgreich importiert
+成功导入_0_条笔记_f1edf5b407	{0} Notizen erfolgreich importiert
+成功导入_n_条待办_37eadf2708	$n Aufgaben erfolgreich importiert
+成功导入_n_条笔记_2f9691a596	$n Notizen erfolgreich importiert
+成功率_0_047cd91c6c	Erfolgsquote {0}%
+成功率_2xx_占比_服务可用性_非_5_a3d7b27e95	Erfolgsquote = Anteil der 2xx; Serviceverfügbarkeit = Anteil der Nicht-5xx. Eine große Differenz bedeutet, dass die Fehler meist vom Client (Parameter oder Kontingent) und nicht vom Upstream stammen.
+成功率_df9dc72f2d	Erfolgsquote
+成功率_monfmt_fixed_sr_1_4fbf1cc803	Erfolgsquote ${MonFmt.fixed(sr, 1)}%
+成功率_延迟分位_错误分布_配额消耗与_toke_9c60795c78	Erfolgsquote, Latenz-Perzentile, Fehlerverteilung, Kontingentverbrauch und Token-Nutzung
+成功登录_last_d5df9592bd	Erfolgreiche Anmeldungen (letzte)
+我_34f201bc50	Ich
+我已知晓风险_强制执行_cd4e2f773d	Ich kenne das Risiko, trotzdem ausführen
+我明白风险_执行_a77f5cd3f3	Ich kenne das Risiko, ausführen
+或_systemd_单元_nginx_serv_14c65e1864	oder systemd-Einheit: nginx.service
+或点左上角_新建笔记_创建_4bb6db19d3	oder oben links auf „Neue Notiz" klicken
+截止日期_9b3177f0b7	Fälligkeitsdatum
+截止时间_864048b32f	Fälligkeitszeit
+所有操作均被审计记录_511c89f737	Alle Aktionen werden protokolliert
+所有管理操作均写入审计日志_logs_a_e2b87d13a1	 · Alle Administratoraktionen werden ins Audit-Log geschrieben (logs/audit.log)
+所有者_ff3beb8e45	Eigentümer
+所有软件包均为最新版本_ee413e3b4c	Alle Pakete sind auf dem neuesten Stand.
+手动_2a4a4de806	Manuell
+手动编辑的_root_crontab_请通过_72bfbdde79	· root-crontab manuell über das Web-Terminal bearbeiten (crontab -e)
+手动进程_040082d08d	Manueller Prozess
+打包_0_项到_1_29836a27f5	{0} Elemente nach {1} paketieren
+打包_selected_size_项到_e42700bf89	${selected.size} Elemente nach ${l.dir} paketieren
+打包_tar_gz_ff1dd64457	tar.gz paketieren
+打包为_tar_gz_3ea0166662	Als tar.gz paketieren
+打包完成_be69db469a	Paketierung abgeschlossen
+打开_65fc81e161	Öffnen
+打开所在目录_b4bf69d6b9	Zielordner öffnen
+执行_0_70b4feea4a	{0} ausführen?
+执行_28febba225	Ausführen
+执行_act_a3e97e4bee	$act ausführen?
+执行_action_b272ecea51	$action ausführen?
+执行_apt_get_install_y_ce_6568cc1ca1	apt-get install -y certbot ausführen, ca. 1-3 Minuten.
+执行_b_0_b_1695afa501	<b>{0}</b> ausführen?
+执行_b_name_b_67f5a659e6	<b>$name</b> ausführen?
+执行_create_extension_if_n_aac00658d4	CREATE EXTENSION IF NOT EXISTS $n ausführen?
+执行_create_extension_pg_s_6d03312f5d	CREATE EXTENSION pg_stat_statements ausführen? Nach der Aktivierung muss es noch zu shared_preload_libraries hinzugefügt und die Datenbank neu gestartet werden, damit die Statistik beginnt.
+执行_ctrl_enter_ecfb73b4d6	Ausführen (Ctrl+Enter)
+执行_daemon_stop_dfe266a216	daemon-stop ausführen?
+执行_ddl_769fdda3d6	DDL ausführen
+执行_ddl_操作_0ed0a31f65	DDL-Vorgang ausführen
+执行_prune_6b4f1926c7	prune ausführen?
+执行_trim_de3f191099	TRIM ausführen
+执行一次_relay_状态热备份_sqlite_8bc4bec089	Einmaliges Hot-Backup des Relay-Status (SQLite-Online-Backup, ohne den Relayedienst zu unterbrechen).
+执行中_1f425b6bf0	Wird ausgeführt
+执行修复_18ad6adf19	Reparatur ausführen
+执行单元_2466ded40e	Einheit ausführen
+执行命令_bf162782f5	Befehl ausführen
+执行失败_9746cfc7d2	Ausführung fehlgeschlagen
+执行异常_f5990190d3	Ausführungsfehler
+执行拉起_24779c513a	Start ausführen
+执行清理_bebeb0649b	Bereinigung ausführen
+执行结果_1b213f405b	Ausführungsergebnis
+执行自愈_d499e88a86	Selbstheilung ausführen
+执行计划_analyze_cc0577dcef	Ausführungsplan (ANALYZE)
+执行计划_json_5d921dfd27	Ausführungsplan-JSON

@@ -1,4 +1,5 @@
 package com.servermaintance.panel.ui
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -762,7 +763,7 @@ fun SearchField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "搜索…",
+    placeholder: String = L["搜索_c85d9132a4"],
 ) {
     val fw = rememberFocusWatch()
     val focusManager = LocalFocusManager.current
@@ -816,7 +817,7 @@ fun SelectField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: String? = null,
-    placeholder: String = "请选择",
+    placeholder: String = L["请选择_382f4b5559"],
 ) {
     var expanded by remember { mutableStateOf(false) }
     val open = expanded
@@ -1081,7 +1082,7 @@ fun <T> DataTable(
     rows: List<T>,
     modifier: Modifier = Modifier,
     rowKey: (T) -> Any = { rows.indexOf(it) },
-    emptyText: String = "暂无数据",
+    emptyText: String = L["暂无数据_b246458f20"],
     onRowClick: ((T) -> Unit)? = null,
     maxRows: Int = 0,
 ) {
@@ -1266,7 +1267,7 @@ internal fun Spinner(size: Dp = 16.dp, color: Color = AccentState.current.primar
 }
 
 @Composable
-fun LoadingState(text: String = "加载中…", modifier: Modifier = Modifier) {
+fun LoadingState(text: String = L["common.loading"], modifier: Modifier = Modifier) {
     Row(
         modifier.padding(horizontal = 16.dp, vertical = 22.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -1342,7 +1343,7 @@ fun ErrorState(
         if (onRetry != null) {
             Spacer(Modifier.height(10.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                GhostBtn("重试", onClick = onRetry, icon = "refresh")
+                GhostBtn(text = L["重试_e2d53a6d3a"], onClick = onRetry, icon = "refresh")
             }
         }
     }

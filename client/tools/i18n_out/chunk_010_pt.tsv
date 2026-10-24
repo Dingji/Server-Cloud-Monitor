@@ -1,0 +1,120 @@
+存在风险_34748d1f0d	Em risco
+存放位置_182f3cab1b	Local de armazenamento
+孤立依赖清理_3088424930	Limpeza de dependências órfãs
+安全升级_只做向上兼容的升级_不卸载其它包_841c2b3607	A "atualização segura" faz apenas atualizações retrocompatíveis e não remove outros pacotes; a "atualização completa" pode remover pacotes em conflito e é mais arriscada — uma pré-visualização das alterações é exibida antes da execução.
+安全基线巡检_cb83870cad	Inspeção de linha de base de segurança
+安全更新_d02224fdc8	Atualização de segurança
+安全管理_27a60a5c86	Gerenciamento de segurança
+安装_087db63ab1	Instalar
+安装_0_340ee35e2a	⬇ Instalar {0}
+安装_0_710b3a3d30	Instalar {0}
+安装_certbot_b472f9adf8	Instalar certbot
+安装_docker_f131e1cdff	Instalar Docker
+安装_engine_name_d4fe147ff5	⬇ Instalar ${engine.name}
+安装_fail2ban_38aa818b73	Instalar Fail2ban
+安装_label_0399b4e4de	Instalar $label
+安装_t_label_36d02c935b	Instalar ${t.label}
+安装中_b2c6913616	Instalando…
+安装大小_85c8cf1c58	Tamanho da instalação
+安装并启动_d20e3e1fda	Instalar e iniciar
+安装引擎_e5276cf0a5	＋ Instalar mecanismo
+安装扩展_354d80ae67	Instalar extensão
+安装约需_1_3_分钟_取决于网络_完成后此页_75a815fda1	A instalação leva de 1 a 3 minutos (dependendo da rede); esta página ficará disponível automaticamente ao término.
+安装配置_02517d8d8f	Configuração de instalação
+完成_33246f6a5e	Concluído
+完成_e982a7473c	 Concluído
+完成进度_722d50c7b4	Progresso
+完整_6e6e581133	Completa
+完整_结构_数据_6aebce144a	Completa (estrutura + dados)
+完整升级_05b1a3ac5b	Atualização completa
+完整升级_含移除_3bed74b0f0	Atualização completa (com remoção)
+完整升级可能移除与新版本冲突的软件包_请仔细核对_50ce8ea44d	A atualização completa pode remover pacotes que entrem em conflito com a nova versão; verifique cuidadosamente a pré-visualização.
+完整备份_json_cbe231e819	Backup completo JSON
+完整性检查_495199337a	Verificação de integridade
+完整日志_4a1b1f9673	Log completo:
+完整说明与依赖列表_0cf5ceed2a	Descrição completa e lista de dependências
+定时任务_c97ffbda2e	Tarefas agendadas
+定时器_70cbf60aeb	Temporizador
+定时维护计划_8560c2fd47	Plano de manutenção agendado
+定时采集运行中_4b7159cb16	Coleta agendada em execução
+实例用户_6be929149e	Usuário da instância
+实时_每_2_秒刷新_c4c5d531ed	Tempo real · atualização a cada 2 s
+实时刷新_556a3ffff3	Atualização em tempo real
+实时活动_最近请求_d2ee85344c	Atividade em tempo real (solicitações recentes)
+实时流量_近_60_秒_1fa853d958	Tráfego em tempo real (últimos 60 s)
+实时磁盘_i_o_193640917c	E/S de disco em tempo real
+实时资源占用_c8bda73ba6	Uso de recursos em tempo real
+实时跟随_8e180d6871	Acompanhamento em tempo real
+实时跟随经_websocket_订阅_最大保留_5bfbd4a38a	Acompanhamento em tempo real via assinatura WebSocket, máximo de ${Fmt.count(MAX_LINES)} linhas retidas;
+实时跟随经_websocket_订阅_最大保留_bb1ab8a92b	Acompanhamento em tempo real via assinatura WebSocket, máximo de {0} linhas retidas;
+实时连接_2e937edd01	Conexões em tempo real
+审计不可用_5ba8cd56a3	Auditoria indisponível
+审计日志_7666cd4323	Log de auditoria
+审计服务_17e6a7950d	Serviço de auditoria
+审计规则_bc6a3d7a3f	Regras de auditoria
+客户端4xx_499dc47a60	Cliente 4xx
+客户端_09afbbcc9b	Cliente
+客户端_4xx_d966c5f146	Cliente 4xx
+客户端与会话_fd8ce68403	Clientes e sessões
+客户端数_4821cbdb7b	Número de clientes
+客户端软件_afcacf7cb8	Software do cliente
+客户端软件构成_aaec3233f0	Composição do software do cliente
+客户端错误_不计入_71aa68fd1c	Erros de cliente (não contabilizados)
+家目录_f273ea575f	Diretório pessoal
+容器_d179a3480d	Contêiner
+容器列表_6ee925b478	Lista de contêineres
+容器日志_0_176db5f47c	Log do contêiner {0}
+容器日志_2a0f3b0fac	Logs de contêineres …
+容器日志_id_take_12_faa2c2b1bc	Log do contêiner ${id.take(12)}
+容量趋势_近_7_天_d77b3aebd5	Tendência de capacidade (últimos 7 dias)
+密码_c839a8ff17	Senha
+密码_授权码_d2c3e3135f	Senha / código de autorização
+密码_无_e55f2504ae	Senha (nenhuma)
+密码_留空_不改_d56e21cbcb	Senha (deixar em branco = sem alteração)
+密码_留空不变_5e4f64d946	Senha (inalterada se em branco)
+密码_留空保持不变_6d05826ea3	Senha (deixar em branco para manter)
+密码_至少_8_位_692b63ec1c	Senha (mín. 8 caracteres)
+密码修改成功_f0e65f05ad	Senha alterada com sucesso
+密码已更新_eb5719cf68	Senha atualizada
+密码更新后其它设备的登录将会失效_9b16aec699	Após a atualização da senha, os logins em outros dispositivos serão invalidados.
+密码有效期_如_2030_01_01_空_不变_4b3bee9f12	Validade da senha (ex.: 2030-01-01, em branco = inalterada)
+密码至少需要_8_位_b6a69b6e34	A senha precisa ter pelo menos 8 caracteres
+密钥_0_可用_1_426c7d2a6e	Chave {0} · disponível {1}
+密钥_0d1965e139	Chave
+密钥池_6ab58f884e	Pool de chaves
+对_0_张表执行_1_004762155e	Executar {1} em {0} tabelas?
+对_0_执行_1_0df7a13871	Executar {1} em {0}?
+对_selected_size_张表执行_209354c5c6	Executar $act em ${selected.size} tabelas?
+对_st_table_执行_label_a6b8052291	Executar $label em ${st.table}?
+对_target_执行_action_d5673f5e8f	Executar $action em $target?
+对_unit_执行_systemctl_ac_ba3c9e7d90	Executar systemctl $act em $unit?
+对外端口_fe3302e0a7	Porta externa
+对容器_0_执行_docker_restar_c942faf88e	Executar docker restart no contêiner {0}?
+对容器_0_执行_docker_start_a6406fd5d5	Executar docker start no contêiner {0}?
+对容器_0_执行_docker_stop_02eec7a6e4	Executar docker stop no contêiner {0}?
+对容器_id_take_12_执行_do_558a792531	Executar docker start no contêiner ${id.take(12)}?
+对容器_id_take_12_执行_do_724af26fed	Executar docker restart no contêiner ${id.take(12)}?
+对容器_id_take_12_执行_do_c78695043c	Executar docker stop no contêiner ${id.take(12)}?
+对所有支持的挂载点执行_fstrim_优化_ss_82318eb7af	Executar fstrim em todos os pontos de montagem compatíveis para otimizar SSDs
+对方邮箱_需已注册并验证_a4de8e4a8f	E-mail do destinatário (deve estar registrado e verificado)
+对端_58e5dbe70d	Extremidade remota
+对象_539cb3b0a6	Objeto
+对象数量_7a08198ac2	Quantidade de objetos
+对象浏览器_162b30cd08	Navegador de objetos
+导入_csv_eee6da0840	Importar CSV
+导入_csv_到_0_230452d08d	Importar CSV para {0}
+导入_csv_到_st_table_ffcc6cb46a	Importar CSV para ${st.table}
+导入_notebox_导出的_json_备份文_9e7560aff1	Importa um arquivo de backup .json exportado do NoteBox, contendo todas as notas e tarefas.
+导入_sql_文件_用于恢复_3313acce03	Importar arquivo SQL (para restauração)
+导入_导出_995e254175	Importar / Exportar
+导入中_de56a0bf71	Importando…
+导入中_f0a7986c54	Importando
+导入中_请稍候_6259769fcb	Importando, aguarde…
+导入失败_aeec838ca4	Falha na importação:
+导入待办_1a771a17b3	Importar tarefas
+导入方式_0eac17d654	Método de importação
+导入笔记_ef0dc85571	Importar notas
+导出_0_31a404b60a	Exportar {0}
+导出_0_为_sql_压缩包_078b43a5d3	Exportar {0} como arquivo SQL compactado?
+导出_188896795f	Exportar
+导出_db_为_sql_压缩包_28584b981a	Exportar $db como arquivo SQL compactado?

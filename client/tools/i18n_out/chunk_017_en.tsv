@@ -1,0 +1,120 @@
+更新于_fmt_clock_每_8e4ddc9657	● Updated ${Fmt.clock()} · every 2 seconds
+更新内容_e86c7cc37a	Update content
+更新失败_0_97268fd8ec	● Update failed: {0}
+更新失败_err_b59b06121d	● Update failed: $err
+更新密码_2f3ed4c7a4	Update password
+更新文档_json_可用_set_a5bcf4c3cb	Update document (JSON, use $set)
+更新索引_b2ee89ac6d	Update index
+更新软件源索引_ab8e1a3dc1	Update software source index
+最低_0_最高_1_当前_2_70336dd1a0	Min {0} · Max {1} · Current {2}
+最低_trend_minof_it_sc_713d6859d7	Min ${trend.minOf { it.score }} · Max ${trend.maxOf { it.score }} · Current ${trend.last().score}
+最多_0_次_1_分钟_c14665e95f	Max {0} times/{1} min
+最多_e_maxrestarts_次_1b0cf4f09e	Max ${e.maxRestarts} times/${e.windowMin} min
+最大_0_ms_均值_1_6ebc8829c9	Max {0} ms · Avg {1}
+最大_0_请求_1_635480efa0	Max {0} · Requests {1}
+最大上下文_dc3be3e642	Max context
+最大消息_3da5316f2b	Max message
+最小尺寸_344803e80b	Minimum size
+最慢_df0ee5c8c7	Slowest
+最近_0_条请求中_22b35b84eb	Of the last {0} requests
+最近_1_小时_92e6814bba	Last hour
+最近_24_小时_eb9f889d6a	Last 24 hours
+最近_6_小时_5a6f35c4fd	Last 6 hours
+最近_7_天_2a0a052cea	Last 7 days
+最近_8c73d90eca	Recent
+最近一次状态备份_e5c455f5bf	Last state backup
+最近上下文_7c180451cc	Recent context
+最近切换记录_4e33862ed5	Recent switch history
+最近发送_2187d92802	Last sent
+最近告警_fbce4cc6ee	Recent alerts
+最近在看板下方_144f8e8c1f	Recently below the dashboard
+最近在线_714e30582a	Recently online
+最近失败_ec2121fd63	Recent failures
+最近封禁_0_073f233150	Recent block: {0}
+最近成功_35b15d3f3f	Last success
+最近按小时的_429_拦截_cd3fc0518c	Recent 429 blocks by hour
+最近更新_80920cd667	Last updated
+最近登录与失败尝试_d575d4606c	Recent logins and failed attempts
+最近结果_d3d6d2384b	Recent results
+最近采集_014935526c	Last collected
+最近错误_5e8913a82d	Recent errors
+有效请求_9f9f7aec83	Valid requests
+有效请求中未拿到响应的次数_b0eba0d9ff	Count of valid requests without response
+有新版本_f329c95a7b	(new version available)
+有问题_ec02351ea3	Problem
+服务_0_运行_46e63016be	Service {0} running
+服务不可达_http_0_6aaaef3706	Service unreachable (HTTP {0})
+服务不可达_http_r_status_v_a9b111f972	Service unreachable (HTTP ${r.status.value})
+服务单元_it_安装_启动都是显式操作_默_902797720d	Service unit $it · Install and start are explicit actions; it will not start automatically by default.
+服务可用性_0_2496bf90f9	Service availability {0}% · 
+服务可用性_9f4b8967df	Service availability
+服务响应异常_0_2671b6c611	Service response error: {0}
+服务响应异常_text_take_200_0907dcad35	Service response error: ${text.take(200)}
+服务器_30d94cb3b9	Server
+服务器上的私钥路径_eb07b84f1f	Path to private key on the server
+服务器与中继的实时运行状态总览_60878a881c	Real-time running status overview of servers and relays
+服务器信息_d2e0457697	Server information
+服务器地址已保存_9e2bd5bc83	Server address saved
+服务器地址未配置_18f3debc5d	Server address not configured
+服务器实时监控与配置控制台_d1c6f4d56b	Real-time server monitoring and configuration console
+服务器文件打包归档与下载_含_relay_每日状_268e49a95e	Package, archive and download server files, including Relay daily state backups
+服务器文件系统操作_浏览_编辑_上传下载_权限_66f94fd459	Server file system operations: browse, edit, upload/download, permissions, archiving, recycle bin (deletions kept for 30 days)
+服务器时间_e76ff2af0c	Server time
+服务器未安装_docker_容器引擎_84468c43e1	Docker container engine not installed on the server.
+服务器未返回令牌_871c697da3	Server returned no token
+服务器未返回会话_cookie_9dc7f14670	Server returned no session Cookie
+服务器监控与配置面板客户端_5595e541d9	Server monitoring and configuration panel client
+服务器连接_20ba55ffe2	Server connection
+服务器连接地址_36039bdf94	Server connection address
+服务器连接配置_1add197bea	Server connection settings
+服务操作_143b5c61b3	Service actions
+服务看护_0_项不可用_c20acfd5d7	Service watchdog: {0} unavailable
+服务看护_1ab82a488c	Service watchdog
+服务看护_ws_down_项不可用_d805345731	Service watchdog: ${ws.down} unavailable
+服务端已阻止该操作_继续执行可能导致系统无法_265cce6378	\n\nThe server has blocked this operation. Continuing may prevent the system from starting, drop the SSH connection, or break the panel.
+服务端日志目录_037c3d3cda	Server log directory
+期望状态码_4bbf3ddcd6	Expected status code
+未上报_af807e32e8	Not reported
+未发现源文件_371b4f4aa9	Source file not found
+未发送过_74a0c48b62	Never sent
+未启用_8bb38ef00c	Disabled
+未命中_786d17cf29	Miss
+未命中_套餐_上游原因_402_额度耗尽_e0a313bdcc	· Misses (plan/upstream causes): 402 quota exhausted, 403 permission or key invalid, 429 rate limited, 5xx upstream failure, 0 no response — only these count as "the plan didn't do its job".
+未命中_套餐原因_5492c99555	Miss (plan cause)
+未命名笔记_044c507dcb	Untitled note
+未安排_0bf49114ad	Not scheduled
+未安装_6f7dc945ae	Not installed
+未安装_未找到_87cb306b77	Not installed|Not found
+未完成_0_已完成_1_38023d83b8	Incomplete {0} · Completed {1}
+未完成_b61b08aec3	Incomplete
+未完成_nbcountup_pending_54ccaeda4f	Incomplete ${nbCountUp(pending)} · Completed ${nbCountUp(done)}
+未定价_5b0ac749b1	No price set
+未归类_9af2c7babc	Uncategorized
+未成功_dc36695631	Unsuccessful
+未找到匹配_a6a3fa1f09	No match found
+未找到匹配的软件包_f031dea558	No matching package found
+未找到相关_timer_e957cd4c26	Related timer not found
+未探测_f0c3554820	Not probed
+未检测到任何可用的数据库引擎_可在此一键安装常见_38b395d313	No usable database engine detected. You can install common databases here in one click (refresh the page after installing).
+未生效_2ed178b607	Not in effect
+未登录_e8041a8c93	Not logged in
+未登录或会话过期_ae00c4ba08	Not logged in or session expired
+未知_d9c32a4c3d	Unknown
+未知目录_9fdfa31d5a	(unknown directory)
+未知错误_5f76edc5de	Unknown error
+未能获取服务器数据目录_请刷新页面后重试_6a4049502d	Could not get the server data directory, please refresh the page and try again
+未覆盖_e3b1d53edc	Not overridden
+未设置静默窗口_备份_发布等例行操作期间可用它屏_12f1e16155	No quiet window set: use it to mute alerts during routine operations such as backups and releases
+未读取到_var_log_内容_f715aba45e	No content read from /var/log
+未运行_b2ba9634d9	Not running
+未运行_econnrefused_连接失败_无法_b31ae4bd85	Not running|ECONNREFUSED|Connection failed|Cannot connect|No such file|does not exist.*running|not found
+未选择文件_dbb4430dc0	No file selected
+未配置_63595e95b7	Not configured
+未配置单价_40ab5e3e97	Unit price not configured
+未配置限流区域_bb373a4d06	Rate-limit regions not configured
+未采集_72a70d0e29	Not collected
+未防护_ba54f04f59	Not protected
+本周_e16e8248b1	This week
+本周_token_23360d9af4	Tokens this week
+本周请求_441334771a	Requests this week
+本地_e8666c377c	Local

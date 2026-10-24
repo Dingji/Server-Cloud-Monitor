@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -89,18 +92,18 @@ import kotlinx.serialization.json.doubleOrNull
  *           docs/findings/extra-api/pkg_*.json、docs/api/page-packages.md
  * ==================================================================== */
 
-private val ACTION_TITLE = mapOf(
-    "install" to "安装", "remove" to "卸载", "purge" to "彻底卸载",
-    "upgrade" to "升级", "full-upgrade" to "完整升级", "autoremove" to "清理孤立依赖",
-    "hold" to "锁定版本", "unhold" to "解除锁定", "update" to "更新软件源索引", "clean" to "清理缓存",
+private val ACTION_TITLE  get() = mapOf(
+    "install" to L["安装_087db63ab1"], "remove" to L["卸载_200cf1550d"], "purge" to L["彻底卸载_33072f5e11"],
+    "upgrade" to L["升级_2e8e70958c"], "full-upgrade" to L["完整升级_05b1a3ac5b"], "autoremove" to L["清理孤立依赖_1a60a375a7"],
+    "hold" to L["锁定版本_fd3722179b"], "unhold" to L["解除锁定_eafaffdf18"], "update" to L["更新软件源索引_ab8e1a3dc1"], "clean" to L["清理缓存_a2cf5ddefb"],
 )
 private val RISKY = setOf("remove", "purge", "autoremove", "full-upgrade")
 
 /** core.js JOB_STEP_LABEL（进度阶段条中文标签）。 */
-private val JOB_STEP_LABEL = mapOf(
-    "queued" to "排队中", "resolve" to "解析依赖", "plan" to "制定方案", "download" to "下载软件包",
-    "unpack" to "解包", "configure" to "安装配置", "remove" to "移除软件包", "update" to "更新索引",
-    "finish" to "收尾", "done" to "完成", "failed" to "失败",
+private val JOB_STEP_LABEL  get() = mapOf(
+    "queued" to L["排队中_4dcbbcfa61"], "resolve" to L["解析依赖_834fe27e03"], "plan" to L["制定方案_fabaee1920"], "download" to L["下载软件包_8568baf78c"],
+    "unpack" to L["解包_8684a68cf4"], "configure" to L["安装配置_02517d8d8f"], "remove" to L["移除软件包_cba9cf8ecf"], "update" to L["更新索引_b2ee89ac6d"],
+    "finish" to L["收尾_7c151dbd71"], "done" to L["完成_33246f6a5e"], "failed" to L["失败_3e3c8068bb"],
 )
 
 /** 预览汇总行：`N upgraded, N newly installed, N to remove`。 */
@@ -226,7 +229,7 @@ fun PackagesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            if (sum == null) loadErr = e.message ?: "请求失败"
+            if (sum == null) loadErr = e.message ?: L["请求失败_8fdc4112a4"]
         }
     }
 
@@ -246,7 +249,7 @@ fun PackagesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            searchErr = e.message ?: "搜索失败"
+            searchErr = e.message ?: L["搜索失败_b9786d51c3"]
         } finally {
             searching = false
         }
@@ -278,12 +281,12 @@ fun PackagesPage() {
                 }
                 fails = 0
                 if (v == null) {
-                    throw IllegalStateException("任务状态已丢失（服务端可能重启过），请重新发起该操作")
+                    throw IllegalStateException(L["任务状态已丢失_服务端可能重启过_请重新发起该_3a4e99bf96"])
                 }
                 jobView = v
                 when (v.str("state")) {
                     "done" -> return v
-                    "failed" -> throw IllegalStateException(v.str("error").ifEmpty { "任务执行失败" })
+                    "failed" -> throw IllegalStateException(v.str("error").ifEmpty { L["任务执行失败_97312db4c3"] })
                 }
                 delay(650)
             }
@@ -295,12 +298,12 @@ fun PackagesPage() {
     /* ---------------- 统一变更入口（JS doAct） ---------------- */
     suspend fun doAct(action: String, names: List<String>, force: Boolean = false) {
         if (pkgBusy) {
-            AppState.toast("已有 apt 任务在执行，请等待完成", ToastKind.Warn)
+            AppState.toast(tr("已有_apt_任务在执行_请等待完成_52d32c3717"), ToastKind.Warn)
             return
         }
         pkgBusy = true
         val title = ACTION_TITLE[action] ?: action
-        val t = if (names.size > 1) "$title · ${names.size} 个包" else title
+        val t = if (names.size > 1) trf("0_1_个包_108817bcfa", title, names.size) else title
         var retry = false
         try {
             try {
@@ -313,32 +316,32 @@ fun PackagesPage() {
                     ),
                 )
                 val id = start.str("id")
-                if (id.isEmpty()) throw IllegalStateException("任务启动失败：服务端未返回任务 id")
+                if (id.isEmpty()) throw IllegalStateException(L["任务启动失败_服务端未返回任务_id_500799f8a2"])
                 val r = watchJob(id, t)
                 val secsEl = r.obj("result")?.key("seconds") ?: r.key("seconds")
                 val secs = (secsEl as? JsonPrimitive)?.doubleOrNull
                 AppState.toast(
-                    title + " 完成" + (if (secs != null) "（${secs.toInt()}s）" else ""),
+                    title + tr("完成_e982a7473c") + (if (secs != null) "（${secs.toInt()}s）" else ""),
                     ToastKind.Ok, 4000,
                 )
-                Modal.output(title + " 结果", r.str("output"))
+                Modal.output(title + L["结果_268f3e1aef"], r.str("output"))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
-                val msg = e.message ?: e::class.simpleName ?: "未知错误"
+                val msg = e.message ?: e::class.simpleName ?: L["未知错误_5f76edc5de"]
                 /* 受保护包首次被拦 → 显式强制重试（JS L86-L91、L105） */
-                if (msg.contains("受保护") && !force) {
+                if (com.servermaintance.panel.i18n.textHasI18nKey(msg, "受保护_9505edfd06") && !force) {
                     val okc = Modal.confirm(
-                        title = "该操作已被安全策略拦截",
+                        title = L["该操作已被安全策略拦截_b8ca2b42da"],
                         text = msg.substringBefore('\n') +
-                            "\n\n服务端已阻止该操作。继续执行可能导致系统无法启动、SSH 断开或面板失效。",
-                        okText = "我已知晓风险，强制执行",
+                            L["服务端已阻止该操作_继续执行可能导致系统无法_265cce6378"],
+                        okText = L["我已知晓风险_强制执行_cd4e2f773d"],
                         danger = true,
                     )
                     if (okc) retry = true
                 } else {
                     AppState.toast(msg.substringBefore('\n'), ToastKind.Err, 8000)
-                    Modal.output(title + " 失败", msg, isError = true)
+                    Modal.output(title + L["失败_01d770b029"], msg, isError = true)
                 }
             }
         } finally {
@@ -367,21 +370,21 @@ fun PackagesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            AppState.toast((e.message ?: "预览失败").substringBefore('\n'), ToastKind.Err, 7000)
+            AppState.toast((e.message ?: tr("预览失败_d285886c5b")).substringBefore('\n'), ToastKind.Err, 7000)
             return
         }
         val lines = pv.str("output").trim()
         val sb = StringBuilder()
-        if (names.isNotEmpty()) sb.appendLine(names.joinToString(", "))
+        if (names.isNotEmpty()) sb.appendLine(names.joinToString(L["s_d3bc9a378d"]))
         PLAN_RE.find(lines)?.let { m ->
-            sb.appendLine("${m.groupValues[1]} 升级 · ${m.groupValues[2]} 新装 · ${m.groupValues[3]} 移除")
+            sb.appendLine(trf("0_升级_1_新装_2_移除_f730a322df", m.groupValues[1], m.groupValues[2], m.groupValues[3]))
         }
         if (warn.isNotEmpty()) sb.appendLine(warn)
-        sb.append(lines.ifEmpty { "(无变更)" })
+        sb.append(lines.ifEmpty { L["无变更_f98b030e4c"] })
         val okc = Modal.confirm(
-            title = (ACTION_TITLE[action] ?: action) + " · 变更预览",
+            title = (ACTION_TITLE[action] ?: action) + L["变更预览_241ab41868"],
             text = sb.toString(),
-            okText = "执行",
+            okText = L["执行_28febba225"],
             danger = action in RISKY,
         )
         if (!okc) return
@@ -390,7 +393,7 @@ fun PackagesPage() {
 
     suspend fun removeFlow(names: List<String>, rdeps: List<String> = emptyList()) {
         val warn = if (rdeps.isNotEmpty()) {
-            "以下已安装包依赖它，卸载可能连带移除或导致异常：\n" + rdeps.take(14).joinToString(", ")
+            L["以下已安装包依赖它_卸载可能连带移除或导致异常_f26237adcd"] + rdeps.take(14).joinToString(", ")
         } else ""
         previewAndAct("remove", names, warn)
     }
@@ -412,7 +415,7 @@ fun PackagesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            AppState.toast(e.message ?: "加载详情失败", ToastKind.Err)
+            AppState.toast(e.message ?: tr("加载详情失败_02c28cd84c"), ToastKind.Err)
         }
     }
 
@@ -426,7 +429,7 @@ fun PackagesPage() {
             if (o != null && o.bool("active") && o.str("id").isNotEmpty()) {
                 val at = o.str("action")
                 try {
-                    watchJob(o.str("id"), (ACTION_TITLE[at] ?: at) + " · 进行中")
+                    watchJob(o.str("id"), (ACTION_TITLE[at] ?: at) + L["进行中_a9e306e247"])
                 } finally {
                     recData = null; srcReady = false; upRes = null
                     runCatching { loadSummary() }
@@ -490,7 +493,7 @@ fun PackagesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            instErr = e.message ?: "加载失败"
+            instErr = e.message ?: L["加载失败_f6b7a41e56"]
         } finally {
             instLoading = false
         }
@@ -505,7 +508,7 @@ fun PackagesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            upErr = e.message ?: "加载失败"
+            upErr = e.message ?: L["加载失败_f6b7a41e56"]
         }
     }
 
@@ -518,7 +521,7 @@ fun PackagesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            recErr = e.message ?: "加载失败"
+            recErr = e.message ?: L["加载失败_f6b7a41e56"]
         }
     }
 
@@ -531,7 +534,7 @@ fun PackagesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            srcErr = e.message ?: "加载失败"
+            srcErr = e.message ?: L["加载失败_f6b7a41e56"]
         }
         bkData = (try {
             AppState.api.get("/pkg/source-backups", 20000)
@@ -573,46 +576,46 @@ fun PackagesPage() {
                                 if (v) sel[nm] = it.bool("installed") else sel.remove(nm)
                             }
                         },
-                        label = "全选本页",
+                        label = L["全选本页_b82f2ebbd9"],
                     )
                 }
                 Spacer(Modifier.height(4.dp))
             }
             if (n == 0) {
-                Muted("勾选后可批量操作：执行前照常预览变更，过程中显示总进度条与实时日志（单次最多 500 个包，自动分批）")
+                Muted(L["勾选后可批量操作_执行前照常预览变更_过程中显示_8b4692abd7"])
                 return
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("已选 ", color = Palette.muted, fontSize = 12.sp)
+                Text(L["已选_17f3287f61"], color = Palette.muted, fontSize = 12.sp)
                 Text("$n", color = Palette.text, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                Text(" 个包", color = Palette.muted, fontSize = 12.sp)
+                Text(L["个包_7043df702a"], color = Palette.muted, fontSize = 12.sp)
                 val ins = sel.values.count { !it }
                 val rem = n - ins
                 val act: suspend (String, List<String>) -> Unit = { a, names ->
-                    if (names.isEmpty()) AppState.toast("没有可执行该操作的包", ToastKind.Warn)
-                    else if (names.size > 500) AppState.toast("一次最多 500 个包，请分批选择", ToastKind.Warn)
+                    if (names.isEmpty()) AppState.toast(tr("没有可执行该操作的包_34484f1862"), ToastKind.Warn)
+                    else if (names.size > 500) AppState.toast(tr("一次最多_500_个包_请分批选择_6bbae64fda"), ToastKind.Warn)
                     else previewAndAct(a, names)
                 }
                 if (mode == "installed") {
-                    DangerBtn(text = "批量卸载 ($n)", onClick = {
+                    DangerBtn(text = L["批量卸载_n_65d9c20918"], onClick = {
                         scope.launch { act("remove", sel.filterValues { it }.keys.toList()) }
                     })
                 } else {
                     if (ins > 0) {
-                        PrimaryBtn(text = "批量安装 ($ins)", onClick = {
+                        PrimaryBtn(text = L["批量安装_ins_d21155177e"], onClick = {
                             scope.launch { act("install", sel.filterValues { !it }.keys.toList()) }
                         })
                     }
                     if (rem > 0) {
-                        DangerBtn(text = "批量卸载 ($rem)", onClick = {
+                        DangerBtn(text = L["批量卸载_rem_3ccf4b0014"], onClick = {
                             scope.launch { act("remove", sel.filterValues { it }.keys.toList()) }
                         })
                     }
                 }
-                GhostBtn(text = "取消选择", onClick = { sel.clear() })
+                GhostBtn(text = L["取消选择_f02e943954"], onClick = { sel.clear() })
             }
         }
     }
@@ -623,8 +626,8 @@ fun PackagesPage() {
         val d = detail ?: return
         var expanded by remember(d) { mutableStateOf(false) }
         val prot = when (d.str("protected")) {
-            "critical" -> "系统关键组件"
-            "protected" -> "面板依赖"
+            "critical" -> L["系统关键组件_434e1cae8b"]
+            "protected" -> L["面板依赖_10de20077c"]
             else -> ""
         }
         PanelCard(
@@ -632,35 +635,35 @@ fun PackagesPage() {
             collapsible = false,
             right = {
                 if (d.bool("installed")) {
-                    GhostBtn(text = "锁定版本", onClick = { scope.launch { doAct("hold", listOf(d.str("name"))) } })
-                    GhostBtn(text = "解除锁定", onClick = { scope.launch { doAct("unhold", listOf(d.str("name"))) } })
-                    DangerBtn(text = "卸载", onClick = {
+                    GhostBtn(text = L["锁定版本_fd3722179b"], onClick = { scope.launch { doAct("hold", listOf(d.str("name"))) } })
+                    GhostBtn(text = L["解除锁定_eafaffdf18"], onClick = { scope.launch { doAct("unhold", listOf(d.str("name"))) } })
+                    DangerBtn(text = L["卸载_200cf1550d"], onClick = {
                         scope.launch { removeFlow(listOf(d.str("name")), d.arr("reverse_deps").mapNotNull { (it as? JsonPrimitive)?.content }) }
                     })
                 } else {
-                    PrimaryBtn(text = "安装", onClick = { scope.launch { previewAndAct("install", listOf(d.str("name"))) } })
+                    PrimaryBtn(text = L["安装_087db63ab1"], onClick = { scope.launch { previewAndAct("install", listOf(d.str("name"))) } })
                 }
-                GhostBtn(text = "关闭", onClick = { detail = null })
+                GhostBtn(text = L["关闭_6c14bd7f6f"], onClick = { detail = null })
             },
         ) {
             if (prot.isNotEmpty()) {
-                LevelBadge(prot, if (prot == "系统关键组件") Level.Bad else Level.Warn)
+                LevelBadge(prot, if (prot == L["系统关键组件_434e1cae8b"]) Level.Bad else Level.Warn)
                 Spacer(Modifier.height(8.dp))
             }
             GridLayout(columns = 2, spacing = 14.dp) {
                 Column {
-                    KvRow("版本", d.str("version").ifEmpty { "-" }, mono = true)
+                    KvRow(L["版本_989d1affa0"], d.str("version").ifEmpty { "-" }, mono = true)
                     KvRow(
-                        "候选",
-                        d.str("candidate").ifEmpty { "-" } + if (d.bool("pinned")) "（已固定）" else "",
+                        L["候选_0461e4db19"],
+                        d.str("candidate").ifEmpty { "-" } + if (d.bool("pinned")) L["已固定_46f9ebb3cb"] else "",
                         mono = true,
                         tint = if (d.bool("pinned")) Palette.info else null,
                     )
                     KvRow(
-                        "已装版本",
+                        L["已装版本_9bdb334d0c"],
                         when {
-                            !d.bool("installed") -> "未安装"
-                            d.bool("upgradable") -> d.str("installed_version") + "（有新版本）"
+                            !d.bool("installed") -> L["未安装_6f7dc945ae"]
+                            d.bool("upgradable") -> d.str("installed_version") + L["有新版本_f329c95a7b"]
                             else -> d.str("installed_version")
                         },
                         mono = true,
@@ -670,35 +673,35 @@ fun PackagesPage() {
                             else -> null
                         },
                     )
-                    KvRow("分组", d.str("section").ifEmpty { "-" })
+                    KvRow(L["分组_97d8a6c05b"], d.str("section").ifEmpty { "-" })
                     KvRow(
-                        "安装大小",
-                        d.str("size") + if (d.int("file_count") > 0) " · ${d.int("file_count")} 个文件" else "",
+                        L["安装大小_85c8cf1c58"],
+                        d.str("size") + if (d.int("file_count") > 0) trf("0_个文件_81d82139e8", d.int("file_count")) else "",
                     )
-                    KvRow("主页", d.str("homepage").ifEmpty { "-" })
+                    KvRow(L["主页_25c408b30e"], d.str("homepage").ifEmpty { "-" })
                 }
                 Column {
-                    Muted("摘要")
+                    Muted(L["摘要_46d4c1b4e4"])
                     Spacer(Modifier.height(3.dp))
                     Text(d.str("summary").ifEmpty { "-" }, color = Palette.text, fontSize = 12.sp, lineHeight = 19.sp)
                     Spacer(Modifier.height(8.dp))
                     val depN = d.arr("depends").size
                     val recN = d.arr("recommends").size
                     val revN = d.arr("reverse_deps").size
-                    Muted("依赖 $depN · 推荐依赖 $recN · 反向依赖 $revN")
+                    Muted(trf("依赖_0_推荐依赖_1_反向依赖_2507ad6a45", depN, recN, revN))
                     if (revN > 0) {
                         val revs = d.arr("reverse_deps").mapNotNull { (it as? JsonPrimitive)?.content }
-                        Muted("被依赖：" + revs.take(10).joinToString(", ") + if (revN > 10) " …" else "")
+                        Muted(L["被依赖_45c402e800"] + revs.take(10).joinToString(L["s_d3bc9a378d"]) + if (revN > 10) L["s_978ed47b35"] else "")
                     }
                     Spacer(Modifier.height(6.dp))
-                    GhostBtn(text = if (expanded) "收起完整说明" else "完整说明与依赖列表", onClick = { expanded = !expanded })
+                    GhostBtn(text = if (expanded) L["收起完整说明_fedbce873b"] else L["完整说明与依赖列表_0cf5ceed2a"], onClick = { expanded = !expanded })
                     if (expanded) {
                         Spacer(Modifier.height(6.dp))
                         PreBox(
                             d.str("description") +
-                                "\n\n--- 依赖 ---\n" + (d.arr("depends").mapNotNull { (it as? JsonPrimitive)?.content }
+                                L["依赖_2ebf56c207"] + (d.arr("depends").mapNotNull { (it as? JsonPrimitive)?.content }
                                 .joinToString("\n").ifEmpty { "-" }) +
-                                "\n\n--- 推荐 ---\n" + (d.arr("recommends").mapNotNull { (it as? JsonPrimitive)?.content }
+                                L["推荐_e8fcb9bb63"] + (d.arr("recommends").mapNotNull { (it as? JsonPrimitive)?.content }
                                 .take(30).joinToString("\n").ifEmpty { "-" }),
                             maxHeight = 280.dp,
                         )
@@ -711,7 +714,7 @@ fun PackagesPage() {
     /* ---------------- 搜索安装页签 ---------------- */
     @Composable
     fun SearchTab() {
-        PanelCard(title = "搜索软件包") {
+        PanelCard(title = L["搜索软件包_a162c7cf8d"]) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -721,56 +724,56 @@ fun PackagesPage() {
                     value = q,
                     onValueChange = { q = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = "搜索软件包：名称或描述，如 nginx / htop / python3",
+                    placeholder = L["搜索软件包_名称或描述_如_nginx_ht_320fde8b40"],
                 )
-                val options = listOf("全部源（全局搜索）") + srcList.map { srcDisplay(it.uri) }
+                val options = listOf(L["全部源_全局搜索_252f184452"]) + srcList.map { srcDisplay(it.uri) }
                 SelectField(
-                    value = if (srcUri.isEmpty()) "全部源（全局搜索）" else srcList.firstOrNull { it.uri == srcUri }?.let { srcDisplay(it.uri) } ?: "全部源（全局搜索）",
+                    value = if (srcUri.isEmpty()) L["全部源_全局搜索_252f184452"] else srcList.firstOrNull { it.uri == srcUri }?.let { srcDisplay(it.uri) } ?: L["全部源_全局搜索_252f184452"],
                     options = options,
                     onValueChange = { v ->
-                        srcUri = if (v == "全部源（全局搜索）") "" else srcList.firstOrNull { srcDisplay(it.uri) == v }?.uri ?: ""
+                        srcUri = if (v == L["全部源_全局搜索_252f184452"]) "" else srcList.firstOrNull { srcDisplay(it.uri) == v }?.uri ?: ""
                     },
                     modifier = Modifier.width(280.dp),
                 )
-                PrimaryBtn(text = "搜索", icon = "search", onClick = { scope.launch { doSearchNow() } })
+                PrimaryBtn(text = L["搜索_f04090805c"], icon = "search", onClick = { scope.launch { doSearchNow() } })
             }
             Spacer(Modifier.height(8.dp))
             if (srcUri.isEmpty()) {
-                Muted("搜索范围：全部已启用源（共 ${srcList.size} 个源），按名称与描述匹配。到「软件源」页可切换国内镜像。")
+                Muted(trf("搜索范围_全部已启用源_共_0_个源_按名_b786d5dc17", srcList.size))
             } else {
                 val one = srcList.firstOrNull { it.uri == srcUri }
                 Muted(
-                    "仅搜索源 $srcUri" +
+                    trf("仅搜索源_0_843fdd9250", srcUri) +
                         (one?.suites?.takeIf { it.isNotEmpty() }?.let { "（${it.joinToString(" ")}）" } ?: "") +
-                        " 的软件包。若结果为空，请到「软件源」页更新该源索引。",
+                        L["的软件包_若结果为空_请到_软件源_页更新该源_8fb011f496"],
                 )
             }
         }
 
         when {
-            q.isBlank() -> PanelCard(title = "开始搜索", collapsible = false) {
-                Muted("输入关键词查找软件包，或指定某个源后仅在该源内搜索。")
+            q.isBlank() -> PanelCard(title = L["开始搜索_8fdc065eda"], collapsible = false) {
+                Muted(L["输入关键词查找软件包_或指定某个源后仅在该源内搜_f4777e948a"])
             }
             searching && searchRes == null -> LoadingState()
             searchErr != null && searchRes == null -> ErrorState(message = searchErr!!, onRetry = {
                 scope.launch { doSearchNow() }
             })
-            searchRes == null -> EmptyState("暂无搜索结果")
+            searchRes == null -> EmptyState(L["暂无搜索结果_8f8274c754"])
             else -> {
                 val d = searchRes ?: return
                 val total = d.int("total")
                 if (total == 0) {
-                    PanelCard(title = "搜索结果 (0)", collapsible = false) {
-                        Muted("${if (srcUri.isNotEmpty()) "该源中" else ""}未找到与 “$q” 匹配的软件包。")
+                    PanelCard(title = L["搜索结果_0_99e3cf5dae"], collapsible = false) {
+                        Muted(trf("0_未找到与_1_匹配的软件包_191b61f1fa", if (srcUri.isNotEmpty()) L["该源中_2d239ff06c"] else "", q))
                     }
                     return
                 }
                 val scanned = d.int("scanned_files")
                 val title = buildString {
-                    append("搜索结果 ($total)")
-                    if (srcUri.isNotEmpty()) append(" · 指定源")
-                    if (scanned > 0) append(" · 已扫描 $scanned 个索引文件")
-                    if (d.bool("truncated")) append(" · 已截断")
+                    append(L["搜索结果_total_71fe2c69d1"])
+                    if (srcUri.isNotEmpty()) append(L["指定源_c1701e5ea0"])
+                    if (scanned > 0) append(trf("已扫描_0_个索引文件_9909c34fb8", scanned))
+                    if (d.bool("truncated")) append(L["已截断_61c54972d5"])
                 }
                 val rows = d.arr("results").filterIsInstance<JsonObject>()
                 PanelCard(title = title) {
@@ -787,33 +790,33 @@ fun PackagesPage() {
                                     },
                                 )
                             },
-                            TableCol<JsonObject>("包名", weight = 1.5f, mono = true) { Mono12(it.str("name")) },
-                            TableCol<JsonObject>("版本", weight = 1.2f, mono = true) {
+                            TableCol<JsonObject>(L["包名_03c2d07a24"], weight = 1.5f, mono = true) { Mono12(it.str("name")) },
+                            TableCol<JsonObject>(L["版本_989d1affa0"], weight = 1.2f, mono = true) {
                                 Mono12(it.str("version").ifEmpty { "-" }, color = Palette.muted)
                             },
-                            TableCol<JsonObject>("描述", weight = 2.4f) {
+                            TableCol<JsonObject>(L["描述_412f54dc38"], weight = 2.4f) {
                                 Text(it.str("description").take(140), fontSize = 12.sp, color = Palette.muted)
                             },
                             if (srcUri.isEmpty()) {
-                                TableCol<JsonObject>("已占", weight = 0.8f) {
+                                TableCol<JsonObject>(L["已占_028e892f8e"], weight = 0.8f) {
                                     Text(kbRaw(it.key("size_kb")), fontSize = 12.sp)
                                 }
                             } else {
-                                TableCol<JsonObject>("分组", weight = 0.9f) {
+                                TableCol<JsonObject>(L["分组_97d8a6c05b"], weight = 0.9f) {
                                     Text(it.str("section").ifEmpty { "-" }, fontSize = 12.sp, color = Palette.muted)
                                 }
                             },
-                            TableCol<JsonObject>("状态", weight = 0.8f) {
-                                if (it.bool("installed")) LevelBadge("已安装", Level.Ok)
-                                else LevelBadge("未安装", Level.Muted)
+                            TableCol<JsonObject>(L["状态_62e951a692"], weight = 0.8f) {
+                                if (it.bool("installed")) LevelBadge(L["已安装_eb88ff57c9"], Level.Ok)
+                                else LevelBadge(L["未安装_6f7dc945ae"], Level.Muted)
                             },
-                            TableCol<JsonObject>("操作", weight = 1.6f, minWidth = 160.dp) { r ->
+                            TableCol<JsonObject>(L["操作_f3ea6d345e"], weight = 1.6f, minWidth = 160.dp) { r ->
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    GhostBtn(text = "详情", onClick = { scope.launch { showDetail(r.str("name")) } })
+                                    GhostBtn(text = L["详情_4f55ee1e68"], onClick = { scope.launch { showDetail(r.str("name")) } })
                                     if (r.bool("installed")) {
-                                        DangerBtn(text = "卸载", onClick = { scope.launch { removePkg(r.str("name")) } })
+                                        DangerBtn(text = L["卸载_200cf1550d"], onClick = { scope.launch { removePkg(r.str("name")) } })
                                     } else {
-                                        PrimaryBtn(text = "安装", onClick = {
+                                        PrimaryBtn(text = L["安装_087db63ab1"], onClick = {
                                             scope.launch { previewAndAct("install", listOf(r.str("name"))) }
                                         })
                                     }
@@ -822,7 +825,7 @@ fun PackagesPage() {
                         ),
                         rows = rows,
                         rowKey = { it.str("name") },
-                        emptyText = "未找到匹配的软件包",
+                        emptyText = L["未找到匹配的软件包_f031dea558"],
                     )
                 }
             }
@@ -832,10 +835,10 @@ fun PackagesPage() {
     /* ---------------- 已安装页签 ---------------- */
     @Composable
     fun InstalledTab() {
-        val sortLabels = listOf("按名称" to "name", "按大小" to "size_kb", "按分组" to "section", "按版本" to "version")
-        val dirLabels = listOf("升序" to "asc", "降序" to "desc")
+        val sortLabels = listOf(L["按名称_0ea96767da"] to "name", L["按大小_ee9a3bcc8e"] to "size_kb", L["按分组_008e3a2b0b"] to "section", L["按版本_f04ae00cab"] to "version")
+        val dirLabels = listOf(L["升序_c0276ec9a7"] to "asc", L["降序_a4c38f3ce2"] to "desc")
         val sections = instRes?.arr("sections").orEmpty().mapNotNull { (it as? JsonPrimitive)?.content }
-        PanelCard(title = "过滤与排序", collapsible = false) {
+        PanelCard(title = L["过滤与排序_77a35ebb60"], collapsible = false) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -845,22 +848,22 @@ fun PackagesPage() {
                     value = iq,
                     onValueChange = { iq = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = "过滤已安装包（名称或分组）",
+                    placeholder = L["过滤已安装包_名称或分组_7ecdc6b62e"],
                 )
                 SelectField(
                     value = iSection,
-                    options = listOf("全部分组") + sections,
-                    onValueChange = { iSection = if (it == "全部分组") "" else it; iPage = 0 },
+                    options = listOf(L["全部分组_eb8d23fedf"]) + sections,
+                    onValueChange = { iSection = if (it == L["全部分组_eb8d23fedf"]) "" else it; iPage = 0 },
                     modifier = Modifier.width(170.dp),
                 )
                 SelectField(
-                    value = sortLabels.firstOrNull { it.second == iSort }?.first ?: "按名称",
+                    value = sortLabels.firstOrNull { it.second == iSort }?.first ?: L["按名称_0ea96767da"],
                     options = sortLabels.map { it.first },
                     onValueChange = { v -> iSort = sortLabels.firstOrNull { it.first == v }?.second ?: "name"; iPage = 0 },
                     modifier = Modifier.width(120.dp),
                 )
                 SelectField(
-                    value = dirLabels.firstOrNull { it.second == iDir }?.first ?: "升序",
+                    value = dirLabels.firstOrNull { it.second == iDir }?.first ?: L["升序_c0276ec9a7"],
                     options = dirLabels.map { it.first },
                     onValueChange = { v -> iDir = dirLabels.firstOrNull { it.first == v }?.second ?: "asc" },
                     modifier = Modifier.width(100.dp),
@@ -870,7 +873,7 @@ fun PackagesPage() {
         when {
             instLoading && instRes == null -> LoadingState()
             instErr != null && instRes == null -> ErrorState(message = instErr!!, onRetry = { reloadTick++ })
-            instRes == null -> EmptyState("暂无数据")
+            instRes == null -> EmptyState(L["暂无数据_b246458f20"])
             else -> {
                 val d = instRes ?: return
                 val total = d.int("total")
@@ -879,10 +882,10 @@ fun PackagesPage() {
                 val pages = kotlin.math.max(1, kotlin.math.ceil(total / limit.toDouble()).toInt())
                 val rows = d.arr("rows").filterIsInstance<JsonObject>()
                 PanelCard(
-                    title = "已安装 ($total)",
+                    title = L["已安装_total_438379cb60"],
                     right = {
                         Muted(
-                            "第 ${if (total > 0) offset + 1 else 0}-${kotlin.math.min(offset + limit, total)} 条",
+                            trf("第_0_1_条_d43fae8803", if (total > 0) offset + 1 else 0, kotlin.math.min(offset + limit, total)),
                         )
                     },
                 ) {
@@ -899,45 +902,45 @@ fun PackagesPage() {
                                     },
                                 )
                             },
-                            TableCol<JsonObject>("包名", weight = 1.6f, mono = true) { Mono12(it.str("name")) },
-                            TableCol<JsonObject>("版本", weight = 1.4f, mono = true) {
+                            TableCol<JsonObject>(L["包名_03c2d07a24"], weight = 1.6f, mono = true) { Mono12(it.str("name")) },
+                            TableCol<JsonObject>(L["版本_989d1affa0"], weight = 1.4f, mono = true) {
                                 Mono12(it.str("version"), color = Palette.muted)
                             },
-                            TableCol<JsonObject>("分组", weight = 0.9f) {
+                            TableCol<JsonObject>(L["分组_97d8a6c05b"], weight = 0.9f) {
                                 Text(it.str("section"), fontSize = 12.sp, color = Palette.muted)
                             },
-                            TableCol<JsonObject>("大小", weight = 0.7f, align = androidx.compose.ui.text.style.TextAlign.End) {
+                            TableCol<JsonObject>(L["大小_fd20702c73"], weight = 0.7f, align = androidx.compose.ui.text.style.TextAlign.End) {
                                 Text(it.str("size"), fontSize = 12.sp)
                             },
-                            TableCol<JsonObject>("状态", weight = 0.7f) {
+                            TableCol<JsonObject>(L["状态_62e951a692"], weight = 0.7f) {
                                 val st = it.str("status")
-                                if (st.startsWith("ii")) LevelBadge("已装", Level.Ok)
+                                if (st.startsWith("ii")) LevelBadge(L["已装_3647e1394b"], Level.Ok)
                                 else LevelBadge(st.trim().ifEmpty { "?" }, Level.Muted)
                             },
-                            TableCol<JsonObject>("操作", weight = 1.4f, minWidth = 150.dp) { r ->
+                            TableCol<JsonObject>(L["操作_f3ea6d345e"], weight = 1.4f, minWidth = 150.dp) { r ->
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    GhostBtn(text = "详情", onClick = { scope.launch { showDetail(r.str("name")) } })
-                                    DangerBtn(text = "卸载", onClick = { scope.launch { removePkg(r.str("name")) } })
+                                    GhostBtn(text = L["详情_4f55ee1e68"], onClick = { scope.launch { showDetail(r.str("name")) } })
+                                    DangerBtn(text = L["卸载_200cf1550d"], onClick = { scope.launch { removePkg(r.str("name")) } })
                                 }
                             },
                         ),
                         rows = rows,
                         rowKey = { it.str("name") },
-                        emptyText = "没有匹配的已安装包",
+                        emptyText = L["没有匹配的已安装包_3aa1636e48"],
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        GhostBtn(text = "上一页", enabled = iPage > 0, onClick = { iPage-- })
+                        GhostBtn(text = L["上一页_b41561d807"], enabled = iPage > 0, onClick = { iPage-- })
                         Text(
                             " ${iPage + 1} / $pages ",
                             color = Palette.muted,
                             fontSize = 12.sp,
                             modifier = Modifier.padding(horizontal = 8.dp),
                         )
-                        GhostBtn(text = "下一页", enabled = iPage + 1 < pages, onClick = { iPage++ })
+                        GhostBtn(text = L["下一页_67a246a344"], enabled = iPage + 1 < pages, onClick = { iPage++ })
                     }
                 }
             }
@@ -950,44 +953,44 @@ fun PackagesPage() {
         when {
             upRes == null && upErr == null -> LoadingState()
             upErr != null && upRes == null -> ErrorState(message = upErr!!, onRetry = { reloadTick++ })
-            upRes == null -> EmptyState("暂无数据")
+            upRes == null -> EmptyState(L["暂无数据_b246458f20"])
             else -> {
                 val d = upRes ?: return
                 val total = d.int("total")
                 val rows = d.arr("rows").filterIsInstance<JsonObject>()
                 PanelCard(
-                    title = "可升级 ($total)",
+                    title = L["可升级_total_12792da8ef"],
                     right = {
-                        PrimaryBtn(text = "全部安全升级", icon = "upload", onClick = {
+                        PrimaryBtn(text = L["全部安全升级_31ec522e55"], icon = "upload", onClick = {
                             scope.launch { previewAndAct("upgrade", emptyList()) }
                         })
-                        GhostBtn(text = "完整升级（含移除）", onClick = {
+                        GhostBtn(text = L["完整升级_含移除_3bed74b0f0"], onClick = {
                             scope.launch {
                                 previewAndAct(
                                     "full-upgrade", emptyList(),
-                                    "完整升级可能移除与新版本冲突的软件包，请仔细核对预览内容。",
+                                    L["完整升级可能移除与新版本冲突的软件包_请仔细核对_50ce8ea44d"],
                                 )
                             }
                         })
                     },
                 ) {
                     if (total == 0) {
-                        Muted("所有软件包均为最新版本。")
+                        Muted(L["所有软件包均为最新版本_ee413e3b4c"])
                     } else {
                         DataTable(
                             columns = listOf(
-                                TableCol<JsonObject>("包名", weight = 1.4f, mono = true) { Mono12(it.str("name")) },
-                                TableCol<JsonObject>("当前版本", weight = 1.2f, mono = true) {
+                                TableCol<JsonObject>(L["包名_03c2d07a24"], weight = 1.4f, mono = true) { Mono12(it.str("name")) },
+                                TableCol<JsonObject>(L["当前版本_46e66f6321"], weight = 1.2f, mono = true) {
                                     Mono12(it.str("current"), color = Palette.muted)
                                 },
-                                TableCol<JsonObject>("目标版本", weight = 1.2f, mono = true) {
+                                TableCol<JsonObject>(L["目标版本_fda86a2031"], weight = 1.2f, mono = true) {
                                     Mono12(it.str("candidate"), color = Palette.ok)
                                 },
-                                TableCol<JsonObject>("来源", weight = 0.8f) {
+                                TableCol<JsonObject>(L["来源_c63f79e636"], weight = 0.8f) {
                                     Text(it.str("suite"), fontSize = 12.sp, color = Palette.muted)
                                 },
-                                TableCol<JsonObject>("操作", weight = 0.8f, minWidth = 76.dp) {
-                                    PrimaryBtn(text = "升级", onClick = {
+                                TableCol<JsonObject>(L["操作_f3ea6d345e"], weight = 0.8f, minWidth = 76.dp) {
+                                    PrimaryBtn(text = L["升级_2e8e70958c"], onClick = {
                                         scope.launch { previewAndAct("upgrade", listOf(it.str("name"))) }
                                     })
                                 },
@@ -997,8 +1000,8 @@ fun PackagesPage() {
                         )
                     }
                 }
-                PanelCard(title = "说明", collapsible = true) {
-                    Muted("「安全升级」只做向上兼容的升级，不卸载其它包；「完整升级」允许移除冲突包，风险更高，执行前会展示变更预览。")
+                PanelCard(title = L["说明_26670dda42"], collapsible = true) {
+                    Muted(L["安全升级_只做向上兼容的升级_不卸载其它包_841c2b3607"])
                 }
             }
         }
@@ -1030,9 +1033,9 @@ fun PackagesPage() {
                     Mono12(r.str("name"))
                 }
                 when {
-                    r.bool("held") -> LevelBadge("已锁定", Level.Warn)
-                    r.bool("installed") -> LevelBadge("已安装", Level.Ok)
-                    else -> LevelBadge("未安装", Level.Muted)
+                    r.bool("held") -> LevelBadge(L["已锁定_3cc7a5af4c"], Level.Warn)
+                    r.bool("installed") -> LevelBadge(L["已安装_eb88ff57c9"], Level.Ok)
+                    else -> LevelBadge(L["未安装_6f7dc945ae"], Level.Muted)
                 }
             }
             Spacer(Modifier.height(6.dp))
@@ -1040,13 +1043,13 @@ fun PackagesPage() {
             Spacer(Modifier.height(6.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 if (r.bool("installed")) {
-                    GhostBtn(text = "详情", onClick = { scope.launch { showDetail(r.str("name")) } })
-                    DangerBtn(text = "卸载", onClick = { scope.launch { removePkg(r.str("name")) } })
+                    GhostBtn(text = L["详情_4f55ee1e68"], onClick = { scope.launch { showDetail(r.str("name")) } })
+                    DangerBtn(text = L["卸载_200cf1550d"], onClick = { scope.launch { removePkg(r.str("name")) } })
                 } else {
-                    PrimaryBtn(text = "安装", icon = "download", onClick = {
+                    PrimaryBtn(text = L["安装_087db63ab1"], icon = "download", onClick = {
                         scope.launch { previewAndAct("install", listOf(r.str("name"))) }
                     })
-                    GhostBtn(text = "详情", onClick = { scope.launch { showDetail(r.str("name")) } })
+                    GhostBtn(text = L["详情_4f55ee1e68"], onClick = { scope.launch { showDetail(r.str("name")) } })
                 }
             }
         }
@@ -1057,7 +1060,7 @@ fun PackagesPage() {
         when {
             recData == null && recErr == null -> LoadingState()
             recErr != null && recData == null -> ErrorState(message = recErr!!, onRetry = { recData = null; reloadTick++ })
-            recData == null -> EmptyState("暂无数据")
+            recData == null -> EmptyState(L["暂无数据_b246458f20"])
             else -> {
                 val d = recData ?: return
                 val cats = d.arr("categories").filterIsInstance<JsonObject>()
@@ -1066,12 +1069,12 @@ fun PackagesPage() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Muted("共 ${d.int("total")} 个常用包 · 已装 ${d.int("installed_total")} · ${d.int("category_count")} 个分类")
+                    Muted(trf("共_0_个常用包_已装_1_2_e967a843a6", d.int("total"), d.int("installed_total"), d.int("category_count")))
                     SearchField(
                         value = recQ,
                         onValueChange = { recQ = it },
                         modifier = Modifier.width(190.dp),
-                        placeholder = "在推荐中过滤",
+                        placeholder = L["在推荐中过滤_655cfb330e"],
                     )
                 }
                 Spacer(Modifier.height(8.dp))
@@ -1079,8 +1082,8 @@ fun PackagesPage() {
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
-                    if (recCat == "all") PrimaryBtn(text = "全部 (${d.int("total")})", onClick = { recCat = "all" })
-                    else GhostBtn(text = "全部 (${d.int("total")})", onClick = { recCat = "all" })
+                    if (recCat == "all") PrimaryBtn(text = trf("全部_0_910e2f37bc", d.int("total")), onClick = { recCat = "all" })
+                    else GhostBtn(text = trf("全部_0_910e2f37bc", d.int("total")), onClick = { recCat = "all" })
                     cats.forEach { c ->
                         val label = "${c.str("label")} ${c.int("installed_count")}/${c.int("total")}"
                         if (recCat == c.str("id")) PrimaryBtn(text = label, onClick = { recCat = c.str("id") })
@@ -1100,12 +1103,12 @@ fun PackagesPage() {
                     if (rows.isEmpty()) null else c to rows
                 }
                 if (groups.isEmpty()) {
-                    PanelCard(title = "推荐包", collapsible = false) { Muted("没有匹配的包") }
+                    PanelCard(title = L["推荐包_d834496b57"], collapsible = false) { Muted(L["没有匹配的包_f28a3dc6a5"]) }
                 }
                 groups.forEach { (c, rows) ->
                     PanelCard(
                         title = c.str("label"),
-                        right = { Muted("${rows.size} 个 · 已装 ${rows.count { it.bool("installed") }}") },
+                        right = { Muted(trf("0_个_已装_1_ab8c2e6db4", rows.size, rows.count { it.bool("installed") })) },
                     ) {
                         GridLayout(columns = 3, spacing = 8.dp) {
                             rows.forEach { r -> RecTile(r) }
@@ -1123,34 +1126,34 @@ fun PackagesPage() {
         val holdList = s.arr("hold_list").mapNotNull { (it as? JsonPrimitive)?.content }
         val holds = holdList.joinToString("、")
         val logDir = (AppState.me.value?.obj("env")?.obj("paths")?.str("logs")).orEmpty()
-            .ifEmpty { "服务端日志目录" }
+            .ifEmpty { L["服务端日志目录_037c3d3cda"] }
         GridLayout(columns = 2) {
-            PanelCard(title = "软件源索引") {
-                Muted("从镜像站拉取最新软件包列表，安装新包前建议先刷新。")
+            PanelCard(title = L["软件源索引_376afe36ab"]) {
+                Muted(L["从镜像站拉取最新软件包列表_安装新包前建议先刷新_18f22cecb1"])
                 Spacer(Modifier.height(4.dp))
-                Muted("当前索引更新于 ${s.str("index_updated").ifEmpty { "未知" }}")
+                Muted(trf("当前索引更新于_0_1c82f67640", s.str("index_updated").ifEmpty { L["未知_d9c32a4c3d"] }))
                 Spacer(Modifier.height(8.dp))
-                PrimaryBtn(text = "更新索引", onClick = { scope.launch { doAct("update", emptyList()) } })
+                PrimaryBtn(text = L["更新索引_b2ee89ac6d"], onClick = { scope.launch { doAct("update", emptyList()) } })
             }
-            PanelCard(title = "缓存清理") {
-                Muted("删除已下载的 .deb 安装包，释放 ${s.str("apt_cache_size").ifEmpty { "?" }}。不影响已安装的软件。")
+            PanelCard(title = L["缓存清理_7dc4dae50d"]) {
+                Muted(trf("删除已下载的_deb_安装包_释放_0_不_dc8e1f42c6", s.str("apt_cache_size").ifEmpty { "?" }))
                 Spacer(Modifier.height(8.dp))
-                GhostBtn(text = "清理 apt 缓存", onClick = { scope.launch { doAct("clean", emptyList()) } })
+                GhostBtn(text = L["清理_apt_缓存_55c020f574"], onClick = { scope.launch { doAct("clean", emptyList()) } })
             }
-            PanelCard(title = "孤立依赖清理") {
-                Muted("移除不再被需要的自动安装依赖（apt autoremove），执行前会展示预览。")
+            PanelCard(title = L["孤立依赖清理_3088424930"]) {
+                Muted(L["移除不再被需要的自动安装依赖_apt_autor_267620f018"])
                 Spacer(Modifier.height(8.dp))
-                DangerBtn(text = "查看可清理项", onClick = {
+                DangerBtn(text = L["查看可清理项_cc9ca0dc55"], onClick = {
                     scope.launch {
                         try {
                             val d = AppState.api.get("/pkg/autoremove", 150000)
                             val out = d.str("output")
-                            Modal.output("可清理的孤立依赖（apt-get -s autoremove）", out)
+                            Modal.output(L["可清理的孤立依赖_apt_get_s_auto_25a43a9abb"], out)
                             if (Regex("\\d+ to remove|REMOVED").containsMatchIn(out)) {
                                 val okc = Modal.confirm(
-                                    title = "执行清理",
-                                    text = "确认执行 apt autoremove --purge ？",
-                                    okText = "执行",
+                                    title = L["执行清理_bebeb0649b"],
+                                    text = L["确认执行_apt_autoremove_pu_54a12414d7"],
+                                    okText = L["执行_28febba225"],
                                     danger = true,
                                 )
                                 if (okc) doAct("autoremove", emptyList())
@@ -1158,35 +1161,35 @@ fun PackagesPage() {
                         } catch (e: CancellationException) {
                             throw e
                         } catch (e: Throwable) {
-                            AppState.toast(e.message ?: "查询失败", ToastKind.Err)
+                            AppState.toast(e.message ?: tr("查询失败_381ea3ac5e"), ToastKind.Err)
                         }
                     }
                 })
             }
-            PanelCard(title = "版本锁定") {
+            PanelCard(title = L["版本锁定_f00c209863"]) {
                 Muted(
-                    "锁定的包不会被自动升级。当前 ${s.int("held")} 个" +
-                        (if (holds.isNotEmpty()) "：$holds" else "") + "。",
+                    trf("锁定的包不会被自动升级_当前_0_个_e9feae0738", s.int("held")) +
+                        (if (holds.isNotEmpty()) "：$holds" else "") + L["s_f92669081d"],
                 )
                 Spacer(Modifier.height(8.dp))
                 if (holdList.isNotEmpty()) {
-                    GhostBtn(text = "全部解除锁定", onClick = {
+                    GhostBtn(text = L["全部解除锁定_fc0465ac55"], onClick = {
                         scope.launch {
                             val okc = Modal.confirm(
-                                title = "解除锁定",
-                                text = "解除 $holds 的版本锁定？这些包将恢复自动升级。",
-                                okText = "解除",
+                                title = L["解除锁定_eafaffdf18"],
+                                text = L["解除_holds_的版本锁定_这些包将恢复自动_1fb2f54761"],
+                                okText = L["解除_ec7ae06b09"],
                             )
                             if (okc) doAct("unhold", holdList)
                         }
                     })
                 } else {
-                    Muted("当前没有锁定的包")
+                    Muted(L["当前没有锁定的包_e812929549"])
                 }
             }
         }
-        PanelCard(title = "操作日志") {
-            Muted("每次变更的完整 apt 输出保存在服务器 $logDir/pkg-*.log。")
+        PanelCard(title = L["操作日志_f4bc877cd2"]) {
+            Muted(L["每次变更的完整_apt_输出保存在服务器_lo_737e75d3ca"])
         }
     }
 
@@ -1211,7 +1214,7 @@ fun PackagesPage() {
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(m.str("name"), color = Palette.text, fontSize = 12.5.sp)
-                if (isCur) LevelBadge("当前", Level.Ok)
+                if (isCur) LevelBadge(L["当前_25e74dceac"], Level.Ok)
             }
             Spacer(Modifier.height(5.dp))
             Text(
@@ -1225,44 +1228,44 @@ fun PackagesPage() {
             Spacer(Modifier.height(7.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 GhostBtn(
-                    text = lat[m.str("id")] ?: "测速",
+                    text = lat[m.str("id")] ?: L["测速_304d8c0081"],
                     onClick = {
                         scope.launch {
                             try {
                                 val r = AppState.api.get("/pkg/test-mirror?url=${urlEnc(m.str("url"))}", 25000)
-                                lat[m.str("id")] = if (r.bool("reachable")) "${r.int("latency_ms")} ms" else "不可达"
+                                lat[m.str("id")] = if (r.bool("reachable")) "${r.int("latency_ms")} ms" else L["不可达_358801edaa"]
                             } catch (_: Throwable) {
-                                lat[m.str("id")] = "失败"
+                                lat[m.str("id")] = tr("失败_3e3c8068bb")
                             }
                         }
                     },
                 )
                 if (!isCur) {
-                    PrimaryBtn(text = "切换到此源", onClick = {
+                    PrimaryBtn(text = L["切换到此源_6a51392f3d"], onClick = {
                         scope.launch {
                             val okc = Modal.confirm(
-                                title = "切换软件源",
-                                text = "从 ${cur.str("uri").ifEmpty { "当前" }} 切换到：\n\n" +
+                                title = L["切换软件源_1d685b5c20"],
+                                text = trf("从_0_切换到_94f8b2509a", cur.str("uri").ifEmpty { L["当前_25e74dceac"] }) +
                                     "${m.str("name")}  ${m.str("url")}\n" +
                                     "${m.str("region")} · ${m.str("desc")}\n\n" +
-                                    "将自动备份当前源文件并执行 apt-get update；若刷新失败会自动回滚。此过程约需 30-120 秒。",
-                                okText = "切换并刷新索引",
+                                    L["将自动备份当前源文件并执行_apt_get_up_0276b8cab1"],
+                                okText = L["切换并刷新索引_90b6357c92"],
                             )
                             if (!okc) return@launch
                             try {
                                 val r = AppState.api.post("/pkg/switch-mirror", jsonObjectOf("mirror" to m.str("id")))
-                                AppState.toast("已切换到 ${m.str("name")}", ToastKind.Ok, 5000)
+                                AppState.toast(trf("已切换到_0_f0c31c31dc", m.str("name")), ToastKind.Ok, 5000)
                                 Modal.output(
-                                    "切换软件源",
-                                    r.str("output") + (r.str("backup").let { if (it.isEmpty()) "" else "\n\n原配置备份：$it" }),
+                                    L["切换软件源_1d685b5c20"],
+                                    r.str("output") + (r.str("backup").let { if (it.isEmpty()) "" else trf("原配置备份_0_45dc9a773d", it) }),
                                 )
                                 srcReady = false
                                 reloadTick++
                             } catch (e: CancellationException) {
                                 throw e
                             } catch (e: Throwable) {
-                                AppState.toast((e.message ?: "切换失败").substringBefore('\n'), ToastKind.Err, 8000)
-                                Modal.output("切换失败（已回滚）", e.message ?: "", isError = true)
+                                AppState.toast((e.message ?: tr("切换失败_9e2fdc4fee")).substringBefore('\n'), ToastKind.Err, 8000)
+                                Modal.output(L["切换失败_已回滚_c0cfb2c6b5"], e.message ?: "", isError = true)
                             }
                         }
                     })
@@ -1275,10 +1278,10 @@ fun PackagesPage() {
     fun SourcesTab() {
         when {
             srcData == null && srcErr == null -> LoadingState()
-            srcErr != null -> PanelCard(title = "当前系统不支持软件源切换", collapsible = false) {
+            srcErr != null -> PanelCard(title = L["当前系统不支持软件源切换_718bf56e6b"], collapsible = false) {
                 Muted(srcErr!!)
                 Spacer(Modifier.height(6.dp))
-                Muted("镜像切换是 Debian/Ubuntu 专有功能（apt sources.list）。其它发行版请使用系统自带的软件源工具。")
+                Muted(L["镜像切换是_debian_ubuntu_专有功能_73bbd10e7d"])
             }
             else -> {
                 val d = srcData ?: return
@@ -1286,42 +1289,42 @@ fun PackagesPage() {
                 val bk = bkData ?: JsonObject(emptyMap())
 
                 PanelCard(
-                    title = "当前镜像",
-                    right = { GhostBtn(text = "刷新状态", icon = "refresh", onClick = { reloadTick++ }) },
+                    title = L["当前镜像_ed71a792a7"],
+                    right = { GhostBtn(text = L["刷新状态_7cc7f07a2c"], icon = "refresh", onClick = { reloadTick++ }) },
                 ) {
                     GridLayout(columns = 2, spacing = 14.dp) {
                         Column {
-                            KvRow("主仓库", "${cur.str("name").ifEmpty { "未识别" }} ${cur.str("uri").ifEmpty { "-" }}")
-                            KvRow("发行版", d.str("codename").ifEmpty { "-" }, mono = true)
+                            KvRow(L["主仓库_6ab193cdf9"], trf("0_1_b245f58149", cur.str("name").ifEmpty { L["未识别_face982a4a"] }, cur.str("uri").ifEmpty { "-" }))
+                            KvRow(L["发行版_6ef5fc415c"], d.str("codename").ifEmpty { "-" }, mono = true)
                             KvRow(
-                                "安全更新",
-                                cur.str("security_mirror").ifEmpty { "同主仓库" } +
+                                L["安全更新_d02224fdc8"],
+                                cur.str("security_mirror").ifEmpty { L["同主仓库_01a7130455"] } +
                                     (cur.str("security_uri").takeIf { it.isNotEmpty() }?.let { " $it" } ?: ""),
                             )
-                            KvRow("源文件", cur.str("file").ifEmpty { "-" }, mono = true)
+                            KvRow(L["源文件_be43b936dd"], cur.str("file").ifEmpty { "-" }, mono = true)
                         }
                         Column {
-                            Muted("· 切换镜像会先备份源文件，改写后立即执行 apt-get update；若刷新失败会自动回滚到原镜像。")
-                            Muted("· 切换成功后会清理旧镜像残留索引，避免搜索结果串源。")
-                            Muted("· 阿里云 ECS 建议使用「阿里云(内网源)」，走内网不消耗公网流量。")
+                            Muted(L["切换镜像会先备份源文件_改写后立即执行_ap_b31cb7b626"])
+                            Muted(L["切换成功后会清理旧镜像残留索引_避免搜索结果_3a16b0a93b"])
+                            Muted(L["阿里云_ecs_建议使用_阿里云_内网源_beb7548e7b"])
                         }
                     }
                 }
 
                 val mirrors = d.arr("mirrors").filterIsInstance<JsonObject>()
                 PanelCard(
-                    title = "可选镜像",
+                    title = L["可选镜像_67237d63bf"],
                     right = {
-                        GhostBtn(text = "测速全部", icon = "activity", enabled = !testingAll, onClick = {
+                        GhostBtn(text = L["测速全部_42afec91d1"], icon = "activity", enabled = !testingAll, onClick = {
                             scope.launch {
                                 testingAll = true
                                 try {
                                     for (m in mirrors) {
                                         try {
                                             val r = AppState.api.get("/pkg/test-mirror?url=${urlEnc(m.str("url"))}", 25000)
-                                            lat[m.str("id")] = if (r.bool("reachable")) "${r.int("latency_ms")} ms" else "不可达"
+                                            lat[m.str("id")] = if (r.bool("reachable")) "${r.int("latency_ms")} ms" else L["不可达_358801edaa"]
                                         } catch (_: Throwable) {
-                                            lat[m.str("id")] = "失败"
+                                            lat[m.str("id")] = tr("失败_3e3c8068bb")
                                         }
                                     }
                                 } finally {
@@ -1338,9 +1341,9 @@ fun PackagesPage() {
 
                 GridLayout(columns = 2) {
                     val files = d.arr("files").filterIsInstance<JsonObject>()
-                    PanelCard(title = "已启用的源文件 (${files.size})") {
+                    PanelCard(title = trf("已启用的源文件_0_7a8ed113e1", files.size)) {
                         if (files.isEmpty()) {
-                            Muted("未发现源文件")
+                            Muted(L["未发现源文件_371b4f4aa9"])
                         } else {
                             files.forEach { f ->
                                 Text(f.str("name"), color = Palette.text, fontSize = 11.5.sp, fontFamily = FontFamily.Monospace)
@@ -1366,7 +1369,7 @@ fun PackagesPage() {
                                             val signed = s.str("signed_by").split('/').lastOrNull().orEmpty()
                                             Muted(
                                                 "${suites.joinToString(" ")} [${comps.joinToString(" ")}]" +
-                                                    (if (signed.isNotEmpty()) " · 签名 $signed" else ""),
+                                                    (if (signed.isNotEmpty()) trf("签名_0_e57efd3ddc", signed) else ""),
                                             )
                                         }
                                     }
@@ -1375,14 +1378,14 @@ fun PackagesPage() {
                             }
                         }
                     }
-                    PanelCard(title = "源文件备份 (${bk.int("total")})") {
-                        Muted("每次切换镜像前自动备份，路径 ${bk.str("dir").ifEmpty { "-" }}")
+                    PanelCard(title = trf("源文件备份_0_4a529aae31", bk.int("total"))) {
+                        Muted(trf("每次切换镜像前自动备份_路径_0_4331441441", bk.str("dir").ifEmpty { "-" }))
                         Spacer(Modifier.height(6.dp))
                         val items = bk.arr("items").mapNotNull { (it as? JsonPrimitive)?.content }
                         if (items.isNotEmpty()) PreBox(items.joinToString("\n"), maxHeight = 220.dp)
-                        else Muted("暂无备份")
+                        else Muted(L["暂无备份_d5392bb044"])
                         Spacer(Modifier.height(8.dp))
-                        Muted("如需回滚，可通过 Web 终端把备份文件复制回 /etc/apt/sources.list.d/ 后执行「更新索引」。")
+                        Muted(L["如需回滚_可通过_web_终端把备份文件复制回_91d4cbe18f"])
                     }
                 }
             }
@@ -1402,14 +1405,14 @@ fun PackagesPage() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             steps.forEachIndexed { i, s ->
-                val label = (JOB_STEP_LABEL[s] ?: s).let { if (i < cur) "✓ $it" else it }
+                val label = (JOB_STEP_LABEL[s] ?: s).let { if (i < cur) L["it_2b79a5d69f"] else it }
                 val color = when {
                     i < cur -> Palette.ok
                     i == cur -> AccentState.current.primary
                     else -> Palette.muted
                 }
                 Text(label, color = color, fontSize = 11.5.sp, fontWeight = if (i == cur) FontWeight.SemiBold else null)
-                if (i != steps.lastIndex) Text(" ›", color = Palette.border2, fontSize = 11.sp)
+                if (i != steps.lastIndex) Text(L["s_0c1dcbdef8"], color = Palette.border2, fontSize = 11.sp)
             }
         }
     }
@@ -1443,7 +1446,7 @@ fun PackagesPage() {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(jobTitle, color = Palette.text, fontSize = 14.5.sp, fontWeight = FontWeight.SemiBold)
-                    LevelBadge(if (state == "queued") "排队中" else "执行中", Level.Info)
+                    LevelBadge(if (state == "queued") L["排队中_4dcbbcfa61"] else L["执行中_1f425b6bf0"], Level.Info)
                 }
                 Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -1460,7 +1463,7 @@ fun PackagesPage() {
                 JobSteps(v)
                 Spacer(Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(v.str("phase_label").ifEmpty { "执行中" }, color = Palette.text, fontSize = 12.5.sp, fontWeight = FontWeight.SemiBold)
+                    Text(v.str("phase_label").ifEmpty { L["执行中_1f425b6bf0"] }, color = Palette.text, fontSize = 12.5.sp, fontWeight = FontWeight.SemiBold)
                     if (v.str("detail").isNotEmpty()) {
                         Spacer(Modifier.size(8.dp))
                         Text(v.str("detail"), color = Palette.muted, fontSize = 12.sp)
@@ -1469,8 +1472,8 @@ fun PackagesPage() {
                     val elapsed = ((nowEpochMillis() - v.long("startedAt")) / 1000).coerceAtLeast(0)
                     val chunks = v.int("chunks")
                     Muted(
-                        "已用 " + Fmt.uptime(elapsed) +
-                            (if (chunks > 1) " · 批次 ${v.int("chunk")}/$chunks" else ""),
+                        L["已用_11ab4c52e3"] + Fmt.uptime(elapsed) +
+                            (if (chunks > 1) trf("批次_0_1_a517254bd8", v.int("chunk"), chunks) else ""),
                     )
                 }
                 Spacer(Modifier.height(8.dp))
@@ -1482,7 +1485,7 @@ fun PackagesPage() {
                 ) {
                     val lines = v.arr("lines").mapNotNull { (it as? JsonPrimitive)?.content }
                     Text(
-                        lines.joinToString("\n").ifEmpty { "（等待任务输出…）" },
+                        lines.joinToString("\n").ifEmpty { L["等待任务输出_9d3133ea50"] },
                         color = Palette.text,
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace,
@@ -1491,10 +1494,10 @@ fun PackagesPage() {
                 }
                 Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Muted("完整日志：" + v.str("log"), modifier = Modifier.weight(1f))
-                    GhostBtn(text = "后台运行", onClick = { jobHidden = true })
+                    Muted(L["完整日志_4a1b1f9673"] + v.str("log"), modifier = Modifier.weight(1f))
+                    GhostBtn(text = L["后台运行_d8478a3802"], onClick = { jobHidden = true })
                     Spacer(Modifier.size(8.dp))
-                    PrimaryBtn(text = "完成", enabled = false, onClick = {})
+                    PrimaryBtn(text = L["完成_33246f6a5e"], enabled = false, onClick = {})
                 }
             }
         }
@@ -1538,7 +1541,7 @@ fun PackagesPage() {
      * 页面主体
      * ==================================================================== */
     Box(Modifier.fillMaxSize()) {
-        PageScaffold(title = "软件包管理") {
+        PageScaffold(title = L["软件包管理_dc0eed4bee"]) {
             when {
                 sum == null && loadErr == null -> LoadingState()
                 sum == null && loadErr != null -> ErrorState(message = loadErr!!, onRetry = {
@@ -1550,25 +1553,25 @@ fun PackagesPage() {
                     /* —— 统计四联卡（JS renderStats L44-L52） —— */
                     GridLayout(columns = 4) {
                         StatTile(
-                            label = "已安装",
+                            label = L["已安装_eb88ff57c9"],
                             value = "${s.int("installed_active")}",
-                            sub = "共 ${s.int("installed_total")} 条记录",
+                            sub = trf("共_0_条记录_41eef6780b", s.int("installed_total")),
                         )
                         StatTile(
-                            label = "可升级",
+                            label = L["可升级_546591fd74"],
                             value = "${s.int("upgradable")}",
-                            sub = if (s.int("upgradable") > 0) "建议尽快更新" else "已是最新",
+                            sub = if (s.int("upgradable") > 0) L["建议尽快更新_4434051095"] else L["已是最新_5985ee9a3c"],
                         )
-                        StatTile(label = "版本锁定", value = "${s.int("held")}", sub = "apt-mark hold")
+                        StatTile(label = L["版本锁定_f00c209863"], value = "${s.int("held")}", sub = L["apt_mark_hold_2a881a84a6"])
                         StatTile(
-                            label = "根分区可用",
+                            label = L["根分区可用_0fff0a9d78"],
                             value = s.obj("disk")?.str("avail").orEmpty().ifEmpty { "-" },
-                            sub = "缓存 ${s.str("apt_cache_size").ifEmpty { "?" }}",
+                            sub = trf("缓存_0_dfe2b5a86d", s.str("apt_cache_size").ifEmpty { "?" }),
                         )
                     }
 
                     /* —— 页签条（JS L28-L36） —— */
-                    PanelCard(title = "页签", collapsible = false) {
+                    PanelCard(title = L["页签_46c7c1c3b1"], collapsible = false) {
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -1579,8 +1582,8 @@ fun PackagesPage() {
                                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                             ) {
                                 val tabs = listOf(
-                                    "search" to "搜索安装", "installed" to "已安装", "upgradable" to "可升级",
-                                    "recommended" to "常用推荐", "maintain" to "维护操作", "sources" to "软件源",
+                                    "search" to L["搜索安装_7bede136f7"], "installed" to L["已安装_eb88ff57c9"], "upgradable" to L["可升级_546591fd74"],
+                                    "recommended" to L["常用推荐_f9420928eb"], "maintain" to L["维护操作_7a7b416bde"], "sources" to L["软件源_d6d000ca92"],
                                 )
                                 tabs.forEach { (id, label) ->
                                     if (tab == id) PrimaryBtn(text = label, onClick = { tab = id; sel.clear() })
@@ -1591,11 +1594,11 @@ fun PackagesPage() {
                                 val lock = s.obj("lock")
                                 val idx = s.str("index_updated").substringBefore('.')
                                 Muted(
-                                    if (lock?.bool("busy") == true) "apt 任务进行中：${lock.str("label")}"
-                                    else "索引更新于 ${idx.ifEmpty { "未知" }}",
+                                    if (lock?.bool("busy") == true) trf("apt_任务进行中_0_6028d2fbd3", lock.str("label"))
+                                    else trf("索引更新于_0_3df853c52d", idx.ifEmpty { L["未知_d9c32a4c3d"] }),
                                 )
                                 Spacer(Modifier.size(8.dp))
-                                GhostBtn(text = "刷新", icon = "refresh", onClick = {
+                                GhostBtn(text = L["刷新_38108eaa1d"], icon = "refresh", onClick = {
                                     scope.launch {
                                         srcReady = false
                                         recData = null

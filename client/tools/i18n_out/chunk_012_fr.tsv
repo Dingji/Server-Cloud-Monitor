@@ -1,0 +1,120 @@
+已添加_57828673c0	Ajouté
+已清屏_刷新可重新加载_01eb7fac6f	(Écran effacé, actualisez pour recharger)
+已清理_deleted_条_4c23a20ddb	$deleted éléments nettoyés
+已清空_f8a66770bf	Effacé
+已用_0_c96f2dd5c9	Utilisé {0}%
+已用_0_da8610464a	Utilisé {0}
+已用_11ab4c52e3	Utilisé 
+已用_4c9426f3cb	Utilisé
+已用_d_pct_2dbf36e2b0	Utilisé ${d.pct}
+已用_m_usedpct_61d820fe07	Utilisé ${m.usedPct}%
+已用内存_5018e93ffc	Mémoire utilisée
+已移入回收站_54e2ac947c	Déplacé dans la corbeille
+已移动_3bf6e46e2d	Déplacé
+已移动到_label_6617d663be	Déplacé vers « $label »
+已移除共享_830fcc049b	Partage supprimé
+已置顶_d7d97038a3	Épinglé
+已装_3647e1394b	Installé
+已装版本_9bdb334d0c	Version installée
+已解压到_0_51e4ef2361	Extrait vers {0}
+已解压到_l_dir_9244cad0e5	Extrait vers ${l.dir}
+已过去_745c1695da	Écoulé
+已过期_1354374f76	Expiré
+已过期_今天到期_86491fdf75	Expiré / expire aujourd'hui
+已还原到原位置_88f9ffd058	Restauré à la position d'origine
+已连接_65fe35c45e	Connecté
+已连接客户端_ce32897c53	Clients connectés
+已送达_da986b8ec5	Livré
+已选_0_项_1a922f0ed8	{0} éléments sélectionnés
+已选_17f3287f61	Sélectionné 
+已选_selected_size_项_d7a48434fc	${selected.size} éléments sélectionnés
+已配凭据_beb6c5256b	Identifiants configurés
+已配置_dc7cd22f34	Configuré
+已采集_2e78019082	Collecté
+已重命名_dc9fe43fb7	Renommé
+已锁定_3cc7a5af4c	Verrouillé
+常用_ee2804c36b	Courants :
+常用命令_8b3f736710	Commandes courantes
+常用推荐_f9420928eb	Recommandations populaires
+平均_0_ttfb_1_08d238b10f	Moy. {0} · TTFB {1}
+平均耗时_397236acf6	Durée moyenne
+并发_09d869d15d	Concurrence
+并授予_sudo_权限_8b30bef02a	 et accorder les privilèges sudo
+序列操作_6b82faed5c	Opérations en séquence
+序列管理_c7e70c52dd	Gestion des séquences
+库_87eedee459	Bibliothèque
+应用_4562024dde	Appliquer
+应用_ssh_配置_6630ee6205	Appliquer la configuration SSH
+应用_swappiness_20e25ed211	Appliquer swappiness
+应用_sysctl_e2dac5275c	Appliquer sysctl
+应用位置_0_48979a348d	Emplacements appliqués ({0})
+应用位置_applied_size_3f8bff0c58	Emplacements appliqués (${applied.size})
+应用带宽_15d87c726e	Bande passante appliquée
+应用并重载_ssh_68c70d62a3	Appliquer et recharger SSH
+延迟_e9f0921480	Latence
+建索引_ba4fa8969d	Créer l'index
+建议_c_warn_427c849e3e	Recommandé : $c.warn
+建议先用_web_终端确认现有登录方式可用_12826a1b60	\n\nNous vous recommandons de vérifier d'abord via le terminal Web que la méthode de connexion existante fonctionne toujours.
+建议处理_43d0209c9a	Actions recommandées
+建议尽快更新_4434051095	Recommandé : mettre à jour dès que possible
+开发_eb3774e356	Développement
+开启公开链接_5594f75324	Activer le lien public
+开启后可用_db_system_profile_439d38a566	Une fois activé, utilisez db.system.profile.find().limit(20) pour consulter les opérations lentes.
+开启网卡_e65c5b5c1b	Activer la carte réseau
+开始写_支持_markdown_标题_加_333c0c0d41	Commencez à écrire… Markdown pris en charge (# titre, **gras**, - liste, ``` bloc de code)
+开始备份_bf05cce62d	Lancer la sauvegarde
+开始复制_3cd62ecee5	Lancer la copie
+开始安装_d109e7cc01	Lancer l'installation
+开始导入_3d04880897	Lancer l'import
+开始导出_86c599fe6e	Lancer l'export
+开始恢复_86cc2051a7	Lancer la restauration
+开始打包_ec3abb06f3	Lancer l'archivage
+开始搜索_8fdc065eda	Lancer la recherche
+开机启动_b995f88661	Démarrer au démarrage du système
+开机自启_e0f2218651	Démarrage automatique au démarrage
+开自启_afbb1e3032	Activer le démarrage automatique
+异常_5caf279339	Anomalie
+异常与变更关联_ad0cd881a4	Corrélation anomalie-changement
+异常时段_fb93a8934a	Période anormale
+引擎_9413bdc38c	Moteur
+引擎状态_fbb8ddd570	État du moteur
+引擎还没跑完一轮_新建规则后约_15_秒_或服_4db3fea74e	Le moteur n'a pas encore terminé un cycle (environ 15 s après la création d'une règle), ou le collecteur n'est pas déployé sur le serveur
+引用_4cfa595c2a	> Citation
+引用列_00382a55a7	Colonnes référencées
+引用表_7d6cb137c9	Tables référencées
+强制删除_53ddf21fc7	Suppression forcée
+强制断开连接_b751ba3828	Forcer la déconnexion ?
+强制终止后端进程_0_e49e9c414a	Forcer l'arrêt du processus backend {0} ?
+强制终止后端进程_pid_eb7db97147	Forcer l'arrêt du processus backend $pid ?
+强调色_6f67371e05	Couleur d'accent
+归档文件名_2a8d06976b	Nom du fichier d'archive
+归类_6a9b5537c6	Catégorie
+归类名称不能为空_8aeba11184	Le nom de la catégorie ne peut pas être vide
+归类已删除_内容已移到上一级_933faa2f08	Catégorie supprimée, contenu déplacé d'un niveau vers le haut
+归类已更新_219432c27a	Catégorie mise à jour
+当前_25e74dceac	Actuel
+当前不可用_bd15b2e133	Indisponible pour le moment
+当前令牌会在切换到不同服务器时自动失效_需重新登_faee75ab2a	Le jeton actuel expire automatiquement lors du passage à un autre serveur ; vous devrez vous reconnecter.
+当前使用_297318c276	Utilisé actuellement
+当前值_8b0db67871	Valeur actuelle
+当前实例_185db6ac3b	Instance actuelle
+当前密码_33abf70fd5	Mot de passe actuel
+当前密钥_0_a6dc721288	Clé actuelle {0} · 
+当前密钥_0_刷新于_1_b44dce11d6	Clé actuelle {0} · actualisée le {1}
+当前密钥_暂不可用_698a7394eb	Clé actuelle : indisponible
+当前封禁_4f4e3ab4f7	Bannissements actuels
+当前封禁_ip_c5ccad72be	IP actuellement bannies
+当前库_db0_db15_全量_rdb_8e1d4e62b1	Base actuelle (db0-db15), RDB complet
+当前数据库_df2f4d6c3c	Base de données actuelle
+当前日志全部_8615243b08	Tous les journaux actuels
+当前服务器未启用运维模块_api_ops_a1afd4f100	Le module ops n'est pas activé sur ce serveur (/api/ops/… renvoie 404).\n
+当前未配置私钥_将使用密码认证_修改后新终端会话_e7d9729ea6	Aucune clé privée configurée ; l'authentification par mot de passe sera utilisée. Les modifications prennent effet pour les nouvelles sessions de terminal.
+当前条件下没有事件_f37e5eca2a	Aucun événement ne correspond aux filtres actuels
+当前没有锁定的包_e812929549	Aucun paquet verrouillé pour le moment
+当前版本_46e66f6321	Version actuelle
+当前状态_045859e792	État actuel
+当前状态起始_ec8a451989	Démarrer depuis l'état actuel
+当前用户权限_show_grants_e8e7d7d1e2	Privilèges de l'utilisateur actuel (SHOW GRANTS)
+当前窗口占比_903b7cd486	Part de la fenêtre actuelle
+当前筛选_8936ccc663	Filtres actuels
+当前系统不支持软件源切换_718bf56e6b	Ce système ne prend pas en charge le changement de miroirs logiciels

@@ -1,0 +1,4 @@
+{
+ "error": "/bin/bash: line 1: mysql: command not found",
+ "output": "/bin/bash: line 1: mysql: command not found\n"
+}

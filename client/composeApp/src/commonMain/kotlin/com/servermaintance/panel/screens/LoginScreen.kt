@@ -1,4 +1,7 @@
 package com.servermaintance.panel.screens
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -92,7 +95,7 @@ fun LoginScreen() {
 
     val doLogin: () -> Unit = {
         if (password.isEmpty()) {
-            error = "请输入密码"
+            error = tr("login.password_required")
         } else if (!busy) {
             error = ""
             scope.launch {
@@ -106,9 +109,9 @@ fun LoginScreen() {
                     if (changed) AppState.reconfigure(target, password = password, rememberPassword = rememberPw)
                     AppState.login(password)
                 } catch (e: ApiException) {
-                    error = e.message ?: "登录失败"
+                    error = e.message ?: tr("login.failed")
                 } catch (e: Exception) {
-                    error = e.message ?: e::class.simpleName ?: "登录失败"
+                    error = e.message ?: e::class.simpleName ?: tr("login.failed")
                 } finally {
                     busy = false
                 }
@@ -133,7 +136,7 @@ fun LoginScreen() {
                     AppState.toast(msg, ToastKind.Ok)
                 } catch (e: Exception) {
                     testOk = false
-                    testMsg = "连接失败：" + (e.message ?: "未知错误")
+                    testMsg = tr("login.connect_failed") + (e.message ?: tr("未知错误_5f76edc5de"))
                     AppState.toast(testMsg, ToastKind.Err, 6000)
                 } finally {
                     testing = false
@@ -205,7 +208,7 @@ fun LoginScreen() {
                     )
                     Spacer(Modifier.size(10.dp))
                     Text(
-                        text = "CLOUD MONITOR",
+                        text = L["cloud_monitor_5768a16d7b"],
                         color = Palette.text,
                         fontSize = 15.sp,
                         fontFamily = FontFamily.Monospace,
@@ -214,7 +217,7 @@ fun LoginScreen() {
                     )
                     Spacer(Modifier.size(6.dp))
                     Text(
-                        text = "服务器实时监控与配置控制台",
+                        text = L["login.subtitle"],
                         color = Palette.muted,
                         fontSize = 12.sp,
                     )
@@ -240,7 +243,7 @@ fun LoginScreen() {
                     LoginField(
                         value = password,
                         onValueChange = { password = it; if (error.isNotEmpty()) error = "" },
-                        placeholder = "访问密码",
+                        placeholder = L["访问密码_c737b784cc"],
                         password = true,
                         enabled = !busy,
                         onEnter = doLogin,
@@ -260,14 +263,14 @@ fun LoginScreen() {
 
                     /* 登录按钮 */
                     BlockButton(
-                        text = if (busy) "登录中…" else "登 录",
+                        text = if (busy) L["登录中_734b8bcd6a"] else L["login.sign_in"],
                         enabled = !busy,
                         onClick = doLogin,
                     )
 
                     Spacer(Modifier.size(16.dp))
                     Text(
-                        text = "所有操作均被审计记录",
+                        text = L["login.audit_notice"],
                         color = Palette.muted,
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace,
@@ -290,7 +293,7 @@ fun LoginScreen() {
                         PanelIcon("link", 13.dp, Palette.muted)
                         Spacer(Modifier.size(7.dp))
                         Text(
-                            text = "服务器连接配置",
+                            text = L["login.server_config"],
                             color = Palette.muted,
                             fontSize = 11.5.sp,
                             fontFamily = FontFamily.Monospace,
@@ -315,7 +318,7 @@ fun LoginScreen() {
                         Spacer(Modifier.size(8.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             SmallButton(
-                                text = if (testing) "测试中…" else "测试连接",
+                                text = if (testing) L["测试中_49562bf14c"] else L["login.test_connection"],
                                 enabled = !testing,
                                 onClick = doTest,
                             )
@@ -331,7 +334,7 @@ fun LoginScreen() {
                                 )
                             } else {
                                 Text(
-                                    text = "默认 ${ConfigStore.DEFAULT_URL}",
+                                    text = trf("默认_0_5ce2332f3f", ConfigStore.DEFAULT_URL),
                                     color = Palette.muted,
                                     fontSize = 10.5.sp,
                                     fontFamily = FontFamily.Monospace,
@@ -375,7 +378,7 @@ fun LoginScreen() {
                                 if (rememberPw) PanelIcon("check", 11.dp, Palette.white, 2.4f)
                             }
                             Spacer(Modifier.size(8.dp))
-                            Text("记住密码", color = Palette.muted, fontSize = 12.sp)
+                            Text(L["login.remember_password"], color = Palette.muted, fontSize = 12.sp)
                         }
 
                         /* 折叠式高级区 */
@@ -389,7 +392,7 @@ fun LoginScreen() {
                             PanelIcon("sliders", 12.dp, Palette.muted)
                             Spacer(Modifier.size(6.dp))
                             Text(
-                                text = "高级",
+                                text = L["login.advanced"],
                                 color = Palette.muted,
                                 fontSize = 11.sp,
                                 fontFamily = FontFamily.Monospace,
@@ -404,17 +407,17 @@ fun LoginScreen() {
 
                         if (advancedOpen) {
                             val cur = AppState.config()
-                            InfoRow("规范化地址", cur.normalizedUrl().ifEmpty { "—" })
-                            InfoRow("API 地址", cur.apiBase().ifEmpty { "—" })
+                            InfoRow(L["规范化地址_aa67aafd91"], cur.normalizedUrl().ifEmpty { "—" })
+                            InfoRow(L["api_地址_acd8a50431"], cur.apiBase().ifEmpty { "—" })
                             InfoRow(
-                                "访问令牌",
-                                if (cur.token.isNotEmpty()) cur.token.take(10) + "…" else "未登录",
+                                L["login.access_token"],
+                                if (cur.token.isNotEmpty()) cur.token.take(10) + L["s_df316e17de"] else L["login.not_logged_in"],
                             )
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                SmallButton(text = "恢复默认地址") { url = ConfigStore.DEFAULT_URL }
+                                SmallButton(text = L["login.restore_default_url"]) { url = ConfigStore.DEFAULT_URL }
                                 Spacer(Modifier.size(8.dp))
                                 Text(
-                                    text = "改地址后点「测试连接」即持久化生效",
+                                    text = L["login.save_on_test_hint"],
                                     color = Palette.muted,
                                     fontSize = 10.sp,
                                     fontFamily = FontFamily.Monospace,

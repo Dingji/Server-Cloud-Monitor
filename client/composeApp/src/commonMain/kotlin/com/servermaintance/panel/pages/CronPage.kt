@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -108,7 +111,7 @@ fun CronPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            error = e.message ?: e::class.simpleName ?: "请求失败"
+            error = e.message ?: e::class.simpleName ?: L["请求失败_8fdc4112a4"]
         } finally {
             loading = false
         }
@@ -116,7 +119,7 @@ fun CronPage() {
 
     LaunchedEffect(Unit) { load() }
 
-    PageScaffold(title = "定时任务") {
+    PageScaffold(title = L["定时任务_c97ffbda2e"]) {
         when {
             loading && data == null && error == null -> LoadingState()
             error != null && data == null -> ErrorState(message = error!!, onRetry = {
@@ -134,26 +137,26 @@ fun CronPage() {
 
                 /* ---------------- 三磁贴（JS grid g3 mb） ---------------- */
                 GridLayout(columns = 3) {
-                    StatTile(label = "面板管理的任务", value = "${cmJobs.size}", sub = "/etc/cron.d/cm-*")
-                    StatTile(label = "Root Crontab", value = "${rootJobs.size}", sub = "crontab -l 条目")
-                    StatTile(label = "Systemd 定时器", value = "${timers.size}", sub = "systemctl list-timers")
+                    StatTile(label = L["面板管理的任务_8c1ae9316e"], value = "${cmJobs.size}", sub = "/etc/cron.d/cm-*")
+                    StatTile(label = L["root_crontab_165ab8a774"], value = "${rootJobs.size}", sub = L["crontab_l_条目_6be8b3d177"])
+                    StatTile(label = L["systemd_定时器_f8d95995f8"], value = "${timers.size}", sub = L["systemctl_list_timers_1d28f42125"])
                 }
 
                 /* ---------------- 新建 + 说明（JS grid g2） ---------------- */
                 GridLayout(columns = 2) {
                     PanelCard(
-                        title = "新建定时任务（root 权限执行）",
-                        right = { PrimaryBtn(text = "创建", onClick = {
+                        title = L["新建定时任务_root_权限执行_d637db8d7b"],
+                        right = { PrimaryBtn(text = L["创建_fcbd093292"], onClick = {
                             scope.launch {
                                 val n = name.trim(); val sc = schedule.trim(); val cmd = command.trim()
                                 if (n.isEmpty() || sc.isEmpty() || cmd.isEmpty()) {
-                                    AppState.toast("请填写完整", ToastKind.Warn)
+                                    AppState.toast(tr("请填写完整_0e68428a12"), ToastKind.Warn)
                                     return@launch
                                 }
                                 val okc = Modal.confirm(
-                                    title = "创建定时任务",
-                                    text = "$sc root $cmd\n任务名: cm-$n",
-                                    okText = "创建",
+                                    title = L["创建定时任务_cc992174ac"],
+                                    text = L["sc_root_cmd_任务名_cm_n_cfc3e33d90"],
+                                    okText = L["创建_fcbd093292"],
                                 )
                                 if (!okc) return@launch
                                 try {
@@ -163,7 +166,7 @@ fun CronPage() {
                                             "action" to "add",
                                             "params" to jsonObjectOf("name" to n, "schedule" to sc, "command" to cmd),
                                         ),
-                                        successToast = "操作成功",
+                                        successToast = L["操作成功_3c5be5f2a1"],
                                     )
                                 } finally {
                                     load()
@@ -175,15 +178,15 @@ fun CronPage() {
                             Field(
                                 value = name,
                                 onValueChange = { name = it },
-                                label = "任务名",
+                                label = L["任务名_c8d6eeaa4c"],
                                 hint = "backup-www",
                                 mono = true,
                             )
                             Field(
                                 value = schedule,
                                 onValueChange = { schedule = it },
-                                label = "Cron 表达式",
-                                hint = "0 3 * * *",
+                                label = L["cron_表达式_6859f82ab2"],
+                                hint = L["0_3_e98da8159a"],
                                 mono = true,
                             )
                         }
@@ -192,24 +195,24 @@ fun CronPage() {
                             value = command,
                             onValueChange = { command = it },
                             modifier = Modifier.fillMaxWidth(),
-                            label = "执行命令",
+                            label = L["执行命令_bf162782f5"],
                             hint = "/usr/local/bin/backup.sh",
                             mono = true,
                         )
                         Spacer(Modifier.height(10.dp))
                         Muted(
-                            "表达式格式：分 时 日 月 周，例：0 3 * * * 每天3点 · */5 * * * * 每5分钟 · " +
-                                "0 */6 * * * 每6小时。任务写入 /etc/cron.d/cm-<名>，以 root 执行。",
+                            L["表达式格式_分_时_日_月_周_例_0_3_191b93658a"] +
+                                L["0_6_每6小时_任务写入_e_369a8da904"],
                         )
                     }
 
-                    PanelCard(title = "说明") {
-                        Muted("· 此处创建的任务带 cm- 前缀，可在下方表格中直接删除")
-                        Muted("· 手动编辑的 root crontab 请通过 Web 终端操作（crontab -e）")
-                        Muted("· Systemd 定时器由 systemd 管理，仅展示；")
+                    PanelCard(title = L["说明_26670dda42"]) {
+                        Muted(L["此处创建的任务带_cm_前缀_可在下方表格_a7728c7ff7"])
+                        Muted(L["手动编辑的_root_crontab_请通过_72bfbdde79"])
+                        Muted(L["systemd_定时器由_systemd_管_6244b23917"])
                         Muted(
-                            "· /etc/cron.daily、cron.hourly 脚本：" +
-                                (dailyHourly.take(8).joinToString(", ").ifEmpty { "(空)" }),
+                            L["etc_cron_daily_cron_h_0b91b3ac69"] +
+                                (dailyHourly.take(8).joinToString(L["s_d3bc9a378d"]).ifEmpty { L["空_9e1138c983"] }),
                         )
                     }
                 }
@@ -222,21 +225,21 @@ fun CronPage() {
                         else CmJob(l.removePrefix("/etc/cron.d/"), l)
                     }
                 }
-                PanelCard(title = "面板管理的定时任务 (${cmRows.size})") {
+                PanelCard(title = trf("面板管理的定时任务_0_7c6321b375", cmRows.size)) {
                     DataTable(
                         columns = listOf(
-                            TableCol<CmJob>("任务文件", weight = 1f, mono = true) {
+                            TableCol<CmJob>(L["任务文件_8f4e93dc3d"], weight = 1f, mono = true) {
                                 Text(it.file, fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                             },
-                            TableCol<CmJob>("内容", weight = 2.6f, mono = true) {
+                            TableCol<CmJob>(L["内容_163aec9194"], weight = 2.6f, mono = true) {
                                 Text(it.line, fontFamily = FontFamily.Monospace, fontSize = 11.5.sp)
                             },
                             TableCol<CmJob>("", weight = 0.7f, minWidth = 76.dp) { job ->
-                                DangerBtn(text = "删除", icon = "trash", onClick = {
+                                DangerBtn(text = L["删除_3755f56f2f"], icon = "trash", onClick = {
                                     scope.launch {
                                         val okc = Modal.confirm(
-                                            title = "删除定时任务",
-                                            text = "删除 ${job.file}？",
+                                            title = L["删除定时任务_cbbfd7d59d"],
+                                            text = trf("删除_0_1fbd66c221", job.file),
                                             danger = true,
                                         )
                                         if (!okc) return@launch
@@ -248,7 +251,7 @@ fun CronPage() {
                                                     "action" to "delete",
                                                     "params" to jsonObjectOf("name" to delName),
                                                 ),
-                                                successToast = "操作成功",
+                                                successToast = L["操作成功_3c5be5f2a1"],
                                             )
                                         } finally {
                                             load()
@@ -259,46 +262,46 @@ fun CronPage() {
                         ),
                         rows = cmRows,
                         rowKey = { it.file },
-                        emptyText = "暂无面板创建的任务",
+                        emptyText = L["暂无面板创建的任务_e6b14e96f2"],
                     )
                 }
 
                 /* ---------------- crontab 原文（JS grid g2 pre） ---------------- */
                 GridLayout(columns = 2) {
-                    PanelCard(title = "Root Crontab") {
-                        PreBox(rootJobs.joinToString("\n").ifEmpty { "(空)" }, maxHeight = 240.dp)
+                    PanelCard(title = L["root_crontab_165ab8a774"]) {
+                        PreBox(rootJobs.joinToString("\n").ifEmpty { L["空_9e1138c983"] }, maxHeight = 240.dp)
                     }
-                    PanelCard(title = "/etc/cron.d 其它任务") {
-                        PreBox(otherJobs.joinToString("\n").take(4000).ifEmpty { "(空)" }, maxHeight = 240.dp)
+                    PanelCard(title = L["etc_cron_d_其它任务_1075d72b5f"]) {
+                        PreBox(otherJobs.joinToString("\n").take(4000).ifEmpty { L["空_9e1138c983"] }, maxHeight = 240.dp)
                     }
                 }
 
                 /* ---------------- Systemd 定时器表 ---------------- */
-                PanelCard(title = "Systemd 定时器 (${timers.size})") {
+                PanelCard(title = trf("systemd_定时器_0_dc0dc6e637", timers.size)) {
                     DataTable(
                         columns = listOf(
-                            TableCol<JsonObject>("下次执行", weight = 1.2f, mono = true) {
+                            TableCol<JsonObject>(L["下次执行_373074f4ee"], weight = 1.2f, mono = true) {
                                 Text(it.str("next"), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                             },
-                            TableCol<JsonObject>("倒计时", weight = 0.9f, mono = true) {
+                            TableCol<JsonObject>(L["倒计时_80176c18f3"], weight = 0.9f, mono = true) {
                                 Text(it.str("left"), fontFamily = FontFamily.Monospace, fontSize = 12.sp)
                             },
-                            TableCol<JsonObject>("定时器", weight = 1.6f, mono = true) {
+                            TableCol<JsonObject>(L["定时器_70cbf60aeb"], weight = 1.6f, mono = true) {
                                 Text(it.str("unit"), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                             },
-                            TableCol<JsonObject>("执行单元", weight = 1.6f, mono = true) {
+                            TableCol<JsonObject>(L["执行单元_2466ded40e"], weight = 1.6f, mono = true) {
                                 Text(it.str("activates"), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                             },
-                            TableCol<JsonObject>("上次执行", weight = 1.2f, mono = true) {
+                            TableCol<JsonObject>(L["上次执行_434c6bf57e"], weight = 1.2f, mono = true) {
                                 Text(it.str("last"), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                             },
-                            TableCol<JsonObject>("已过去", weight = 0.9f, mono = true) {
+                            TableCol<JsonObject>(L["已过去_745c1695da"], weight = 0.9f, mono = true) {
                                 Text(it.str("passed"), fontFamily = FontFamily.Monospace, fontSize = 12.sp)
                             },
                         ),
                         rows = timers,
                         rowKey = { it.str("unit") + "#" + it.str("next") },
-                        emptyText = "无 systemd 定时器",
+                        emptyText = L["无_systemd_定时器_2cb3ed5b5f"],
                     )
                 }
             }

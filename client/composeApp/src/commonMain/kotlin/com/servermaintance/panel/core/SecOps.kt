@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.JsonObject
@@ -89,7 +91,7 @@ object SecState {
         if (e is ApiException && e.code == 404) {
             unsupported.value = true
             lastError.value = null
-        } else lastError.value = "$path: ${e.message ?: "请求失败"}"
+        } else lastError.value = trf("0_1_4d3c418a83", path, e.message ?: L["请求失败_8fdc4112a4"])
     }
 
     suspend fun scan() {
@@ -128,20 +130,20 @@ object SecState {
         val output = o.str("output")
         load()
         loadTrend()
-        (if (o.bool("ok")) null else (output.ifBlank { "修复未成功" })) to output
+        (if (o.bool("ok")) null else (output.ifBlank { L["修复未成功_d8d320b456"] })) to output
     } catch (e: ApiException) {
-        (e.message ?: "修复失败") to null
+        (e.message ?: L["修复失败_3d6dfbe1ad"]) to null
     } catch (e: Exception) {
-        (e.message ?: "修复失败") to null
+        (e.message ?: L["修复失败_3d6dfbe1ad"]) to null
     }
 
     fun byCategory(cat: String): List<SecCheck> = report.value?.checks?.filter { it.cat == cat } ?: emptyList()
     fun issueCount(): Int = report.value?.let { (it.counts["bad"] ?: 0) + (it.counts["warn"] ?: 0) } ?: 0
     fun fixLabel(id: String): String = fixes.value.firstOrNull { it.id == id }?.label ?: id
     fun levelText(level: String): String = when (level) {
-        "ok" -> "合规"
-        "warn" -> "建议处理"
-        "bad" -> "存在风险"
-        else -> "未覆盖"
+        "ok" -> L["合规_540bc8b761"]
+        "warn" -> L["建议处理_43d0209c9a"]
+        "bad" -> L["存在风险_34748d1f0d"]
+        else -> L["未覆盖_e3b1d53edc"]
     }
 }

@@ -1,0 +1,120 @@
+0_6_每6小时_任务写入_e_369a8da904	0 */6 * * * Every 6 hours. The task is written to /etc/cron.d/cm-<name> and runs as root.
+0_个文件_81d82139e8	 · {0} files
+0_将进入回收站_保留_1_天_0a8a244509	"{0}" will go to the recycle bin and be kept for {1} days.
+0_条展示_命中_1_条_0e114bc461	({0} shown / {1} matched)
+0_表示立即_189b797c4f	0 means immediately
+10分钟_b82d31194e	10 minutes
+14_4_表示约_2_天烧完_sre_常用告_681c4dc86d	≥14.4× means the budget runs out in about 2 days (a common SRE alert threshold). 4xx are client-side issues and are not counted against the budget.
+163_邮箱_设置_pop3_smtp_2cd036d08b	163 Mail: Settings → POP3/SMTP → enable and generate an "authorization code", then enter it below (not your login password).
+1_列表_522d9cc510	1. List
+1小时_3a9a579a96	1 hour
+24_小时发送_8e6d358b2e	Sent in 24 hours
+24_小时失败_f23fa2b0e3	Failed in 24 hours
+24_小时拉起次数_8c19db84c7	Restarts in 24 hours
+24_小时通知_ed50056bf1	Notifications in 24 hours
+24小时_45a2727884	24 hours
+2_秒_5198950435	2 seconds
+30_天_9401eee769	30 days
+30_天后自动清除_b6c489a29c	Automatically cleared after 30 days
+33m_会话已关闭_be33fffa31	[33m[Session closed]
+402_额度_fbd56d7158	402 quota
+403_权限_bd93595602	403 permission
+429_拦截_0_7a460e2aa8	429 blocked {0}
+429_拦截_563bec273d	429 blocked
+429_次数_9333e8c60f	429 count
+429_限流_5bd5af3cd2	429 rate-limited
+499_中断_8a0629ae88	499 aborted
+4xx_0_499_中断_1_817ee52e07	4xx {0} · 499 aborted {1}
+4xx_0_5xx_1_未授权_4116249143	4xx {0} · 5xx {1} · unauthorized {2}
+4xx_0_无响应_1_cd8a2943ad	4xx {0} · no response {1}
+4xx_错误_2368d2493d	4xx errors
+500_毫秒_cc7da43bcf	500 ms
+5xx_无响应_2355276e0d	5xx/no response
+5xx_错误_6ed859ac67	5xx errors
+6小时_57937ccefc	6 hours
+7_天_e45a81074f	7 days
+account_lock_锁定_bbeaf242af	ACCOUNT LOCK (locked)
+account_unlock_解锁_b001d58ec0	ACCOUNT UNLOCK (unlocked)
+acl_用户_0_b7e2c3ae45	ACL users ({0})
+acl_用户_roles_size_8df0ffb733	ACL users (${roles.size})
+act_服务_a3ebd5a4a1	$act service
+analyze_会真实执行该语句以采集实际行数与_7e2c3ab4f2	ANALYZE actually runs the statement to collect real row counts and timings. Make sure this is a read-only query; run statements that write data in the SQL console.
+analyze_更新统计_ae3c35e60c	ANALYZE (update statistics)
+api_地址_acd8a50431	API address
+api_基础地址_走代理时填_5c7aa1a51e	API base address (fill in when using a proxy)
+app.description	Server monitoring and configuration panel client
+app_连接的_cloud_monitor_面板_0ee7660770	Address of the Cloud Monitor panel the app connects to. Defaults to http://8.153.153.176/panel; can be changed to the address of any deployed panel.
+apt_任务进行中_0_6028d2fbd3	apt task in progress: {0}
+apt_缓存_c1fb672ce3	APT cache
+auditd_未启用_2ca17006e2	auditd not enabled
+auditd_记录的敏感文件变更_谁_用什么命令_de2731982f	Sensitive file changes recorded by auditd: who, with which command, which file changed
+badprov_个供应商配额耗尽_363bea5ae6	$badProv provider quotas exhausted
+banner_能顺带看到对端_openssh_版_6a7382b65e	The banner also reveals the remote OpenSSH version, which helps check upgrade needs
+bgsave_会在后台生成_rdb_文件_flu_221d58038d	BGSAVE creates an RDB file in the background; FLUSHDB/ALL deletes all data and requires a second confirmation.
+bgsave_后台快照_7679d32e01	BGSAVE (background snapshot)
+bilibili_视频_7fcd50c628	Bilibili video
+certbot_安装日志_1bf087319a	certbot installation log
+certbot_已安装_7690d6f09a	certbot installed
+certbot_未安装_b2dd3df63b	certbot not installed
+chat_id_或_频道名_beb6893b9b	Chat ID or @channel name
+check_校验_8a646f2a85	CHECK (verify)
+common.loading	Loading…
+corecount_核高负载_cores_afc43a96da	$coreCount cores under heavy load · $coresTotal cores
+cpu_使用率_35b17729e2	CPU usage %
+cpu_使用率_bdf91f384b	CPU usage
+cpu_占用_89f8a08e80	CPU utilization
+cpu_占用_top_52d0789676	Top CPU utilization
+cpu_核数_2a5bc46dd3	CPU cores
+cron_表达式_6859f82ab2	Cron expression
+crontab_l_条目_6be8b3d177	crontab -l entries
+csv_内容_粘贴_17c5b7dbff	CSV content (paste)
+csv_导入结果_3a4d7db0d7	CSV import result
+ctrl_shift_c_v_复制粘贴_会话_7c3872ffae	Ctrl+Shift+C/V to copy/paste · the session is kept for 2 minutes after you leave this page (server/shell.js GRACE_MS)· 
+curlabel_按天_12556e7b0c	$curLabel · per day
+curlabel_按天_可复用_vs_8cc7c3562a	$curLabel · per day · reusable vs. new
+days_天_a6409fc14f	$days days
+db2_sql_以实例用户执行_51f6dbcefb	Db2 SQL (runs as the instance user)
+db2_授权_grant_revoke_eb50e06ee0	Db2 grants (GRANT / REVOKE)
+db2_用_grant_revoke_管理权限_209a33078b	Db2 manages permissions with GRANT/REVOKE; the user must first be created on the instance (db2 CREATE USER or an OS account).
+ddl_定义_可编辑后执行_20bea6e0ac	DDL definition (editable before execution)
+ddl_执行结果_d203cf40d4	DDL execution result
+dirty_待写盘_a3b33885f4	Dirty (pending write to disk)
+docker_system_prune_af_ead57cbf4c	docker system prune -af: removes unused images/networks/stopped containers
+docker_安装日志_08ccdea4e9	Docker installation log
+docker_容器_4372ba1200	Docker containers
+docker_引擎_755076c561	Docker engine
+docker_清理_795b9faf02	Docker cleanup
+drop_table_删除表_0a38c31f25	DROP TABLE (delete table)
+du_尚未返回结果_0af775f143	du has not returned results yet
+e_name_将进入回收站_保留_f_b07c62be90	"${e.name}" will go to the recycle bin and be kept for ${FileStore.trashDays.value} days.
+else_dat_3b7177d8b6	\n            else -> dateTime(t)\n        }\n    }\n\n    /** Percentage display: `99.1%` (precision ≤0.1, extra zeros trimmed). */\n    fun pct(p: Number?, suffix: String = 
+error_log_累计_40739fb64e	error.log total
+etc_cron_d_其它任务_1075d72b5f	/etc/cron.d other tasks
+etc_cron_daily_cron_h_0b91b3ac69	· /etc/cron.daily, cron.hourly scripts:
+explain_分析_5739bed548	EXPLAIN analysis
+fail2ban_未启用_dba20ac8ac	fail2ban not enabled
+fail2ban_未安装_未运行_006151f653	fail2ban not installed/not running
+fail2ban_监狱_fd16fed272	fail2ban jails
+fail2ban_运行中_401151de3a	fail2ban running
+fail2ban_防爆破_e5d811ec15	Fail2ban anti-brute-force
+failedcount_个服务失败_4bb48044cc	$failedCount services failed
+failing_项失败_c0f4c9b479	$failing items failed
+flushall_清空全部_d122dc5ecd	FLUSHALL (flush everything)
+flushdb_清空当前库_4587c55eaa	FLUSHDB (flush current database)
+gzip_归档_39fcde3a7b	gzip archive
+h_label_采集完成_a374e6c968	{0} collection complete
+hmac_签名密钥_可空_d93d6e2984	HMAC signing key (optional)
+http_方法_b1d337493c	HTTP method
+inode_使用_0_小文件过多时会先耗尽_241698504d	inode usage {0}% (inodes run out first when there are too many small files)
+inode_使用_m_inodeusedpc_cd43f1cf53	inode usage ${m.inodeUsedPct}% (inodes run out first when there are too many small files)
+inode_使用率_5279b4b61c	inode usage
+ip_或域名_6ebd1799de	IP or domain name
+ip_来源_f387b79f3d	IP source
+journal_apt_轮转日志_093250e13f	journal + APT + rotated logs
+journal_上限_0_1_天_d18e51fc4e	journal limit {0} / {1} days
+journal_上限_1f54a3217f	journal limit
+journal_上限_s_journalsi_1ef09f8f8d	journal limit ${s.journalSize} / ${s.journalDays} days
+journal_保留天数_e74cafd94c	journal retention days
+journal_日志_b4bd477c2c	journal logs
+json_文档_e422afa510	JSON document
+label_失败_4c06e7d781	<label> failed

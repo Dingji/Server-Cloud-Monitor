@@ -1,4 +1,5 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,8 +45,8 @@ fun DatabasesPage() {
     }
 
     PageScaffold(
-        title = "数据库",
-        desc = "PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB 的库表管理、SQL 控制台、性能洞察与备份恢复",
+        title = L["数据库_f4dbbc63a5"],
+        desc = L["postgresql_mysql_sql_42e513fca9"],
     ) {
         when {
             st.enginesLoading -> LoadingState()

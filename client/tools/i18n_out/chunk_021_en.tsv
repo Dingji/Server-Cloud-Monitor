@@ -1,0 +1,120 @@
+站点文件_6bb8ebce82	Site files
+端到端均值_0_ms_样本_1_19bba62269	End-to-end mean {0} ms · samples {1}
+端到端延迟_p50_p95_p99_a56b61f255	End-to-end latency P50/P95/P99
+端到端延迟分布_add045c5a6	End-to-end latency distribution
+端口_6cbb7335b5	Port
+端口_tcp_证书_000343bdda	Port (TCP / certificate)
+端口规格_如_8080_tcp_或_3306_b254f7025d	Port spec, e.g. 8080/tcp or 3306
+笔记_697dbde096	Notes
+笔记_markdown_f0f9aad2ff	Notes Markdown
+笔记数_c6bb826e1e	Note count
+符号链接_bcf783908a	Symlink
+第_0_1_条_d43fae8803	Items {0}–{1}
+第_0_1_页_2bcf209437	Page {0}{1}
+第_if_total_0_offse_cc3c7f5983	Items ${if (total > 0) offset + 1 else 0}–${kotlin.math.min(offset + limit, total)}
+等待_ws_推送_b35761ce7b	Waiting for WS push…
+等待任务输出_9d3133ea50	(Awaiting task output…)
+等级_0_97edc6708f	Grade {0}
+等级_r_grade_eea478ae8a	Grade ${r.grade}
+筛选_dcce9a144a	Filter
+签名_0_e57efd3ddc	 · signed {0}
+签名_signed_23520a9a01	 · signed $signed
+签名头名称_9630afa6a5	Signature header name
+管理_4989b5cf94	Manage
+管理员_ef84e765e0	Administrator
+类型_e4e46c7235	Type
+粘贴公钥_ssh_ed25519_aaaa_2134dc2324	Paste public key (ssh-ed25519 AAAA... user@host)
+精确计数_5ced543864	Exact count
+系统_1a1f6dff78	System
+系统健康_c628dff7ac	System health
+系统关键组件_434e1cae8b	Critical system component
+系统服务_b548e12013	System services
+系统状态_d27e7c5033	System status
+索引_0_3cc54b03cb	Indexes ({0})
+索引_0_f272b8b8df	Indexes ({0})
+索引_79f9110607	Indexes
+索引_idx_size_e3756f6c32	Indexes (${idx.size})
+索引与维护_08e65540df	Indexes & maintenance
+索引名_6440d47b9d	Index name
+索引方法_803a267e88	Index method
+索引更新于_0_3df853c52d	Index updated {0}
+紧张_168469b0ba	Strained
+紧急_27429f465b	Critical
+紫罗兰_4ad6adcb0c	Violet
+累计token_7b460149d3	Cumulative tokens
+累计封禁_27b6c8449a	Cumulative bans
+累计查询_393f01e953	Cumulative queries
+累计轮次_0_2b3c58a131	Cumulative turns {0}
+红色_4e68d49452	Red
+级别_2548499200	Level
+级联删除_cascade_a1e0b2af29	Cascade delete (CASCADE)
+纳管主机_0_台不通_6d0408c84f	{0} managed host(s) unreachable
+纳管主机_264920c4bd	Managed hosts
+纳管主机_hs_unreachable_台_b3d7618998	${hs.unreachable} managed host(s) unreachable
+线路_5922d95f29	Route
+线路分布_3032cd9f4d	Route distribution
+终止_2eee5759c3	Terminate
+终止会话_de80dfdd28	Terminate session
+终止匹配会话_0ae3497d4c	Terminate matching sessions
+终止所有匹配的会话_筛选_状态_0_库_1aa59069c5	Terminate all matching sessions?\nFilter: state={0} · database={1} · user={2}
+终止进程_58d47ffb50	Terminate process
+终止连接_cffa0e1963	Terminate connection
+终端优先使用密钥认证_keys_pty_key_72bf1b066b	Terminals prefer key authentication (keys/pty_key) with password as fallback. Takes effect for new terminal sessions after changes.
+结构_953c96d7dd	Structure
+结构_数据整表复制到另一个数据库_pg_走_6fb384c536	Copy structure + data of entire tables to another database (PG via a pg_dump pipe, MySQL via a mysqldump pipe).
+结果_0a2c91cec6	Result
+结果_268f3e1aef	 result
+结果按主机写入历史_远端内存_负载_磁盘趋势_b7a653d0f5	Results are written to per-host history (remote memory / load / disk trends). Password credentials are stored in the server's ops directory (0600); the API only reports whether they are configured.
+结论_32b3f16d10	Conclusion
+绝对路径_如_var_www_html_a7724c2089	Absolute path, e.g. /var/www/html
+统计_慢查询_b2cf7a731a	Stats: slow queries
+统计_表大小_30ce851a1c	Stats: table sizes
+统计功能未启用_6be0d6457c	Statistics not enabled
+统计窗口_d51cf620a9	Stats window
+统计窗口_分钟_b0bcefb565	Stats window (minutes)
+继续_1fc1afc5c5	Continue
+续期证书_bc4865026e	Renew certificate
+维护_72527e2f0e	Maintenance
+维护与高级_1b6aefdd47	Maintenance & advanced
+维护操作_7a7b416bde	Maintenance actions
+维护窗口_21d86e812a	Maintenance window
+维护结果_5efe6d2c70	Maintenance result
+维护计划_b0429d05a2	Maintenance plan
+缓存_0_dfe2b5a86d	Cache {0}
+缓存_月_6f6d3ae971	Cache (months)
+缓存_缓冲_f04a767b7a	Cache / buffers
+缓存写_6d103bdf73	Cache writes
+缓存命中_6b6d3e87d8	Cache hits
+缓存命中率_0_3db6d625f8	Cache hit rate {0}
+缓存命中率_c684222fb9	Cache hit rate
+缓存清理_7dc4dae50d	Cache cleanup
+缓存读_37ec7f1ba3	Cache reads
+缓存读_tok_941fe28661	Cache read tok
+缓存读_写_75e0fcf350	Cache read / write
+编码_c94faa718a	Encoding
+编辑_0_70e0b308bd	Edit "{0}"
+编辑_a7f814c0a4	Edit
+编辑_existing_label_0222c62373	Edit "${existing.label}"
+编辑_existing_name_15e06c10c7	Edit "${existing.name}"
+编辑事项_6ea6964be4	Edit item
+编辑归类_c2e1877f39	Edit category
+编辑此文件_17388d0bda	Edit this file
+编辑清单_b94bb808ea	Edit list
+编辑用户_2b8f00100b	Edit user
+编辑行_e748f0fc90	Edit row
+编辑行_定位条件_7d4862ee54	Edit row - locate condition
+编辑键值_0_ffdfc28fa2	Edit key-value - {0}
+编辑键值_k_1b61b1ea25	Edit key-value - $k
+缺_ssh2_6e2c932ece	ssh2 missing
+缺启动命令_3e09108184	Start command missing
+缺失索引建议_daeb19067d	Missing index suggestions
+网卡开关_0cbd1185e2	NIC toggle
+网站_nginx_62b11c295b	Website / Nginx
+网站_端口_证书_dns_的周期探测_0eddb57091	Periodic probes and availability (SLA) stats for websites / ports / certificates / DNS
+网络_i_o_a51f84968c	Network I/O
+网络不可达_7e7812414f	Network unreachable
+网络吞吐_kb_s_e4170c683f	Network throughput (KB/s)
+网络流量_40150f52d6	Network traffic
+网络管理_c953585213	Network management
+网络错误_0_d319ef957f	Network error: {0}
+翠绿_f1343f68f2	Spring green

@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label ติดตั้งเสร็จสิ้น กำลังรีเฟรช…
+label_安装日志_13ce1b1029	$label บันทึกการติดตั้ง
+label_实现中_70505f7ef8	“$label” อยู่ระหว่างการพัฒนา…
+llm_api_中继的请求量_token_用量_6b89d708ea	ปริมาณคำขอ ปริมาณการใช้ Token โควตาของคีย์พูล ความพร้อมใช้งานของโมเดล และการวิเคราะห์คุณภาพของ LLM API relay
+location_块_不要停用该站点以免面板与_4ae164b62b	บล็อก location) อย่าปิดไซต์นี้ เพราะทั้งพาเนลและบริการรีเลย์จะหยุดพร้อมกัน
+login.access_token	โทเค็นการเข้าถึง
+login.advanced	ขั้นสูง
+login.audit_notice	การดำเนินการทั้งหมดถูกบันทึกลงในบันทึกการตรวจสอบ
+login.connect_failed	เชื่อมต่อไม่สำเร็จ:
+login.failed	เข้าสู่ระบบไม่สำเร็จ
+login.normalized_url	ที่อยู่ที่ปรับรูปแบบแล้ว
+login.not_logged_in	ยังไม่ได้เข้าสู่ระบบ
+login.password_required	กรุณาใส่รหัสผ่าน
+login.remember_password	จดจำรหัสผ่าน
+login.restore_default_url	กู้คืนที่อยู่เริ่มต้น
+login.save_on_test_hint	หลังเปลี่ยนที่อยู่ ให้คลิก “ทดสอบการเชื่อมต่อ” เพื่อบันทึก
+login.server_config	การตั้งค่าการเชื่อมต่อเซิร์ฟเวอร์
+login.sign_in	เข้าสู่ระบบ
+login.signing_in	กำลังเข้าสู่ระบบ…
+login.subtitle	คอนโซลตรวจสอบเซิร์ฟเวอร์แบบเรียลไทม์และการตั้งค่า
+login.test_connection	ทดสอบการเชื่อมต่อ
+login.testing	กำลังทดสอบ…
+login_可登录_0e617ada9b	LOGIN (เข้าสู่ระบบได้)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(ไบต์ของรอบก่อนหน้า ไบต์ของรอบนี้) คือเนื้อหาที่ส่งไปแล้วในรอบก่อน ๆ นี่คือขีดจำกัดสูงสุดที่แคชควรเข้าถึง โดยไม่ขึ้นกับข้อมูลที่ผู้ให้บริการรายงาน\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB ไม่คืนพื้นที่ disk validate/reindex เป็นงานบำรุงรักษาตามปกติ
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB ใช้ mongodump เพื่อสร้างไฟล์บีบอัด gzip (ต้องมี mongodump)
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB จะสร้างฐานข้อมูลจริงก็ต่อเมื่อมีการเขียนลงในคอลเลกชันครั้งแรก ที่นี่จะสร้างคอลเลกชันตัวแทน _cm_init
+mongodb_的过滤条件支持_字段_值_558264a7d8	ตัวกรองของ MongoDB รองรับรูปแบบ {"ฟิลด์":ค่า} (แปลงเป็นเงื่อนไขคิวรีภายใน) หรือแบบย่อ ฟิลด์=ค่า เอกสารแสดงเป็น JSON โดย _id เป็นตัวระบุเอกสาร
+mongodb_维护结果_aaeb39f907	ผลการบำรุงรักษา MongoDB
+ms_毫秒_7ade5ab3a4	$ms มิลลิวินาที
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (ค่าเริ่มต้น root + socket)
+mysql_语法_8200e34cb7	ไวยากรณ์ MySQL
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a สถิติ
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c ตรวจสอบ
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o ปรับให้เหมาะสม
+name_ver_连接正常_33d0a44ec7	$name $ver เชื่อมต่อปกติ
+name_关闭_c8e887ebc0	$name: ปิด
+name_开启_54ce939603	$name: เปิด
+nav.audit	บันทึกการตรวจสอบ
+nav.backups	ศูนย์ข้อมูลสำรอง
+nav.cron	งานตามเวลา
+nav.dashboard	แดชบอร์ด
+nav.databases	ฐานข้อมูล
+nav.disks	การจัดการดิสก์
+nav.docker	คอนเทนเนอร์ Docker
+nav.health_alerts	การแจ้งเตือนสถานะ
+nav.logs	ศูนย์บันทึก
+nav.memory	การจัดการหน่วยความจำ
+nav.network	การจัดการเครือข่าย
+nav.note_mail	การแจ้งเตือนทางอีเมล
+nav.note_settings	การตั้งค่า NoteBox
+nav.note_transfer	นำเข้า / ส่งออก
+nav.note_users	การจัดการผู้ใช้
+nav.notes	โน้ต
+nav.ops_channels	ช่องทางการแจ้งเตือน
+nav.ops_disk	การบริหารดิสก์
+nav.ops_files	การจัดการไฟล์
+nav.ops_hosts	โฮสต์ที่จัดการ
+nav.ops_remote	เมตริกโฮสต์ระยะไกล
+nav.ops_rules	กฎการแจ้งเตือน
+nav.ops_sec	การตรวจสอบเส้นฐานความปลอดภัย
+nav.ops_uptime	การวัดความพร้อมใช้งาน
+nav.ops_watch	การดูแลบริการ
+nav.packages	การจัดการแพ็กเกจ
+nav.page_placeholder	หน้า “{0}” อยู่ระหว่างการพัฒนา…
+nav.pinned_hint	(ปักหมุดแล้ว กดค้างเพื่อเลิกปักหมุด)
+nav.processes	การจัดการโพรเซส
+nav.relay	OpenCode relay
+nav.section.app	แอป
+nav.section.monitor	การตรวจสอบ
+nav.section.notes	โน้ต
+nav.section.server	เซิร์ฟเวอร์
+nav.section.system	ระบบ
+nav.section.tools	เครื่องมือ
+nav.security	การจัดการความปลอดภัย
+nav.services	บริการของระบบ
+nav.settings	การตั้งค่าพาเนล
+nav.slo	SLO และการใช้งาน
+nav.terminal	เทอร์มินัล Web
+nav.todos	รายการสิ่งที่ต้องทำ
+nav.web	เว็บไซต์ / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf กำหนดค่า Nginx · sshd_config กำหนดค่า SSH · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	กำหนดค่า nginx/sshd/fstab จะถูกตรวจสอบอัตโนมัติหลังบันทึก
+nginx_站点_0_6bcfddef71	ไซต์ Nginx ({0})
+nginx_站点_sites_size_2db3c2b5be	ไซต์ Nginx (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	SMTP และกฎการแจ้งเตือนของ NoteBox
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox โน้ตคลาวด์ (หมวดหมู่หลายระดับ · ถังขยะ · Markdown · การแชร์)
+notebox_地址未配置_3d37258011	ยังไม่ได้ตั้งค่าที่อยู่ NoteBox
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox สิ่งที่ต้องทำ (รองรับกำหนดส่งและการแจ้งเตือนทางอีเมล)
+notebox_数据迁移_362725f18e	การย้ายข้อมูล NoteBox
+notebox_服务可达_6a7506d6ac	บริการ NoteBox เข้าถึงได้
+notebox_服务可达_未登录_e023d68cad	บริการ NoteBox เข้าถึงได้ (ยังไม่ได้เข้าสู่ระบบ)
+notebox_服务地址_默认端口_13345_e0880dfda6	ที่อยู่บริการ NoteBox (พอร์ตเริ่มต้น 13345) ต้องเข้าสู่ระบบอีกครั้งหลังเปลี่ยน
+notebox_登录成功_013138644f	เข้าสู่ระบบ NoteBox สำเร็จ
+notebox_设置_efb5a47b98	การตั้งค่า NoteBox
+notebox_账号_仅管理员_81b8d4ca26	บัญชี NoteBox (สำหรับผู้ดูแลเท่านั้น)
+online_台有近期数据_1fefff8cdc	$online เครื่องมีข้อมูลล่าสุด
+opencode_中继_2e021ee797	OpenCode relay
+p95_延迟_57d63f8b46	ความหน่วง P95
+p95_延迟_ba65a873bc	ความหน่วง p95
+palette.accent_hint	ลักษณะภายนอก · ปัจจุบัน {0}
+palette.open_page	เปิดหน้า {0}
+palette.pin	ปักหมุด “{0}”
+palette.pin_hint	พื้นที่ทำงาน · กดค้างที่รายการแถบข้างเพื่อสลับเช่นกัน
+palette.reload_hint	F5 / Ctrl+R · โหลดใหม่
+palette.theme_hint	ลักษณะภายนอก · ปัจจุบัน {0}
+palette.unpin	เลิกปักหมุด “{0}”
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (บังคับเปลี่ยนรหัสผ่าน)
+pg_自定义格式_0cc41d0ea4	รูปแบบกำหนดเอง PG
+postgresql_mysql_sql_42e513fca9	การจัดการฐานข้อมูล/ตาราง คอนโซล SQL ข้อมูลเชิงลึกด้านประสิทธิภาพ และการสำรอง/กู้คืนสำหรับ PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	รูปแบบกำหนดเองของ PostgreSQL -Fc (กู้คืนเร็วกว่า)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (ค่าเริ่มต้นใช้การยืนยันตัวตน peer: su - postgres)
+rdb_快照_62f218ed40	สแนปช็อต RDB
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis จะรัน BGSAVE และคัดลอกไฟล์ RDB การกู้คืนจะเขียนทับไดเรกทอรีข้อมูล และต้องรีสตาร์ท Redis จึงจะมีผล
+redis_命令控制台_fa42019a53	คอนโซลคำสั่ง Redis
+redis_维护_d2a01bfbd3	การบำรุงรักษา Redis
+reindex_全部库_90545e1eeb	REINDEX ทุกฐานข้อมูล
+reindex_重建索引_256956f94e	REINDEX / สร้างดัชนีใหม่
+reindex_重建索引_d81fcbf8d0	REINDEX (สร้างดัชนีใหม่)
+relay_alert_py_检查_smtp_告_012aaa3373	การตรวจสอบ relay_alert.py ช่องทางแจ้งเตือน SMTP ค่าเกณฑ์ และบันทึกการแจ้งเตือน

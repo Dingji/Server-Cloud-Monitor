@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label इंस्टॉलेशन पूर्ण, रीफ्रेश हो रहा है…
+label_安装日志_13ce1b1029	$label इंस्टॉल लॉग
+label_实现中_70505f7ef8	“$label” कार्यान्वयन जारी…
+llm_api_中继的请求量_token_用量_6b89d708ea	LLM API रिले के अनुरोधों की मात्रा, Token उपयोग, कुंजी पूल कोटा, मॉडल उपलब्धता और गुणवत्ता विश्लेषण
+location_块_不要停用该站点以免面板与_4ae164b62b	location ब्लॉक), इस साइट को अक्षम न करें, अन्यथा पैनल और रिले सेवा दोनों एक साथ बंद हो जाएंगे।
+login.access_token	एक्सेस टोकन
+login.advanced	उन्नत
+login.audit_notice	सभी कार्रवाइयाँ ऑडिट लॉग में दर्ज होती हैं
+login.connect_failed	कनेक्शन विफल:
+login.failed	लॉगिन विफल
+login.normalized_url	मानकीकृत पता
+login.not_logged_in	लॉगिन नहीं हुआ
+login.password_required	कृपया पासवर्ड दर्ज करें
+login.remember_password	पासवर्ड याद रखें
+login.restore_default_url	डिफ़ॉल्ट पता पुनर्स्थापित करें
+login.save_on_test_hint	पता बदलने के बाद उसे सहेजने के लिए “कनेक्शन परीक्षण” पर क्लिक करें
+login.server_config	सर्वर कनेक्शन सेटिंग्स
+login.sign_in	लॉग इन करें
+login.signing_in	लॉगिन हो रहा है…
+login.subtitle	सर्वर की रीयल-टाइम मॉनिटरिंग और कॉन्फ़िगरेशन कंसोल
+login.test_connection	कनेक्शन परीक्षण
+login.testing	परीक्षण जारी…
+login_可登录_0e617ada9b	LOGIN (लॉगिन उपलब्ध)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(पिछले राउंड के बाइट, इस राउंड के बाइट) वह सामग्री है जो पिछले राउंड में पहले ही भेजी जा चुकी है — यही वह अधिकतम सीमा है जहाँ कैश को हिट होना चाहिए, यह विक्रेता की रिपोर्ट पर निर्भर नहीं है।\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB स्पेस रिक्लेम नहीं करता; validate/reindex सामान्य नियमित रखरखाव हैं।
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB mongodump से gzip संग्रह बनाता है (mongodump आवश्यक)।
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB डेटाबेस को वास्तव में किसी कलेक्शन में पहली लिखाई पर ही बनाता है; यहाँ प्लेसहोल्डर कलेक्शन _cm_init बनाई जाएगी।
+mongodb_的过滤条件支持_字段_值_558264a7d8	MongoDB फ़िल्टर {"फ़ील्ड":मान} रूप (आंतरिक रूप से क्वेरी शर्त में बदला जाता है) या फ़ील्ड=मान संक्षिप्त रूप का समर्थन करते हैं। दस्तावेज़ JSON में दिखाए जाते हैं; _id दस्तावेज़ पहचानकर्ता है।
+mongodb_维护结果_aaeb39f907	MongoDB रखरखाव परिणाम
+ms_毫秒_7ade5ab3a4	$ms मिलीसेकंड
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (डिफ़ॉल्ट root + socket)
+mysql_语法_8200e34cb7	MySQL सिंटैक्स
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a आंकड़े
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c सत्यापन
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o अनुकूलन
+name_ver_连接正常_33d0a44ec7	$name $ver कनेक्शन सामान्य
+name_关闭_c8e887ebc0	$name: बंद
+name_开启_54ce939603	$name: चालू
+nav.audit	ऑडिट लॉग
+nav.backups	बैकअप केंद्र
+nav.cron	निर्धारित कार्य
+nav.dashboard	डैशबोर्ड
+nav.databases	डेटाबेस
+nav.disks	डिस्क प्रबंधन
+nav.docker	Docker कंटेनर
+nav.health_alerts	स्वास्थ्य अलर्ट
+nav.logs	लॉग केंद्र
+nav.memory	मेमोरी प्रबंधन
+nav.network	नेटवर्क प्रबंधन
+nav.note_mail	ईमेल सूचनाएँ
+nav.note_settings	NoteBox सेटिंग्स
+nav.note_transfer	आयात / निर्यात
+nav.note_users	उपयोगकर्ता प्रबंधन
+nav.notes	नोट्स
+nav.ops_channels	सूचना चैनल
+nav.ops_disk	डिस्क शासन
+nav.ops_files	फ़ाइल प्रबंधन
+nav.ops_hosts	प्रबंधित होस्ट
+nav.ops_remote	दूरस्थ होस्ट मेट्रिक्स
+nav.ops_rules	अलर्ट नियम
+nav.ops_sec	सुरक्षा बेसलाइन जाँच
+nav.ops_uptime	अपटाइम प्रोबिंग
+nav.ops_watch	सेवा निगरानी
+nav.packages	पैकेज प्रबंधन
+nav.page_placeholder	“{0}” पेज कार्यान्वयन जारी…
+nav.pinned_hint	(पिन किया गया, अनपिन करने के लिए देर तक दबाएँ)
+nav.processes	प्रोसेस प्रबंधन
+nav.relay	OpenCode रिले
+nav.section.app	ऐप्स
+nav.section.monitor	मॉनिटरिंग
+nav.section.notes	नोट्स
+nav.section.server	सर्वर
+nav.section.system	सिस्टम
+nav.section.tools	उपकरण
+nav.security	सुरक्षा प्रबंधन
+nav.services	सिस्टम सेवाएँ
+nav.settings	पैनल सेटिंग्स
+nav.slo	SLO और उपयोग
+nav.terminal	Web टर्मिनल
+nav.todos	कार्य सूची
+nav.web	वेबसाइट / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf Nginx कॉन्फ़िग · sshd_config SSH कॉन्फ़िग · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	nginx/sshd/fstab कॉन्फ़िग सहेजने पर स्वतः सत्यापित हो जाती हैं
+nginx_站点_0_6bcfddef71	Nginx साइट ({0})
+nginx_站点_sites_size_2db3c2b5be	Nginx साइट (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP और अलर्ट नियम
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox क्लाउड नोट्स (बहु-स्तरीय श्रेणियाँ · रीसायकल बिन · Markdown · साझाकरण)
+notebox_地址未配置_3d37258011	NoteBox पता कॉन्फ़िगर नहीं है
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox कार्य (समय-सीमा और ईमेल रिमाइंडर सहित)
+notebox_数据迁移_362725f18e	NoteBox डेटा माइग्रेशन
+notebox_服务可达_6a7506d6ac	NoteBox सेवा पहुँच योग्य
+notebox_服务可达_未登录_e023d68cad	NoteBox सेवा पहुँच योग्य (लॉगिन नहीं हुआ)
+notebox_服务地址_默认端口_13345_e0880dfda6	NoteBox सेवा पता (डिफ़ॉल्ट पोर्ट 13345)। बदलने के बाद फिर से लॉगिन करना होगा।
+notebox_登录成功_013138644f	NoteBox लॉगिन सफल
+notebox_设置_efb5a47b98	NoteBox सेटिंग्स
+notebox_账号_仅管理员_81b8d4ca26	NoteBox खाता (केवल व्यवस्थापक)
+online_台有近期数据_1fefff8cdc	$online होस्ट पर हाल का डेटा है
+opencode_中继_2e021ee797	OpenCode रिले
+p95_延迟_57d63f8b46	P95 विलंबता
+p95_延迟_ba65a873bc	p95 विलंबता
+palette.accent_hint	रूप · वर्तमान {0}
+palette.open_page	पेज खोलें {0}
+palette.pin	“{0}” पिन करें
+palette.pin_hint	कार्यक्षेत्र · साइडबार आइटम को देर तक दबाकर भी बदलें
+palette.reload_hint	F5 / Ctrl+R · रीलोड
+palette.theme_hint	रूप · वर्तमान {0}
+palette.unpin	“{0}” अनपिन करें
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (पासवर्ड बदलना अनिवार्य)
+pg_自定义格式_0cc41d0ea4	PG कस्टम प्रारूप
+postgresql_mysql_sql_42e513fca9	PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB के लिए डेटाबेस/तालिका प्रबंधन, SQL कंसोल, प्रदर्शन इनसाइट और बैकअप/पुनर्स्थापना
+postgresql_自定义格式_fc_更快恢_080c860e81	PostgreSQL कस्टम प्रारूप -Fc (तेज़ पुनर्स्थापना)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (डिफ़ॉल्ट रूप से peer प्रमाणीकरण: su - postgres)
+rdb_快照_62f218ed40	RDB स्नैपशॉट
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis BGSAVE चलाता है और RDB फ़ाइल कॉपी करता है; पुनर्स्थापना डेटा डायरेक्टरी को ओवरराइट करती है और इसे लागू करने के लिए Redis पुनः आरंभ करना आवश्यक है।
+redis_命令控制台_fa42019a53	Redis कमांड कंसोल
+redis_维护_d2a01bfbd3	Redis रखरखाव
+reindex_全部库_90545e1eeb	REINDEX सभी डेटाबेस
+reindex_重建索引_256956f94e	REINDEX / इंडेक्स पुनर्निर्माण
+reindex_重建索引_d81fcbf8d0	REINDEX (इंडेक्स पुनर्निर्माण)
+relay_alert_py_检查_smtp_告_012aaa3373	relay_alert.py जाँच, SMTP अलर्ट चैनल, थ्रेशोल्ड और अलर्ट रिकॉर्ड

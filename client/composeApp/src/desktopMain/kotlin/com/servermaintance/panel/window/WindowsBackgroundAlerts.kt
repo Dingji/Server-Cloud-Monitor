@@ -1,4 +1,5 @@
 package com.servermaintance.panel.window
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,11 +37,11 @@ internal fun FrameWindowScope.WindowsBackgroundAlerts(
         if (key in notifiedKeys) return
         notifiedKeys.add(key)
         while (notifiedKeys.size > 300) notifiedKeys.removeAt(0)
-        val msg = a.str("message").ifEmpty { "新告警" }
+        val msg = a.str("message").ifEmpty { L["新告警_ae1159aaec"] }
         val title = when (a.str("level")) {
-            "bad" -> "严重告警"
-            "warn" -> "健康警告"
-            else -> "Cloud Monitor"
+            "bad" -> L["严重告警_0fbe91a69f"]
+            "warn" -> L["健康警告_36e38f0344"]
+            else -> L["cloud_monitor_5e4d4fbbe5"]
         }
         trayHost.notifyAlert(title, msg, a.str("level") == "bad")
     }

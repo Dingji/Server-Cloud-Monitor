@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -91,7 +94,7 @@ internal suspend fun opsRunAction(
     reload: (suspend () -> Unit)? = null,
 ) {
     val r = Actions.run(path = path, body = body, title = title) ?: return
-    AppState.toast(r.str("output").ifEmpty { "操作成功" }, ToastKind.Ok)
+    AppState.toast(r.str("output").ifEmpty { tr("操作成功_3c5be5f2a1") }, ToastKind.Ok)
     if (reload != null) {
         delay(700)
         reload()
@@ -101,12 +104,12 @@ internal suspend fun opsRunAction(
 /** `CM.refreshLabel(ms)` —— 2000 → "2 秒"，500 → "500 毫秒"。
  *  名字带前缀以避免与 pages/ 下其它角色的同名 top-level 冲突。 */
 internal fun monitorRefreshLabel(ms: Long): String =
-    if (ms >= 1000) "${ms / 1000.0} 秒" else "$ms 毫秒"
+    if (ms >= 1000) trf("0_秒_99598b798a", ms / 1000.0) else trf("0_毫秒_dd9d131b83", ms)
 
 /** 面板徽章里的计数是整数，避免 "203.0" 这种显示。 */
 internal fun badgeCount(v: Double): String = v.toLong().toString()
 
-private val SORTS = listOf("cpu" to "按 CPU", "mem" to "按 内存", "pid" to "按 PID", "user" to "按 用户")
+private val SORTS  get() = listOf("cpu" to L["按_cpu_ed77c666c4"], "mem" to L["按_内存_ee559401b3"], "pid" to L["按_pid_c594df6b43"], "user" to L["按_用户_fc09815a27"])
 
 @Composable
 fun ProcessesPage() {
@@ -152,9 +155,9 @@ fun ProcessesPage() {
     val counts = data?.obj("statCounts")
     val list = data?.arr("list").orEmpty().filterIsInstance<JsonObject>()
 
-    PageScaffold(title = "进程管理", desc = "进程列表、资源占用与信号操作") {
+    PageScaffold(title = L["nav.processes"], desc = L["进程列表_资源占用与信号操作_48f58dc1aa"]) {
         PanelCard(
-            title = "进程列表",
+            title = L["进程列表_1b896e6456"],
             cardKey = "proc-list",
             right = {
                 Row(
@@ -163,15 +166,15 @@ fun ProcessesPage() {
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
                 ) {
                     if (counts != null) {
-                        Chip("运行 ${badgeCount(counts.num("running"))}", tone = Level.Ok)
-                        Chip("休眠 ${badgeCount(counts.num("sleeping"))}", tone = Level.Muted)
+                        Chip(trf("运行_0_d2a28237c8", badgeCount(counts.num("running"))), tone = Level.Ok)
+                        Chip(trf("休眠_0_c11a981edd", badgeCount(counts.num("sleeping"))), tone = Level.Muted)
                         if (counts.num("zombie") > 0) {
-                            Chip("僵尸 ${badgeCount(counts.num("zombie"))}", tone = Level.Bad)
+                            Chip(trf("僵尸_0_350f669b6a", badgeCount(counts.num("zombie"))), tone = Level.Bad)
                         }
-                        Chip("共 ${badgeCount(data?.num("total") ?: 0.0)}", tone = Level.Info)
+                        Chip(trf("共_0_6de8606170", badgeCount(data?.num("total") ?: 0.0)), tone = Level.Info)
                     }
                     Chip(monitorRefreshLabel(AppState.meRefreshMs()), tone = Level.Muted)
-                    GhostBtn(text = "刷新", onClick = { scope.launch { load() } })
+                    GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { load() } })
                 }
             },
         ) {
@@ -183,7 +186,7 @@ fun ProcessesPage() {
                 SearchField(
                     value = query,
                     onValueChange = { query = it },
-                    placeholder = "搜索 PID/用户/命令…",
+                    placeholder = L["搜索_pid_用户_命令_f1c406afb9"],
                     modifier = Modifier.weight(1f),
                 )
                 SelectField(
@@ -194,28 +197,28 @@ fun ProcessesPage() {
                     },
                     modifier = Modifier.width(150.dp),
                 )
-                Toggle(checked = auto, onCheckedChange = { auto = it }, label = "自动刷新")
+                Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
             }
 
             Spacer(Modifier.height(10.dp))
 
             when {
-                data == null && loading -> LoadingState("加载中…")
+                data == null && loading -> LoadingState(L["common.loading"])
                 data == null && error != null -> ErrorState(
-                    message = error ?: "加载失败",
+                    message = error ?: L["加载失败_f6b7a41e56"],
                     onRetry = { scope.launch { load() } },
                 )
-                data == null -> LoadingState("加载中…")
+                data == null -> LoadingState(L["common.loading"])
                 else -> {
                     DataTable(
                         columns = listOf(
                             TableCol<JsonObject>(title = "PID", weight = 0.7f, align = TextAlign.End, mono = true) {
                                 TableText(it.long("pid").toString(), mono = true, textAlign = TextAlign.End)
                             },
-                            TableCol<JsonObject>(title = "用户", weight = 1.0f) {
+                            TableCol<JsonObject>(title = L["用户_9ba763ea34"], weight = 1.0f) {
                                 TableText(it.str("user"))
                             },
-                            TableCol<JsonObject>(title = "CPU%", weight = 0.8f, align = TextAlign.End, mono = true) {
+                            TableCol<JsonObject>(title = L["cpu_99af5977d6"], weight = 0.8f, align = TextAlign.End, mono = true) {
                                 val c = it.num("cpu")
                                 TableText(
                                     MonFmt.fixed(c, 1),
@@ -228,19 +231,19 @@ fun ProcessesPage() {
                                     },
                                 )
                             },
-                            TableCol<JsonObject>(title = "MEM%", weight = 0.8f, align = TextAlign.End, mono = true) {
+                            TableCol<JsonObject>(title = L["mem_8c4bf90fbc"], weight = 0.8f, align = TextAlign.End, mono = true) {
                                 TableText(MonFmt.fixed(it.num("mem"), 1), mono = true, textAlign = TextAlign.End)
                             },
                             TableCol<JsonObject>(title = "RSS", weight = 1.1f, align = TextAlign.End, mono = true) {
                                 TableText(Fmt.bytes(it.num("rss")), mono = true, textAlign = TextAlign.End)
                             },
-                            TableCol<JsonObject>(title = "状态", weight = 0.7f, mono = true) {
+                            TableCol<JsonObject>(title = L["状态_62e951a692"], weight = 0.7f, mono = true) {
                                 TableText(it.str("stat"), mono = true, color = Palette.muted)
                             },
-                            TableCol<JsonObject>(title = "运行时长", weight = 1.0f, mono = true) {
+                            TableCol<JsonObject>(title = L["运行时长_66836c8fb3"], weight = 1.0f, mono = true) {
                                 TableText(it.str("etime"), mono = true)
                             },
-                            TableCol<JsonObject>(title = "命令", weight = 3.0f, mono = true) {
+                            TableCol<JsonObject>(title = L["命令_b114b91547"], weight = 3.0f, mono = true) {
                                 TableText(
                                     it.str("args").take(90),
                                     mono = true,
@@ -252,14 +255,14 @@ fun ProcessesPage() {
                                 val pid = row.long("pid")
                                 if (pid > 1) {
                                     DangerBtn(
-                                        text = "终止",
+                                        text = L["终止_2eee5759c3"],
                                         onClick = {
                                             scope.launch {
                                                 val args = row.str("args").take(60)
                                                 val ok = Modal.confirm(
-                                                    title = "终止进程",
-                                                    text = "向 PID $pid ($args) 发送 SIGTERM？",
-                                                    okText = "终止",
+                                                    title = L["终止进程_58d47ffb50"],
+                                                    text = L["向_pid_pid_args_发送_si_1e664241d5"],
+                                                    okText = L["终止_2eee5759c3"],
                                                     danger = true,
                                                 )
                                                 if (!ok) return@launch
@@ -275,7 +278,7 @@ fun ProcessesPage() {
                             },
                         ),
                         rows = list,
-                        emptyText = "没有匹配的进程",
+                        emptyText = L["没有匹配的进程_4b32ae9684"],
                     )
                 }
             }

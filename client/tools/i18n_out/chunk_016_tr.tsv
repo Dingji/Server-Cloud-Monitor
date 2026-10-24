@@ -1,0 +1,120 @@
+方式_systemd_时填写_c2e758e99d	Yöntem = systemd ise doldurun
+方式_端口时必填_18fb66e1a7	Yöntem = Port ise zorunlu
+方式_进程时填_pgrep_f_6f5e68243f	Yöntem = Süreç ise doldurun, pgrep -f
+方法_b77e2ac8f4	Yöntem
+无_3f83251907	(Yok)
+无_72077749f7	Yok
+无_ipv4_1c7bda176d	IPv4 yok
+无_systemd_定时器_2cb3ed5b5f	systemd zamanlayıcısı yok
+无供应商数据_079694fa08	Sağlayıcı verisi yok
+无全局_ipv6_fdeea14453	Genel IPv6 yok
+无匹配_cd8c79d55c	Eşleşme yok
+无匹配对象_ccaba2ef1b	Eşleşen öğe yok
+无变更_f98b030e4c	(Değişiklik yok)
+无响应_585c257481	Yanıt yok
+无地址_2de7722736	Adres yok
+无块设备信息_7d38d4c445	Blok cihaz bilgisi yok
+无失败服务_4b73cd3229	Başarısız hizmet yok
+无失败记录_fc59ed91cc	Başarısızlık kaydı yok
+无密钥_e80f2d522d	Anahtar yok
+无巡检数据_5f815bb00d	Denetim verisi yok
+无已建立连接_28fcae6254	Kurulu bağlantı yok
+无挂载点_99d3f4a93a	Bağlama noktası yok
+无数据_6ffa7e6d35	Veri yok
+无数据_需_mysql_8_sys_sche_55b4c320de	Veri yok (MySQL 8 + sys şeması gerekir)
+无未命中_f377902d85	Iska yok
+无检查项_3d5aa31af3	Denetim öğesi yok
+无模型_f7d175950c	Model yok
+无模型_token_数据_a505d4ac3a	Model Token verisi yok
+无法_bc9f0cc8da	Yapılamıyor
+无法定位该行_无主键_a3b09102f7	Bu satır bulunamadı (birincil anahtar yok)
+无法解析_9262bec0c8	(Ayrıştırılamıyor)
+无法连接_notebox_0_cc669cd82a	NoteBox'a bağlanılamıyor: {0}
+无法连接服务器_0_2154d8942a	Sunucuya bağlanılamıyor: {0}
+无法连接服务器_0_8f6c19cfd1	Sunucuya bağlanılamıyor: {0}
+无法连接服务器_e_message_dea3a7f089	Sunucuya bağlanılamıyor: ${e.message}
+无生效配置_e4ffb2c454	Etkin yapılandırma yok
+无监听端口_e179a92a15	Dinleyen port yok
+无记录_3c275e011f	(Kayıt yok)
+无记录_afaa05cdc4	Kayıt yok
+无输出_66e9bdf63b	(Çıktı yok)
+无运行中容器_85fb788d24	Çalışan konteyner yok
+无采样点_920b2e00a7	Örnekleme noktası yok
+日_15917f3b32	Gün
+日均变化_9dc6a161af	Günlük ortalama değişim
+日增量_e7ce94b3ff	Günlük artış
+日增量与预测来自每日配额快照_quota_his_119e99916d	Günlük artış ve tahminler günlük kota anlık görüntüsünden (quota-history.jsonl) gelir; tahminler 2 günlük veriden sonra başlar. Mevcut token oranı:
+日志_4de50894b8	Günlükler
+日志中心_b9543b21a6	Günlük merkezi
+日志体积_89cbbd3cbe	Günlük boyutu
+日志按_var_log_audit_audit_705976aed4	Günlükler /var/log/audit/audit.log üzerinde döner; daha eski kayıtlar aynı dizindeki audit.log.* arşivlerindedir.
+日志文件与可回收估算_b648c74df1	Günlük dosyaları ve kurtarılabilir tahmini
+日志查看器_604706ec79	Günlük görüntüleyici
+日志流已结束_chunk_source_94bab11174	Günlük akışı sona erdi: ${chunk.source}
+日志获取失败_47449d85ad	Günlükler alınamadı
+日期_b6fed9af83	Tarih
+日期_时间格式不对_yyyy_mm_dd_与_h_8b0d431063	Tarih/saat biçimi geçersiz (YYYY-MM-DD ve HH:mm)
+日期格式应为_yyyy_mm_dd_565fb221c7	Tarih biçimi YYYY-MM-DD olmalıdır
+日本語_c12140a0ff	Japonca
+旧版面板_1d60ea9964	Eski panel
+时_a34801ad9c	Saat
+时区_fb2a23dc16	Saat dilimi
+时段_f453a4b294	Zaman aralığı
+时长_0_s_78c39c9a18	 · süre>{0} s
+时长_s_2ce70674d1	Süre(s)
+时长_sec_s_9e02794f9f	 · süre>$sec s
+时长_秒_365cba3da3	Süre > saniye
+时间_89b4aa6364	Zaman
+时间格式应为_hh_mm_8820852ef2	Saat biçimi HH:mm olmalıdır
+时间段_7f34462708	Zaman aralığı
+时间范围_2be9040878	Zaman kapsamı
+明天_b76ce230d3	Yarın
+明天_hm_4adda4dab9	Yarın $hm
+明细_0_24c4208e51	Ayrıntılar · {0}
+明细_h_label_99a12f2553	Ayrıntılar · ${h.label}
+是_30160a21b9	Evet
+显示_71b6771bc7	Göster
+显示权限清单_edc6d375d3	Yetki listesini göster
+显示模式_4a8bb8aba3	Görüntüleme modu
+显示模式与强调色会立即生效并保存在本机_52e8737036	Görüntüleme modu ve vurgu rengi hemen uygulanır ve bu makinede saklanır.
+普通用户_bd8d896aad	Normal kullanıcı
+暂无_ip_数据_b2bc157cfb	IP verisi yok
+暂无中继备份_dacac650ad	Röle yedeklemesi yok
+暂无事件_所有任务都在线_705a26c232	Olay yok: tüm işler çevrimiçi
+暂无会话数据_ea9498e844	Oturum verisi yok
+暂无信息_2f186ec435	Bilgi yok
+暂无切换记录_cb6e9b8316	Geçiş kaydı yok
+暂无列_6937181dc8	Sütun yok
+暂无动作_046f87f240	Eylem yok
+暂无历史_482a16ecfa	Geçmiş yok
+暂无参数_8ff5e03996	Parametre yok
+暂无发送记录_8190202072	Gönderim kaydı yok
+暂无变量_7c754b0098	Değişken yok
+暂无告警事件_5afa22a92c	Uyarı olayı yok
+暂无告警记录_805d7ef9cc	Uyarı kaydı yok
+暂无命中率数据_9475fb3493	İsabet oranı verisi yok
+暂无备份_d5392bb044	Yedekleme yok
+暂无备份_点击上方目录按钮创建_68fce26f69	Yedekleme yok; oluşturmak için yukarıdaki dizin düğmesine tıklayın
+暂无备份状态记录_f254ce0b6d	Yedekleme durum kaydı yok
+暂无容器_96a29bf063	Konteyner yok
+暂无密钥_0e15befa13	Anahtar yok
+暂无挂载点_d25afc47c8	Bağlama noktası yok
+暂无授权密钥_使用密钥登录更安全_07e7ba27d0	Yetkili anahtar yok (anahtarla giriş daha güvenlidir)
+暂无探测记录_9006abbcd2	Prob kaydı yok
+暂无搜索结果_8f8274c754	Arama sonucu yok
+暂无数据_b246458f20	Veri yok
+暂无数据库_9b93de555b	Veritabanı yok
+暂无模型数据_0c50fd6d6b	Model verisi yok
+暂无索引_c86267b32d	İndeks yok
+暂无表_视图_9bc71df029	Tablo / görünüm yok
+暂无请求_c2f4aebbc8	İstek yok
+暂无进程数据_07202fdf7e	Süreç verisi yok
+暂无配额数据_68af8db72c	Kota verisi yok
+暂无错误_cd5f469fc5	Hata yok
+暂无镜像_dd1ca5cd99	İmaj yok
+暂无限流配置数据_9258ebf5d0	Hız sınırı yapılandırma verisi yok
+暂无面板创建的任务_e6b14e96f2	Panel tarafından oluşturulan iş yok
+更新_d9db02d07a	Güncelle
+更新于_0_7340e34cda	 · güncellendi {0}
+更新于_0_每_2_秒_664974959b	● Güncellendi {0} · her 2 s
+更新于_0_近5分钟_1_轮_0fd646dbb6	● Güncellendi {0} · son 5 dakikada {1} tur /

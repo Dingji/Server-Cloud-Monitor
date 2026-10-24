@@ -1,0 +1,120 @@
+已添加_57828673c0	Added
+已清屏_刷新可重新加载_01eb7fac6f	(Screen cleared, refresh to reload)
+已清理_deleted_条_4c23a20ddb	Removed $deleted entries
+已清空_f8a66770bf	Cleared
+已用_0_c96f2dd5c9	Used {0}%
+已用_0_da8610464a	Used {0}
+已用_11ab4c52e3	Used 
+已用_4c9426f3cb	Used
+已用_d_pct_2dbf36e2b0	Used ${d.pct}
+已用_m_usedpct_61d820fe07	Used ${m.usedPct}%
+已用内存_5018e93ffc	Used memory
+已移入回收站_54e2ac947c	Moved to recycle bin
+已移动_3bf6e46e2d	Moved
+已移动到_label_6617d663be	Moved to "$label"
+已移除共享_830fcc049b	Sharing removed
+已置顶_d7d97038a3	Pinned
+已装_3647e1394b	Installed
+已装版本_9bdb334d0c	Installed version
+已解压到_0_51e4ef2361	Extracted to {0}
+已解压到_l_dir_9244cad0e5	Extracted to ${l.dir}
+已过去_745c1695da	Elapsed
+已过期_1354374f76	Expired
+已过期_今天到期_86491fdf75	Expired / expires today
+已还原到原位置_88f9ffd058	Restored to original location
+已连接_65fe35c45e	Connected
+已连接客户端_ce32897c53	Connected clients
+已送达_da986b8ec5	Delivered
+已选_0_项_1a922f0ed8	Selected {0} items
+已选_17f3287f61	Selected 
+已选_selected_size_项_d7a48434fc	Selected ${selected.size} items
+已配凭据_beb6c5256b	Credentials configured
+已配置_dc7cd22f34	Configured
+已采集_2e78019082	Collected
+已重命名_dc9fe43fb7	Renamed
+已锁定_3cc7a5af4c	Locked
+常用_ee2804c36b	Common:
+常用命令_8b3f736710	Common commands
+常用推荐_f9420928eb	Popular recommendations
+平均_0_ttfb_1_08d238b10f	Avg {0} · TTFB {1}
+平均耗时_397236acf6	Average duration
+并发_09d869d15d	Concurrency
+并授予_sudo_权限_8b30bef02a	 and grant sudo privileges
+序列操作_6b82faed5c	Sequence operations
+序列管理_c7e70c52dd	Sequence management
+库_87eedee459	Library
+应用_4562024dde	Apply
+应用_ssh_配置_6630ee6205	Apply SSH configuration
+应用_swappiness_20e25ed211	Apply swappiness
+应用_sysctl_e2dac5275c	Apply sysctl
+应用位置_0_48979a348d	Applied locations ({0})
+应用位置_applied_size_3f8bff0c58	Applied locations (${applied.size})
+应用带宽_15d87c726e	Applied bandwidth
+应用并重载_ssh_68c70d62a3	Apply and reload SSH
+延迟_e9f0921480	Latency
+建索引_ba4fa8969d	Build index
+建议_c_warn_427c849e3e	Recommended $c.warn
+建议先用_web_终端确认现有登录方式可用_12826a1b60	\n\nWe recommend first verifying via the Web terminal that the existing login method still works.
+建议处理_43d0209c9a	Suggested actions
+建议尽快更新_4434051095	Recommended: update as soon as possible
+开发_eb3774e356	Development
+开启公开链接_5594f75324	Enable public link
+开启后可用_db_system_profile_439d38a566	Once enabled, use db.system.profile.find().limit(20) to view slow operations.
+开启网卡_e65c5b5c1b	Enable network interface
+开始写_支持_markdown_标题_加_333c0c0d41	Start writing… Markdown supported (# heading, **bold**, - list, ``` code block)
+开始备份_bf05cce62d	Start backup
+开始复制_3cd62ecee5	Start copying
+开始安装_d109e7cc01	Start installation
+开始导入_3d04880897	Start import
+开始导出_86c599fe6e	Start export
+开始恢复_86cc2051a7	Start restore
+开始打包_ec3abb06f3	Start archiving
+开始搜索_8fdc065eda	Start search
+开机启动_b995f88661	Start on boot
+开机自启_e0f2218651	Auto-start on boot
+开自启_afbb1e3032	Enable auto-start
+异常_5caf279339	Anomaly
+异常与变更关联_ad0cd881a4	Anomaly–change correlation
+异常时段_fb93a8934a	Anomalous period
+引擎_9413bdc38c	Engine
+引擎状态_fbb8ddd570	Engine status
+引擎还没跑完一轮_新建规则后约_15_秒_或服_4db3fea74e	The engine hasn't finished a cycle yet (about 15 s after creating a rule), or the collector isn't deployed on the server
+引用_4cfa595c2a	> Quote
+引用列_00382a55a7	Referenced columns
+引用表_7d6cb137c9	Referenced tables
+强制删除_53ddf21fc7	Force delete
+强制断开连接_b751ba3828	Force disconnect?
+强制终止后端进程_0_e49e9c414a	Force kill backend process {0}?
+强制终止后端进程_pid_eb7db97147	Force kill backend process $pid?
+强调色_6f67371e05	Accent color
+归档文件名_2a8d06976b	Archive filename
+归类_6a9b5537c6	Category
+归类名称不能为空_8aeba11184	Category name cannot be empty
+归类已删除_内容已移到上一级_933faa2f08	Category deleted; content moved up one level
+归类已更新_219432c27a	Category updated
+当前_25e74dceac	Current
+当前不可用_bd15b2e133	Currently unavailable
+当前令牌会在切换到不同服务器时自动失效_需重新登_faee75ab2a	The current token automatically expires when switching to a different server; you'll need to sign in again.
+当前使用_297318c276	Currently using
+当前值_8b0db67871	Current value
+当前实例_185db6ac3b	Current instance
+当前密码_33abf70fd5	Current password
+当前密钥_0_a6dc721288	Current key {0} · 
+当前密钥_0_刷新于_1_b44dce11d6	Current key {0} · refreshed {1}
+当前密钥_暂不可用_698a7394eb	Current key: unavailable
+当前封禁_4f4e3ab4f7	Current bans
+当前封禁_ip_c5ccad72be	Currently banned IPs
+当前库_db0_db15_全量_rdb_8e1d4e62b1	Current DB (db0-db15) full RDB
+当前数据库_df2f4d6c3c	Current database
+当前日志全部_8615243b08	All current logs
+当前服务器未启用运维模块_api_ops_a1afd4f100	The ops module is not enabled on this server (/api/ops/… returns 404).\n
+当前未配置私钥_将使用密码认证_修改后新终端会话_e7d9729ea6	No private key configured; password authentication will be used. Changes take effect for new terminal sessions.
+当前条件下没有事件_f37e5eca2a	No events match the current filters
+当前没有锁定的包_e812929549	No packages are currently locked
+当前版本_46e66f6321	Current version
+当前状态_045859e792	Current status
+当前状态起始_ec8a451989	Start from current state
+当前用户权限_show_grants_e8e7d7d1e2	Current user privileges (SHOW GRANTS)
+当前窗口占比_903b7cd486	Current window share
+当前筛选_8936ccc663	Current filters
+当前系统不支持软件源切换_718bf56e6b	This system does not support switching software sources

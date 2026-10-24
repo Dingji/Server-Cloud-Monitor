@@ -1,0 +1,62 @@
+{
+ "engine": "postgres",
+ "database": null,
+ "sections": [
+  {
+   "title": "数据库统计 (pg_stat_database)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "表膨胀 / 死元组 (前 30)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "未使用的索引",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "索引使用率 Top",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "锁与阻塞",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "长事务 / 活动查询",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "复制状态",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": "None 表示没有从库"
+  },
+  {
+   "title": "连接分布",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  }
+ ]
+}

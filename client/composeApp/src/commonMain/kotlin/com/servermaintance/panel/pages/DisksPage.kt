@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -81,14 +84,14 @@ import kotlinx.serialization.json.JsonObject
 
 private data class DiskAction(val id: String, val label: String, val danger: Boolean, val desc: String)
 
-private val DISK_ACTIONS = listOf(
-    DiskAction("apt-clean", "清理 apt 缓存", false, "删除 /var/cache/apt/archives 下的已下载安装包"),
-    DiskAction("apt-autoremove", "自动卸载无用包", true, "卸载不再被任何软件包依赖的软件包"),
-    DiskAction("journal-vacuum", "裁剪系统日志", false, "将 journald 日志体积限制到 200MB"),
-    DiskAction("fstrim", "执行 TRIM", false, "对所有支持的挂载点执行 fstrim，优化 SSD"),
-    DiskAction("drop-caches", "释放内存缓存", true, "写入 drop_caches=3，清空页缓存/目录项/inode 缓存（短暂变慢）"),
-    DiskAction("docker-prune", "Docker 清理", true, "docker system prune -af：删除未使用镜像/网络/停止的容器"),
-    DiskAction("analyze", "磁盘占用分析", false, "扫描根目录一级/二级目录及大于 100MB 的文件"),
+private val DISK_ACTIONS  get() = listOf(
+    DiskAction("apt-clean", L["清理_apt_缓存_55c020f574"], false, L["删除_var_cache_apt_archiv_4cd0531496"]),
+    DiskAction("apt-autoremove", L["自动卸载无用包_38e506d175"], true, L["卸载不再被任何软件包依赖的软件包_8ed32b0b41"]),
+    DiskAction("journal-vacuum", L["裁剪系统日志_519fd2b507"], false, L["将_journald_日志体积限制到_200mb_88b7b48940"]),
+    DiskAction("fstrim", L["执行_trim_de3f191099"], false, L["对所有支持的挂载点执行_fstrim_优化_ss_82318eb7af"]),
+    DiskAction("drop-caches", L["释放内存缓存_f951d508c6"], true, L["写入_drop_caches_3_清空页缓存_目_545feeaf1e"]),
+    DiskAction("docker-prune", L["docker_清理_795b9faf02"], true, L["docker_system_prune_af_ead57cbf4c"]),
+    DiskAction("analyze", L["磁盘占用分析_e0dcb52688"], false, L["扫描根目录一级_二级目录及大于_100mb_的文_60e4bd3b99"]),
 )
 
 @Composable
@@ -120,20 +123,20 @@ fun DisksPage() {
             val r = AppState.api.post("/disk/action", jsonObjectOf("action" to a.id))
             val out = r.str("output")
             if (a.id == "analyze") {
-                Modal.output("磁盘占用分析", out)
+                Modal.output(L["磁盘占用分析_e0dcb52688"], out)
             } else {
-                AppState.toast("操作完成", ToastKind.Ok)
+                AppState.toast(tr("操作完成_66c6340147"), ToastKind.Ok)
                 Modal.output(a.label, out)
             }
             load()
         } catch (e: CancellationException) {
             throw e
         } catch (e: ApiException) {
-            AppState.toast(e.message ?: "操作失败", ToastKind.Err, ms = 6000)
+            AppState.toast(e.message ?: tr("操作失败_09e424b5e8"), ToastKind.Err, ms = 6000)
             val o = e.output
-            if (!o.isNullOrBlank()) Modal.output("${a.label} 失败", o, isError = true)
+            if (!o.isNullOrBlank()) Modal.output(trf("0_失败_cd6897c36c", a.label), o, isError = true)
         } catch (e: Exception) {
-            AppState.toast("操作失败: ${e.message ?: "未知错误"}", ToastKind.Err, ms = 6000)
+            AppState.toast(trf("操作失败_0_c81f3f901e", e.message ?: tr("未知错误_5f76edc5de")), ToastKind.Err, ms = 6000)
         }
     }
 
@@ -142,40 +145,40 @@ fun DisksPage() {
     val rootD = mounts.firstOrNull { it.str("mount") == "/" } ?: mounts.firstOrNull() ?: JsonObject(emptyMap())
     val io = bundle?.data?.obj("diskio")
 
-    PageScaffold(title = "磁盘管理", desc = "分区容量、块设备与磁盘维护操作") {
+    PageScaffold(title = L["nav.disks"], desc = L["分区容量_块设备与磁盘维护操作_80c0745041"]) {
 
         /* D1 统计四联 */
         GridLayout(columns = 4, spacing = 12.dp) {
             StatTile(
-                label = "根分区使用率",
+                label = L["根分区使用率_64e9efb467"],
                 value = "${MonFmt.fixed(rootD.num("pct"), 0)}%",
                 sub = "${Fmt.bytes(rootD.num("used"))} / ${Fmt.bytes(rootD.num("total"))}",
                 pct = rootD.num("pct"),
                 icon = "disk",
             )
             StatTile(
-                label = "可用空间",
+                label = L["可用空间_4981f67ab1"],
                 value = Fmt.bytes(rootD.num("avail")),
-                sub = "/ 分区",
+                sub = L["分区_016c7a3b77"],
             )
             StatTile(
-                label = "inode 使用率",
+                label = L["inode_使用率_5279b4b61c"],
                 value = "${MonFmt.fixed(rootD.num("ipct"), 0)}%",
-                sub = "小文件数量占比",
+                sub = L["小文件数量占比_e37f172da2"],
                 pct = rootD.num("ipct"),
                 icon = "package",
             )
             StatTile(
-                label = "分区数量",
+                label = L["分区数量_0933d5f9ce"],
                 value = "${mounts.size}",
-                sub = "物理挂载点",
+                sub = L["物理挂载点_63c0461fc1"],
                 icon = "layers",
             )
         }
 
         /* D2 分区与挂载点 */
         PanelCard(
-            title = "分区与挂载点",
+            title = L["分区与挂载点_f1ca26a5e8"],
             cardKey = "disk-mounts",
             right = {
                 Row(
@@ -183,38 +186,38 @@ fun DisksPage() {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
                 ) {
-                    Toggle(checked = auto, onCheckedChange = { auto = it }, label = "自动刷新")
+                    Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
                     ChipText(monitorRefreshLabel(AppState.meRefreshMs()))
-                    GhostBtn(text = "刷新", onClick = { scope.launch { load() } })
+                    GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { load() } })
                 }
             },
         ) {
             when {
-                data == null && loading -> LoadingState("加载中…")
+                data == null && loading -> LoadingState(L["common.loading"])
                 data == null && error != null -> ErrorState(
-                    message = error ?: "加载失败",
+                    message = error ?: L["加载失败_f6b7a41e56"],
                     onRetry = { scope.launch { load() } },
                 )
-                data == null -> LoadingState("加载中…")
-                mounts.isEmpty() -> Text("无挂载点", color = Palette.muted, fontSize = 12.5.sp)
+                data == null -> LoadingState(L["common.loading"])
+                mounts.isEmpty() -> Text(L["无挂载点_99d3f4a93a"], color = Palette.muted, fontSize = 12.5.sp)
                 else -> DataTable(
                     columns = listOf(
-                        TableCol<JsonObject>(title = "设备", weight = 1.6f, mono = true) {
+                        TableCol<JsonObject>(title = L["设备_01f2c16cda"], weight = 1.6f, mono = true) {
                             Text(it.str("dev"), fontSize = 12.sp)
                         },
-                        TableCol<JsonObject>(title = "挂载点", weight = 1.4f, mono = true) {
+                        TableCol<JsonObject>(title = L["挂载点_8517da781f"], weight = 1.4f, mono = true) {
                             Text(it.str("mount"), fontSize = 12.sp)
                         },
-                        TableCol<JsonObject>(title = "总容量", weight = 1.1f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["总容量_8b60ba80ea"], weight = 1.1f, align = TextAlign.End, mono = true) {
                             Text(Fmt.bytes(it.num("total")), fontSize = 12.sp)
                         },
-                        TableCol<JsonObject>(title = "已用", weight = 1.1f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["已用_4c9426f3cb"], weight = 1.1f, align = TextAlign.End, mono = true) {
                             Text(Fmt.bytes(it.num("used")), fontSize = 12.sp)
                         },
-                        TableCol<JsonObject>(title = "可用", weight = 1.1f, align = TextAlign.End, mono = true) {
+                        TableCol<JsonObject>(title = L["可用_e91365cf9e"], weight = 1.1f, align = TextAlign.End, mono = true) {
                             Text(Fmt.bytes(it.num("avail")), fontSize = 12.sp)
                         },
-                        TableCol<JsonObject>(title = "使用率", weight = 1.8f) {
+                        TableCol<JsonObject>(title = L["使用率_8ca02f90d1"], weight = 1.8f) {
                             val p = it.num("pct")
                             Column {
                                 PctBar(pct = p, showLabel = false)
@@ -244,25 +247,25 @@ fun DisksPage() {
 
         /* D3 + D4 */
         GridLayout(columns = 2, spacing = 12.dp) {
-            PanelCard(title = "块设备 (lsblk)", cardKey = "disk-blocks") {
+            PanelCard(title = L["块设备_lsblk_04b4c2fd97"], cardKey = "disk-blocks") {
                 if (blocks.isEmpty()) {
-                    Text("无块设备信息", color = Palette.muted, fontSize = 12.5.sp)
+                    Text(L["无块设备信息_7d38d4c445"], color = Palette.muted, fontSize = 12.5.sp)
                 } else {
                     DataTable(
                         columns = listOf(
-                            TableCol<JsonObject>(title = "设备", weight = 1.4f, mono = true) {
+                            TableCol<JsonObject>(title = L["设备_01f2c16cda"], weight = 1.4f, mono = true) {
                                 Text(it.str("name"), fontSize = 12.sp)
                             },
-                            TableCol<JsonObject>(title = "大小", weight = 0.9f, align = TextAlign.End, mono = true) {
+                            TableCol<JsonObject>(title = L["大小_fd20702c73"], weight = 0.9f, align = TextAlign.End, mono = true) {
                                 Text(it.str("size"), fontSize = 12.sp)
                             },
-                            TableCol<JsonObject>(title = "类型", weight = 0.8f) {
+                            TableCol<JsonObject>(title = L["类型_e4e46c7235"], weight = 0.8f) {
                                 Text(it.str("type"), fontSize = 12.sp)
                             },
-                            TableCol<JsonObject>(title = "文件系统", weight = 1.1f) {
+                            TableCol<JsonObject>(title = L["文件系统_42949b7f8f"], weight = 1.1f) {
                                 Text(it.str("fstype").ifEmpty { "—" }, fontSize = 12.sp, color = Palette.muted)
                             },
-                            TableCol<JsonObject>(title = "挂载点", weight = 1.6f, mono = true) {
+                            TableCol<JsonObject>(title = L["挂载点_8517da781f"], weight = 1.6f, mono = true) {
                                 Text(it.str("mountpoint").ifEmpty { "—" }, fontSize = 12.sp, color = Palette.muted)
                             },
                         ),
@@ -271,24 +274,24 @@ fun DisksPage() {
                 }
             }
 
-            PanelCard(title = "实时磁盘 I/O", cardKey = "disk-io") {
+            PanelCard(title = L["实时磁盘_i_o_193640917c"], cardKey = "disk-io") {
                 val readBps = io?.num("readBps") ?: 0.0
                 val writeBps = io?.num("writeBps") ?: 0.0
                 val readOps = io?.num("readOps") ?: 0.0
                 val writeOps = io?.num("writeOps") ?: 0.0
-                KVLine("读取速率", Fmt.bps(readBps))
-                KVLine("写入速率", Fmt.bps(writeBps))
-                KVLine("读取 IOPS", MonFmt.fixed(readOps, 1))
-                KVLine("写入 IOPS", MonFmt.fixed(writeOps, 1))
+                KVLine(L["读取速率_602daacd93"], Fmt.bps(readBps))
+                KVLine(L["写入速率_2836adc578"], Fmt.bps(writeBps))
+                KVLine(L["读取_iops_0b3c539023"], MonFmt.fixed(readOps, 1))
+                KVLine(L["写入_iops_c0257973a8"], MonFmt.fixed(writeOps, 1))
                 if (io == null) {
                     Spacer(Modifier.height(4.dp))
-                    Text("等待 WS 推送…", color = Palette.muted, fontSize = 12.sp)
+                    Text(L["等待_ws_推送_b35761ce7b"], color = Palette.muted, fontSize = 12.sp)
                 }
             }
         }
 
         /* D5 维护操作 */
-        PanelCard(title = "磁盘维护操作", cardKey = "disk-actions") {
+        PanelCard(title = L["磁盘维护操作_d8e8f23104"], cardKey = "disk-actions") {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -303,7 +306,7 @@ fun DisksPage() {
                                     val ok = Modal.confirm(
                                         title = "${a.label}？",
                                         text = a.desc,
-                                        okText = "我明白风险，执行",
+                                        okText = L["我明白风险_执行_a77f5cd3f3"],
                                         danger = true,
                                     )
                                     if (ok) runDiskAction(a)
@@ -318,7 +321,7 @@ fun DisksPage() {
                                     val ok = Modal.confirm(
                                         title = "${a.label}？",
                                         text = a.desc,
-                                        okText = "执行",
+                                        okText = L["执行_28febba225"],
                                         danger = false,
                                     )
                                     if (ok) runDiskAction(a)
@@ -330,7 +333,7 @@ fun DisksPage() {
             }
             Spacer(Modifier.height(8.dp))
             Text(
-                "危险操作会弹出确认框。所有操作都会写入审计日志。",
+                L["危险操作会弹出确认框_所有操作都会写入审计日志_762239eaff"],
                 color = Palette.muted,
                 fontSize = 12.sp,
             )

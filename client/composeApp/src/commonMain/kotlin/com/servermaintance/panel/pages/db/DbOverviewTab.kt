@@ -1,4 +1,8 @@
 package com.servermaintance.panel.pages.db
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -62,16 +66,16 @@ private val MAINT_NEEDS_TABLE = setOf("vacuum", "vacuum-full", "analyze", "analy
 /** 维护按钮（按引擎，L339-L347）。 */
 private fun maintButtons(engineId: String): List<Pair<String, String>> = when (engineId) {
     "postgres" -> listOf(
-        "vacuum" to "VACUUM", "vacuum-full" to "VACUUM FULL", "analyze" to "ANALYZE",
-        "reindex" to "REINDEX DATABASE", "checkpoint" to "CHECKPOINT",
+        "vacuum" to "VACUUM", "vacuum-full" to L["vacuum_full_f172bbae70"], "analyze" to "ANALYZE",
+        "reindex" to L["reindex_database_fcba9eea81"], "checkpoint" to "CHECKPOINT",
     )
     "mysql" -> listOf(
-        "analyze-mysql" to "ANALYZE TABLE", "optimize" to "OPTIMIZE TABLE", "check" to "CHECK TABLE",
-        "repair" to "REPAIR TABLE", "flush" to "FLUSH PRIVILEGES",
+        "analyze-mysql" to L["analyze_table_b8d87263dd"], "optimize" to L["optimize_table_9a05d5c66b"], "check" to L["check_table_d5146d2b61"],
+        "repair" to L["repair_table_b270647694"], "flush" to L["flush_privileges_980e5b054e"],
     )
     "sqlite" -> listOf(
         "vacuum" to "VACUUM", "analyze" to "ANALYZE", "reindex" to "REINDEX",
-        "optimize" to "PRAGMA optimize", "check" to "完整性检查", "wal-checkpoint" to "WAL 检查点",
+        "optimize" to L["pragma_optimize_ed5cd9ca52"], "check" to L["完整性检查_495199337a"], "wal-checkpoint" to L["wal_检查点_2010a0cc44"],
     )
     "db2" -> listOf("analyze" to "RUNSTATS", "vacuum" to "REORG", "check" to "REORGCHK")
     else -> emptyList()
@@ -109,28 +113,28 @@ private fun OverviewBody(st: DbState, scope: CoroutineScope, status: JsonObject,
 
     /* ---- 四联统计卡（L348-L354） ---- */
     GridLayout(4) {
-        StatTile("引擎状态", "运行中", sub = v.str("version").take(46).ifEmpty { st.engine?.version ?: "-" })
+        StatTile(L["引擎状态_fbb8ddd570"], L["运行中_5942497005"], sub = v.str("version").take(46).ifEmpty { st.engine?.version ?: "-" })
         StatTile(
-            "连接数",
+            L["连接数_7e94aaa397"],
             s.str("connections").ifEmpty { "0" },
-            sub = "上限 ${s.str("max_connections").ifEmpty { "-" }} · 活动 ${s.str("active").ifEmpty { "-" }}",
+            sub = trf("上限_0_活动_1_190aaf98ec", s.str("max_connections").ifEmpty { "-" }, s.str("active").ifEmpty { "-" }),
         )
         StatTile(
-            "数据库数量",
+            L["数据库数量_1c82d51d3e"],
             dbs.size.toString(),
-            sub = "总大小 ${Fmt.bytes(totalSize)}",
+            sub = trf("总大小_0_a2c8d9634b", Fmt.bytes(totalSize)),
         )
         when (st.engineId) {
             "postgres" -> StatTile(
-                "缓存命中率",
+                L["缓存命中率_c684222fb9"],
                 "${s.str("cache_hit_pct").ifEmpty { "-" }}%",
-                sub = "shared buffers",
+                sub = L["shared_buffers_62672b2339"],
                 pct = s.num("cache_hit_pct").takeIf { it > 0.0 },
             )
-            "mysql" -> StatTile("累计查询", s.str("questions").ifEmpty { "-" }, sub = "Questions")
-            "sqlite" -> StatTile("表 / 索引", "${s.num("tables").toInt()} / ${s.num("indexes").toInt()}", sub = "sqlite_master")
+            "mysql" -> StatTile(L["累计查询_393f01e953"], s.str("questions").ifEmpty { "-" }, sub = "Questions")
+            "sqlite" -> StatTile(L["表_索引_e5ebf24606"], "${s.num("tables").toInt()} / ${s.num("indexes").toInt()}", sub = "sqlite_master")
             else -> StatTile(
-                "对象数量",
+                L["对象数量_7a08198ac2"],
                 s.str("tables").ifEmpty { s.str("databases").ifEmpty { "-" } },
                 sub = "catalog",
             )
@@ -139,10 +143,10 @@ private fun OverviewBody(st: DbState, scope: CoroutineScope, status: JsonObject,
 
     /* ---- 维护操作 + 服务器信息（L356-L371） ---- */
     GridLayout(2) {
-        PanelCard(title = "维护操作", cardKey = "db-maint") {
+        PanelCard(title = L["维护操作_7a7b416bde"], cardKey = "db-maint") {
             val actions = maintButtons(st.engineId ?: "")
             if (actions.isEmpty()) {
-                Text("该引擎无可用维护操作。", style = dbMuted, fontSize = 12.sp)
+                Text(L["该引擎无可用维护操作_513087fb85"], style = dbMuted, fontSize = 12.sp)
             } else {
                 Row(
                     Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
@@ -156,21 +160,21 @@ private fun OverviewBody(st: DbState, scope: CoroutineScope, status: JsonObject,
             Spacer(Modifier.size(8.dp))
             Text(
                 text = when (st.engineId) {
-                    "sqlite" -> "针对当前数据库文件执行；VACUUM 会重建文件、VACUUM FULL 等价于 VACUUM。"
-                    "db2" -> "RUNSTATS/REORG 针对整库或所选表执行，大表可能耗时较长。"
-                    else -> "表级操作需先选择数据库（部分操作可对整库执行）。"
+                    "sqlite" -> L["针对当前数据库文件执行_vacuum_会重建文件_5783f13242"]
+                    "db2" -> L["runstats_reorg_针对整库或所选表执_d40a81b4e9"]
+                    else -> L["表级操作需先选择数据库_部分操作可对整库执行_6097ad490b"]
                 },
                 style = dbMuted,
                 fontSize = 11.sp,
             )
         }
 
-        PanelCard(title = "服务器信息", cardKey = "db-server-info") {
+        PanelCard(title = L["服务器信息_d2e0457697"], cardKey = "db-server-info") {
             val entries: List<Pair<String, String>> =
                 v.entries.map { it.key to primText(it.value).take(60) } +
                     s.entries.map { it.key to primText(it.value) }
             if (entries.isEmpty()) {
-                Text("暂无信息", style = dbMuted)
+                Text(L["暂无信息_2f186ec435"], style = dbMuted)
             } else {
                 entries.forEach { (k, value) ->
                     Row(Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
@@ -184,9 +188,9 @@ private fun OverviewBody(st: DbState, scope: CoroutineScope, status: JsonObject,
 
     /* ---- 活动连接（L373-L385，最大高 320px） ---- */
     PanelCard(
-        title = "活动连接 (${procs.size})",
+        title = trf("活动连接_0_e7e5929f6f", procs.size),
         cardKey = "db-procs",
-        right = { DbBtn("刷新") { st.bump() } },
+        right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } },
     ) {
         Box(Modifier.fillMaxWidth().heightIn(max = 320.dp)) {
             DataTable(
@@ -194,22 +198,22 @@ private fun OverviewBody(st: DbState, scope: CoroutineScope, status: JsonObject,
                     TableCol("PID", weight = 0.6f, align = TextAlign.End, mono = true) {
                         Text(it.str("pid"), style = dbMono)
                     },
-                    TableCol("用户", weight = 0.8f, mono = true) { Text(it.str("user"), style = dbMono) },
-                    TableCol("数据库", weight = 1f, mono = true) { Text(it.str("db"), style = dbMono) },
-                    TableCol("状态", weight = 0.9f) { Text(it.str("state").ifEmpty { "-" }, style = dbBody) },
-                    TableCol("时长(s)", weight = 0.7f, align = TextAlign.End) {
+                    TableCol(L["用户_9ba763ea34"], weight = 0.8f, mono = true) { Text(it.str("user"), style = dbMono) },
+                    TableCol(L["nav.databases"], weight = 1f, mono = true) { Text(it.str("db"), style = dbMono) },
+                    TableCol(L["状态_62e951a692"], weight = 0.9f) { Text(it.str("state").ifEmpty { "-" }, style = dbBody) },
+                    TableCol(L["时长_s_2ce70674d1"], weight = 0.7f, align = TextAlign.End) {
                         Text(it.str("seconds").ifEmpty { "-" }, style = dbBody)
                     },
-                    TableCol("客户端", weight = 1.1f, mono = true) { Text(it.str("client").ifEmpty { "-" }, style = dbMono) },
+                    TableCol(L["客户端_09afbbcc9b"], weight = 1.1f, mono = true) { Text(it.str("client").ifEmpty { "-" }, style = dbMono) },
                     TableCol("SQL", weight = 2.4f, mono = true) { Text(it.str("query").take(80), style = dbMonoSmall) },
                     TableCol("", weight = 0.7f, align = TextAlign.Center) { p ->
                         val pid = p.int("pid")
-                        DbBtn("终止", tone = DbBtnTone.Danger) { killProcess(scope, st, pid) }
+                        DbBtn(L["终止_2eee5759c3"], tone = DbBtnTone.Danger) { killProcess(scope, st, pid) }
                     },
                 ),
                 rows = procs,
-                rowKey = { it.str("pid") + "|" + it.str("user") + "|" + it.str("seconds") },
-                emptyText = "没有活动连接",
+                rowKey = { it.str("pid") + L["s_3eb416223e"] + it.str("user") + L["s_3eb416223e"] + it.str("seconds") },
+                emptyText = L["没有活动连接_29a76a67b2"],
             )
         }
     }
@@ -220,20 +224,20 @@ private fun OverviewBody(st: DbState, scope: CoroutineScope, status: JsonObject,
         (it.str("name") + " " + it.str("value")).contains(varQuery, ignoreCase = true)
     }
     PanelCard(
-        title = "配置变量 (${vars.size})",
+        title = trf("配置变量_0_2ef4932006", vars.size),
         cardKey = "db-vars",
-        right = { SearchField(varQuery, { varQuery = it }, Modifier.width(190.dp), "搜索变量名…") },
+        right = { SearchField(varQuery, { varQuery = it }, Modifier.width(190.dp), L["搜索变量名_a66a6cba87"]) },
     ) {
         Box(Modifier.fillMaxWidth().heightIn(max = 380.dp)) {
             DataTable(
                 columns = listOf(
-                    TableCol("变量", weight = 1.4f, mono = true) { Text(it.str("name"), style = dbMono) },
-                    TableCol("值", weight = 2f, mono = true) { Text(it.str("value"), style = dbMono) },
-                    TableCol("分类", weight = 1f) { Text(it.str("category").ifEmpty { "-" }, style = dbMuted) },
+                    TableCol(L["变量_b418ca60d4"], weight = 1.4f, mono = true) { Text(it.str("name"), style = dbMono) },
+                    TableCol(L["值_321b955840"], weight = 2f, mono = true) { Text(it.str("value"), style = dbMono) },
+                    TableCol(L["分类_435c5259e4"], weight = 1f) { Text(it.str("category").ifEmpty { "-" }, style = dbMuted) },
                 ),
                 rows = filteredVars.take(400),
                 rowKey = { it.str("name") },
-                emptyText = "暂无变量",
+                emptyText = L["暂无变量_7c754b0098"],
             )
         }
     }
@@ -244,7 +248,7 @@ private fun OverviewBody(st: DbState, scope: CoroutineScope, status: JsonObject,
 private fun killProcess(scope: CoroutineScope, st: DbState, pid: Int) {
     if (pid <= 0) return
     scope.launch {
-        val okc = Modal.confirm("终止连接", "强制终止后端进程 $pid？", okText = "终止", danger = true)
+        val okc = Modal.confirm(L["终止连接_cffa0e1963"], trf("强制终止后端进程_0_e49e9c414a", pid), okText = L["终止_2eee5759c3"], danger = true)
         if (!okc) return@launch
         runDb(
             "/db/kill",
@@ -264,13 +268,13 @@ private fun runMaintenance(scope: CoroutineScope, st: DbState, dbs: List<JsonObj
         if (needTable) {
             if (database.isNullOrEmpty()) {
                 if (dbs.isEmpty()) {
-                    AppState.toast("该实例没有数据库", ToastKind.Warn)
+                    AppState.toast(tr("该实例没有数据库_2bc55e5004"), ToastKind.Warn)
                     return@launch
                 }
                 val r = Modal.prompt(
-                    "选择数据库",
-                    listOf(FormField.Select("database", "数据库", dbs.map { it.str("name") }, st.database ?: "")),
-                    okText = "继续",
+                    L["选择数据库_86095a4763"],
+                    listOf(FormField.Select("database", L["nav.databases"], dbs.map { it.str("name") }, st.database ?: "")),
+                    okText = L["继续_1fc1afc5c5"],
                 ) ?: return@launch
                 database = r["database"]?.takeIf { it.isNotEmpty() } ?: return@launch
                 val target = database ?: return@launch
@@ -280,26 +284,26 @@ private fun runMaintenance(scope: CoroutineScope, st: DbState, dbs: List<JsonObj
                 val names = (tl ?: JsonArray(emptyList())).filterIsInstance<JsonObject>()
                     .map { it.str("schema") + "." + it.str("name") }
                 if (names.isEmpty()) {
-                    AppState.toast("该库没有表", ToastKind.Warn)
+                    AppState.toast(tr("该库没有表_0968570f19"), ToastKind.Warn)
                     return@launch
                 }
                 val r2 = Modal.prompt(
-                    "选择表",
-                    listOf(FormField.Select("table", "表", names, names.first())),
-                    okText = "执行",
+                    L["选择表_07de45d317"],
+                    listOf(FormField.Select("table", L["表_6a954390e3"], names, names.first())),
+                    okText = L["执行_28febba225"],
                 ) ?: return@launch
                 table = r2["table"]?.takeIf { it.isNotEmpty() } ?: return@launch
             } else if (table.isNullOrEmpty()) {
-                AppState.toast("请先到「表与数据」选择一个表", ToastKind.Warn)
+                AppState.toast(tr("请先到_表与数据_选择一个表_8b4ab3af68"), ToastKind.Warn)
                 return@launch
             }
         }
 
-        val target = (database ?: "当前实例") + (table?.let { " / $it" } ?: "")
+        val target = (database ?: L["当前实例_185db6ac3b"]) + (table?.let { " / $it" } ?: "")
         val okc = Modal.confirm(
-            "维护操作",
-            "对 $target 执行 $action？",
-            okText = "执行",
+            L["维护操作_7a7b416bde"],
+            trfn("对_target_执行_action_d5673f5e8f", "target" to target, "action" to action),
+            okText = L["执行_28febba225"],
             danger = true,
         )
         if (!okc) return@launch
@@ -311,7 +315,7 @@ private fun runMaintenance(scope: CoroutineScope, st: DbState, dbs: List<JsonObj
                 "table" to table,
                 "action" to action,
             ),
-            outputTitle = "维护结果",
+            outputTitle = L["维护结果_5efe6d2c70"],
             reload = { st.bump() },
         )
     }

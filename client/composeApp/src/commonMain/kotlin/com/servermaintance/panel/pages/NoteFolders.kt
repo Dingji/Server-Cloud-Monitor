@@ -1,4 +1,5 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -77,7 +78,15 @@ internal fun List<JsonElement>.toFolders(): List<NoteFolder> =
     }
 
 internal val NB_NOTE_COLORS = listOf("", "#4f46e5", "#8b5cf6", "#0ea5e9", "#22c55e", "#f59e0b", "#ef4444")
-internal val folderColorNames = listOf("默认", "靛蓝", "紫罗兰", "天蓝", "翠绿", "琥珀", "红色")
+internal val folderColorNames  get() = listOf(
+    L["默认_c8d09cf955"],
+    L["靛蓝_6aa58f8c75"],
+    L["紫罗兰_4ad6adcb0c"],
+    L["天蓝_99ab6c2904"],
+    L["翠绿_f1343f68f2"],
+    L["琥珀_84c5d7ae27"],
+    L["红色_4e68d49452"],
+)
 
 internal fun colorNameOf(hex: String): String =
     folderColorNames[NB_NOTE_COLORS.indexOf(hex).coerceAtLeast(0)]
@@ -90,7 +99,7 @@ internal fun noteColorOf(hex: String): Color = runCatching {
 /** 深度优先的「上级归类」选项，value 为 id，null=顶层。 */
 internal fun folderParentOptions(folders: List<NoteFolder>): List<Pair<Int?, String>> {
     val kids = folders.groupBy { it.parentId }
-    val out = mutableListOf<Pair<Int?, String>>(null to "（顶层）")
+    val out = mutableListOf<Pair<Int?, String>>(null to L["顶层_8dcb7af51d"])
     fun walk(parent: Int?, depth: Int) {
         kids[parent].orEmpty().sortedWith(compareBy({ it.position }, { it.name })).forEach { f ->
             out += f.id to ("　".repeat(depth) + f.name)
@@ -102,7 +111,7 @@ internal fun folderParentOptions(folders: List<NoteFolder>): List<Pair<Int?, Str
 }
 
 internal fun folderPathName(folders: List<NoteFolder>, id: Int?): String {
-    if (id == null) return "未归类"
+    if (id == null) return L["未归类_9af2c7babc"]
     val byId = folders.associateBy { it.id }
     val chain = mutableListOf<String>()
     var cur = byId[id]
@@ -111,7 +120,7 @@ internal fun folderPathName(folders: List<NoteFolder>, id: Int?): String {
         chain += cur.name
         cur = cur.parentId?.let { byId[it] }
     }
-    return if (chain.isEmpty()) "未归类" else chain.asReversed().joinToString(" / ")
+    return if (chain.isEmpty()) L["未归类_9af2c7babc"] else chain.asReversed().joinToString(" / ")
 }
 
 internal fun folderChildren(folders: List<NoteFolder>, parent: Int?): List<NoteFolder> =
@@ -175,28 +184,28 @@ internal fun NoteFolderRail(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                "归类",
+                L["归类_6a9b5537c6"],
                 color = Palette.muted, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.SemiBold, letterSpacing = 0.7.sp,
             )
             Spacer(Modifier.weight(1f))
-            AddSquareButton(hint = "新建顶层归类") { onCreate(null) }
+            AddSquareButton(hint = L["新建顶层归类_cb49387a03"]) { onCreate(null) }
         }
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(6.dp)) {
             RailRow(
-                icon = "note", label = "全部笔记", selected = selected == "all", depth = 0,
+                icon = "note", label = L["全部笔记_be5bc30cf8"], selected = selected == "all", depth = 0,
                 count = null,
             ) { onSelect("all") }
             RailRow(
-                icon = "folder", label = "未归类", selected = selected == "unfiled", depth = 0,
+                icon = "folder", label = L["未归类_9af2c7babc"], selected = selected == "unfiled", depth = 0,
                 count = null,
             ) { onSelect("unfiled") }
             RailRow(
-                icon = "users", label = "共享给我", selected = selected == "shared", depth = 0,
+                icon = "users", label = L["共享给我_6863118293"], selected = selected == "shared", depth = 0,
                 count = null,
             ) { onSelect("shared") }
             RailRow(
-                icon = "trash", label = "回收站", selected = selected == "trash", depth = 0,
+                icon = "trash", label = L["回收站_64ea8751fb"], selected = selected == "trash", depth = 0,
                 count = null, danger = true,
             ) { onSelect("trash") }
 
@@ -215,7 +224,7 @@ internal fun NoteFolderRail(
             }
             if (folders.isEmpty()) {
                 Text(
-                    "还没有归类\n点右上角 + 创建",
+                    L["还没有归类_点右上角_创建_52dc846a22"],
                     color = Palette.muted, fontSize = 11.sp, lineHeight = 17.sp,
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
                 )
@@ -340,9 +349,9 @@ private fun RailRow(
         )
         if (hovered && (onAddChild != null || onEdit != null || onDelete != null)) {
             Row(horizontalArrangement = Arrangement.spacedBy(1.dp)) {
-                if (onAddChild != null) TinyIcon("plus", "新建子归类", onAddChild)
-                if (onEdit != null) TinyIcon("edit", "重命名归类", onEdit)
-                if (onDelete != null) TinyIcon("trash", "删除归类", onDelete, danger = true)
+                if (onAddChild != null) TinyIcon("plus", L["新建子归类_fc67a95ee7"], onAddChild)
+                if (onEdit != null) TinyIcon("edit", L["重命名归类_9e71e978ba"], onEdit)
+                if (onDelete != null) TinyIcon("trash", L["删除归类_f282b52e6b"], onDelete, danger = true)
             }
         } else if (count != null) {
             Text(

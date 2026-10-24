@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	Резервная копия relay недоступна
+relay_备份结果_0cf7f02f06	Результаты резервного копирования relay
+relay_每日状态备份_32dee8ba2b	Ежедневный снимок состояния relay
+reorg_重建索引_2b9d2e3b0e	REORG (перестроение индексов)
+reorg_重组表_6195b56608	REORG (реорганизация таблиц)
+reorgchk_校验_010830b6a4	REORGCHK (проверка)
+repair_修复_8dd157c84c	REPAIR (восстановление)
+restart_值_77d45b4c24	Значение RESTART
+root_密码登录_df671edd13	Вход по паролю root
+root_权限的交互式_shell_经_ssh_724c53e674	Интерактивная оболочка с правами root (через SSH PTY, собственный ANSI-терминал)
+running_运行中_contain_7d4c0797f6	$running работает · ${containers.size - running} остановлено
+runstats_reorg_针对整库或所选表执_d40a81b4e9	RUNSTATS/REORG выполняется для всей базы или выбранных таблиц; большие таблицы могут занимать много времени.
+runstats_全库统计_e9fcb7b8fd	RUNSTATS статистика по всей базе
+runstats_更新统计_a6a6663709	RUNSTATS (обновить статистику)
+save_同步快照_afc91773af	SAVE (синхронизировать снимок)
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\nИмя задачи: cm-$n
+settings.language.changed	Язык обновлён
+settings.language.hint	Вступает в силу сразу, выбор запоминается. Арабский интерфейс автоматически зеркалит макет.
+settings.language.label	Язык
+settings.language.title	Язык интерфейса
+setval_值_938e9aa8cf	Значение setval
+shell_控制台_6f576115f4	Консоль Shell
+sites_enabled_为空_4516b41170	sites-enabled пуст
+slo_与用量_a308fd44ff	SLO и использование
+slo_目标已更新为_0_1_天_41ec05d358	Цель SLO обновлена до {0}% / {1} дн.
+slo_目标已更新为_t_dy_天_7716799870	Цель SLO обновлена до $t% / $dy дн.
+slo_目标应为_0_100_之间的百分数_254085fd3b	Цель SLO должна быть процентом от 0 до 100
+slo_错误预算_47d719e135	Бюджет ошибок SLO
+smtp_主机_9cb2a0f9f3	Хост SMTP
+smtp_已配置_70f40873a7	SMTP настроен
+smtp_授权码_273299a5a3	Код авторизации SMTP
+smtp_服务器_941346a5f4	Сервер SMTP
+smtp_未配置_先填账号授权码_c97b712442	SMTP не настроен (сначала укажите учётную запись и код авторизации)
+smtp_状态_8658366a9a	Состояние SMTP
+smtp_设置已保存_e5e2238754	Настройки SMTP сохранены
+smtp_账号_163_邮箱_4bbcd0b1d0	Учётная запись SMTP (почта 163)
+sql_控制台_a3458fb2ad	Консоль SQL
+sql_文本_gzip_通用_可编辑_48f716760f	Текст SQL + gzip (универсально, редактируется)
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	SQLite — база данных в одном файле: если файла нет, он будет создан; имя должно заканчиваться на .db/.sqlite.
+sqlite_搜索目录_49521cf800	Каталог поиска SQLite
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	SQLite — встроенная база данных в одном файле без понятия пользователей/ролей; контроль доступа определяется правами файлов операционной системы.
+sqlite_生成_sql_文本_gzi_f960464be7	· SQLite формирует текст SQL + gzip, который можно напрямую восстановить в новый файл.
+sqlite_语法_支持_tables_sc_41d445ac53	Синтаксис SQLite (поддерживаются точечные команды вроде .tables/.schema)
+ssh2_可用_efe0e7bbc7	ssh2 доступен
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys ключи допуска · relay_scripts скрипты relay · ufw_conf брандмауэр · cron_conf запланированные задачи.
+ssh_凭据_0_527cdbdfec	Учётные данные SSH · {0}
+ssh_凭据_h_label_24a0886915	Учётные данные SSH · ${h.label}
+ssh_可达_df28fdb916	SSH доступен
+ssh_密码认证_f22e3cd826	Аутентификация SSH по паролю
+ssh_授权密钥_authorized_key_4fee36881a	Ключи допуска SSH (authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	Только для чтения: проверка экспозиции SSH, брандмауэра, учётных записей и прав, обновлений, журналов и синхронизации времени; исправления выполняются после проверки безопасности сервера
+ssh_服务配置_sshd_有效配置_b5a2f5733e	Конфигурация службы SSH (действующая конфигурация sshd)
+ssh_端口_db451b3851	Порт SSH
+ssh_设置已保存_a65c44f49c	Настройки SSH сохранены
+ssh_连接_用于_web_终端的_pty_b26f43db91	SSH-соединение (PTY для веб-терминала)
+ssh_通道_dbd1043d39	SSH-канал
+ssh_配置应用_c35c2ef2bf	Применить конфигурацию SSH
+ssh_防爆破_3e3c79eef0	Защита SSH от перебора
+ssl_证书_let_s_encrypt_332fd65bdb	SSL-сертификат (Let's Encrypt)
+sudo_权限_e03e1e61f9	Права sudo
+swap_控制_12c3f63c98	Управление Swap
+systemd_单元名_c8ea5d11ad	Имя юнита systemd
+systemd_定时器_0_dc0dc6e637	Таймер Systemd ({0})
+systemd_定时器_f8d95995f8	Таймер Systemd
+systemd_定时器_timers_si_6ade92f31f	Таймер Systemd (${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· Таймеры Systemd управляются systemd и отображаются только для чтения;
+systemd_日志总占用_f776a05861	Общий объём журналов systemd
+systemd_服务_fe73189369	Службы systemd
+tcp_主机_c307455515	Хост TCP
+tcp_端口_468daa15c6	Порт TCP
+tcp_端口探活_731f0297a0	Проверка активности TCP-порта
+title_names_size_个_acb99452ee	$title · ${names.size} пакетов
+tls_证书_43af3d4e3c	TLS-сертификат
+tmp_保留_0_天_f32c9b5407	/tmp хранится {0} дн.
+tmp_保留_s_tmpdays_天_86426f5281	/tmp хранится ${s.tmpDays} дн.
+tmp_保留天数_0d11396618	Срок хранения /tmp (дн.)
+token_命中率_2bfb8e83db	Доля совпадений токенов
+token_总量_3f5fa71b8e	Всего токенов
+token_构成_9af64ae64e	Состав токенов
+token_用量归集_81e6ced52c	Сводка использования токенов
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	Статистика токенов агрегируется по скользящему окну · данные с {0}
+top_会话_3c40651605	Топ сессий
+top_进程_17603f0ba3	Топ процессов
+truncate_清空数据_2b621f28d2	TRUNCATE (очистить данные)
+ttfb_按线路_dd77200ec0	TTFB по линиям
+ua_族_886e5b0cbd	Семейства UA
+ufwrulescount_条规则_4d66159719	$ufwRulesCount правил
+user_或_user_group_dab37bbd5c	user или user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE по всем базам
+vacuum_full_全部库_7cb397ec45	VACUUM FULL по всем базам
+vacuum_full_重写表_6eacd637a2	VACUUM FULL (перезапись таблицы)
+vacuum_回收空间_1fab10fe60	VACUUM (освободить место)
+vacuum_重建文件_7a9b0fc30b	VACUUM (пересобрать файл)
+w_a_个异常找到疑似变更_072ff64ee0	Найдено $w / $a аномалий с подозрительными изменениями
+wal_检查点_2010a0cc44	Контрольная точка WAL
+web_终端_7a3963643f	Веб-терминал
+where_条件_如_id_10_211cc8803d	Условие WHERE, напр. id > 10
+where_条件_必填_d024e40edd	Условие WHERE (обязательно)
+where_条件_必填_禁止分号_de5b786116	Условие WHERE (обязательно, точки с запятой запрещены)
+win.client.close_label	При закрытии окна
+win.client.desc_ask	Спрашивать при каждом закрытии: остаться в фоне или выйти.
+win.client.desc_quit	Закрывать Cloud Monitor сразу после закрытия.
+win.client.desc_tray	Скрывать главное окно после закрытия и продолжать получать уведомления об оповещениях в трее.
+win.client.desc_tray_no_tray	Сворачивать в панель задач после закрытия и продолжать получать уведомления об оповещениях в фоне.
+win.client.hint	Поведение при нажатии кнопки закрытия окна. Первый выбор в диалоге закрытия тоже автоматически сохраняется здесь.
+win.client.title	Клиент Windows
+win.client.updated_toast	Поведение при закрытии обновлено
+win.close.ask	Спрашивать каждый раз
+win.close.quit	Сразу выйти из программы
+win.close.tray	Оставаться в трее при закрытии
+win.close.tray_taskbar	Сворачивать в панель задач при закрытии
+win.dialog.body_taskbar	Выйти из программы или свернуть в панель задач, чтобы продолжать получать оповещения сервера в фоне.
+win.dialog.body_tray	Выйти из программы или остаться в трее, чтобы продолжать получать оповещения сервера в фоне.
+win.dialog.cancel	Отмена
+win.dialog.minimize	Свернуть в панель задач
+win.dialog.quit	Выйти
+win.dialog.stay_tray	Остаться в трее
+win.dialog.title	Закрыть Cloud Monitor
+youtube_视频_70a0be3df0	Видео YouTube
+一_d274eee8a1	1

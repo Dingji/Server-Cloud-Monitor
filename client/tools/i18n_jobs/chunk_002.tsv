@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	relay 备份不可用
+relay_备份结果_0cf7f02f06	Relay 备份结果
+relay_每日状态备份_32dee8ba2b	Relay 每日状态备份
+reorg_重建索引_2b9d2e3b0e	REORG（重建索引）
+reorg_重组表_6195b56608	REORG（重组表）
+reorgchk_校验_010830b6a4	REORGCHK（校验）
+repair_修复_8dd157c84c	REPAIR（修复）
+restart_值_77d45b4c24	RESTART 值
+root_密码登录_df671edd13	Root 密码登录
+root_权限的交互式_shell_经_ssh_724c53e674	root 权限的交互式 Shell（经 SSH PTY，原生自绘 ANSI 终端）
+running_运行中_contain_7d4c0797f6	$running 运行中 · ${containers.size - running} 停止
+runstats_reorg_针对整库或所选表执_d40a81b4e9	RUNSTATS/REORG 针对整库或所选表执行，大表可能耗时较长。
+runstats_全库统计_e9fcb7b8fd	RUNSTATS 全库统计
+runstats_更新统计_a6a6663709	RUNSTATS（更新统计）
+save_同步快照_afc91773af	SAVE（同步快照）
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\n任务名: cm-$n
+settings.language.changed	语言已更新
+settings.language.hint	切换后立即生效，并会记住你的选择。阿拉伯语界面会自动镜像布局。
+settings.language.label	语言
+settings.language.title	界面语言
+setval_值_938e9aa8cf	setval 值
+shell_控制台_6f576115f4	Shell 控制台
+sites_enabled_为空_4516b41170	sites-enabled 为空
+slo_与用量_a308fd44ff	SLO 与用量
+slo_目标已更新为_0_1_天_41ec05d358	SLO 目标已更新为 {0}% ／ {1} 天
+slo_目标已更新为_t_dy_天_7716799870	SLO 目标已更新为 $t% ／ $dy 天
+slo_目标应为_0_100_之间的百分数_254085fd3b	SLO 目标应为 0~100 之间的百分数
+slo_错误预算_47d719e135	SLO 错误预算
+smtp_主机_9cb2a0f9f3	SMTP 主机
+smtp_已配置_70f40873a7	SMTP 已配置
+smtp_授权码_273299a5a3	SMTP 授权码
+smtp_服务器_941346a5f4	SMTP 服务器
+smtp_未配置_先填账号授权码_c97b712442	SMTP 未配置（先填账号授权码）
+smtp_状态_8658366a9a	SMTP 状态
+smtp_设置已保存_e5e2238754	SMTP 设置已保存
+smtp_账号_163_邮箱_4bbcd0b1d0	SMTP 账号（163 邮箱）
+sql_控制台_a3458fb2ad	SQL 控制台
+sql_文本_gzip_通用_可编辑_48f716760f	SQL 文本 + gzip（通用，可编辑）
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	SQLite 为单文件数据库：不存在则创建新文件，文件名需以 .db/.sqlite 结尾。
+sqlite_搜索目录_49521cf800	SQLite 搜索目录
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	SQLite 是单文件嵌入式数据库，没有用户/角色概念，访问控制由操作系统的文件权限决定。
+sqlite_生成_sql_文本_gzi_f960464be7	· SQLite 生成 SQL 文本 + gzip，可直接恢复到新文件。
+sqlite_语法_支持_tables_sc_41d445ac53	SQLite 语法（支持 .tables/.schema 等点命令）
+ssh2_可用_efe0e7bbc7	ssh2 可用
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys 授权密钥 · relay_scripts 中继脚本 · ufw_conf 防火墙 · cron_conf 定时任务。
+ssh_凭据_0_527cdbdfec	SSH 凭据 · {0}
+ssh_凭据_h_label_24a0886915	SSH 凭据 · ${h.label}
+ssh_可达_df28fdb916	SSH 可达
+ssh_密码认证_f22e3cd826	SSH 密码认证
+ssh_授权密钥_authorized_key_4fee36881a	SSH 授权密钥 (authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	SSH 暴露面、防火墙、账号与权限、更新、日志与时间同步等只读体检；修复动作经服务器安全校验后执行
+ssh_服务配置_sshd_有效配置_b5a2f5733e	SSH 服务配置 (sshd 有效配置)
+ssh_端口_db451b3851	SSH 端口
+ssh_设置已保存_a65c44f49c	SSH 设置已保存
+ssh_连接_用于_web_终端的_pty_b26f43db91	SSH 连接（用于 Web 终端的 PTY）
+ssh_通道_dbd1043d39	SSH 通道
+ssh_配置应用_c35c2ef2bf	SSH 配置应用
+ssh_防爆破_3e3c79eef0	SSH 防爆破
+ssl_证书_let_s_encrypt_332fd65bdb	SSL 证书 (Let's Encrypt)
+sudo_权限_e03e1e61f9	sudo 权限
+swap_控制_12c3f63c98	Swap 控制
+systemd_单元名_c8ea5d11ad	systemd 单元名
+systemd_定时器_0_dc0dc6e637	Systemd 定时器 ({0})
+systemd_定时器_f8d95995f8	Systemd 定时器
+systemd_定时器_timers_si_6ade92f31f	Systemd 定时器 (${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· Systemd 定时器由 systemd 管理，仅展示；
+systemd_日志总占用_f776a05861	systemd 日志总占用
+systemd_服务_fe73189369	systemd 服务
+tcp_主机_c307455515	TCP 主机
+tcp_端口_468daa15c6	TCP 端口
+tcp_端口探活_731f0297a0	TCP 端口探活
+title_names_size_个_acb99452ee	$title · ${names.size} 个包
+tls_证书_43af3d4e3c	TLS 证书
+tmp_保留_0_天_f32c9b5407	/tmp 保留 {0} 天
+tmp_保留_s_tmpdays_天_86426f5281	/tmp 保留 ${s.tmpDays} 天
+tmp_保留天数_0d11396618	/tmp 保留天数
+token_命中率_2bfb8e83db	Token 命中率
+token_总量_3f5fa71b8e	Token 总量
+token_构成_9af64ae64e	Token 构成
+token_用量归集_81e6ced52c	Token 用量归集
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	Token 统计按滚动窗口聚合 · 数据自 {0}
+top_会话_3c40651605	Top 会话
+top_进程_17603f0ba3	Top 进程
+truncate_清空数据_2b621f28d2	TRUNCATE（清空数据）
+ttfb_按线路_dd77200ec0	TTFB 按线路
+ua_族_886e5b0cbd	UA 族
+ufwrulescount_条规则_4d66159719	$ufwRulesCount 条规则
+user_或_user_group_dab37bbd5c	user 或 user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE 全部库
+vacuum_full_全部库_7cb397ec45	VACUUM FULL 全部库
+vacuum_full_重写表_6eacd637a2	VACUUM FULL（重写表）
+vacuum_回收空间_1fab10fe60	VACUUM（回收空间）
+vacuum_重建文件_7a9b0fc30b	VACUUM（重建文件）
+w_a_个异常找到疑似变更_072ff64ee0	$w / $a 个异常找到疑似变更
+wal_检查点_2010a0cc44	WAL 检查点
+web_终端_7a3963643f	Web 终端
+where_条件_如_id_10_211cc8803d	WHERE 条件, 如 id > 10
+where_条件_必填_d024e40edd	WHERE 条件（必填）
+where_条件_必填_禁止分号_de5b786116	WHERE 条件（必填，禁止分号）
+win.client.close_label	关闭窗口时
+win.client.desc_ask	每次关闭时弹出选择：驻留后台或退出。
+win.client.desc_quit	关闭后立即退出 Cloud Monitor。
+win.client.desc_tray	关闭后隐藏主窗口，在托盘继续接收告警通知。
+win.client.desc_tray_no_tray	关闭后最小化到任务栏，继续在后台接收告警通知。
+win.client.hint	点击窗口关闭按钮时的行为。首次在关闭对话框中的选择也会自动记在这里。
+win.client.title	Windows 客户端
+win.client.updated_toast	关闭行为已更新
+win.close.ask	每次询问
+win.close.quit	直接退出程序
+win.close.tray	关闭时驻留到系统托盘
+win.close.tray_taskbar	关闭时最小化到任务栏
+win.dialog.body_taskbar	退出程序，或最小化到任务栏继续在后台接收服务器告警。
+win.dialog.body_tray	退出程序，或驻留到系统托盘继续在后台接收服务器告警。
+win.dialog.cancel	取消
+win.dialog.minimize	最小化到任务栏
+win.dialog.quit	退出
+win.dialog.stay_tray	驻留托盘
+win.dialog.title	关闭 Cloud Monitor
+youtube_视频_70a0be3df0	YouTube 视频
+一_d274eee8a1	一

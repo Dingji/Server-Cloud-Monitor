@@ -1,0 +1,19 @@
+首次_a5a7c570b3	First
+首次成功_59d8e1af26	First success
+首行是否为列名_0c92d3b892	Whether the first row contains column names
+验证_80144e2e73	Verify
+验证邮件已发送_请查收_24_小时内有效_若未_b397297e85	Verification email sent, please check your inbox (valid for 24 hours). If you did not receive it, contact an administrator to activate.
+验证邮件已重新发送_2dcdc605ce	Verification email resent
+高_b096b3f5ac	High
+高级_c009d0ab82	Advanced
+默认_0_5ce2332f3f	Default {0}
+默认_bb17cdb052	(default)
+默认_c8d09cf955	Default
+默认_configstore_default_0733ed0183	Default ${ConfigStore.DEFAULT_URL}
+默认_https_api_telegram_12d4c4cae0	Default https://api.telegram.org
+默认_noteboxstore_defaul_80d6354637	Default ${NoteBoxStore.DEFAULT_URL}
+默认值_d93919c37b	Default value
+默认值_注释_序列值_74bbba44ab	Default value / Comment / Sequence value
+默认值或注释文本_fc754f6441	Default value or comment text
+默认库_8e2aece25f	Default database
+默认网关_e44b012e45	Default gateway

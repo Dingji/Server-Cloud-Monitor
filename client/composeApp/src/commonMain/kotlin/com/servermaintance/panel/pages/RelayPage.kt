@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,19 +50,19 @@ import com.servermaintance.panel.ui.PanelIcon
  * 「旧版面板」外链。`GET /relay/available` 探测失败时以非阻断横幅提示
  * 「中继采集器不可用」，具体页签内部再各自降级（不崩溃、不弹 toast）。
  */
-private val RELAY_TABS = listOf(
-    "overview" to "概览",
-    "traffic" to "流量分析",
-    "quality" to "质量分析",
-    "hitrate" to "套餐命中率",
-    "tokenhit" to "Token 命中率",
-    "clients" to "客户端与会话",
+private val RELAY_TABS  get() = listOf(
+    "overview" to L["概览_5060421d15"],
+    "traffic" to L["流量分析_3953320414"],
+    "quality" to L["质量分析_1bbbc5f3b4"],
+    "hitrate" to L["套餐命中率_b717e2e192"],
+    "tokenhit" to L["token_命中率_2bfb8e83db"],
+    "clients" to L["客户端与会话_fd8ce68403"],
     "tokens" to "Token",
-    "keys" to "密钥池",
+    "keys" to L["密钥池_6ab58f884e"],
 )
 
-private const val LIVE_FAST = "实时 · 每 2 秒刷新"
-private const val LIVE_SLOW = "每 10 秒自动刷新"
+private val LIVE_FAST get() = L["实时_每_2_秒刷新_c4c5d531ed"]
+private val LIVE_SLOW get() = L["每_10_秒自动刷新_0c62f6d07b"]
 
 @Composable
 fun RelayPage() {
@@ -80,19 +82,19 @@ fun RelayPage() {
             // 采集端以 API 字段为准（服务端并无 relay.service，别假设 systemd 单元名）
             val ingestErr = data?.str("ingest_error").orEmpty()
             when {
-                !topOk -> "中继采集器不可用"
-                ingestErr.isNotEmpty() -> "中继采集器上报错误：$ingestErr"
-                !dataOk -> "中继采集器采集未就绪（可用性受限）"
+                !topOk -> L["中继采集器不可用_e768a2ecc1"]
+                ingestErr.isNotEmpty() -> trf("中继采集器上报错误_0_ea1bf3be8f", ingestErr)
+                !dataOk -> L["中继采集器采集未就绪_可用性受限_527bbf9587"]
                 else -> null
             }
         } catch (e: Throwable) {
-            "中继采集器不可用：${e.message ?: "连接失败"}"
+            trf("中继采集器不可用_0_d01f86c7fd", e.message ?: trf("连接失败_2c056f182f"))
         }
     }
 
     PageScaffold(
-        title = "OpenCode 中继",
-        desc = "LLM API 中继的请求量、Token 用量、密钥池配额、模型可用性与质量分析",
+        title = L["opencode_中继_2e021ee797"],
+        desc = L["llm_api_中继的请求量_token_用量_6b89d708ea"],
         actions = {
             Text(
                 text = live,
@@ -102,7 +104,7 @@ fun RelayPage() {
             if (platformHandheld) {
                 Spacer(Modifier.padding(start = 10.dp))
                 GhostBtn(
-                    text = "旧版面板",
+                    text = L["旧版面板_1d60ea9964"],
                     icon = "external",
                     onClick = { openUrl(AppState.config().normalizedUrl() + "/stats/") },
                 )
@@ -155,6 +157,6 @@ private fun ProbeBanner(msg: String, onRetry: () -> Unit) {
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.weight(1f),
         )
-        GhostBtn(text = "重试", icon = "refresh", onClick = onRetry)
+        GhostBtn(text = L["重试_e2d53a6d3a"], icon = "refresh", onClick = onRetry)
     }
 }

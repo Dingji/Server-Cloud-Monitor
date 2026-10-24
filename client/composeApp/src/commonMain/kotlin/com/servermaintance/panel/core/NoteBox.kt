@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.trf
 
 import com.servermaintance.panel.platformStore
 import io.ktor.client.HttpClient
@@ -108,7 +110,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
 
     private fun urlOf(path: String): String {
         val base = config().normalizedUrl()
-        if (base.isEmpty()) throw ApiException("NoteBox 地址未配置", 0)
+        if (base.isEmpty()) throw ApiException(L["notebox_地址未配置_3d37258011"], 0)
         return base + path
     }
 
@@ -121,7 +123,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
         val parsed = runCatching { Json.parseToJsonElement(body).jsonObject }.getOrNull()
         val msg = parsed?.let { (it["error"] as? JsonPrimitive)?.safeContent() }
         return ApiException(
-            message = if (msg.isNullOrBlank()) "HTTP $code" else msg,
+            message = if (msg.isNullOrBlank()) com.servermaintance.panel.i18n.trf("common.http_code", code) else msg,
             code = code,
             isAuth = code == 401,
         )
@@ -137,7 +139,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
         val text = r.textOrEmpty()
         if (r.status.value >= 400) throw parseError(path, r.status.value, text)
         return runCatching { Json.parseToJsonElement(text) }.getOrElse {
-            throw ApiException("响应解析失败: ${text.take(300)}", r.status.value)
+            throw ApiException(trf("响应解析失败_0_2b68ffa3e9", text.take(300)), r.status.value)
         }
     }
 
@@ -159,7 +161,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
         return readJson(path, r)
     }
@@ -174,7 +176,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
         return readJson(path, r)
     }
@@ -196,7 +198,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("无法连接 NoteBox: ${e.message ?: e::class.simpleName ?: "网络不可达"}", 0)
+            throw ApiException(trf("无法连接_notebox_0_cc669cd82a", e.message ?: e::class.simpleName ?: L["网络不可达_7e7812414f"]), 0)
         }
         val text = r.textOrEmpty()
         if (r.status.value >= 400) throw parseError("/api/login", r.status.value, text)
@@ -206,7 +208,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
             .firstOrNull { it.startsWith("session=") }
             ?.substringBefore(";")
             ?.takeIf { it.length > "session=".length }
-            ?: throw ApiException("服务器未返回会话 Cookie", r.status.value)
+            ?: throw ApiException(L["服务器未返回会话_cookie_9dc7f14670"], r.status.value)
 
         val cur = config()
         return cur.copy(
@@ -308,7 +310,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
                 bytes,
                 io.ktor.http.headers {
                     append(HttpHeaders.ContentType, mime)
-                    append(HttpHeaders.ContentDisposition, "filename=\"${filename.replace("\"", "")}\"")
+                    append(HttpHeaders.ContentDisposition, "filename=\"${filename.replace("\\", "")}\"")
                 },
             )
         }
@@ -320,7 +322,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
         return readJson("/api/assets", r).jsonObject
     }
@@ -573,7 +575,7 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            throw ApiException("网络错误: ${e.message ?: e::class.simpleName ?: "连接失败"}", 0)
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
         }
         if (r.status.value >= 400) throw parseError(path, r.status.value, r.textOrEmpty())
         if (!r.status.isSuccess()) throw ApiException("HTTP ${r.status.value}", r.status.value)
@@ -596,14 +598,14 @@ class NoteBoxApi(private val config: () -> NoteBoxConfig) {
             try {
                 val r = http.get("$full/api/bootstrap")
                 when {
-                    r.status.value == 401 -> return "NoteBox 服务可达（未登录）"
-                    r.status.isSuccess() -> return "NoteBox 服务可达"
-                    else -> throw ApiException("服务不可达 (HTTP ${r.status.value})", r.status.value)
+                    r.status.value == 401 -> return L["notebox_服务可达_未登录_e023d68cad"]
+                    r.status.isSuccess() -> return L["notebox_服务可达_6a7506d6ac"]
+                    else -> throw ApiException(trf("服务不可达_http_0_6aaaef3706", r.status.value), r.status.value)
                 }
             } catch (e: ApiException) {
                 throw e
             } catch (e: Exception) {
-                throw ApiException("无法连接 NoteBox: ${e.message ?: e::class.simpleName ?: "网络不可达"}", 0)
+                throw ApiException(trf("无法连接_notebox_0_cc669cd82a", e.message ?: e::class.simpleName ?: L["网络不可达_7e7812414f"]), 0)
             } finally {
                 try { http.close() } catch (_: Exception) {}
             }
@@ -700,9 +702,9 @@ object NoteBoxState {
         _session.value = NbSessionState.Ready
         null
     } catch (e: ApiException) {
-        e.message ?: "登录失败"
+        e.message ?: L["登录失败_aeb6c8a818"]
     } catch (e: Exception) {
-        e.message ?: e::class.simpleName ?: "登录失败"
+        e.message ?: e::class.simpleName ?: L["登录失败_aeb6c8a818"]
     }
 
     /** 邮箱注册；返回 null 成功，否则为错误消息。 */
@@ -710,15 +712,15 @@ object NoteBoxState {
         _api.register(email, password)
         null
     } catch (e: ApiException) {
-        e.message ?: "注册失败"
+        e.message ?: L["注册失败_a1d7fb5dfc"]
     } catch (e: Exception) {
-        e.message ?: e::class.simpleName ?: "注册失败"
+        e.message ?: e::class.simpleName ?: L["注册失败_a1d7fb5dfc"]
     }
 
     suspend fun resendVerification(email: String): String = try {
         _api.resendVerification(email)
     } catch (e: Exception) {
-        e.message ?: "发送失败"
+        e.message ?: L["发送失败_e767d34c78"]
     }
 
     suspend fun logout() {

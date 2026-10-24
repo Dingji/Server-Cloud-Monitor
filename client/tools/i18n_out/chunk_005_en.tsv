@@ -1,0 +1,120 @@
+健康_28ff5ffe95	Healthy
+健康告警_a3932fd7ea	Health alert
+健康警告_36e38f0344	Health warning
+僵尸_0_350f669b6a	Zombie {0}
+允许_0_4xx_1_不计入_2c75f2ef75	Allow {0} · 4xx {1} (not counted)
+允许_null_613ffb2b0f	Allow NULL
+允许搜索的根目录_冒号分隔_9f54070414	Root directories allowed for search (colon-separated)
+允许范围由服务器的_cm_files_roots_1e4f0369fa	Allowed scope is determined by the server's CM_FILES_ROOTS (entire filesystem by default); the panel already has a Web terminal (equivalent to a root shell),
+允许错误率_b1b11f31c6	Allowed error rate
+先配私钥路径或密码才能采集_1c4899bb70	Configure a private key path or password before collecting
+入库_0_1_运行_2_6103dc0494	Stored {0}/{1} · Running {2}
+入站_0_均值_请求_1_406a6865d4	Inbound {0} · Avg/request {1}
+入站_1057bbf420	Inbound
+全局_a5644f4bbf	Global
+全库备份_db2_backup_3a9089df6c	Full backup (db2 backup)
+全库备份_db_sql_gz_acafceba07	Full backup (.db -> sql.gz)
+全库备份_mysqldump_1ed22a1def	Full backup (mysqldump)
+全库备份_pg_dumpall_1bd23a039b	Full backup (pg_dumpall)
+全库数据搜索_beda6555aa	Full-database data search
+全选_3e44b2a933	Select all
+全选本页_b82f2ebbd9	Select all on this page
+全部_0_33a02d8846	All {0}
+全部_0_910e2f37bc	All ({0})
+全部_2_e5060e9fe1	All (2)
+全部_778fc8f994	All
+全部_alerts_size_83c38547e2	All ${alerts.size}
+全部_仅显示有规则标记的事件_c50328c4bb	All (show only rule-flagged events)
+全部分组_eb8d23fedf	All groups
+全部发送成功_66de2386e0	All sent successfully
+全部合规_59b806d265	All compliant
+全部在线_44e9a836b2	All online
+全部在阈值内_3b9654881f	All within threshold
+全部安全升级_31ec522e55	All security upgrades
+全部探测_ccb06057e1	All probes
+全部数据库_服务器级全量_488b444221	All databases (server-level full)
+全部标签_ffd92f5524	All tags
+全部标记已读_5645f09d67	Mark all as read
+全部检查一次_0a5f08235e	Check all once
+全部正常_d02882ad7e	All normal
+全部清单_54e487ccc0	All inventories
+全部源_全局搜索_252f184452	All sources (global search)
+全部状态_1a4c26d92d	All statuses
+全部立即采集_49af47e239	Collect all now
+全部笔记_be5bc30cf8	All notes
+全部规则_33c1cd2c36	All rules
+全部角色_9adaf88c6d	All roles
+全部解除锁定_fc0465ac55	Unlock all
+全部通过_3b6e5a1267	All passed
+公开链接_093bb537a9	Public link
+公开链接已开启_已复制_url_519f2b78bb	Public link enabled, copied: $url
+公网ip_de8bbe24d6	Public IP
+公钥_b6965e119c	Public key
+六_3d72c724e0	Six
+共_0_6de8606170	Total {0}
+共_0_个常用包_已装_1_2_e967a843a6	{0} common packages total · {1} installed · {2} categories
+共_0_字符_f3f4105419	{0} characters total
+共_0_条_c3ba901cd9	{0} items total
+共_0_条记录_41eef6780b	{0} records total
+共_0_次请求_有效_1_次_29c1aa705f	{0} requests total · {1} valid
+共_0_行_a4e8522340	{0} rows total
+共_alerts_size_条_560bb53bad	${alerts.size} items total
+共_editdraft_length_字符_7c1eadf347	${editDraft.length} characters total
+共_fmt_count_totaln_c03f4c77be	${Fmt.count(totalN ?: 0)} rows total
+共_services_size_71096c72f6	${services.size} total
+共享_9a236964e8	Shared
+共享给我_6863118293	Shared with me
+共享给用户_f0425c626f	Share with user
+关于_bed172efc9	About
+关注_7ac0d5c9c3	Follow
+关自启_b871a656d2	Autostart off
+关闭_0_9aa50629e4	Closed (0)
+关闭_0_9d7b014ef2	Closed {0}
+关闭_6c14bd7f6f	Close
+关闭_tab_title_43b16ac3b7	Close ${tab.title}
+关闭网卡_62663eaa23	Disable network interface
+关闭跟随或离开本页会自动退订_72c6084027	Turning off following or leaving this page will automatically unsubscribe.
+其中_0_条失败_c5eef2f155	{0} of them failed
+其中_0_项已触发重启仍失败_9b68a5e334	{0} of them still failing after a restart was triggered
+其中_s_failing_项已触发重启仍_f01141d4a9	${s?.failing} of them still failing after a restart was triggered
+其中_t_failed24h_条失败_42b755439b	${t?.failed24h} of them failed
+其他用户共享给你的笔记会出现在这里_864edb3def	Notes shared with you by other users will appear here
+其它_295c71ff98	Other
+内存_a8fa8ac31a	Memory %
+内存_ba57ca4da5	Memory ≥ %
+内存_d014ab7703	Memory
+内存_交换_mb_69caca4bab	Memory / Swap (MB)
+内存与交换分区用量_进程占用与维护操作_a12dd4174d	Memory and swap usage, process usage, and maintenance operations
+内存使用_c5281dc2e1	Memory usage
+内存使用率_51cc7e4578	Memory usage rate
+内存占用_871ca4fff4	Memory consumption
+内存占用_top_15_rss_180f27c927	Memory usage Top 15 (RSS)
+内存管理_dd6f618330	Memory management
+内存维护_4a93296df5	Memory maintenance
+内存详情_proc_meminfo_6fc684a759	Memory details (/proc/meminfo)
+内容_163aec9194	Content
+内核_8f190c51d6	Kernel
+内核_系统安全参数_sysctl_1d74700ad7	Kernel/system security parameters (sysctl)
+写入_9e93bdccb2	Write
+写入_drop_caches_3_清空页缓存_目_545feeaf1e	Write drop_caches=3 to clear the page cache/dentry/inode caches (temporarily slower)
+写入_iops_c0257973a8	Write IOPS
+写入_p_f48e1e9bc1	Write to $p?
+写入系统定时任务_etc_cron_d_cm_7b1a14bf5a	Write to system cron jobs (/etc/cron.d/cm-dbmaint-*). Example: 0 4 * * * = daily at 4 AM. View/delete on the "Cron Jobs" page.
+写入速率_2836adc578	Write rate
+冷却_分钟_c84b0ae919	Cooldown (min)
+凭据_131caf7289	Credentials
+凭据已保存_只存服务器_ef4af72acf	Credentials saved (stored on server only)
+凭据已删除_7546bc5222	Credentials deleted
+出于安全考虑_必须至少指定_数据库_用户_f479eba94a	For safety, at least one of database / user / duration must be specified; a single match is limited to 200 sessions.
+出口带宽上限_mbps_0_不限_333a869c1c	Egress bandwidth cap (Mbps, 0 = unlimited)
+出口带宽上限已设为_0_mbps_8e30001052	Egress bandwidth cap set to {0} Mbps
+出口带宽上限已设为_mbps_mbps_1643606623	Egress bandwidth cap set to $mbps Mbps
+出站_c9b439d70a	Outbound
+分_decb3b3262	 min
+分割线_985282b3aa	— Divider
+分区_016c7a3b77	/ partition
+分区与挂载点_f1ca26a5e8	Partitions and mount points
+分区容量_6a3c635ae9	Partition capacity
+分区容量_块设备与磁盘维护操作_80c0745041	Partition capacity, block devices, and disk maintenance operations
+分区数量_0933d5f9ce	Number of partitions
+分时成功率_ccd648d6f2	Success rate by hour

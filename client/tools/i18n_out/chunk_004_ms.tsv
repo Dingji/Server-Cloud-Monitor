@@ -1,0 +1,120 @@
+仅本地_5c28a4b5d1	Hanya setempat
+仅结构_15c49958e4	Hanya struktur
+仅结构_8cdf512d85	(Hanya struktur)
+仅结构_不含数据_86341bfbf0	Hanya struktur (tanpa data)
+仅运行_affb726f94	Hanya yang berjalan
+仅面板铃铛_3ecf2a6ea9	Hanya loceng panel
+今天_17e83cc25e	Hari ini
+今天_hm_b5123a00e4	Hari ini $hm
+今天到期_fb2cb94029	Tamat hari ini
+今日_0_会话_1_客户端_2_dfa0d41ced	Hari ini {0} · Sesi {1} · Klien {2}
+今日_0_新增_1_e17159d28e	Hari ini {0} · Baharu {1}
+今日_0_请求_f79a1b4d82	{0} permintaan hari ini
+今日_24_小时分布_d5b7360f18	Taburan 24 jam hari ini
+今日_574cd4fb79	Hari ini
+今日_token_d0b5adbe07	Token hari ini
+今日出站_ae22fbbb49	Keluar hari ini
+今日成功率_70d58b9151	Kadar kejayaan hari ini
+今日请求_0_8e7833564f	Permintaan hari ini {0}
+今日请求_731c00a176	Permintaan hari ini
+今日邮件发送成功_060f80e076	E-mel berjaya dihantar hari ini
+今日错误_97f268b84a	Ralat hari ini
+从_0_切换到_94f8b2509a	Ditukar daripada {0} kepada:\n\n
+从未发信_d605d91365	Tidak pernah dihantar
+从镜像站拉取最新软件包列表_安装新包前建议先刷新_18f22cecb1	Mengambil senarai pakej terkini daripada mirror; disarankan menyegarkan sebelum memasang pakej baharu.
+代码_21cdbf098d	 〔Kod〕 
+代码_33246dda76	Kod
+以_0_执行_结果支持多语句_1_052948bd3b	Jalankan sebagai {0} · Result menyokong beberapa pernyataan · {1}
+以_dbmeta_label_st_engi_c4aac0c4ce	Jalankan sebagai ${DbMeta.label(st.engineId)} · Result menyokong beberapa pernyataan · $dialect
+以下已安装包依赖它_卸载可能连带移除或导致异常_f26237adcd	Pakej berikut yang dipasang bergantung padanya; membuangnya mungkin turut membuang pakej tersebut atau menyebabkan ralat:\n
+以后_ac5d03ece3	Nanti
+仪表盘_2c0ab88554	Papan pemuka
+任何拿到链接的人_无需登录_可查看_3f77643748	Sesiapa yang mempunyai pautan (tanpa log masuk) boleh melihatnya
+任务_3172b317f9	Tugas
+任务名_c8d6eeaa4c	Nama tugas
+任务名称_2e30469899	Nama tugas
+任务启动失败_服务端未返回任务_id_500799f8a2	Gagal memulakan tugas: pelayan tidak mengembalikan id tugas
+任务执行失败_97312db4c3	Pelaksanaan tugas gagal
+任务文件_8f4e93dc3d	Fail tugas
+任务状态已丢失_服务端可能重启过_请重新发起该_3a4e99bf96	Status tugas hilang (pelayan mungkin telah dihidupkan semula), sila mulakan semula operasi
+休眠_0_c11a981edd	Tidur {0}
+优先级_7cabe771eb	Keutamaan
+优秀_3e61f36792	Cemerlang
+会自动执行配置校验_d447aa930e	(pengesahan konfigurasi akan dijalankan secara automatik)
+会话_1_497c4ea2d5	Sesi 1
+会话_836ffe0e10	Sesi
+会话_titleseq_33244bea87	Sesi $titleSeq
+会话上下文明细_内存视图_22c78a29f0	Perincian konteks sesi (paparan memori)
+会话上下文构成_ce6fae8e45	Komposisi konteks sesi
+会话内存视图_fcd9415f11	Paparan memori sesi
+会话分布_按请求数_b85c7c435b	Taburan sesi (mengikut bilangan permintaan)
+会话已关闭_095a652630	Sesi telah ditutup
+会话已过期_请重新登录_32f89bb43c	Sesi telah tamat tempoh, sila log masuk semula
+会话批量清理_55815972d3	Pembersihan pukal sesi
+会话排行_按上下文字节_0_1_6f0f0e51a3	Penarafan sesi (mengikut bait konteks)  {0} · {1} sesi / {2} pusingan · jumlah {3}
+会话排行_按上下文字节_e47849da63	Penarafan sesi (mengikut bait konteks)
+会话数_4d72abd2e9	Bilangan sesi
+会话数_今日_9cd79de908	Bilangan sesi (hari ini)
+估算成本_f05235023c	Anggaran kos
+位置_88c34452cc	Lokasi
+低_b9ee259b7f	Rendah
+低于告警线的证书任务_695579ce30	Tugas sijil di bawah ambang amaran
+作用范围_95a5e61424	Skop
+使用_ssl_465_端口勾选_316a136e99	Guna SSL (tanda untuk port 465)
+使用率_8ca02f90d1	Kadar guna
+例如_工作_项目资料_190eafea68	contoh: Kerja, dokumen projek
+供应商状态_ed8f7c5676	Status penyedia
+依赖_0_推荐依赖_1_反向依赖_2507ad6a45	Kebergantungan {0} · Disyorkan {1} · Songsang {2}
+依赖_2ebf56c207	\n\n--- Kebergantungan ---\n
+依赖_depn_推荐依赖_recn_684b03c97f	Kebergantungan $depN · Disyorkan $recN · Songsang $revN
+保存_fadf24dbc5	Simpan
+保存_smtp_设置_31e1de2129	Simpan tetapan SMTP
+保存中_6644f06197	Menyimpan…
+保存地址_b4507bac53	Simpan alamat
+保存失败_40525a7328	Gagal menyimpan
+保存失败_b12163000c	Gagal menyimpan:
+保存失败或被取消_7e2bbcfe18	Gagal menyimpan atau dibatalkan
+保存并重连_a440c33bd4	Simpan dan sambung semula
+保存数据库连接_ccfc22f810	Simpan sambungan pangkalan data
+保存文件_184adfdabf	Simpan fail
+保存被取消_82f61f25b1	Penyimpanan dibatalkan
+保存通知规则_81afc138cf	Simpan peraturan pemberitahuan
+保存阈值_1a6c3945df	Simpan ambang
+保留_0_份_6f62f9cd31	Kekalkan {0} salinan
+保留_30_份_relay_backup_tim_b625d85371	Kekalkan 30 salinan; relay-backup.timer berjalan setiap hari pada 03:30.
+保留最近_n_个_855e3ce9c7	Kekalkan N terkini
+修复失败_3d6dfbe1ad	Pembaikan gagal
+修复执行记录_2669e0f726	Log pelaksanaan pembaikan
+修复未成功_d8d320b456	Pembaikan tidak berjaya
+修改_c9c77517fe	Ubah suai
+修改会写入_etc_ssh_sshd_conf_4cb39a7a47	Perubahan ditulis ke /etc/ssh/sshd_config.d/99-cloud-monitor.conf; sshd -t dijalankan dahulu untuk mengesahkan dan perubahan dibuang secara automatik jika gagal. Sediakan kunci sebelum mematikan pengesahan kata laluan.
+修改列_类型_默认值_可空_8bebfff9e5	Ubah suai lajur (jenis/lalai/nullable)
+修改失败_9abb465039	Gagal mengubah suai
+修改密码_0_1a306d5990	Tukar kata laluan - {0}
+修改密码_0ae20ac3af	Tukar kata laluan
+修改密码_n_00b25b96ac	Tukar kata laluan - $n
+修改密码_name_d9c700cba6	Tukar kata laluan - $name
+修改所有者_3876d6ab1f	Tukar pemilik
+修改时间_af71bc5cc4	Masa diubah suai
+修改登录密码_321d9d86f6	Tukar kata laluan log masuk
+修改端口_路径需编辑_config_json_后_983be325ee	Untuk menukar port/laluan, sunting config.json kemudian mula semula
+修改限流阈值_编辑_00_limits_conf_1152af13c3	Untuk menukar ambang kadar: sunting 00-limits.conf, kemudian nginx -t && systemctl reload nginx.
+修改面板密码_17fc433ccc	Tukar kata laluan panel
+倒计时_80176c18f3	Kira detik
+候选_0461e4db19	Calon
+值_321b955840	Nilai
+值越小越倾向使用物理内存_数据库服务器常用_10_d669b666d0	Nilai yang lebih kecil cenderung menggunakan memori fizikal; pelayan pangkalan data biasanya menggunakan 10.
+偏快_8900d928c6	Agak laju
+停止_0_e0be2c8b16	Hentikan {0}
+停止_a17f70a8d3	Hentikan
+停止_fail2ban_c4775a3abd	Hentikan Fail2ban
+停止_label_8f0e06c363	Hentikan $label
+停止_容器_c97111b01f	Hentikan kontena
+停止分享_55c70caa51	Hentikan perkongsian
+停止后将失去_ssh_防爆破保护_cf3e594655	Jika dihentikan, perlindungan SSH daripada serangan brute force akan hilang.
+停止引擎_f83e27f9a5	Hentikan enjin
+停止自愈_8e53c62499	Hentikan pembaikan automatik
+停止跟随_72312418e3	Hentikan mengikut
+停用_0_其会话将立即失效_bd25e844b8	Nyahaktifkan {0}? Sesi berkaitannya serta-merta menjadi tidak sah.
+停用_d989e55188	Nyahaktifkan
+停用用户_3f2f67ac37	Nyahaktifkan pengguna

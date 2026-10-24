@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.db
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -69,39 +72,39 @@ fun KvOverviewTab(st: DbState, scope: CoroutineScope) {
         val vars = s.arr("variables").filterIsInstance<JsonObject>()
         val totalKeys = dbs.sumOf { it.num("keys") }
         GridLayout(4) {
-            StatTile("引擎状态", "运行中", sub = v.str("version").take(46))
-            StatTile("已连接客户端", stt.str("connections").ifEmpty { "0" }, sub = "上限 ${stt.str("max_connections").ifEmpty { "-" }}")
-            StatTile("键总数", Fmt.count(totalKeys.toLong()), sub = "${dbs.size} 个逻辑库")
-            StatTile("已用内存", stt.str("memory").ifEmpty { "-" }, sub = "命中 ${stt.str("hits").ifEmpty { "-" }}")
+            StatTile(L["引擎状态_fbb8ddd570"], L["运行中_5942497005"], sub = v.str("version").take(46))
+            StatTile(L["已连接客户端_ce32897c53"], stt.str("connections").ifEmpty { "0" }, sub = trf("上限_0_70bdcc315a", stt.str("max_connections").ifEmpty { "-" }))
+            StatTile(L["键总数_950b059b5a"], Fmt.count(totalKeys.toLong()), sub = trf("0_个逻辑库_9f3172f7f7", dbs.size))
+            StatTile(L["已用内存_5018e93ffc"], stt.str("memory").ifEmpty { "-" }, sub = trf("命中_0_bc8f08b9ae", stt.str("hits").ifEmpty { "-" }))
         }
         GridLayout(2) {
-            PanelCard(title = "逻辑库 (db0-db15)", cardKey = "kv-dbs") {
+            PanelCard(title = L["逻辑库_db0_db15_1443ce3df5"], cardKey = "kv-dbs") {
                 DynamicTable(
                     columns = listOf("name", "keys", "expires", "avg_ttl"),
                     rows = dbs,
-                    extra = TableCol("操作", weight = 0.7f) { row ->
-                        DbBtn("浏览") {
+                    extra = TableCol(L["操作_f3ea6d345e"], weight = 0.7f) { row ->
+                        DbBtn(L["浏览_ef23ea67b0"]) {
                             st.kvDb = row.str("name").removePrefix("db")
                             st.tab = "keys"
                         }
                     },
                 )
             }
-            PanelCard(title = "服务器信息", cardKey = "kv-info") {
+            PanelCard(title = L["服务器信息_d2e0457697"], cardKey = "kv-info") {
                 KvEntries(v)
                 KvEntries(stt)
             }
         }
-        PanelCard(title = "连接的客户端 (${procs.size})", cardKey = "kv-cli", right = { DbBtn("刷新") { st.bump() } }) {
+        PanelCard(title = trf("连接的客户端_0_f875571d9f", procs.size), cardKey = "kv-cli", right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } }) {
             DynamicTable(
                 columns = listOf("pid", "user", "db", "state", "seconds", "client"),
                 rows = procs,
                 maxHeight = 320,
                 extra = TableCol("", weight = 0.7f) { row ->
-                    DbBtn("断开", tone = DbBtnTone.Danger) {
+                    DbBtn(L["断开_28fb7cedb1"], tone = DbBtnTone.Danger) {
                         scope.launch {
                             val pid = row.str("pid")
-                            val okc = Modal.confirm("断开客户端", "断开客户端 $pid ？", danger = true)
+                            val okc = Modal.confirm(L["断开客户端_ff6093dd26"], L["断开客户端_pid_77a2046256"], danger = true)
                             if (!okc) return@launch
                             runDb("/db/kill", jsonObjectOf("engine" to "redis", "pid" to (pid.toIntOrNull() ?: 0)), reload = { st.bump() })
                         }
@@ -111,7 +114,7 @@ fun KvOverviewTab(st: DbState, scope: CoroutineScope) {
         }
         var q by remember { mutableStateOf("") }
         val filtered = if (q.isEmpty()) vars else vars.filter { (it.str("name") + " " + it.str("value")).contains(q, true) }
-        PanelCard(title = "INFO (${vars.size})", cardKey = "kv-vars", right = { SearchField(q, { q = it }, Modifier.width(200.dp), "搜索…") }) {
+        PanelCard(title = "INFO ($${vars.size})", cardKey = "kv-vars", right = { SearchField(q, { q = it }, Modifier.width(200.dp), L["搜索_c85d9132a4"]) }) {
             DynamicTable(listOf("name", "value"), filtered.take(400), maxHeight = 380)
         }
     }
@@ -136,17 +139,17 @@ fun KvKeysTab(st: DbState, scope: CoroutineScope) {
             loaded = true
         },
     ) {
-        PanelCard(title = "键空间", cardKey = "kv-scan", collapsible = false, right = {
-            DbBtn("+ 新建键", tone = DbBtnTone.Ok) {
+        PanelCard(title = L["键空间_3568205fa0"], cardKey = "kv-scan", collapsible = false, right = {
+            DbBtn(L["新建键_26da7abc8d"], tone = DbBtnTone.Ok) {
                 scope.launch {
                     val r = Modal.prompt(
-                        "新建字符串键",
+                        L["新建字符串键_cfff5f4c43"],
                         listOf(
-                            FormField.Text("key", "键名", hint = "user:1:name", mono = true),
-                            FormField.Text("value", "值"),
-                            FormField.Text("ttl", "过期秒数（0=不过期）", value = "0"),
+                            FormField.Text("key", L["键名_f0b35799ef"], hint = L["user_1_name_4237e6cf56"], mono = true),
+                            FormField.Text("value", L["值_321b955840"]),
+                            FormField.Text("ttl", L["过期秒数_0_不过期_c3e59e1315"], value = "0"),
                         ),
-                        okText = "写入",
+                        okText = L["写入_9e93bdccb2"],
                     ) ?: return@launch
                     val k = r["key"]?.trim().orEmpty()
                     if (k.isEmpty()) return@launch
@@ -159,40 +162,43 @@ fun KvKeysTab(st: DbState, scope: CoroutineScope) {
             }
         }) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("库", style = dbMuted, fontSize = 11.sp)
+                Text(L["库_87eedee459"], style = dbMuted, fontSize = 11.sp)
                 SelectField("db$dbSel", (0..15).map { "db$it" }, { dbSel = it.removePrefix("db"); st.bump() }, Modifier.width(90.dp))
-                Field(pattern, { pattern = it }, Modifier.width(260.dp), hint = "模式，如 user:*", mono = true)
-                DbBtn("扫描", tone = DbBtnTone.Primary) { st.kvPattern = pattern; st.bump() }
-                Chip("${keys.size} 个键")
+                Field(pattern, { pattern = it }, Modifier.width(260.dp), hint = L["模式_如_user_a8bfd4d94c"], mono = true)
+                DbBtn(L["扫描_998c936377"], tone = DbBtnTone.Primary) { st.kvPattern = pattern; st.bump() }
+                Chip(trf("0_个键_c90a86e1b2", keys.size))
             }
         }
-        PanelCard(title = "键列表", cardKey = "kv-list") {
+        PanelCard(title = L["键列表_1a724e4d16"], cardKey = "kv-list") {
             DynamicTable(
                 columns = listOf("key", "type", "ttl", "size"),
                 rows = keys,
                 maxHeight = 480,
-                extra = TableCol("操作", weight = 1.6f) { row ->
+                extra = TableCol(L["操作_f3ea6d345e"], weight = 1.6f) { row ->
                     val k = row.str("key")
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        DbBtn("查看", tone = DbBtnTone.Primary) {
+                        DbBtn(L["查看_f7acefd2d4"], tone = DbBtnTone.Primary) {
                             scope.launch {
                                 try {
                                     val val_ = AppState.api.get("/db/kv/value?database=${q(dbSel)}&key=${q(k)}") as JsonObject
                                     val body = val_.str("value").ifEmpty {
                                         val_.arr("rows").joinToString("\n") { it.asText() }.ifEmpty { val_.arr("value").joinToString("\n") { it.asText() } }
                                     }
-                                    Modal.output("键 $k（类型 ${val_.str("type")}）", body)
+                                    Modal.output(trf("键_0_类型_1_e5c94c0e35", k, val_.str("type")), body)
                                 } catch (e: Exception) {
-                                    AppState.toast(e.message ?: "失败", ToastKind.Err)
+                                    AppState.toast(e.message ?: tr("失败_3e3c8068bb"), ToastKind.Err)
                                 }
                             }
                         }
-                        DbBtn("改值") {
+                        DbBtn(L["改值_d6c5664772"]) {
                             scope.launch {
                                 val r = Modal.prompt(
-                                    "编辑键值 - $k",
-                                    listOf(FormField.Text("value", "字符串值"), FormField.Text("ttl", "过期秒数（0=不过期）", value = "0")),
-                                    okText = "保存",
+                                    trf("编辑键值_0_ffdfc28fa2", k),
+                                    listOf(
+                                        FormField.Text("value", L["字符串值_7b6e787aab"]),
+                                        FormField.Text("ttl", L["过期秒数_0_不过期_c3e59e1315"], value = "0"),
+                                    ),
+                                    okText = L["保存_fadf24dbc5"],
                                 ) ?: return@launch
                                 runDb(
                                     "/db/kv/set",
@@ -201,9 +207,9 @@ fun KvKeysTab(st: DbState, scope: CoroutineScope) {
                                 )
                             }
                         }
-                        DbBtn("删除", tone = DbBtnTone.Danger) {
+                        DbBtn(L["删除_3755f56f2f"], tone = DbBtnTone.Danger) {
                             scope.launch {
-                                val okc = Modal.confirm("删除键", "删除 $k ？不可恢复！", okText = "删除", danger = true)
+                                val okc = Modal.confirm(L["删除键_ea51f84dd1"], trf("删除_0_不可恢复_935f255ade", k), okText = L["删除_3755f56f2f"], danger = true)
                                 if (!okc) return@launch
                                 runDb("/db/kv/delete", jsonObjectOf("database" to dbSel, "keys" to jsonStrings(listOf(k))), reload = { st.bump() })
                             }
@@ -230,37 +236,37 @@ fun KvAdvancedTab(st: DbState, scope: CoroutineScope) {
         },
     ) {
         GridLayout(2) {
-            PanelCard(title = "维护操作", cardKey = "kv-maint") {
+            PanelCard(title = L["维护操作_7a7b416bde"], cardKey = "kv-maint") {
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    listOf("bgsave" to "BGSAVE（后台快照）", "save" to "SAVE（同步快照）", "bgrewriteaof" to "BGREWRITEAOF").forEach { (a, l) ->
+                    listOf("bgsave" to L["bgsave_后台快照_7679d32e01"], "save" to L["save_同步快照_afc91773af"], "bgrewriteaof" to "BGREWRITEAOF").forEach { (a, l) ->
                         DbBtn(l) { kvMaint(scope, a, danger = a == "save") }
                     }
                 }
                 Spacer(Modifier.size(6.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    DbBtn("FLUSHDB（清空当前库）", tone = DbBtnTone.Danger) { kvMaint(scope, "flushdb", true) }
-                    DbBtn("FLUSHALL（清空全部）", tone = DbBtnTone.Danger) { kvMaint(scope, "flushall", true) }
+                    DbBtn(L["flushdb_清空当前库_4587c55eaa"], tone = DbBtnTone.Danger) { kvMaint(scope, "flushdb", true) }
+                    DbBtn(L["flushall_清空全部_d122dc5ecd"], tone = DbBtnTone.Danger) { kvMaint(scope, "flushall", true) }
                 }
                 Spacer(Modifier.size(6.dp))
-                Text("BGSAVE 会在后台生成 RDB 文件；FLUSHDB/ALL 会删除所有数据，需二次确认。", style = dbMuted, fontSize = 11.sp)
+                Text(L["bgsave_会在后台生成_rdb_文件_flu_221d58038d"], style = dbMuted, fontSize = 11.sp)
             }
-            PanelCard(title = "慢查询 (SLOWLOG)", cardKey = "kv-slow", right = { DbBtn("重新加载") { st.bump() } }) {
+            PanelCard(title = L["慢查询_slowlog_89cb405eab"], cardKey = "kv-slow", right = { DbBtn(L["重新加载_5982c44c18"]) { st.bump() } }) {
                 val rows = slow?.arr("rows")?.filterIsInstance<JsonObject>() ?: emptyList()
                 val cols = slow?.arr("columns")?.map { (it as? JsonPrimitive)?.content.orEmpty() }?.filter { it.isNotEmpty() } ?: emptyList()
-                if (rows.isEmpty()) Text("没有慢查询记录", style = dbMuted)
+                if (rows.isEmpty()) Text(L["没有慢查询记录_75d83e6845"], style = dbMuted)
                 else DynamicTable(cols, rows, maxHeight = 300)
             }
         }
-        PanelCard(title = "运行时配置", cardKey = "kv-cfg", right = { DbBtn("刷新") { st.bump() } }) {
+        PanelCard(title = L["运行时配置_e2821f3acc"], cardKey = "kv-cfg", right = { DbBtn(L["刷新_38108eaa1d"]) { st.bump() } }) {
             DynamicTable(
                 columns = listOf("name", "value"),
                 rows = cfg,
                 maxHeight = 360,
                 extra = TableCol("", weight = 0.7f) { row ->
-                    DbBtn("修改") {
+                    DbBtn(L["修改_c9c77517fe"]) {
                         scope.launch {
                             val n = row.str("name")
-                            val r = Modal.prompt("CONFIG SET $n", listOf(FormField.Text("value", "新值", value = row.str("value"))), okText = "设置")
+                            val r = Modal.prompt(trf("config_set_n_f64b85737c", n), listOf(FormField.Text("value", L["新值_c4f3da96a2"], value = row.str("value"))), okText = L["设置_7debf9cb03"])
                                 ?: return@launch
                             runDb("/db/kv/config", jsonObjectOf("name" to n, "value" to r["value"]), reload = { st.bump() })
                         }
@@ -275,12 +281,12 @@ fun KvAdvancedTab(st: DbState, scope: CoroutineScope) {
 private fun kvMaint(scope: CoroutineScope, act: String, danger: Boolean) {
     scope.launch {
         val okc = Modal.confirm(
-            "Redis 维护",
-            "执行 $act ？" + if (danger) "\n该操作可能删除所有数据或短暂阻塞服务。" else "",
-            okText = "执行",
+            L["redis_维护_d2a01bfbd3"],
+            trf("执行_0_70b4feea4a", act) + if (danger) L["该操作可能删除所有数据或短暂阻塞服务_75750ad855"] else "",
+            okText = L["执行_28febba225"],
             danger = danger,
         )
         if (!okc) return@launch
-        runDb("/db/maintenance", jsonObjectOf("engine" to "redis", "action" to act), outputTitle = "执行结果")
+        runDb("/db/maintenance", jsonObjectOf("engine" to "redis", "action" to act), outputTitle = L["执行结果_1b213f405b"])
     }
 }

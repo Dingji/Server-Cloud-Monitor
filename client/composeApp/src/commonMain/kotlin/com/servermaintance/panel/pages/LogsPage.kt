@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -151,8 +154,8 @@ fun LogsPage() {
             if (chunk.source != sourceId) return@collect
             when (chunk.kind) {
                 "log" -> batchChan.send(chunk.lines)
-                "log-error" -> AppState.toast("日志流: " + chunk.lines.joinToString(" "), ToastKind.Err)
-                "log-end" -> AppState.toast("日志流已结束: ${chunk.source}", ToastKind.Warn)
+                "log-error" -> AppState.toast(tr("日志流_d164b36f54") + chunk.lines.joinToString(" "), ToastKind.Err)
+                "log-end" -> AppState.toast(tr("日志流已结束_chunk_source_94bab11174"), ToastKind.Warn)
                 else -> {}
             }
         }
@@ -180,16 +183,16 @@ fun LogsPage() {
         if (autoscroll && filtered.isNotEmpty()) listState.scrollToItem(filtered.size - 1)
     }
 
-    PageScaffold(title = "日志中心", desc = "多来源日志查看与实时跟随（原生渲染，无 WebView）") {
+    PageScaffold(title = L["nav.logs"], desc = L["多来源日志查看与实时跟随_原生渲染_无_webv_9574e78f0d"]) {
         PanelCard(
-            title = "日志查看器",
+            title = L["日志查看器_604706ec79"],
             right = {
                 PanelIcon("logs", size = 14.dp)
-                GhostBtn(text = "清屏", onClick = { lines = emptyList() })
+                GhostBtn(text = L["清屏_e8db7ce0cc"], onClick = { lines = emptyList() })
             },
         ) {
             if (!sourcesLoaded) {
-                LoadingState("加载日志源…")
+                LoadingState(L["加载日志源_e64e9c0145"])
                 return@PanelCard
             }
             sourcesError?.let {
@@ -215,16 +218,16 @@ fun LogsPage() {
                 Field(
                     value = unitText,
                     onValueChange = { unitText = it },
-                    hint = "或 systemd 单元: nginx.service",
+                    hint = L["或_systemd_单元_nginx_serv_14c65e1864"],
                     mono = true,
                     modifier = Modifier.weight(1.4f),
                 )
                 GhostBtn(
-                    text = "加载单元日志",
+                    text = L["加载单元日志_faba070327"],
                     onClick = {
                         val u = unitText.trim()
                         if (u.isBlank()) {
-                            AppState.toast("请输入 systemd 单元名", ToastKind.Warn)
+                            AppState.toast(tr("请输入_systemd_单元名_a2e89b958d"), ToastKind.Warn)
                         } else {
                             val id = "journal:$u"
                             if (unitOptions.none { it.id == id }) {
@@ -236,10 +239,10 @@ fun LogsPage() {
                     },
                 )
                 PrimaryBtn(
-                    text = if (follow) "停止跟随" else "实时跟随",
+                    text = if (follow) L["停止跟随_72312418e3"] else L["实时跟随_8e180d6871"],
                     onClick = {
                         follow = !follow
-                        if (follow) AppState.toast("已开启实时跟随", ToastKind.Ok)
+                        if (follow) AppState.toast(tr("已开启实时跟随_b8c950e7d3"), ToastKind.Ok)
                     },
                 )
             }
@@ -249,19 +252,19 @@ fun LogsPage() {
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Toggle(checked = autoscroll, onCheckedChange = { autoscroll = it }, label = "自动滚动")
+                Toggle(checked = autoscroll, onCheckedChange = { autoscroll = it }, label = L["自动滚动_9642fc88cd"])
                 SearchField(
                     value = filter,
                     onValueChange = { filter = it },
-                    placeholder = "过滤关键字…",
+                    placeholder = L["过滤关键字_9f513909e2"],
                     modifier = Modifier.weight(1f),
                 )
                 Text(
-                    text = "${filtered.size} 行",
+                    text = trf("0_行_2b07d26538", filtered.size),
                     color = Palette.muted,
                     style = MaterialTheme.typography.bodySmall,
                 )
-                if (loadingTail) Text("取尾中…", color = Palette.muted, style = MaterialTheme.typography.bodySmall)
+                if (loadingTail) Text(L["取尾中_d2a2c10e52"], color = Palette.muted, style = MaterialTheme.typography.bodySmall)
             }
 
             /* 日志视图 */
@@ -274,7 +277,7 @@ fun LogsPage() {
             ) {
                 if (filtered.isEmpty()) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        EmptyState(if (lines.isEmpty()) "选择日志源" else "(空)")
+                        EmptyState(if (lines.isEmpty()) L["选择日志源_0af5cd0783"] else L["空_9e1138c983"])
                     }
                 } else {
                     LazyColumn(
@@ -296,8 +299,8 @@ fun LogsPage() {
 
             Spacer(Modifier.height(6.dp))
             Text(
-                text = "实时跟随经 WebSocket 订阅，最大保留 ${Fmt.count(MAX_LINES)} 行；" +
-                    "关闭跟随或离开本页会自动退订。",
+                text = trf("实时跟随经_websocket_订阅_最大保留_bb1ab8a92b", Fmt.count(MAX_LINES)) +
+                    L["关闭跟随或离开本页会自动退订_72c6084027"],
                 color = Palette.muted,
                 style = MaterialTheme.typography.bodySmall,
             )

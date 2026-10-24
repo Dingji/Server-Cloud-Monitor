@@ -1,0 +1,120 @@
+执行计划树_2a66c47766	Execution plan tree
+扩展名_如_pgcrypto_83ec8b404a	Extension name e.g. pgcrypto
+扩展安装_3587656bb2	Extension installation
+扩展监控_wal_bgwriter_in_b526852c31	Extended monitoring (WAL / BGWriter / InnoDB / replication slots)
+扫描_0_张表_命中_1_张_ddc51ef2c9	Scanned {0} tables · matched {1}
+扫描_998c936377	Scan
+扫描中_7c81ab45e3	Scanning…
+扫描根目录一级_二级目录及大于_100mb_的文_60e4bd3b99	Scan first/second-level directories of root and files larger than 100MB
+批次_0_1_a517254bd8	 · Batch {0}/{1}
+批量删除_362aedce37	Bulk delete
+批量卸载_n_65d9c20918	Bulk uninstall ($n)
+批量卸载_rem_3ccf4b0014	Bulk uninstall ($rem)
+批量安装_ins_d21155177e	Bulk install ($ins)
+批量操作_eae7c2c8a9	Bulk operations
+批量操作结果_c3c60aaa7e	Bulk operation results
+批量表操作_9ac7c449b3	Bulk table operations
+找出占空间的东西_按项清理并核对实际释放量_可开_0fdb33dd38	Find what's taking up space, clean it item by item and verify the space actually freed; daily auto-maintenance can be enabled
+把_0_从台账移除_cfcfa0347b	Remove "{0}" from the inventory?
+把_0_项移入回收站_保留_1_天_可还_34b70d7414	Move {0} items to trash (kept for {1} days, restorable).
+把_h_label_从台账移除_3366b95a93	Remove "${h.label}" from the inventory?
+把_selected_size_项移入回收_0cf24b0894	Move ${selected.size} items to trash (kept for ${FileStore.trashDays.value} days, restorable).
+把仓库_ops_server_部署到面板_se_085f78330b	Deploy the repo ops-server/ to the panel server/ops/ and restart after mounting in index.js to use it:\n
+把告警送到人_webhook_企业微信_c503ab6c52	Send alerts to people: Webhook / WeCom / DingTalk / Feishu / Telegram / email, credentials stored only on the server
+抖动_a60f92b8bb	Jitter
+报文大小分布_响应_eb73297921	Packet size distribution (response)
+报文大小分布_请求_978ad9741c	Packet size distribution (request)
+报错退出_e9bcdb3450	Exit with error
+拉起命令_可空_8598bf93c8	Start command (optional)
+拒绝_deny_15eaa6f7a5	− Deny (DENY)
+拥有者_0f0558fe5a	Owner
+拨测_0_台不可用_faf5bff7d3	{0} probe targets unavailable
+拨测_0c26df31f3	Probe
+拨测_o_probedown_台不可用_6f5279e1a9	${o.probeDown} probe targets unavailable
+拨测与_sla_自定义告警规则_通知渠道_静默与_be90e55995	Probing with SLA, custom alert rules, notification channels, silencing and maintenance windows.
+拨测任务_aca6ce04f6	Probe task
+拨测任务已保存_c628e8f14a	Probe task saved
+拨测失败_7b0bb7893f	Probe failed
+拨测类型_4ed688984c	Probe type
+拨测间隔_秒_7c2e24962c	Probe interval (seconds)
+持续_0_s_冷却_1_s_2_a238875611	Duration {0}s · cooldown {1}s · {2}
+持续增长_ab21b96aa8	Steady growth
+持续多少秒才告警_9624b095e1	How many seconds must it persist before alerting
+挂载点_8517da781f	Mount point
+指定指标_efb37dcdc8	Specified metric
+指定指标_作用范围_指定指标时_2b528db368	Specified metric (when scope = specified metric)
+指定源_c1701e5ea0	 · Specified source
+指定规则_e050a72f42	Specified rule
+指定规则_作用范围_指定规则时_a4bbca73a1	Specified rule (when scope = specified rule)
+指标_0_89d6aad554	Metric: {0}
+指标_1dfc810a7b	Metric
+指标_opsstate_metriclabe_fef507e4db	Metric: ${OpsState.metricLabel(it.metric)}
+按_cpu_ed77c666c4	By CPU
+按_etc_relay_pricing_jso_a1872b6ad6	By /etc/relay/pricing.json
+按_pid_c594df6b43	By PID
+按_sch_执行_act_c9ffbfae51	Run $act on schedule $sch?
+按_内存_ee559401b3	By memory
+按_用户_fc09815a27	By user
+按一级标题拆分_cffaaceb8e	Split by top-level headings
+按今日计划执行一次_c9294b2b15	Run once per today's schedule
+按分组_008e3a2b0b	By group
+按名称_0ea96767da	By name
+按大小_ee9a3bcc8e	By size
+按天_6a0d40d657	By day
+按天用量_4fac34d248	Daily usage
+按小时_3ae9822387	By hour
+按模型_token_分布图_a371a816cb	Token distribution chart by model
+按模型_token_统计_日_周_月_并_1820d55c9f	Token stats by model (day / week / month side by side)
+按模型_复用率_vs_真实命中率_c4c8c68680	By model: reuse rate vs actual hit rate
+按此速率耗尽_b0a756faa9	Depleted at this rate
+按每次探测结果聚合_030b2e6a6a	Aggregate per probe result
+按版本_f04ae00cab	By version
+授予_afc60b6b80	Grant
+授予_sudo_b17c8ef2b8	Grant sudo
+授予数据库权限_fa513839dd	Grant database privileges
+授权_3a6e607f0c	Authorize
+授权库_4d0119c773	Authorized library
+授权码_886b52b1db	Authorization code
+排序_d797283645	Sort:
+排序_dc35af8d69	Sort
+排序规则_cba9ca5a18	Sort rule
+排队中_4dcbbcfa61	Queued
+排除表_逗号分隔_可选_c3fbff6bed	Exclude tables (comma-separated, optional)
+探活_自动拉起_超过上限停止并告警_每次_042dac10cd	Health check → auto-restart → stop and alert when the limit is exceeded; every action keeps an execution history
+探活方式_ccd56454d3	Health check method
+探活间隔_秒_3b83fe753f	Health check interval (seconds)
+探测_b5ef40a22d	Probe
+探测只打开端口读_banner_不发送任何凭据_a9cc98b513	Probing only opens the port to read the banner; no credentials are sent
+探测地址_556833efb5	Probe address
+探测失败_1e2b42cb65	Probe failed
+探测完成_c51494c626	Probe complete
+接口端点_a8989ccc29	API endpoint
+推理_0_输出占比_1_0dae9a01a8	Inference {0} · output share {1}
+推理_c9d3b085e2	Inference
+推荐_e8fcb9bb63	\n\n--- Recommended ---\n
+推荐包_d834496b57	Recommended packages
+描述_412f54dc38	Description
+提前提醒_分钟_0c4a512c91	Remind in advance (minutes)
+提示_ab3656a956	Hint
+提醒邮件已发送_含详情_子任务与日历邀请_7359e6549a	Reminder email sent (with details, subtasks and calendar invite)
+插入_022bf3283d	Insert
+插入文档_6d53393c50	Insert document
+搜索_c85d9132a4	Search…
+搜索_f04090805c	Search
+搜索_pid_用户_命令_f1c406afb9	Search PID/user/command…
+搜索事项_a5b34743c2	Search items…
+搜索变量名_a66a6cba87	Search variable name…
+搜索失败_b9786d51c3	Search failed
+搜索安装_7bede136f7	Search & install
+搜索服务名_9646f29b1b	Search service name…
+搜索笔记_8699c6b13f	Search notes…
+搜索结果_0_1_项_bc8aaa1631	Search results · "{0}" {1} items
+搜索结果_0_99e3cf5dae	Search results (0)
+搜索结果_query_hits_si_3d502bbdbe	Search results · "$query" ${hits.size} items
+搜索结果_total_71fe2c69d1	Search results ($total)
+搜索范围_全部已启用源_共_0_个源_按名_b786d5dc17	Scope: all enabled sources ({0} sources), matched by name and description. Go to the "Software Sources" page to switch to local mirrors.
+搜索范围_全部已启用源_共_srclist_2017990f2b	Scope: all enabled sources (${srcList.size} sources), matched by name and description. Go to the "Software Sources" page to switch to local mirrors.
+搜索软件包_a162c7cf8d	Search packages
+搜索软件包_名称或描述_如_nginx_ht_320fde8b40	Search packages: name or description, e.g. nginx / htop / python3
+搜索邮箱_8dad475e2f	Search email…
+搜索页面或命令_ctrl_cmd_k_84c6582b79	Search pages or commands… (Ctrl/Cmd+K)

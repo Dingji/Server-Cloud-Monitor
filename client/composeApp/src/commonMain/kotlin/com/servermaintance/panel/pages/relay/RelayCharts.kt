@@ -1,4 +1,5 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -91,7 +92,7 @@ fun RelayMultiBar(
     val labelColor = Palette.muted
 
     if (labels.isEmpty() || series.isEmpty()) {
-        Box(modifier.height(height), contentAlignment = Alignment.Center) { Muted("无数据") }
+        Box(modifier.height(height), contentAlignment = Alignment.Center) { Muted(L["无数据_6ffa7e6d35"]) }
         return
     }
 
@@ -341,7 +342,7 @@ private fun RelayBarTooltip(
         }
         if (stacked && total > 0f && rows.size > 1) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("合计", style = MaterialTheme.typography.labelSmall, color = Palette.muted)
+                Text(L["合计_92bcbf71cb"], style = MaterialTheme.typography.labelSmall, color = Palette.muted)
                 Text(
                     rNum(total.toLong()),
                     style = MaterialTheme.typography.labelSmall,
@@ -376,14 +377,14 @@ fun WeekHeat(cells: List<kotlinx.serialization.json.JsonElement>) {
         if (cnt > maxCell) maxCell = cnt
     }
 
-    val days = listOf("日", "一", "二", "三", "四", "五", "六")
+    val days = listOf(L["日_15917f3b32"], L["一_d274eee8a1"], L["二_1d5639f716"], L["三_49ddb069d5"], L["四_4f88740b34"], L["五_8f07f53d63"], L["六_3d72c724e0"])
     val rows = (0..23).map { hh -> HeatRow(hh, (0..6).map { dd -> grid["$dd-$hh"] ?: 0.0 }) }
     val accent = AccentState.current.primary
 
     DataTable(
         columns = buildList<TableCol<HeatRow>> {
             add(
-                TableCol<HeatRow>(title = "时", weight = 0.5f, mono = true, align = TextAlign.Start) { r ->
+                TableCol<HeatRow>(title = L["时_a34801ad9c"], weight = 0.5f, mono = true, align = TextAlign.Start) { r ->
                     Text(
                         r.hour.toString().padStart(2, '0'),
                         style = MaterialTheme.typography.labelSmall,
@@ -412,6 +413,6 @@ fun WeekHeat(cells: List<kotlinx.serialization.json.JsonElement>) {
             }
         },
         rows = rows,
-        emptyText = "无数据",
+        emptyText = L["无数据_6ffa7e6d35"],
     )
 }

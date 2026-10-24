@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	Το backup της relay δεν είναι διαθέσιμο
+relay_备份结果_0cf7f02f06	Αποτελέσματα backup της relay
+relay_每日状态备份_32dee8ba2b	Ημερήσιο backup κατάστασης της relay
+reorg_重建索引_2b9d2e3b0e	REORG (ανακατασκευή ευρετηρίων)
+reorg_重组表_6195b56608	REORG (αναδιάταξη πινάκων)
+reorgchk_校验_010830b6a4	REORGCHK (επαλήθευση)
+repair_修复_8dd157c84c	REPAIR (επισκευή)
+restart_值_77d45b4c24	Τιμή RESTART
+root_密码登录_df671edd13	Σύνδεση με κωδικό root
+root_权限的交互式_shell_经_ssh_724c53e674	Διαδραστική Shell με δικαιώματα root (μέσω SSH PTY, αυτόχρημη απόδοση τερματικού ANSI)
+running_运行中_contain_7d4c0797f6	$running σε εκτέλεση · ${containers.size - running} σταματημένα
+runstats_reorg_针对整库或所选表执_d40a81b4e9	Το RUNSTATS/REORG εκτελείται σε ολόκληρη τη βάση ή στους επιλεγμένους πίνακες· μεγάλοι πίνακες μπορεί να χρειαστούν χρόνο.
+runstats_全库统计_e9fcb7b8fd	RUNSTATS στατιστικά ολόκληρης της βάσης
+runstats_更新统计_a6a6663709	RUNSTATS (ενημέρωση στατιστικών)
+save_同步快照_afc91773af	SAVE (συγχρονισμός στιγμιότυπου)
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\nΌνομα εργασίας: cm-$n
+settings.language.changed	Η γλώσσα ενημερώθηκε
+settings.language.hint	Ισχύει αμέσως και η επιλογή σας αποθηκεύεται. Η αραβική διεπαφή αντικατοπτρίζει τη διάταξη αυτόματα.
+settings.language.label	Γλώσσα
+settings.language.title	Γλώσσα διεπαφής
+setval_值_938e9aa8cf	Τιμή setval
+shell_控制台_6f576115f4	Κονσόλα Shell
+sites_enabled_为空_4516b41170	Το sites-enabled είναι κενό
+slo_与用量_a308fd44ff	SLO και χρήση
+slo_目标已更新为_0_1_天_41ec05d358	Ο στόχος SLO ενημερώθηκε σε {0}% / {1} ημέρες
+slo_目标已更新为_t_dy_天_7716799870	Ο στόχος SLO ενημερώθηκε σε $t% / $dy ημέρες
+slo_目标应为_0_100_之间的百分数_254085fd3b	Ο στόχος SLO πρέπει να είναι ποσοστό μεταξύ 0 και 100
+slo_错误预算_47d719e135	Προϋπολογισμός σφαλμάτων SLO
+smtp_主机_9cb2a0f9f3	Κεντρικός υπολογιστής SMTP
+smtp_已配置_70f40873a7	Το SMTP έχει ρυθμιστεί
+smtp_授权码_273299a5a3	Κωδικός εξουσιοδότησης SMTP
+smtp_服务器_941346a5f4	Διακομιστής SMTP
+smtp_未配置_先填账号授权码_c97b712442	Το SMTP δεν έχει ρυθμιστεί (συμπληρώστε πρώτα λογαριασμό και κωδικό εξουσιοδότησης)
+smtp_状态_8658366a9a	Κατάσταση SMTP
+smtp_设置已保存_e5e2238754	Οι ρυθμίσεις SMTP αποθηκεύτηκαν
+smtp_账号_163_邮箱_4bbcd0b1d0	Λογαριασμός SMTP (ταχυδρομείο 163)
+sql_控制台_a3458fb2ad	Κονσόλα SQL
+sql_文本_gzip_通用_可编辑_48f716760f	Κείμενο SQL + gzip (γενικό, επεξεργάσιμο)
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	Το SQLite είναι μια βάση δεδομένων ενός αρχείου: αν δεν υπάρχει, δημιουργείται νέο· το όνομα πρέπει να τελεί με .db/.sqlite.
+sqlite_搜索目录_49521cf800	Κατάλογος αναζήτησης SQLite
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	Το SQLite είναι ενσωματωμένη βάση ενός αρχείου, χωρίς έννοια χρήστη/ρόλου· ο έλεγχος πρόσβασης εξαρτάται από τα δικαιώματα αρχείων του λειτουργικού συστήματος.
+sqlite_生成_sql_文本_gzi_f960464be7	· Το SQLite παράγει κείμενο SQL + gzip, το οποίο μπορεί να αποκατασταθεί απευθείας σε νέο αρχείο.
+sqlite_语法_支持_tables_sc_41d445ac53	Σύνταξη SQLite (υποστηρίζει εντολές τελείας όπως .tables/.schema)
+ssh2_可用_efe0e7bbc7	το ssh2 είναι διαθέσιμο
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys εξουσιοδοτημένα κλειδιά · relay_scripts σενάρια relay · ufw_conf τείχος προστασίας · cron_conf προγραμματισμένες εργασίες.
+ssh_凭据_0_527cdbdfec	Στοιχεία εξουσιοδότησης SSH · {0}
+ssh_凭据_h_label_24a0886915	Στοιχεία εξουσιοδότησης SSH · ${h.label}
+ssh_可达_df28fdb916	Το SSH είναι προσβάσιμο
+ssh_密码认证_f22e3cd826	Επαλήθευση SSH με κωδικό πρόσβασης
+ssh_授权密钥_authorized_key_4fee36881a	Εξουσιοδοτημένα κλειδιά SSH (authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	Έλεγχος μόνο για ανάγνωση της έκθεσης SSH, του τείχους προστασίας, λογαριασμών και δικαιωμάτων, ενημερώσεων, αρχείων καταγραφής και συγχρονισμού ώρας· οι ενέργειες επισκευής εκτελούνται μετά την επαλήθευση ασφαλείας του διακομιστή
+ssh_服务配置_sshd_有效配置_b5a2f5733e	Διαμόρφωση υπηρεσίας SSH (ισχύουσα διαμόρφωση sshd)
+ssh_端口_db451b3851	Θύρα SSH
+ssh_设置已保存_a65c44f49c	Οι ρυθμίσεις SSH αποθηκεύτηκαν
+ssh_连接_用于_web_终端的_pty_b26f43db91	Σύνδεση SSH (PTY για το τερματικό ιστού)
+ssh_通道_dbd1043d39	Κανάλι SSH
+ssh_配置应用_c35c2ef2bf	Εφαρμογή διαμόρφωσης SSH
+ssh_防爆破_3e3c79eef0	Προστασία SSH από brute force
+ssl_证书_let_s_encrypt_332fd65bdb	Πιστοποιητικό SSL (Let's Encrypt)
+sudo_权限_e03e1e61f9	Δικαιώματα sudo
+swap_控制_12c3f63c98	Έλεγχος Swap
+systemd_单元名_c8ea5d11ad	Όνομα μονάδας systemd
+systemd_定时器_0_dc0dc6e637	Χρονοδιατακτής Systemd ({0})
+systemd_定时器_f8d95995f8	Χρονοδιατακτής Systemd
+systemd_定时器_timers_si_6ade92f31f	Χρονοδιατακτής Systemd (${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· Οι χρονοδιατακτές Systemd διαχειρίζονται από το systemd και εμφανίζονται μόνο για ανάγνωση;
+systemd_日志总占用_f776a05861	Συνολική χρήση αρχείων καταγραφής systemd
+systemd_服务_fe73189369	Υπηρεσίες systemd
+tcp_主机_c307455515	Κεντρικός υπολογιστής TCP
+tcp_端口_468daa15c6	Θύρα TCP
+tcp_端口探活_731f0297a0	Έλεγχος ζωντάνιας θύρας TCP
+title_names_size_个_acb99452ee	$title · ${names.size} πακέτα
+tls_证书_43af3d4e3c	Πιστοποιητικό TLS
+tmp_保留_0_天_f32c9b5407	Το /tmp διατηρείται {0} ημέρες
+tmp_保留_s_tmpdays_天_86426f5281	Το /tmp διατηρείται ${s.tmpDays} ημέρες
+tmp_保留天数_0d11396618	Ημέρες διατήρησης /tmp
+token_命中率_2bfb8e83db	Ποσοστό επιτυχίας token
+token_总量_3f5fa71b8e	Σύνολο token
+token_构成_9af64ae64e	Σύνθεση token
+token_用量归集_81e6ced52c	Συγκέντρωση χρήσης token
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	Τα στατιστικά token συγκεντρώνονται σε κυλιόμενο παράθυρο · δεδομένα από {0}
+top_会话_3c40651605	Κορυφαίες συνεδρίες
+top_进程_17603f0ba3	Κορυφαίες διεργασίες
+truncate_清空数据_2b621f28d2	TRUNCATE (διαγραφή δεδομένων)
+ttfb_按线路_dd77200ec0	TTFB ανά γραμμή
+ua_族_886e5b0cbd	Οικογένειες UA
+ufwrulescount_条规则_4d66159719	$ufwRulesCount κανόνες
+user_或_user_group_dab37bbd5c	user ή user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE σε όλες τις βάσεις
+vacuum_full_全部库_7cb397ec45	VACUUM FULL σε όλες τις βάσεις
+vacuum_full_重写表_6eacd637a2	VACUUM FULL (επανεγγραφή πίνακα)
+vacuum_回收空间_1fab10fe60	VACUUM (απελευθέρωση χώρου)
+vacuum_重建文件_7a9b0fc30b	VACUUM (ανακατασκευή αρχείου)
+w_a_个异常找到疑似变更_072ff64ee0	Βρέθηκαν $w / $a αποκλίσεις με ύποπτες αλλαγές
+wal_检查点_2010a0cc44	Σημείο ελέγχου WAL
+web_终端_7a3963643f	Τερματικό ιστού
+where_条件_如_id_10_211cc8803d	Όρος WHERE, π.χ. id > 10
+where_条件_必填_d024e40edd	Όρος WHERE (υποχρεωτικό)
+where_条件_必填_禁止分号_de5b786116	Όρος WHERE (υποχρεωτικό, το ; απαγορεύεται)
+win.client.close_label	Κατά το κλείσιμο του παραθύρου
+win.client.desc_ask	Να ρωτά κάθε φορά που κλείνει: παραμονή στο παρασκήνιο ή έξοδος.
+win.client.desc_quit	Έξοδος από το Cloud Monitor αμέσως μετά το κλείσιμο.
+win.client.desc_tray	Απόκρυψη του κύριου παραθύρου μετά το κλείσιμο και συνέχιση λήψης ειδοποιήσεων στο tray.
+win.client.desc_tray_no_tray	Ελαχιστοποίηση στη γραμμή εργασιών μετά το κλείσιμο και συνέχιση λήψης ειδοποιήσεων στο παρασκήνιο.
+win.client.hint	Συμπεριφορά κατά το κλικ στο κουμπί κλεισίματος. Η πρώτη επιλογή στο διάλογο κλεισίματος καταγράφεται εδώ αυτόματα.
+win.client.title	Πελάτης Windows
+win.client.updated_toast	Η συμπεριφορά κλεισίματος ενημερώθηκε
+win.close.ask	Να ρωτά κάθε φορά
+win.close.quit	Έξοδος από το πρόγραμμα αμέσως
+win.close.tray	Παραμονή στο tray του συστήματος κατά το κλείσιμο
+win.close.tray_taskbar	Ελαχιστοποίηση στη γραμμή εργασιών κατά το κλείσιμο
+win.dialog.body_taskbar	Έξοδος από το πρόγραμμα, ή ελαχιστοποίηση στη γραμμή εργασιών για συνέχιση λήψης ειδοποιήσεων διακομιστή στο παρασκήνιο.
+win.dialog.body_tray	Έξοδος από το πρόγραμμα, ή παραμονή στο tray του συστήματος για συνέχιση λήψης ειδοποιήσεων διακομιστή στο παρασκήνιο.
+win.dialog.cancel	Ακύρωση
+win.dialog.minimize	Ελαχιστοποίηση στη γραμμή εργασιών
+win.dialog.quit	Έξοδος
+win.dialog.stay_tray	Παραμονή στο tray
+win.dialog.title	Κλείσιμο του Cloud Monitor
+youtube_视频_70a0be3df0	Βίντεο YouTube
+一_d274eee8a1	1

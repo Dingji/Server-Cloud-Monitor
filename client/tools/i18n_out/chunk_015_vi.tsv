@@ -1,0 +1,120 @@
+摘要_46d4c1b4e4	Tóm tắt
+摘要发送时间_0eccc15130	Thời gian gửi bản tóm tắt
+播放_21925350de	Phát
+操作_f3ea6d345e	Thao tác
+操作失败_09e424b5e8	Thao tác thất bại
+操作失败_0_c81f3f901e	Thao tác thất bại: {0}
+操作完成_66c6340147	Thao tác hoàn tất
+操作成功_3c5be5f2a1	Thao tác thành công
+操作日志_f4bc877cd2	Nhật ký thao tác
+操作进行中_a31331bbf2	Thao tác đang diễn ra
+支持_csv_有_无表头均可_列名支持_标题_截_564b0aa879	Hỗ trợ CSV (có hoặc không có dòng tiêu đề; tên cột: Tiêu đề/Hạn/Mức ưu tiên/Ghi chú/Trạng thái), danh sách văn bản thuần (cú pháp - [x]) và mảng JSON.
+支持_markdown_纯文本_html_305bf19136	Hỗ trợ Markdown / văn bản thuần / HTML; HTML tự động chuyển thành Markdown có thể chỉnh sửa. Khi có nhiều tiêu đề cấp 1, nó tự động tách thành nhiều ghi chú.
+支持_sql_sql_gz_dum_e07870399d	Hỗ trợ .sql / .sql.gz / .dump (định dạng tùy chỉnh của PostgreSQL). Dán văn bản rồi tải lên thư mục sao lưu trên máy chủ.
+支持_变量_函数体_0b11a90fd3	Hỗ trợ biến $ / thân hàm
+收件人_529414cfe5	Người nhận
+收件人_逗号分隔_7352ac40b2	Người nhận (ngăn bằng dấu phẩy)
+收尾_7c151dbd71	Hoàn tất
+收起_5d5815647c	Thu gọn
+收起完整说明_fedbce873b	Thu gọn mô tả đầy đủ
+改值_d6c5664772	Đổi giá trị
+改地址后点_测试连接_即持久化生效_71864f6613	Sau khi đổi địa chỉ, nhấp "Kiểm tra kết nối" để áp dụng và lưu vĩnh viễn
+改密_bb974d3064	Đổi mật khẩu
+改属主_962ff54eef	Đổi chủ sở hữu
+改权限_6d524368de	Đổi quyền
+改表名_5932b4950c	Đổi tên bảng
+放弃编辑_815725bb66	Hủy chỉnh sửa
+数据_54b8a90b3c	Dữ liệu
+数据刷新间隔_783b4fd825	Khoảng thời gian làm mới dữ liệu
+数据库_0_38b5c31d37	Cơ sở dữ liệu ({0})
+数据库_dbs_size_f98d7bbce7	Cơ sở dữ liệu (${dbs.size})
+数据库_f4dbbc63a5	Cơ sở dữ liệu
+数据库列表_04a9b8f2c3	Danh sách cơ sở dữ liệu
+数据库列表_0_fe197e98d3	Danh sách cơ sở dữ liệu ({0})
+数据库列表_dbs_size_06771422a0	Danh sách cơ sở dữ liệu (${dbs.size})
+数据库名_8a98ff0618	Tên cơ sở dữ liệu
+数据库大小_ed9a685d54	Kích thước cơ sở dữ liệu
+数据库引擎安装_1b953ccc06	Cài đặt công cụ cơ sở dữ liệu
+数据库引擎总览_8dc625b5ae	Tổng quan công cụ cơ sở dữ liệu
+数据库数量_1c82d51d3e	Số lượng cơ sở dữ liệu
+数据库文件路径_名称_fd6bff11f9	Đường dẫn/tên tệp cơ sở dữ liệu
+数据库管理_9995484fc6	Quản lý cơ sở dữ liệu
+数据库级_6e3f81b153	Cấp cơ sở dữ liệu
+数据库统计_35f181019a	Thống kê cơ sở dữ liệu
+数据库设置_0_8c7ac8f827	Cài đặt cơ sở dữ liệu - {0}
+数据库设置_database_882d97c702	Cài đặt cơ sở dữ liệu - $database
+数据库连接凭据_6d0ff7df04	Thông tin đăng nhập kết nối cơ sở dữ liệu
+数据库连接已保存_68d2c61647	Đã lưu kết nối cơ sở dữ liệu
+数据来自_nginx_访问日志_含_ups_a5a09ba2e4	· Dữ liệu đến từ relay.db được ghi từ nhật ký truy cập của nginx (bao gồm $upstream_status); các gói được phân biệt theo route: go=OpenCode Go, zen=OpenCode Zen, glm=GLM Coding Plan, mimo=MiMo Token Plan.
+数据来自_nginx_访问日志写入的_relay_1cbea10182	Dữ liệu đến từ relay.db được ghi từ nhật ký truy cập của nginx; các gói được phân biệt theo route: go=OpenCode Go, zen=OpenCode Zen, glm=GLM Coding Plan, mimo=MiMo Token Plan.
+数据每_0_从_proc_实时采集_cf5df3d1ba	 · Dữ liệu được thu thập theo thời gian thực từ /proc mỗi {0}
+数据浏览_5eba898584	Trình duyệt dữ liệu
+数量_b9ae893190	Số lượng
+文件_0_超过可编辑上限_1_请用终端或_bf27cf6d14	Tệp {0} vượt giới hạn chỉnh sửa {1}; hãy dùng terminal hoặc tải lên để ghi đè
+文件_0_超过预览上限_1_请下载或用_62cd65cbf5	Tệp {0} vượt giới hạn xem trước {1}; hãy tải xuống hoặc xem trong terminal Web.
+文件_49deaf7da2	Tệp
+文件_fmt_bytes_p_size_0f2f020b75	Tệp ${Fmt.bytes(p.size)} vượt giới hạn xem trước ${Fmt.bytes(p.limit)}; hãy tải xuống hoặc xem trong terminal Web.
+文件_fmt_bytes_p_size_5711488d59	Tệp ${Fmt.bytes(p.size)} vượt giới hạn chỉnh sửa ${Fmt.bytes(p.limit)}; hãy dùng terminal hoặc tải lên để ghi đè
+文件内容_粘贴_98b4f4a653	Nội dung tệp (dán)
+文件内条目_b4ce600040	Các mục trong tệp
+文件名_1275f6feb7	Tên tệp
+文件回收站_7a008554ce	Thùng rác tệp
+文件已保存_09f0eaa4ba	Đã lưu tệp
+文件已创建_3e2240f609	Đã tạo tệp
+文件管理_3f2244c98f	Trình quản lý tệp
+文件管理器不额外扩权_所有写操作都进面板审计日志_9856778584	Trình quản lý tệp không cấp thêm đặc quyền. Mọi thao tác ghi đều được ghi vào nhật ký kiểm toán của bảng điều khiển (ops.files.*); mục xóa sẽ vào thùng rác trước và có thể khôi phục trong vòng 30 ngày.
+文件系统_0_0938484ae2	Hệ thống tệp {0}
+文件系统_42949b7f8f	Hệ thống tệp
+文件系统_d_filesystem_0b2cd8781e	Hệ thống tệp ${d.filesystem}
+文件被截断预览_0_在线编辑会丢失内容_建_1d7dde5641	Xem trước tệp bị cắt ({0}); chỉnh sửa trực tuyến sẽ làm mất nội dung. Hãy tải bản sao lưu xuống trước.
+文件被截断预览_fmt_bytes_p_si_580f3f9109	Xem trước tệp bị cắt (${Fmt.bytes(p.size)}); chỉnh sửa trực tuyến sẽ làm mất nội dung. Hãy tải bản sao lưu xuống trước.
+文本文件_0_69e2147621	Tệp văn bản ({0})
+斜体_af5a2c8bff	Nghiêng
+断开_28fb7cedb1	Ngắt kết nối
+断开客户端_ff6093dd26	Ngắt kết nối máy khách
+断开客户端_pid_77a2046256	Ngắt kết nối máy khách $pid?
+新会话_db44360cd0	Phiên mới
+新值_c4f3da96a2	Giá trị mới
+新名称_b8659855b0	Tên mới
+新名称_索引或约束名_所有者_8779802d2e	Tên mới / tên chỉ mục hoặc ràng buộc / chủ sở hữu
+新告警_ae1159aaec	Cảnh báo mới
+新增_2cd9e6ce81	Thêm
+新增行_cbc8dab8c3	Thêm hàng
+新密码_d22c9c0085	Mật khẩu mới
+新密码_至少_8_位_0d551cb025	Mật khẩu mới (tối thiểu 8 ký tự)
+新密码至少_8_位_695025596e	Mật khẩu mới tối thiểu 8 ký tự
+新建_0cda8d1c71	Tạo
+新建会话_3da224c43d	Phiên mới
+新建告警规则_4f937923b8	Quy tắc cảnh báo mới
+新建备份_导出_e3160cab07	Sao lưu / xuất mới
+新建失败_ae047a3e45	Tạo thất bại:
+新建子归类_fc67a95ee7	Hạng mục con mới
+新建字符串键_cfff5f4c43	Khóa chuỗi mới
+新建定时任务_root_权限执行_d637db8d7b	Tác vụ định kỳ mới (chạy với quyền root)
+新建归类_64cf5b76fb	＋ Hạng mục mới…
+新建归类_e4ffdeb063	Hạng mục mới
+新建拨测_02d832478b	Lần dò mới
+新建拨测任务_cd03f12322	Tác vụ dò mới
+新建数据库_42e4ee46d5	Cơ sở dữ liệu mới
+新建文件_d4526eb925	Tệp mới
+新建清单_0f3d4d8665	Danh sách kiểm mới
+新建清单_76f9b5e92e	＋ Danh sách kiểm mới…
+新建渠道_0_05cd02b38f	Kênh mới · {0}
+新建渠道_5c08b54484	Kênh mới
+新建渠道_typelabel_typek_880e06ee72	Kênh mới · ${typeLabel(typeKey)}
+新建用户_30416407e5	Người dùng mới
+新建用户需要至少_8_位的密码_59c185c76b	Người dùng mới cần mật khẩu tối thiểu 8 ký tự
+新建目录_80e05af6a0	Thư mục mới
+新建看护_ae27bee6ea	Theo dõi mới
+新建看护项_c8df6a2e03	Mục theo dõi mới
+新建笔记_14fd2fe5ca	Ghi chú mới
+新建表_ddl_7ef91fdfef	Bảng mới (DDL)
+新建规则_eae3b2e915	Quy tắc mới
+新建通知渠道_ce4914887a	Kênh thông báo mới
+新建集合_5952f4c234	Bộ sưu tập mới
+新建静默_维护窗口_00c1db257e	Im lặng / cửa sổ bảo trì mới
+新建顶层归类_cb49387a03	Hạng mục cấp cao nhất mới
+新模式名_ae42d0691f	Tên schema mới
+新渠道_fd0cc5a2d3	Kênh mới
+新表名_aa730ef230	Tên bảng mới
+方式_af90809619	Phương thức

@@ -1,0 +1,120 @@
+健康_28ff5ffe95	Sağlıklı
+健康告警_a3932fd7ea	Sağlık alarmı
+健康警告_36e38f0344	Sağlık uyarısı
+僵尸_0_350f669b6a	Zombi {0}
+允许_0_4xx_1_不计入_2c75f2ef75	İzin ver {0} · 4xx {1} (sayılmaz)
+允许_null_613ffb2b0f	NULL'a izin ver
+允许搜索的根目录_冒号分隔_9f54070414	Aramaya izin verilen kök dizinler (iki nokta ile ayrılmış)
+允许范围由服务器的_cm_files_roots_1e4f0369fa	İzin verilen kapsam, sunucunun CM_FILES_ROOTS değeriyle belirlenir (varsayılan tüm dosya sistemi); panelde zaten bir Web terminali var (root kabuğu ile eşdeğer),
+允许错误率_b1b11f31c6	İzin verilen hata oranı
+先配私钥路径或密码才能采集_1c4899bb70	Toplamadan önce özel anahtar yolunu ya da parolayı yapılandırın
+入库_0_1_运行_2_6103dc0494	Kaydedildi {0}/{1} · Çalışıyor {2}
+入站_0_均值_请求_1_406a6865d4	Gelen {0} · Ort./istek {1}
+入站_1057bbf420	Gelen
+全局_a5644f4bbf	Genel
+全库备份_db2_backup_3a9089df6c	Tam yedek (db2 backup)
+全库备份_db_sql_gz_acafceba07	Tam yedek (.db -> sql.gz)
+全库备份_mysqldump_1ed22a1def	Tam yedek (mysqldump)
+全库备份_pg_dumpall_1bd23a039b	Tam yedek (pg_dumpall)
+全库数据搜索_beda6555aa	Tüm veritabanında veri arama
+全选_3e44b2a933	Tümünü seç
+全选本页_b82f2ebbd9	Bu sayfadaki tümünü seç
+全部_0_33a02d8846	Tümü {0}
+全部_0_910e2f37bc	Tümü ({0})
+全部_2_e5060e9fe1	Tümü (2)
+全部_778fc8f994	Tümü
+全部_alerts_size_83c38547e2	Tümü ${alerts.size}
+全部_仅显示有规则标记的事件_c50328c4bb	Tümü (yalnızca kural işaretli olayları göster)
+全部分组_eb8d23fedf	Tüm gruplar
+全部发送成功_66de2386e0	Tümü başarıyla gönderildi
+全部合规_59b806d265	Tümü uygun
+全部在线_44e9a836b2	Tümü çevrimiçi
+全部在阈值内_3b9654881f	Tümü eşik içinde
+全部安全升级_31ec522e55	Tüm güvenlik yükseltmeleri
+全部探测_ccb06057e1	Tüm sondalar
+全部数据库_服务器级全量_488b444221	Tüm veritabanları (sunucu düzeyinde tam)
+全部标签_ffd92f5524	Tüm etiketler
+全部标记已读_5645f09d67	Tümünü okundu olarak işaretle
+全部检查一次_0a5f08235e	Tümünü bir kez denetle
+全部正常_d02882ad7e	Tümü normal
+全部清单_54e487ccc0	Tüm envanterler
+全部源_全局搜索_252f184452	Tüm kaynaklar (genel arama)
+全部状态_1a4c26d92d	Tüm durumlar
+全部立即采集_49af47e239	Tümünü şimdi topla
+全部笔记_be5bc30cf8	Tüm notlar
+全部规则_33c1cd2c36	Tüm kurallar
+全部角色_9adaf88c6d	Tüm roller
+全部解除锁定_fc0465ac55	Tümünün kilidini aç
+全部通过_3b6e5a1267	Tümü geçti
+公开链接_093bb537a9	Herkese açık bağlantı
+公开链接已开启_已复制_url_519f2b78bb	Herkese açık bağlantı etkinleştirildi, kopyalandı: $url
+公网ip_de8bbe24d6	Genel IP
+公钥_b6965e119c	Genel anahtar
+六_3d72c724e0	Altı
+共_0_6de8606170	Toplam {0}
+共_0_个常用包_已装_1_2_e967a843a6	Toplam {0} yaygın paket · yüklü {1} · {2} kategori
+共_0_字符_f3f4105419	Toplam {0} karakter
+共_0_条_c3ba901cd9	Toplam {0} öğe
+共_0_条记录_41eef6780b	Toplam {0} kayıt
+共_0_次请求_有效_1_次_29c1aa705f	Toplam {0} istek · geçerli {1}
+共_0_行_a4e8522340	Toplam {0} satır
+共_alerts_size_条_560bb53bad	Toplam ${alerts.size} öğe
+共_editdraft_length_字符_7c1eadf347	Toplam ${editDraft.length} karakter
+共_fmt_count_totaln_c03f4c77be	Toplam ${Fmt.count(totalN ?: 0)} satır
+共_services_size_71096c72f6	Toplam ${services.size}
+共享_9a236964e8	Paylaşıldı
+共享给我_6863118293	Benimle paylaşılan
+共享给用户_f0425c626f	Kullanıcıyla paylaş
+关于_bed172efc9	Hakkında
+关注_7ac0d5c9c3	Takip et
+关自启_b871a656d2	Otomatik başlat Kapalı
+关闭_0_9aa50629e4	Kapatıldı (0)
+关闭_0_9d7b014ef2	Kapatıldı {0}
+关闭_6c14bd7f6f	Kapat
+关闭_tab_title_43b16ac3b7	${tab.title} kapat
+关闭网卡_62663eaa23	Ağ arayüzünü kapat
+关闭跟随或离开本页会自动退订_72c6084027	Takibi kapatmak veya bu sayfadan çıkmak aboneliği otomatik olarak sonlandırır.
+其中_0_条失败_c5eef2f155	Bunlardan {0} başarısız
+其中_0_项已触发重启仍失败_9b68a5e334	Bunlardan {0} yeniden başlatma sonrası hâlâ başarısız
+其中_s_failing_项已触发重启仍_f01141d4a9	Bunlardan ${s?.failing} yeniden başlatma sonrası hâlâ başarısız
+其中_t_failed24h_条失败_42b755439b	Bunlardan ${t?.failed24h} başarısız
+其他用户共享给你的笔记会出现在这里_864edb3def	Diğer kullanıcıların sizinle paylaştığı notlar burada görünür
+其它_295c71ff98	Diğer
+内存_a8fa8ac31a	Bellek %
+内存_ba57ca4da5	Bellek ≥ %
+内存_d014ab7703	Bellek
+内存_交换_mb_69caca4bab	Bellek / Swap (MB)
+内存与交换分区用量_进程占用与维护操作_a12dd4174d	Bellek ve takas kullanımı, işlem kullanımı ve bakım işlemleri
+内存使用_c5281dc2e1	Bellek kullanımı
+内存使用率_51cc7e4578	Bellek kullanım oranı
+内存占用_871ca4fff4	Bellek tüketimi
+内存占用_top_15_rss_180f27c927	Bellek tüketimi Top 15 (RSS)
+内存管理_dd6f618330	Bellek yönetimi
+内存维护_4a93296df5	Bellek bakımı
+内存详情_proc_meminfo_6fc684a759	Bellek ayrıntıları (/proc/meminfo)
+内容_163aec9194	İçerik
+内核_8f190c51d6	Çekirdek
+内核_系统安全参数_sysctl_1d74700ad7	Çekirdek/sistem güvenlik parametreleri (sysctl)
+写入_9e93bdccb2	Yazma
+写入_drop_caches_3_清空页缓存_目_545feeaf1e	Sayfa önbelleğini/dizin girdisi/inode önbelleğini boşaltmak için drop_caches=3 yaz (kısa süreli yavaşlama)
+写入_iops_c0257973a8	Yazma IOPS
+写入_p_f48e1e9bc1	$p üzerine yazılsın mı?
+写入系统定时任务_etc_cron_d_cm_7b1a14bf5a	Sistem cron görevlerine yaz (/etc/cron.d/cm-dbmaint-*). Örnek: 0 4 * * * her gün saat 4. "Cron Görevleri" sayfasından görüntüle/sil.
+写入速率_2836adc578	Yazma hızı
+冷却_分钟_c84b0ae919	Bekleme süresi (dk)
+凭据_131caf7289	Kimlik bilgileri
+凭据已保存_只存服务器_ef4af72acf	Kimlik bilgileri kaydedildi (yalnızca sunucuda)
+凭据已删除_7546bc5222	Kimlik bilgileri silindi
+出于安全考虑_必须至少指定_数据库_用户_f479eba94a	Güvenlik için en azından veritabanı / kullanıcı / süreden birini belirtin; tek bir eşleşmede en fazla 200 oturum.
+出口带宽上限_mbps_0_不限_333a869c1c	Çıkış bant genişliği sınırı (Mbps, 0 = sınırsız)
+出口带宽上限已设为_0_mbps_8e30001052	Çıkış bant genişliği sınırı {0} Mbps olarak ayarlandı
+出口带宽上限已设为_mbps_mbps_1643606623	Çıkış bant genişliği sınırı $mbps Mbps olarak ayarlandı
+出站_c9b439d70a	Giden
+分_decb3b3262	 dk
+分割线_985282b3aa	— Ayırıcı
+分区_016c7a3b77	/ bölüm
+分区与挂载点_f1ca26a5e8	Bölümler ve bağlama noktaları
+分区容量_6a3c635ae9	Bölüm kapasitesi
+分区容量_块设备与磁盘维护操作_80c0745041	Bölüm kapasitesi, blok cihazları ve disk bakım işlemleri
+分区数量_0933d5f9ce	Bölüm sayısı
+分时成功率_ccd648d6f2	Saate göre başarı oranı

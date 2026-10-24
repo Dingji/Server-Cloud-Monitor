@@ -1,0 +1,120 @@
+当前索引更新于_0_1c82f67640	Index updated at {0}
+当前采集到的指标_8e4e47b457	Currently collected metrics
+当前镜像_ed71a792a7	Current image
+当前页面_b7d5886b05	 · Current page
+彻底删除_0_项_无法恢复_9f56fcff22	Permanently delete {0} items; this cannot be undone.
+彻底删除_8c0b37b684	Permanently delete
+彻底删除_trash_size_项_无法恢_87a3623728	Permanently delete ${trash.size} items; this cannot be undone.
+彻底卸载_33072f5e11	Uninstall completely
+待办_csv_3308e95082	To-do CSV
+待办_未完成_已完成_7422fade10	To-dos (pending / done)
+待办清单_febc09d1b1	To-do list
+待探测_51805a6f50	Probe pending
+待检测_05fb47fc35	Check pending
+待邮箱验证_bada0c2e46	Awaiting email verification
+待验证_0b48e4bdd8	Verification pending
+必须带_http_或_https_e74acdc586	Must start with http:// or https://
+快捷_14249f75ba	Quick
+快捷模板_423595bef4	Quick templates:
+快速备份_1cbe05845d	Quick backup
+性能洞察_71fa3a4ff8	Performance insights
+总_0_新增_1_1fd58b4e12	Total {0} · New {1}
+总_token_2d5ae33603	Total tokens
+总占用_3da7163a84	 Total usage
+总大小_0_a2c8d9634b	Total size {0}
+总大小_fmt_bytes_totalsiz_53ae231269	Total size ${Fmt.bytes(totalSize)}
+总容量_8b60ba80ea	Total capacity
+总尝试_56d2a2d4f5	Total attempts
+总成功率_0_重试_1_32f597c3de	Overall success rate {0}% · Retries {1}
+总成功率_322a0370e9	Overall success rate
+总成功率_61b76516e3	Overall success rate 
+总探测_572bee6277	Total probes
+总流量_出_6efb4930fb	Total traffic (out)
+总耗时_2db420d198	Total time
+总览_c122e1758c	Overview
+总览与监控_70e2feb12d	Overview & monitoring
+总计_3af1ac5b4e	Total
+总请求_d1cac3ca3b	Total requests
+总账号_02ceb243fe	Total accounts
+恢复_79748ca1c6	Restore
+恢复_mongodb_归档_ad961869c7	Restore MongoDB archive
+恢复_redis_7dd20f103c	Restore Redis
+恢复中_176238056c	Restoring…
+恢复中_d6426a51e5	Restoring
+恢复于_0_57aae0c315	Restored at {0}
+恢复于_rtmrecover_recover_471df21a46	Restored at ${rTmRecover(recoverAt)}
+恢复备份到目标数据库_00fbc874c2	Restore backup to target database
+恢复失败_08c8ed5980	Restore failed:
+恢复失败_76842a0348	Restore failed
+恢复完成_笔记_0_条_待办_1_条_7aa19232cf	Restore complete: {0} notes, {1} to-dos
+恢复完整备份_640eea92dc	Restore full backup
+恢复方式_4a0ce48265	Restore method
+恢复时是否通知_e60cfd9684	Notify on restore
+恢复结果_25404d8096	Restore result
+恢复通知_9d088c33ba	Restore notification
+恢复默认地址_4c7fd3785e	Reset to default address
+想到什么_立刻记下来_c54f483edc	Jot down whatever comes to mind…
+慢查询_slowlog_89cb405eab	Slow queries (SLOWLOG)
+慢查询_剖析_e7d6b1beb3	Slow queries (profiling)
+慢查询_热点语句_e4c8bb10fe	Slow queries / hot statements
+成功_0_错误_1_超时_2_4e74aeecc7	Success {0} · Errors {1} · Timeouts {2}
+成功_51991a5d11	Success
+成功导入_0_条待办_0f7f47eb57	Successfully imported {0} to-dos
+成功导入_0_条笔记_f1edf5b407	Successfully imported {0} notes
+成功导入_n_条待办_37eadf2708	Successfully imported $n to-dos
+成功导入_n_条笔记_2f9691a596	Successfully imported $n notes
+成功率_0_047cd91c6c	Success rate {0}%
+成功率_2xx_占比_服务可用性_非_5_a3d7b27e95	Success rate = share of 2xx; service availability = share of non-5xx. A large gap between the two means failures mostly come from client-side parameters or quota, not upstream faults.
+成功率_df9dc72f2d	Success rate
+成功率_monfmt_fixed_sr_1_4fbf1cc803	Success rate ${MonFmt.fixed(sr, 1)}%
+成功率_延迟分位_错误分布_配额消耗与_toke_9c60795c78	Success rate, latency percentiles, error distribution, quota usage and token usage rollup
+成功登录_last_d5df9592bd	Successful sign-ins (last)
+我_34f201bc50	Me
+我已知晓风险_强制执行_cd4e2f773d	I understand the risks, force execute
+我明白风险_执行_a77f5cd3f3	I understand the risks, execute
+或_systemd_单元_nginx_serv_14c65e1864	or systemd unit: nginx.service
+或点左上角_新建笔记_创建_4bb6db19d3	or click "New Note" in the top-left corner to create one
+截止日期_9b3177f0b7	Due date
+截止时间_864048b32f	Due time
+所有操作均被审计记录_511c89f737	All actions are audit-logged
+所有管理操作均写入审计日志_logs_a_e2b87d13a1	 · All administrative actions are written to the audit log (logs/audit.log)
+所有者_ff3beb8e45	Owner
+所有软件包均为最新版本_ee413e3b4c	All packages are up to date.
+手动_2a4a4de806	Manual
+手动编辑的_root_crontab_请通过_72bfbdde79	· Edit root crontab manually via the Web terminal (crontab -e)
+手动进程_040082d08d	Manual process
+打包_0_项到_1_29836a27f5	Pack {0} items to {1}
+打包_selected_size_项到_e42700bf89	Pack ${selected.size} items to ${l.dir}
+打包_tar_gz_ff1dd64457	Pack tar.gz
+打包为_tar_gz_3ea0166662	Pack as tar.gz
+打包完成_be69db469a	Packing complete
+打开_65fc81e161	Open
+打开所在目录_b4bf69d6b9	Open containing folder
+执行_0_70b4feea4a	Run {0}?
+执行_28febba225	Run
+执行_act_a3e97e4bee	Run $act?
+执行_action_b272ecea51	Run $action?
+执行_apt_get_install_y_ce_6568cc1ca1	Run apt-get install -y certbot; takes about 1-3 minutes.
+执行_b_0_b_1695afa501	Run <b>{0}</b>?
+执行_b_name_b_67f5a659e6	Run <b>$name</b>?
+执行_create_extension_if_n_aac00658d4	Run CREATE EXTENSION IF NOT EXISTS $n?
+执行_create_extension_pg_s_6d03312f5d	Run CREATE EXTENSION pg_stat_statements? After enabling, you still need to add it to shared_preload_libraries and restart the database before statistics begin.
+执行_ctrl_enter_ecfb73b4d6	Run (Ctrl+Enter)
+执行_daemon_stop_dfe266a216	Run daemon-stop?
+执行_ddl_769fdda3d6	Run DDL
+执行_ddl_操作_0ed0a31f65	Run DDL operation
+执行_prune_6b4f1926c7	Run prune?
+执行_trim_de3f191099	Run TRIM
+执行一次_relay_状态热备份_sqlite_8bc4bec089	Run a hot backup of relay state (SQLite online backup, without interrupting the relay service).
+执行中_1f425b6bf0	Running
+执行修复_18ad6adf19	Run repair
+执行单元_2466ded40e	Run unit
+执行命令_bf162782f5	Run command
+执行失败_9746cfc7d2	Execution failed
+执行异常_f5990190d3	Execution error
+执行拉起_24779c513a	Run start
+执行清理_bebeb0649b	Run cleanup
+执行结果_1b213f405b	Execution result
+执行自愈_d499e88a86	Run self-healing
+执行计划_analyze_cc0577dcef	Execution plan (ANALYZE)
+执行计划_json_5d921dfd27	Execution plan JSON

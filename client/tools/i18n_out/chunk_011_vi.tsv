@@ -1,0 +1,120 @@
+导出_fmt_uppercase_5fa0136e39	Xuất ${fmt.uppercase()}
+导出失败_38ab583870	Xuất thất bại:
+导出数据库_8eb2a58640	Xuất cơ sở dữ liệu
+将_0_1_复制到_2_40d7c9a939	Sao chép {0}.{1} sang {2}
+将_0_移入回收站_可随时恢复_b035da26b3	Chuyển "{0}" vào thùng rác? Bạn có thể khôi phục bất cứ lúc nào.
+将_db_tbl_复制到_target_bfe49531fd	Sao chép $db.$tbl sang $target
+将_journald_日志体积限制到_200mb_88b7b48940	Giới hạn dung lượng nhật ký journald ở 200MB
+将_name_加入_sudo_组_e6b5bf2823	Thêm $name vào nhóm sudo?
+将_src_打包为_tar_gz_大目录可能耗_0e4d5baded	Nén $src thành tar.gz (thư mục lớn có thể mất nhiều thời gian).
+将_vm_swappiness_设置为_v_并_d6d34ffc96	Đặt vm.swappiness thành $v và lưu cố định?
+将停止_0_服务_不会删除数据_3644eaaa47	Sẽ dừng dịch vụ {0} (dữ liệu sẽ không bị xóa).
+将停止_label_服务_不会删除数据_b8004f9ec0	Sẽ dừng dịch vụ $label (dữ liệu sẽ không bị xóa).
+将写入并重载_sshd_body_warn_b8307d441d	Sẽ ghi và tải lại sshd:\n$body$warn
+将删除_0_中满足条件的数据_1_此操_6705d19e0e	Sẽ xóa dữ liệu trong {0} thỏa mãn điều kiện:\n{1}\nThao tác này không thể hoàn tác.
+将删除_st_table_中满足条件的数据_4e3f9bc4e7	Sẽ xóa dữ liệu trong ${st.table} thỏa mãn điều kiện:\n$w\nThao tác này không thể hoàn tác.
+将删除用户_name_及其家目录_userde_38f9f46e9a	Sẽ xóa người dùng $name và thư mục chủ của họ (userdel -r); không thể hoàn tác!
+将启动_0_服务_1f105846d4	Sẽ khởi động dịch vụ {0}.
+将启动_label_服务_b82e5baf55	Sẽ khởi động dịch vụ $label.
+将启用_ufw_默认拒绝入站_请确认已允许_2_ebeb8137d3	Sẽ bật UFW (mặc định chặn chiều vào). Đảm bảo cổng 22 được cho phép: ufw allow 22/tcp
+将强制删除容器_0_docker_rm_f_e5e8832e8e	Sẽ xóa ép container {0} (docker rm -f); volume dữ liệu của container không bị ảnh hưởng.
+将执行_apt_get_install_fail_e1244066c3	Sẽ chạy apt-get install fail2ban và khởi động dịch vụ (cần kết nối mạng, có thể mất 1-2 phút).
+将执行_apt_get_install_y_d_5218b05b7a	Sẽ chạy apt-get install -y docker.io, khoảng 1-3 phút.
+将执行_drop_caches_3_系统可能短暂_6626720ff2	Sẽ chạy drop_caches=3; hệ thống có thể chậm lại trong giây lát. Tiếp tục?
+将按已保存的计划执行清理项_journal_ap_762e3baf6f	Sẽ chạy các mục dọn dẹp đã lưu (journal, APT, nhật ký xoay vòng...) theo lịch.
+将永久删除_db_及其全部数据_不可恢复_a493b3bdb0	Sẽ xóa vĩnh viễn $db và toàn bộ dữ liệu của nó; không thể hoàn tác!
+将添加_root_定时任务_每天_03_00_执_0937e4afe4	Sẽ thêm tác vụ cron cho root, chạy hằng ngày lúc 03:00:\n$cmd
+将添加_root_定时任务_每天_03_00_执_e6ee798c58	Sẽ thêm tác vụ cron cho root, chạy hằng ngày lúc 03:00:\n{0}
+将自动备份当前源文件并执行_apt_get_up_0276b8cab1	Sẽ sao lưu các tệp nguồn hiện tại và chạy apt-get update; nếu làm mới thất bại sẽ tự động hoàn tác. Quá trình mất khoảng 30-120 giây.
+小于_7d11896ff4	< Nhỏ hơn
+小于等于_190834de3e	≤ Nhỏ hơn hoặc bằng
+小文件数量占比_e37f172da2	Tỷ lệ tệp nhỏ
+小时_99f6904ff3	Giờ
+尚未执行过任何修复动作_fe7c3d4771	Chưa thực hiện hành động khắc phục nào
+尚未运行健康检查_ba6dfd78c0	Chưa chạy kiểm tra sức khỏe
+尝试_31d1e44656	Thử
+属主_444fd7bd13	Chủ sở hữu
+属主已更新_dce00bf89c	Đã cập nhật chủ sở hữu
+属性_7d3c35c29b	Thuộc tính
+峰值时段_6bb7941d45	Khung giờ cao điểm
+峰值轮_4cecb849cf	Vòng cao điểm
+工作区_保留收藏_b4859ec177	Không gian làm việc · Giữ mục yêu thích
+工作数据库_866878eb8f	Cơ sở dữ liệu làm việc
+工作日_27b4a6aed2	Ngày trong tuần
+工具_f7bb5ad4da	Công cụ:
+已上传_0_62e7aadbe5	Đã tải lên {0}
+已上传_f_name_06d42217a4	Đã tải lên ${f.name}
+已上传并覆盖_0_56609744b2	Đã tải lên và ghi đè {0}
+已上传并覆盖_f_name_da9914d31d	Đã tải lên và ghi đè ${f.name}
+已产生不可用事件_a2f7f57fb3	Đã phát sinh sự kiện không khả dụng
+已保存_cdfab96f75	Đã lưu
+已保存_email_4726a5328b	Đã lưu $email
+已保存_saved_36d870566a	Đã lưu: $saved
+已保存_下一次重复已自动排期_866a056587	Đã lưu · lần lặp tiếp theo đã tự lên lịch
+已保存到_path_6a5d7deabb	Đã lưu vào $path
+已保存到_saved_49bd95c1fb	Đã lưu vào $saved
+已停止_75dddf524e	Đã dừng
+已停止公开分享_9a9cf049a9	Đã ngừng chia sẻ công khai
+已停用_0_c934ebc3bd	Đã tắt {0}
+已停用_6c7dcbb73a	Đã tắt
+已停用自动维护_836de837e0	Đã tắt bảo trì tự động
+已共享给_ev_email_permt_77651d6ed4	Đã chia sẻ với ${ev.email} (${permText(ev.perm)})
+已切换为浅色模式_910f7b8537	Đã chuyển sang chế độ sáng
+已切换为深色模式_b03918bd9e	Đã chuyển sang chế độ tối
+已切换到_0_f0c31c31dc	Đã chuyển sang {0}
+已切换到_appstate_config_0ccf0355a4	Đã chuyển sang ${AppState.config().normalizedUrl()}
+已创建归类_name_4dcdef1d04	Đã tạo danh mục "$name"
+已创建新终端会话_096edaffb2	Đã tạo phiên terminal mới
+已创建清单_name_0235b26a57	Đã tạo danh sách "$name"
+已删除_0_a0892ec5c3	Đã xóa {0}
+已删除_0_行_a56ea85604	Đã xóa {0} dòng
+已删除_fb5fe1e266	Đã xóa
+已到期_75e6c9fb6f	Đã hết hạn
+已加载的审计规则_575f3a8203	Quy tắc kiểm toán đã tải
+已占_028e892f8e	Đã chiếm
+已取消保存_1f0e8fda6a	Đã hủy lưu
+已取消带宽上限_4d02387c26	Đã bỏ giới hạn băng thông
+已取消置顶_64ca5ea597	Đã bỏ ghim
+已启用_0_29dab49ed0	Đã bật {0}
+已启用_25d2843150	Đã bật
+已启用的源文件_0_7a8ed113e1	Tệp nguồn đã bật ({0})
+已启用的源文件_files_size_3ef3f7d5ad	Tệp nguồn đã bật (${files.size})
+已启用自动维护_26c95d2e69	Đã bật bảo trì tự động
+已回滚_c4ab8c16f8	Đã hoàn tác
+已固定_46f9ebb3cb	(Đã ghim)
+已复制_e381a5763d	Đã sao chép
+已复制到剪贴板_c2bb6d50ae	Đã sao chép vào bộ nhớ tạm
+已复制笔记_578fe5f530	Đã sao chép ghi chú
+已存_it_secretset_jointo_371806c69d	Đã lưu {0}
+已存在_a867d42ddf	Đã tồn tại
+已安装_eb88ff57c9	Đã cài đặt
+已安装_total_438379cb60	Đã cài đặt ($total)
+已完成_e99b48a29b	Hoàn tất
+已完成_下一次重复已自动排期_2f89384a29	Hoàn tất · lần lặp tiếp theo đã tự lên lịch
+已导入_n_条待办_c3352cbaa8	Đã nhập $n việc cần làm
+已导入_n_条笔记_09e6db7128	Đã nhập $n ghi chú
+已建立连接_0_ac05618709	Đã thiết lập kết nối ({0})
+已建立连接_established_siz_bb2e6b06da	Đã thiết lập kết nối (${established.size})
+已开启实时跟随_b8c950e7d3	Đã bật theo dõi trực tiếp
+已归档_5cfbea2b76	Đã lưu trữ
+已彻底删除_21ae7be063	Đã xóa vĩnh viễn
+已恢复_0_120218aebb	Đã khôi phục "{0}"
+已恢复_6aa9ad7241	Đã khôi phục
+已截断_61c54972d5	 · Đã cắt bớt
+已打开新会话选项卡_b298c97275	Đã mở thẻ phiên mới
+已执行计划清理_b29e9620a4	Đã chạy dọn dẹp theo lịch
+已扫描_0_个索引文件_9909c34fb8	 · Đã quét {0} tệp chỉ mục
+已扫描_scanned_个索引文件_b6efc4ae77	 · Đã quét $scanned tệp chỉ mục
+已按保留期清理轮转日志_deca9628b4	Đã dọn nhật ký xoay vòng theo thời hạn lưu giữ
+已按当前值试跑_结果见发送记录_467ceb202b	Đã chạy thử với giá trị hiện tại (xem nhật ký gửi)
+已推送到铃铛与渠道_336daad702	Đã đẩy tới chuông và các kênh
+已插入_ok_个文件_5032d55e92	Đã chèn $ok tệp
+已收藏_41f91d9758	 · Đã thêm vào yêu thích
+已是最新_5985ee9a3c	Đã là bản mới nhất
+已更新_112f98675e	Đã cập nhật
+已有_apt_任务在执行_请等待完成_52d32c3717	Đã có tác vụ apt đang chạy; vui lòng đợi hoàn tất
+已有账号_c9bc5e7bff	Đã có tài khoản?
+已格式化_简单模式_注意字符串内关键词也会被换行_ff56058a41	Đã định dạng (chế độ đơn giản; lưu ý từ khóa trong chuỗi cũng bị ngắt dòng)
+已检查全部看护项_7ceab11b1c	Đã kiểm tra toàn bộ mục giám sát
+已永久删除_b2e5fd714f	Đã xóa vĩnh viễn
+已测量_a418169c62	Đã đo

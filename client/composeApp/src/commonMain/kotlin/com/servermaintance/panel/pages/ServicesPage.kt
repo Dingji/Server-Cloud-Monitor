@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -82,8 +85,8 @@ private fun svcRefreshLabel(ms: Long): String =
     if (ms >= 1000) {
         val s = ms / 1000.0
         val t = (s * 100).toLong() / 100.0 // toFixed(2) 截断等价
-        (if (t % 1.0 == 0.0) t.toLong().toString() else t.toString()) + " 秒"
-    } else "$ms 毫秒"
+        (if (t % 1.0 == 0.0) t.toLong().toString() else t.toString()) + L["秒_d9ad5055c3"]
+    } else trf("0_毫秒_dd9d131b83", ms)
 
 @Composable
 fun ServicesPage() {
@@ -91,12 +94,12 @@ fun ServicesPage() {
     var error by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(true) }
     var query by remember { mutableStateOf("") }
-    var stateLabel by remember { mutableStateOf("全部状态") }
+    var stateLabel by remember { mutableStateOf(L["全部状态_1a4c26d92d"]) }
     var autoOn by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
 
-    val stateFilters = listOf("全部状态", "仅运行", "仅失败", "仅停止")
-    val stateValue = mapOf("仅运行" to "active", "仅失败" to "failed", "仅停止" to "inactive")
+    val stateFilters = listOf(L["全部状态_1a4c26d92d"], L["仅运行_affb726f94"], L["仅失败_9ecd8b6190"], L["仅停止_5d3b3d5a81"])
+    val stateValue = mapOf(L["仅运行_affb726f94"] to "active", L["仅失败_9ecd8b6190"] to "failed", L["仅停止_5d3b3d5a81"] to "inactive")
 
     suspend fun load() {
         try {
@@ -115,7 +118,7 @@ fun ServicesPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            error = e.message ?: e::class.simpleName ?: "请求失败"
+            error = e.message ?: e::class.simpleName ?: L["请求失败_8fdc4112a4"]
         } finally {
             loading = false
         }
@@ -127,8 +130,8 @@ fun ServicesPage() {
     /** JS `runAction('/service', {unit, action}, {reload: load})`。 */
     suspend fun svcAction(unit: String, act: String) {
         val okc = Modal.confirm(
-            title = "$act 服务",
-            text = "对 $unit 执行 systemctl $act ？",
+            title = trfn("act_服务_a3ebd5a4a1", "act" to act),
+            text = trfn("对_unit_执行_systemctl_ac_ba3c9e7d90", "unit" to unit, "act" to act),
             danger = act == "stop",
         )
         if (!okc) return
@@ -136,7 +139,7 @@ fun ServicesPage() {
             Actions.run(
                 path = "/service",
                 body = jsonObjectOf("unit" to unit, "action" to act),
-                successToast = "操作成功",
+                successToast = L["操作成功_3c5be5f2a1"],
             )
         } catch (_: Throwable) {
             /* runAction 失败也会 toast，这里仅确保随后刷新 */
@@ -154,11 +157,11 @@ fun ServicesPage() {
     // JS: list.slice(0, 400)
     val shown = filtered.take(400)
 
-    PageScaffold(title = "系统服务") {
+    PageScaffold(title = L["系统服务_b548e12013"]) {
         PanelCard(
-            title = "systemd 服务",
+            title = L["systemd_服务_fe73189369"],
             right = {
-                GhostBtn(text = "刷新", icon = "refresh", onClick = {
+                GhostBtn(text = L["刷新_38108eaa1d"], icon = "refresh", onClick = {
                     scope.launch { loading = true; load() }
                 })
             },
@@ -171,22 +174,22 @@ fun ServicesPage() {
             ) {
                 val running = services.count { it.active == "active" }
                 val failed = services.count { it.active == "failed" }
-                LevelBadge("运行 $running", Level.Ok)
-                if (failed > 0) LevelBadge("失败 $failed", Level.Bad)
-                LevelBadge("共 ${services.size}", Level.Info)
+                LevelBadge(L["运行_running_43df56390e"], Level.Ok)
+                if (failed > 0) LevelBadge(L["失败_failed_0a1e1046d9"], Level.Bad)
+                LevelBadge(trf("共_0_6de8606170", services.size), Level.Info)
                 Spacer(Modifier.width(4.dp))
                 SearchField(
                     value = query,
                     onValueChange = { query = it },
                     modifier = Modifier.width(200.dp),
-                    placeholder = "搜索服务名…",
+                    placeholder = L["搜索服务名_9646f29b1b"],
                 )
                 SelectField(
                     value = stateLabel,
                     options = stateFilters,
                     onValueChange = { stateLabel = it },
                 )
-                CheckRow(checked = autoOn, onChange = { autoOn = it }, label = "自动刷新")
+                CheckRow(checked = autoOn, onChange = { autoOn = it }, label = L["自动刷新_297a7ec438"])
                 Text(
                     svcRefreshLabel(AppState.meRefreshMs()),
                     color = Palette.muted,
@@ -204,38 +207,38 @@ fun ServicesPage() {
                     /* —— 服务表（JS ui.table，列定义照抄） —— */
                     DataTable(
                         columns = listOf(
-                            TableCol<Svc>("单元", weight = 2f, mono = true) { s ->
+                            TableCol<Svc>(L["单元_9abfa4fb70"], weight = 2f, mono = true) { s ->
                                 Text(s.unit, fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                             },
-                            TableCol<Svc>("状态", weight = 1.2f) { s -> svcBadge(s.active, s.sub) },
-                            TableCol<Svc>("开机启动", weight = 1.1f) { s ->
+                            TableCol<Svc>(L["状态_62e951a692"], weight = 1.2f) { s -> svcBadge(s.active, s.sub) },
+                            TableCol<Svc>(L["开机启动_b995f88661"], weight = 1.1f) { s ->
                                 when (s.enabled) {
                                     "enabled" -> LevelBadge("enabled", Level.Ok)
                                     "static" -> LevelBadge("static", Level.Muted)
                                     else -> LevelBadge(s.enabled.ifEmpty { "-" }, Level.Warn)
                                 }
                             },
-                            TableCol<Svc>("描述", weight = 2.4f) { s ->
+                            TableCol<Svc>(L["描述_412f54dc38"], weight = 2.4f) { s ->
                                 Text(s.description.take(70), fontSize = 12.sp, color = Palette.muted)
                             },
-                            TableCol<Svc>("操作", weight = 2.6f, minWidth = 290.dp) { s ->
+                            TableCol<Svc>(L["操作_f3ea6d345e"], weight = 2.6f, minWidth = 290.dp) { s ->
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    GhostBtn(text = "启动", icon = "play", onClick = {
+                                    GhostBtn(text = L["启动_ebd26da421"], icon = "play", onClick = {
                                         scope.launch { svcAction(s.unit, "start") }
                                     })
-                                    GhostBtn(text = "重启", icon = "restart", onClick = {
+                                    GhostBtn(text = L["重启_385c272e35"], icon = "restart", onClick = {
                                         scope.launch { svcAction(s.unit, "restart") }
                                     })
-                                    DangerBtn(text = "停止", icon = "stop", onClick = {
+                                    DangerBtn(text = L["停止_a17f70a8d3"], icon = "stop", onClick = {
                                         scope.launch { svcAction(s.unit, "stop") }
                                     })
                                     // JS: 已 enabled 的显示「关自启」(disable)，否则「开自启」(enable)
                                     if (s.enabled == "enabled") {
-                                        GhostBtn(text = "关自启", icon = "power", onClick = {
+                                        GhostBtn(text = L["关自启_b871a656d2"], icon = "power", onClick = {
                                             scope.launch { svcAction(s.unit, "disable") }
                                         })
                                     } else {
-                                        GhostBtn(text = "开自启", icon = "power", onClick = {
+                                        GhostBtn(text = L["开自启_afbb1e3032"], icon = "power", onClick = {
                                             scope.launch { svcAction(s.unit, "enable") }
                                         })
                                     }
@@ -244,7 +247,7 @@ fun ServicesPage() {
                         ),
                         rows = shown,
                         rowKey = { it.unit },
-                        emptyText = "没有匹配的服务",
+                        emptyText = L["没有匹配的服务_9248fe4a20"],
                     )
                 }
             }

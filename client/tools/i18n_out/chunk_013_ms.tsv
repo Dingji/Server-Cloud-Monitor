@@ -1,0 +1,120 @@
+当前索引更新于_0_1c82f67640	Indeks dikemas kini pada {0}
+当前采集到的指标_8e4e47b457	Metrik yang sedang dikumpul
+当前镜像_ed71a792a7	Imej semasa
+当前页面_b7d5886b05	 · Halaman semasa
+彻底删除_0_项_无法恢复_9f56fcff22	Padam {0} item secara kekal; tidak boleh dipulihkan.
+彻底删除_8c0b37b684	Padam kekal
+彻底删除_trash_size_项_无法恢_87a3623728	Padam ${trash.size} item secara kekal; tidak boleh dipulihkan.
+彻底卸载_33072f5e11	Nyahpasang sepenuhnya
+待办_csv_3308e95082	CSV tugasan
+待办_未完成_已完成_7422fade10	Tugasan (belum selesai / selesai)
+待办清单_febc09d1b1	Senarai tugasan
+待探测_51805a6f50	Menunggu tinjauan
+待检测_05fb47fc35	Menunggu pemeriksaan
+待邮箱验证_bada0c2e46	Menunggu pengesahan e-mel
+待验证_0b48e4bdd8	Menunggu pengesahan
+必须带_http_或_https_e74acdc586	Mesti bermula dengan http:// atau https://
+快捷_14249f75ba	Pantas
+快捷模板_423595bef4	Templat pantas:
+快速备份_1cbe05845d	Sandaran pantas
+性能洞察_71fa3a4ff8	Wawasan prestasi
+总_0_新增_1_1fd58b4e12	Jumlah {0} · Baharu {1}
+总_token_2d5ae33603	Jumlah Token
+总占用_3da7163a84	 Jumlah guna
+总大小_0_a2c8d9634b	Jumlah saiz {0}
+总大小_fmt_bytes_totalsiz_53ae231269	Jumlah saiz ${Fmt.bytes(totalSize)}
+总容量_8b60ba80ea	Jumlah kapasiti
+总尝试_56d2a2d4f5	Jumlah percubaan
+总成功率_0_重试_1_32f597c3de	Kadar kejayaan keseluruhan {0}% · Cuba semula {1}
+总成功率_322a0370e9	Kadar kejayaan keseluruhan
+总成功率_61b76516e3	Kadar kejayaan keseluruhan 
+总探测_572bee6277	Jumlah tinjauan
+总流量_出_6efb4930fb	Jumlah trafik (keluar)
+总耗时_2db420d198	Jumlah masa
+总览_c122e1758c	Ringkasan
+总览与监控_70e2feb12d	Ringkasan dan pemantauan
+总计_3af1ac5b4e	Jumlah
+总请求_d1cac3ca3b	Jumlah permintaan
+总账号_02ceb243fe	Jumlah akaun
+恢复_79748ca1c6	Pulihkan
+恢复_mongodb_归档_ad961869c7	Pulihkan arkib MongoDB
+恢复_redis_7dd20f103c	Pulihkan Redis
+恢复中_176238056c	Memulihkan…
+恢复中_d6426a51e5	Memulihkan
+恢复于_0_57aae0c315	Dipulihkan pada {0}
+恢复于_rtmrecover_recover_471df21a46	Dipulihkan pada ${rTmRecover(recoverAt)}
+恢复备份到目标数据库_00fbc874c2	Pulihkan sandaran ke pangkalan data sasaran
+恢复失败_08c8ed5980	Pemulihan gagal:
+恢复失败_76842a0348	Pemulihan gagal
+恢复完成_笔记_0_条_待办_1_条_7aa19232cf	Pemulihan selesai: {0} nota, {1} tugasan
+恢复完整备份_640eea92dc	Pulihkan sandaran penuh
+恢复方式_4a0ce48265	Kaedah pemulihan
+恢复时是否通知_e60cfd9684	Maklumkan semasa pemulihan
+恢复结果_25404d8096	Keputusan pemulihan
+恢复通知_9d088c33ba	Pemberitahuan pemulihan
+恢复默认地址_4c7fd3785e	Pulihkan alamat lalai
+想到什么_立刻记下来_c54f483edc	Catat apa sahaja yang terfikir serta-merta…
+慢查询_slowlog_89cb405eab	Pertanyaan perlahan (SLOWLOG)
+慢查询_剖析_e7d6b1beb3	Pertanyaan perlahan (profil)
+慢查询_热点语句_e4c8bb10fe	Pertanyaan perlahan / pernyataan popular
+成功_0_错误_1_超时_2_4e74aeecc7	Berjaya {0} · Ralat {1} · Tamat masa {2}
+成功_51991a5d11	Berjaya
+成功导入_0_条待办_0f7f47eb57	Berjaya mengimport {0} tugasan
+成功导入_0_条笔记_f1edf5b407	Berjaya mengimport {0} nota
+成功导入_n_条待办_37eadf2708	Berjaya mengimport $n tugasan
+成功导入_n_条笔记_2f9691a596	Berjaya mengimport $n nota
+成功率_0_047cd91c6c	Kadar kejayaan {0}%
+成功率_2xx_占比_服务可用性_非_5_a3d7b27e95	Kadar kejayaan = bahagian 2xx; ketersediaan perkhidmatan = bahagian bukan 5xx. Jurang yang besar menunjukkan kegagalan berpunca daripada parameter atau kuota pihak klien, bukan kerosakan hulu.
+成功率_df9dc72f2d	Kadar kejayaan
+成功率_monfmt_fixed_sr_1_4fbf1cc803	Kadar kejayaan ${MonFmt.fixed(sr, 1)}%
+成功率_延迟分位_错误分布_配额消耗与_toke_9c60795c78	Kadar kejayaan, perentil latensi, taburan ralat, penggunaan kuota dan penggunaan token
+成功登录_last_d5df9592bd	Log masuk berjaya (last)
+我_34f201bc50	Saya
+我已知晓风险_强制执行_cd4e2f773d	Saya faham risikonya, paksa laksana
+我明白风险_执行_a77f5cd3f3	Saya faham risikonya, laksana
+或_systemd_单元_nginx_serv_14c65e1864	atau unit systemd: nginx.service
+或点左上角_新建笔记_创建_4bb6db19d3	atau klik "Nota Baharu" di penjuru kiri atas
+截止日期_9b3177f0b7	Tarikh tamat
+截止时间_864048b32f	Masa tamat
+所有操作均被审计记录_511c89f737	Semua tindakan direkod untuk audit
+所有管理操作均写入审计日志_logs_a_e2b87d13a1	 · Semua tindakan pentadbiran direkod ke dalam log audit (logs/audit.log)
+所有者_ff3beb8e45	Pemilik
+所有软件包均为最新版本_ee413e3b4c	Semua pakej adalah versi terkini.
+手动_2a4a4de806	Manual
+手动编辑的_root_crontab_请通过_72bfbdde79	· Sunting crontab root melalui terminal Web (crontab -e)
+手动进程_040082d08d	Proses manual
+打包_0_项到_1_29836a27f5	Bungkus {0} item ke {1}
+打包_selected_size_项到_e42700bf89	Bungkus ${selected.size} item ke ${l.dir}
+打包_tar_gz_ff1dd64457	Bungkus tar.gz
+打包为_tar_gz_3ea0166662	Bungkus sebagai tar.gz
+打包完成_be69db469a	Pembungkusan selesai
+打开_65fc81e161	Buka
+打开所在目录_b4bf69d6b9	Buka folder yang mengandungi
+执行_0_70b4feea4a	Laksanakan {0}?
+执行_28febba225	Laksanakan
+执行_act_a3e97e4bee	Laksanakan $act?
+执行_action_b272ecea51	Laksanakan $action?
+执行_apt_get_install_y_ce_6568cc1ca1	Jalankan apt-get install -y certbot, ambil masa lebih kurang 1-3 minit.
+执行_b_0_b_1695afa501	Laksanakan <b>{0}</b>?
+执行_b_name_b_67f5a659e6	Laksanakan <b>$name</b>?
+执行_create_extension_if_n_aac00658d4	Laksanakan CREATE EXTENSION IF NOT EXISTS $n?
+执行_create_extension_pg_s_6d03312f5d	Laksanakan CREATE EXTENSION pg_stat_statements? Selepas diaktifkan, anda masih perlu menambahkannya ke shared_preload_libraries dan but semula pangkalan data sebelum statistik mula dikumpul.
+执行_ctrl_enter_ecfb73b4d6	Laksanakan (Ctrl+Enter)
+执行_daemon_stop_dfe266a216	Laksanakan daemon-stop?
+执行_ddl_769fdda3d6	Laksanakan DDL
+执行_ddl_操作_0ed0a31f65	Laksanakan operasi DDL
+执行_prune_6b4f1926c7	Laksanakan prune?
+执行_trim_de3f191099	Laksanakan TRIM
+执行一次_relay_状态热备份_sqlite_8bc4bec089	Jalankan sandaran panas untuk status relay (sandaran dalam talian SQLite, tanpa mengganggu perkhidmatan relay).
+执行中_1f425b6bf0	Sedang dilaksanakan
+执行修复_18ad6adf19	Laksanakan pembaikan
+执行单元_2466ded40e	Laksanakan unit
+执行命令_bf162782f5	Laksanakan arahan
+执行失败_9746cfc7d2	Pelaksanaan gagal
+执行异常_f5990190d3	Ralat pelaksanaan
+执行拉起_24779c513a	Laksanakan permulaan
+执行清理_bebeb0649b	Laksanakan pembersihan
+执行结果_1b213f405b	Keputusan pelaksanaan
+执行自愈_d499e88a86	Laksanakan pemulihan sendiri
+执行计划_analyze_cc0577dcef	Pelan pelaksanaan (ANALYZE)
+执行计划_json_5d921dfd27	Pelan pelaksanaan JSON

@@ -1,0 +1,120 @@
+执行计划树_2a66c47766	Pokok pelaksanaan rancangan
+扩展名_如_pgcrypto_83ec8b404a	Nama sambungan, cth. pgcrypto
+扩展安装_3587656bb2	Pemasangan sambungan
+扩展监控_wal_bgwriter_in_b526852c31	Pemantauan lanjutan (WAL / BGWriter / InnoDB / slot replikasi)
+扫描_0_张表_命中_1_张_ddc51ef2c9	{0} jadual diimbas · {1} sepadan
+扫描_998c936377	Imbas
+扫描中_7c81ab45e3	Mengimbas…
+扫描根目录一级_二级目录及大于_100mb_的文_60e4bd3b99	Imbas direktori tahap 1/2 root dan fail lebih besar daripada 100MB
+批次_0_1_a517254bd8	 · Batch {0}/{1}
+批量删除_362aedce37	Padam pukal
+批量卸载_n_65d9c20918	Nyahpasang pukal ($n)
+批量卸载_rem_3ccf4b0014	Nyahpasang pukal ($rem)
+批量安装_ins_d21155177e	Pasang pukal ($ins)
+批量操作_eae7c2c8a9	Tindakan pukal
+批量操作结果_c3c60aaa7e	Keputusan tindakan pukal
+批量表操作_9ac7c449b3	Tindakan pukal ke atas jadual
+找出占空间的东西_按项清理并核对实际释放量_可开_0fdb33dd38	Kenal pasti apa yang mengambil ruang, bersihkan item demi item dan sahkan ruang benar-benar dibebaskan; boleh mengaktifkan penyelenggaraan automatik harian
+把_0_从台账移除_cfcfa0347b	Buang "{0}" daripada inventori?
+把_0_项移入回收站_保留_1_天_可还_34b70d7414	Pindahkan {0} item ke tong sampah (disimpan {1} hari, boleh dipulihkan).
+把_h_label_从台账移除_3366b95a93	Buang "${h.label}" daripada inventori?
+把_selected_size_项移入回收_0cf24b0894	Pindahkan ${selected.size} item ke tong sampah (disimpan ${FileStore.trashDays.value} hari, boleh dipulihkan).
+把仓库_ops_server_部署到面板_se_085f78330b	Deploy repo ops-server/ ke panel server/ops/ dan mula semula selepas mount dalam index.js untuk gunakannya:\n
+把告警送到人_webhook_企业微信_c503ab6c52	Hantar amaran kepada orang: Webhook / WeCom / DingTalk / Feishu / Telegram / e-mel, kelayakan disimpan hanya pada pelayan
+抖动_a60f92b8bb	Jitter
+报文大小分布_响应_eb73297921	Taburan saiz pakej (respons)
+报文大小分布_请求_978ad9741c	Taburan saiz pakej (permintaan)
+报错退出_e9bcdb3450	Keluar dengan ralat
+拉起命令_可空_8598bf93c8	Perintah mula (pilihan)
+拒绝_deny_15eaa6f7a5	− Tolak (DENY)
+拥有者_0f0558fe5a	Pemilik
+拨测_0_台不可用_faf5bff7d3	{0} sasaran probe tidak tersedia
+拨测_0c26df31f3	probe
+拨测_o_probedown_台不可用_6f5279e1a9	${o.probeDown} sasaran probe tidak tersedia
+拨测与_sla_自定义告警规则_通知渠道_静默与_be90e55995	probe dengan SLA, peraturan amaran tersuai, saluran notifikasi, senyap dan tetingkap penyelenggaraan.
+拨测任务_aca6ce04f6	Tugas probe
+拨测任务已保存_c628e8f14a	Tugas probe disimpan
+拨测失败_7b0bb7893f	probe gagal
+拨测类型_4ed688984c	Jenis probe
+拨测间隔_秒_7c2e24962c	Selang probe (saat)
+持续_0_s_冷却_1_s_2_a238875611	Tempoh {0}s · penyejukan {1}s · {2}
+持续增长_ab21b96aa8	Pertumbuhan berterusan
+持续多少秒才告警_9624b095e1	Berapa saat perlu berlaku sebelum amaran dibunyikan
+挂载点_8517da781f	Titik mount
+指定指标_efb37dcdc8	Metrik ditetapkan
+指定指标_作用范围_指定指标时_2b528db368	Metrik ditetapkan (skop = metrik ditetapkan)
+指定源_c1701e5ea0	 · Sumber ditetapkan
+指定规则_e050a72f42	Peraturan ditetapkan
+指定规则_作用范围_指定规则时_a4bbca73a1	Peraturan ditetapkan (skop = peraturan ditetapkan)
+指标_0_89d6aad554	Metrik: {0}
+指标_1dfc810a7b	Metrik
+指标_opsstate_metriclabe_fef507e4db	Metrik: ${OpsState.metricLabel(it.metric)}
+按_cpu_ed77c666c4	Mengikut CPU
+按_etc_relay_pricing_jso_a1872b6ad6	Mengikut /etc/relay/pricing.json
+按_pid_c594df6b43	Mengikut PID
+按_sch_执行_act_c9ffbfae51	Jalankan $act mengikut $sch?
+按_内存_ee559401b3	Mengikut memori
+按_用户_fc09815a27	Mengikut pengguna
+按一级标题拆分_cffaaceb8e	Bahagikan mengikut tajuk tahap 1
+按今日计划执行一次_c9294b2b15	Jalankan sekali mengikut jadual hari ini
+按分组_008e3a2b0b	Mengikut kumpulan
+按名称_0ea96767da	Mengikut nama
+按大小_ee9a3bcc8e	Mengikut saiz
+按天_6a0d40d657	Mengikut hari
+按天用量_4fac34d248	Penggunaan harian
+按小时_3ae9822387	Mengikut jam
+按模型_token_分布图_a371a816cb	Carta taburan Token mengikut model
+按模型_token_统计_日_周_月_并_1820d55c9f	Statistik Token mengikut model (hari / minggu / bulan bersebelahan)
+按模型_复用率_vs_真实命中率_c4c8c68680	Mengikut model: kadar guna semula vs kadar padanan sebenar
+按此速率耗尽_b0a756faa9	Habis pada kadar ini
+按每次探测结果聚合_030b2e6a6a	Agregat mengikut setiap hasil probe
+按版本_f04ae00cab	Mengikut versi
+授予_afc60b6b80	Beri
+授予_sudo_b17c8ef2b8	Beri sudo
+授予数据库权限_fa513839dd	Beri keistimewaan pangkalan data
+授权_3a6e607f0c	Sahkan
+授权库_4d0119c773	Perpustakaan yang dibenarkan
+授权码_886b52b1db	Kod pengesahan
+排序_d797283645	Susun:
+排序_dc35af8d69	Susun
+排序规则_cba9ca5a18	Peraturan pengisihan
+排队中_4dcbbcfa61	Dalam baris gilir
+排除表_逗号分隔_可选_c3fbff6bed	Kecualikan jadual (dipisahkan dengan koma, pilihan)
+探活_自动拉起_超过上限停止并告警_每次_042dac10cd	Health check → mula semula automatik → berhenti dan amaran apabila melebihi had; setiap tindakan menyimpan sejarah pelaksanaan
+探活方式_ccd56454d3	Kaedah health check
+探活间隔_秒_3b83fe753f	Selang health check (saat)
+探测_b5ef40a22d	probe
+探测只打开端口读_banner_不发送任何凭据_a9cc98b513	probe hanya membuka port untuk membaca banner; tiada kelayakan dihantar
+探测地址_556833efb5	Alamat probe
+探测失败_1e2b42cb65	probe gagal
+探测完成_c51494c626	probe selesai
+接口端点_a8989ccc29	Titik akhir API
+推理_0_输出占比_1_0dae9a01a8	Inferens {0} · bahagian output {1}
+推理_c9d3b085e2	Inferens
+推荐_e8fcb9bb63	\n\n--- Disyorkan ---\n
+推荐包_d834496b57	Pakej disyorkan
+描述_412f54dc38	Penerangan
+提前提醒_分钟_0c4a512c91	Peringatan awal (minit)
+提示_ab3656a956	Petua
+提醒邮件已发送_含详情_子任务与日历邀请_7359e6549a	E-mel peringatan dihantar (dengan butiran, subtugasan dan jemputan kalendar)
+插入_022bf3283d	Sisip
+插入文档_6d53393c50	Sisip dokumen
+搜索_c85d9132a4	Cari…
+搜索_f04090805c	Cari
+搜索_pid_用户_命令_f1c406afb9	Cari PID/pengguna/perintah…
+搜索事项_a5b34743c2	Cari item…
+搜索变量名_a66a6cba87	Cari nama pemboleh ubah…
+搜索失败_b9786d51c3	Pencarian gagal
+搜索安装_7bede136f7	Cari dan pasang
+搜索服务名_9646f29b1b	Cari nama perkhidmatan…
+搜索笔记_8699c6b13f	Cari nota…
+搜索结果_0_1_项_bc8aaa1631	Keputusan · "{0}" {1} item
+搜索结果_0_99e3cf5dae	Keputusan (0)
+搜索结果_query_hits_si_3d502bbdbe	Keputusan · "$query" ${hits.size} item
+搜索结果_total_71fe2c69d1	Keputusan ($total)
+搜索范围_全部已启用源_共_0_个源_按名_b786d5dc17	Skop: semua sumber yang didayakan ({0} sumber), sepadan mengikut nama dan penerangan. Pergi ke halaman "Sumber perisian" untuk bertukar ke mirror domestik.
+搜索范围_全部已启用源_共_srclist_2017990f2b	Skop: semua sumber yang didayakan (${srcList.size} sumber), sepadan mengikut nama dan penerangan. Pergi ke halaman "Sumber perisian" untuk bertukar ke mirror domestik.
+搜索软件包_a162c7cf8d	Cari pakej
+搜索软件包_名称或描述_如_nginx_ht_320fde8b40	Cari pakej: nama atau penerangan, cth. nginx / htop / python3
+搜索邮箱_8dad475e2f	Cari e-mel…
+搜索页面或命令_ctrl_cmd_k_84c6582b79	Cari halaman atau perintah… (Ctrl/Cmd+K)

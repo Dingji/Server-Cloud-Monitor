@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -79,7 +82,7 @@ fun DockerPage() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            error = e.message ?: e::class.simpleName ?: "请求失败"
+            error = e.message ?: e::class.simpleName ?: L["请求失败_8fdc4112a4"]
         } finally {
             loading = false
         }
@@ -93,9 +96,9 @@ fun DockerPage() {
         params: JsonObject = jsonObjectOf(),
         confirmFirst: Boolean = false,
         danger: Boolean = false,
-        confirmTitle: String = "确认",
-        confirmText: String = "执行 $action ？",
-        okText: String = "确认",
+        confirmTitle: String = L["确认_b56d9ac6c5"],
+        confirmText: String = trf("执行_0_70b4feea4a", action),
+        okText: String = L["确认_b56d9ac6c5"],
         reloadDelayMs: Long = 1200L,
     ) {
         if (confirmFirst) {
@@ -106,7 +109,7 @@ fun DockerPage() {
             Actions.run(
                 path = "/docker/action",
                 body = jsonObjectOf("action" to action, "params" to params),
-                successToast = "操作成功",
+                successToast = L["操作成功_3c5be5f2a1"],
                 reload = { delay(reloadDelayMs); load() },
             )
         } catch (_: Throwable) {
@@ -120,15 +123,15 @@ fun DockerPage() {
     suspend fun tailLogs(id: String) {
         try {
             val r = AppState.api.post("/logs/tail", jsonObjectOf("source" to "docker:$id"))
-            Modal.output("容器日志 ${id.take(12)}", r.str("output"))
+            Modal.output(trf("容器日志_0_176db5f47c", id.take(12)), r.str("output"))
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            AppState.toast(e.message ?: "日志获取失败", ToastKind.Err)
+            AppState.toast(e.message ?: tr("日志获取失败_47449d85ad"), ToastKind.Err)
         }
     }
 
-    PageScaffold(title = "Docker 容器") {
+    PageScaffold(title = L["nav.docker"]) {
         when {
             loading && data == null && error == null -> LoadingState()
             error != null && data == null -> ErrorState(message = error!!, onRetry = {
@@ -147,17 +150,17 @@ fun DockerPage() {
                         ) {
                             PanelIcon("docker", size = 42.dp, color = Palette.muted, stroke = 1.2f)
                             Spacer(Modifier.height(14.dp))
-                            Text("服务器未安装 Docker 容器引擎。", color = Palette.muted, fontSize = 13.sp)
+                            Text(L["服务器未安装_docker_容器引擎_84468c43e1"], color = Palette.muted, fontSize = 13.sp)
                             Spacer(Modifier.height(14.dp))
                             PrimaryBtn(
-                                text = "一键安装 Docker (docker.io)",
+                                text = L["一键安装_docker_docker_io_d4c1d88eaa"],
                                 enabled = !installing,
                                 onClick = {
                                     scope.launch {
                                         val okc = Modal.confirm(
-                                            title = "安装 Docker",
-                                            text = "将执行 apt-get install -y docker.io，约 1-3 分钟。",
-                                            okText = "开始安装",
+                                            title = L["安装_docker_f131e1cdff"],
+                                            text = L["将执行_apt_get_install_y_d_5218b05b7a"],
+                                            okText = L["开始安装_d109e7cc01"],
                                         )
                                         if (!okc) return@launch
                                         installing = true
@@ -165,7 +168,7 @@ fun DockerPage() {
                                             Actions.run(
                                                 path = "/pkg/install",
                                                 body = jsonObjectOf("pkg" to "docker.io"),
-                                                title = "Docker 安装日志",
+                                                title = L["docker_安装日志_08ccdea4e9"],
                                             )
                                             load()
                                         } finally {
@@ -176,7 +179,7 @@ fun DockerPage() {
                             )
                             Spacer(Modifier.height(10.dp))
                             Text(
-                                "安装约需 1-3 分钟（取决于网络），完成后此页面自动可用。",
+                                L["安装约需_1_3_分钟_取决于网络_完成后此页_75a815fda1"],
                                 color = Palette.muted,
                                 fontSize = 11.sp,
                             )
@@ -195,17 +198,17 @@ fun DockerPage() {
 
                 GridLayout(columns = 4) {
                     StatTile(
-                        label = "Docker 引擎",
-                        value = if (active) "运行中" else "已停止",
+                        label = L["docker_引擎_755076c561"],
+                        value = if (active) L["运行中_5942497005"] else L["已停止_75dddf524e"],
                         sub = "v${version.ifEmpty { "?" }}",
                     )
                     StatTile(
-                        label = "容器",
+                        label = L["容器_d179a3480d"],
                         value = "${containers.size}",
-                        sub = "$running 运行中 · ${containers.size - running} 停止",
+                        sub = trf("0_运行中_1_停止_3f10fff62d", running, containers.size - running),
                     )
-                    StatTile(label = "镜像", value = "${images.size}", sub = "本地镜像数量")
-                    StatTile(label = "维护", value = "—")
+                    StatTile(label = L["镜像_e64cd65578"], value = "${images.size}", sub = L["本地镜像数量_019cf81efd"])
+                    StatTile(label = L["维护_72527e2f0e"], value = "—")
                 }
 
                 /* 引擎与维护操作（JS 四个 bind：daemon-start/stop/enable + prune） */
@@ -215,52 +218,52 @@ fun DockerPage() {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (active) {
-                        DangerBtn(text = "停止引擎", onClick = {
+                        DangerBtn(text = L["停止引擎_f83e27f9a5"], onClick = {
                             scope.launch {
                                 dockerAction(
                                     "daemon-stop", confirmFirst = true, danger = true,
-                                    confirmTitle = "确认", confirmText = "执行 daemon-stop ？",
+                                    confirmTitle = L["确认_b56d9ac6c5"], confirmText = L["执行_daemon_stop_dfe266a216"],
                                 )
                             }
                         })
                     } else {
-                        GhostBtn(text = "启动引擎", icon = "play", onClick = {
+                        GhostBtn(text = L["启动引擎_193b25d8af"], icon = "play", onClick = {
                             scope.launch { dockerAction("daemon-start") }
                         })
                     }
-                    GhostBtn(text = "开机自启", icon = "power", onClick = {
+                    GhostBtn(text = L["开机自启_e0f2218651"], icon = "power", onClick = {
                         scope.launch { dockerAction("daemon-enable", reloadDelayMs = 0) }
                     })
-                    DangerBtn(text = "清理未使用资源", icon = "trash", onClick = {
+                    DangerBtn(text = L["清理未使用资源_aef1da41a9"], icon = "trash", onClick = {
                         scope.launch {
                             dockerAction(
                                 "prune", confirmFirst = true, danger = true,
-                                confirmTitle = "确认", confirmText = "执行 prune ？",
+                                confirmTitle = L["确认_b56d9ac6c5"], confirmText = L["执行_prune_6b4f1926c7"],
                             )
                         }
                     })
                 }
 
                 PanelCard(
-                    title = "容器列表",
-                    right = { GhostBtn(text = "刷新", onClick = { scope.launch { loading = true; load() } }) },
+                    title = L["容器列表_6ee925b478"],
+                    right = { GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { loading = true; load() } }) },
                 ) {
                     DataTable(
                         columns = listOf(
-                            TableCol<JsonObject>("名称", weight = 1.4f, mono = true) {
+                            TableCol<JsonObject>(L["名称_1be7ae4fc2"], weight = 1.4f, mono = true) {
                                 Text(it.str("name"), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                             },
                             TableCol<JsonObject>("ID", weight = 0.9f, mono = true) {
                                 Text(it.str("id").take(12), fontFamily = FontFamily.Monospace, fontSize = 12.sp)
                             },
-                            TableCol<JsonObject>("镜像", weight = 1.6f, mono = true) {
+                            TableCol<JsonObject>(L["镜像_e64cd65578"], weight = 1.6f, mono = true) {
                                 Text(it.str("image").take(40), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                             },
-                            TableCol<JsonObject>("状态", weight = 1.4f) {
+                            TableCol<JsonObject>(L["状态_62e951a692"], weight = 1.4f) {
                                 val st = it.str("status").take(28)
                                 LevelBadge(st, if (it.bool("running")) Level.Ok else Level.Muted)
                             },
-                            TableCol<JsonObject>("端口", weight = 1.4f, mono = true) {
+                            TableCol<JsonObject>(L["端口_6cbb7335b5"], weight = 1.4f, mono = true) {
                                 Text(
                                     it.str("ports").ifEmpty { "-" }.take(34),
                                     fontFamily = FontFamily.Monospace,
@@ -269,54 +272,54 @@ fun DockerPage() {
                                     maxLines = 1,
                                 )
                             },
-                            TableCol<JsonObject>("操作", weight = 2.4f, minWidth = 250.dp) { c ->
+                            TableCol<JsonObject>(L["操作_f3ea6d345e"], weight = 2.4f, minWidth = 250.dp) { c ->
                                 val id = c.str("id")
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                     if (c.bool("running")) {
-                                        GhostBtn(text = "重启", onClick = {
+                                        GhostBtn(text = L["重启_385c272e35"], onClick = {
                                             scope.launch {
                                                 dockerAction(
                                                     "restart",
                                                     params = jsonObjectOf("target" to id),
                                                     confirmFirst = true,
-                                                    confirmTitle = "重启 容器",
-                                                    confirmText = "对容器 ${id.take(12)} 执行 docker restart ？",
+                                                    confirmTitle = L["重启_容器_450f2d207a"],
+                                                    confirmText = trf("对容器_0_执行_docker_restar_c942faf88e", id.take(12)),
                                                 )
                                             }
                                         })
-                                        DangerBtn(text = "停止", onClick = {
+                                        DangerBtn(text = L["停止_a17f70a8d3"], onClick = {
                                             scope.launch {
                                                 dockerAction(
                                                     "stop",
                                                     params = jsonObjectOf("target" to id),
                                                     confirmFirst = true, danger = true,
-                                                    confirmTitle = "停止 容器",
-                                                    confirmText = "对容器 ${id.take(12)} 执行 docker stop ？",
+                                                    confirmTitle = L["停止_容器_c97111b01f"],
+                                                    confirmText = trf("对容器_0_执行_docker_stop_02eec7a6e4", id.take(12)),
                                                 )
                                             }
                                         })
                                     } else {
-                                        GhostBtn(text = "启动", icon = "play", onClick = {
+                                        GhostBtn(text = L["启动_ebd26da421"], icon = "play", onClick = {
                                             scope.launch {
                                                 dockerAction(
                                                     "start",
                                                     params = jsonObjectOf("target" to id),
                                                     confirmFirst = true,
-                                                    confirmTitle = "启动 容器",
-                                                    confirmText = "对容器 ${id.take(12)} 执行 docker start ？",
+                                                    confirmTitle = L["启动_容器_76c73301e8"],
+                                                    confirmText = trf("对容器_0_执行_docker_start_a6406fd5d5", id.take(12)),
                                                 )
                                             }
                                         })
                                     }
-                                    GhostBtn(text = "日志", icon = "logs", onClick = {
+                                    GhostBtn(text = L["日志_4de50894b8"], icon = "logs", onClick = {
                                         scope.launch { tailLogs(id) }
                                     })
-                                    DangerBtn(text = "删除", icon = "trash", onClick = {
+                                    DangerBtn(text = L["删除_3755f56f2f"], icon = "trash", onClick = {
                                         scope.launch {
                                             val okc = Modal.confirm(
-                                                title = "删除容器",
-                                                text = "将强制删除容器 ${c.str("name")}（docker rm -f），容器数据卷不受影响。",
-                                                okText = "删除",
+                                                title = L["删除容器_c1cbe14e79"],
+                                                text = trf("将强制删除容器_0_docker_rm_f_e5e8832e8e", c.str("name")),
+                                                okText = L["删除_3755f56f2f"],
                                                 danger = true,
                                             )
                                             if (!okc) return@launch
@@ -328,52 +331,52 @@ fun DockerPage() {
                         ),
                         rows = containers,
                         rowKey = { it.str("id") },
-                        emptyText = "暂无容器",
+                        emptyText = L["暂无容器_96a29bf063"],
                     )
                 }
 
                 GridLayout(columns = 2) {
-                    PanelCard(title = "镜像") {
+                    PanelCard(title = L["镜像_e64cd65578"]) {
                         DataTable(
                             columns = listOf(
-                                TableCol<JsonObject>("镜像", weight = 2.4f, mono = true) {
+                                TableCol<JsonObject>(L["镜像_e64cd65578"], weight = 2.4f, mono = true) {
                                     Text(it.str("repo").take(44), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                                 },
-                                TableCol<JsonObject>("大小", weight = 0.8f, align = TextAlign.End) {
+                                TableCol<JsonObject>(L["大小_fd20702c73"], weight = 0.8f, align = TextAlign.End) {
                                     Text(it.str("size"))
                                 },
-                                TableCol<JsonObject>("创建于", weight = 1.2f) {
+                                TableCol<JsonObject>(L["创建于_f3b01f3f1a"], weight = 1.2f) {
                                     Text(it.str("created"), color = Palette.muted)
                                 },
                             ),
                             rows = images,
                             rowKey = { it.str("repo") + "#" + it.str("created") },
-                            emptyText = "暂无镜像",
+                            emptyText = L["暂无镜像_dd1ca5cd99"],
                             maxRows = 20,
                         )
                     }
-                    PanelCard(title = "实时资源占用") {
+                    PanelCard(title = L["实时资源占用_c8bda73ba6"]) {
                         DataTable(
                             columns = listOf(
-                                TableCol<JsonObject>("容器", weight = 1.4f, mono = true) {
+                                TableCol<JsonObject>(L["容器_d179a3480d"], weight = 1.4f, mono = true) {
                                     Text(it.str("name"), fontFamily = FontFamily.Monospace, fontSize = 12.sp, maxLines = 1)
                                 },
                                 TableCol<JsonObject>("CPU", weight = 0.8f, align = TextAlign.End) {
                                     Text(it.str("cpu"))
                                 },
-                                TableCol<JsonObject>("内存", weight = 1.1f, align = TextAlign.End) {
+                                TableCol<JsonObject>(L["内存_d014ab7703"], weight = 1.1f, align = TextAlign.End) {
                                     Text(it.str("mem"))
                                 },
-                                TableCol<JsonObject>("MEM%", weight = 0.8f, align = TextAlign.End) {
+                                TableCol<JsonObject>(L["mem_8c4bf90fbc"], weight = 0.8f, align = TextAlign.End) {
                                     Text(it.str("memPct"))
                                 },
-                                TableCol<JsonObject>("网络 I/O", weight = 1f, align = TextAlign.End) {
+                                TableCol<JsonObject>(L["网络_i_o_a51f84968c"], weight = 1f, align = TextAlign.End) {
                                     Text(it.str("net"))
                                 },
                             ),
                             rows = stats,
                             rowKey = { it.str("name") },
-                            emptyText = "无运行中容器",
+                            emptyText = L["无运行中容器_85fb788d24"],
                             maxRows = 20,
                         )
                     }

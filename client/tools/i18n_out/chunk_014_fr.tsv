@@ -1,0 +1,120 @@
+执行计划树_2a66c47766	Arbre du plan d'exécution
+扩展名_如_pgcrypto_83ec8b404a	Nom d'extension, ex. pgcrypto
+扩展安装_3587656bb2	Installation d'extensions
+扩展监控_wal_bgwriter_in_b526852c31	Surveillance étendue (WAL / BGWriter / InnoDB / slots de réplication)
+扫描_0_张表_命中_1_张_ddc51ef2c9	{0} tables analysées · {1} correspondances
+扫描_998c936377	Analyser
+扫描中_7c81ab45e3	Analyse…
+扫描根目录一级_二级目录及大于_100mb_的文_60e4bd3b99	Analyser les répertoires de premier/deuxième niveau de la racine et les fichiers de plus de 100MB
+批次_0_1_a517254bd8	 · Lot {0}/{1}
+批量删除_362aedce37	Suppression en masse
+批量卸载_n_65d9c20918	Désinstallation en masse ($n)
+批量卸载_rem_3ccf4b0014	Désinstallation en masse ($rem)
+批量安装_ins_d21155177e	Installation en masse ($ins)
+批量操作_eae7c2c8a9	Actions en masse
+批量操作结果_c3c60aaa7e	Résultats des actions en masse
+批量表操作_9ac7c449b3	Actions en masse sur les tables
+找出占空间的东西_按项清理并核对实际释放量_可开_0fdb33dd38	Repérez ce qui occupe l'espace, nettoyez élément par élément et vérifiez l'espace réellement libéré ; la maintenance automatique quotidienne peut être activée
+把_0_从台账移除_cfcfa0347b	Retirer « {0} » de l'inventaire ?
+把_0_项移入回收站_保留_1_天_可还_34b70d7414	Déplacer {0} éléments vers la corbeille (conservés {1} jours, restaurables).
+把_h_label_从台账移除_3366b95a93	Retirer « ${h.label} » de l'inventaire ?
+把_selected_size_项移入回收_0cf24b0894	Déplacer ${selected.size} éléments vers la corbeille (conservés ${FileStore.trashDays.value} jours, restaurables).
+把仓库_ops_server_部署到面板_se_085f78330b	Déployez le dépôt ops-server/ dans le panneau sur server/ops/ puis redémarrez après le montage dans index.js pour l'utiliser :\n
+把告警送到人_webhook_企业微信_c503ab6c52	Acheminez les alertes vers les personnes : Webhook / WeCom / DingTalk / Feishu / Telegram / e-mail, les identifiants restent uniquement sur le serveur
+抖动_a60f92b8bb	Gigue
+报文大小分布_响应_eb73297921	Distribution de la taille des paquets (réponse)
+报文大小分布_请求_978ad9741c	Distribution de la taille des paquets (requête)
+报错退出_e9bcdb3450	Sortie avec erreur
+拉起命令_可空_8598bf93c8	Commande de démarrage (facultative)
+拒绝_deny_15eaa6f7a5	− Refuser (DENY)
+拥有者_0f0558fe5a	Propriétaire
+拨测_0_台不可用_faf5bff7d3	{0} cibles de probe indisponibles
+拨测_0c26df31f3	Probe
+拨测_o_probedown_台不可用_6f5279e1a9	${o.probeDown} cibles de probe indisponibles
+拨测与_sla_自定义告警规则_通知渠道_静默与_be90e55995	Probe avec SLA, règles d'alerte personnalisées, canaux de notification, silencieux et fenêtres de maintenance.
+拨测任务_aca6ce04f6	Tâche de probe
+拨测任务已保存_c628e8f14a	Tâche de probe enregistrée
+拨测失败_7b0bb7893f	Probe échouée
+拨测类型_4ed688984c	Type de probe
+拨测间隔_秒_7c2e24962c	Intervalle de probe (secondes)
+持续_0_s_冷却_1_s_2_a238875611	Durée {0}s · atténuation {1}s · {2}
+持续增长_ab21b96aa8	Croissance continue
+持续多少秒才告警_9624b095e1	Combien de secondes faut-il avant de déclencher une alerte
+挂载点_8517da781f	Point de montage
+指定指标_efb37dcdc8	Métrique spécifiée
+指定指标_作用范围_指定指标时_2b528db368	Métrique spécifiée (portée = métrique spécifiée)
+指定源_c1701e5ea0	 · Source spécifiée
+指定规则_e050a72f42	Règle spécifiée
+指定规则_作用范围_指定规则时_a4bbca73a1	Règle spécifiée (portée = règle spécifiée)
+指标_0_89d6aad554	Métrique : {0}
+指标_1dfc810a7b	Métrique
+指标_opsstate_metriclabe_fef507e4db	Métrique : ${OpsState.metricLabel(it.metric)}
+按_cpu_ed77c666c4	Par CPU
+按_etc_relay_pricing_jso_a1872b6ad6	Par /etc/relay/pricing.json
+按_pid_c594df6b43	Par PID
+按_sch_执行_act_c9ffbfae51	Exécuter $act selon $sch ?
+按_内存_ee559401b3	Par mémoire
+按_用户_fc09815a27	Par utilisateur
+按一级标题拆分_cffaaceb8e	Découper par titres de premier niveau
+按今日计划执行一次_c9294b2b15	Exécuter une fois selon le plan du jour
+按分组_008e3a2b0b	Par groupe
+按名称_0ea96767da	Par nom
+按大小_ee9a3bcc8e	Par taille
+按天_6a0d40d657	Par jour
+按天用量_4fac34d248	Consommation quotidienne
+按小时_3ae9822387	Par heure
+按模型_token_分布图_a371a816cb	Graphique de distribution des Token par modèle
+按模型_token_统计_日_周_月_并_1820d55c9f	Statistiques des Token par modèle (jour / semaine / mois côte à côte)
+按模型_复用率_vs_真实命中率_c4c8c68680	Par modèle : taux de réutilisation vs taux de correspondance réel
+按此速率耗尽_b0a756faa9	Épuisé à ce rythme
+按每次探测结果聚合_030b2e6a6a	Agréger par résultat de probe
+按版本_f04ae00cab	Par version
+授予_afc60b6b80	Accorder
+授予_sudo_b17c8ef2b8	Accorder sudo
+授予数据库权限_fa513839dd	Accorder les privilèges de base de données
+授权_3a6e607f0c	Autoriser
+授权库_4d0119c773	Bibliothèque autorisée
+授权码_886b52b1db	Code d'autorisation
+排序_d797283645	Trier :
+排序_dc35af8d69	Trier
+排序规则_cba9ca5a18	Règle de tri
+排队中_4dcbbcfa61	En file d'attente
+排除表_逗号分隔_可选_c3fbff6bed	Exclure les tables (séparées par des virgules, facultatif)
+探活_自动拉起_超过上限停止并告警_每次_042dac10cd	Health check → redémarrage automatique → arrêt et alerte si la limite est dépassée ; chaque action conserve un historique d'exécution
+探活方式_ccd56454d3	Méthode de health check
+探活间隔_秒_3b83fe753f	Intervalle de health check (secondes)
+探测_b5ef40a22d	Probe
+探测只打开端口读_banner_不发送任何凭据_a9cc98b513	Le probe ouvre uniquement le port pour lire la bannière ; aucun identifiant n'est envoyé
+探测地址_556833efb5	Adresse de probe
+探测失败_1e2b42cb65	Probe échouée
+探测完成_c51494c626	Probe terminée
+接口端点_a8989ccc29	Point d'accès API
+推理_0_输出占比_1_0dae9a01a8	Inférence {0} · part en sortie {1}
+推理_c9d3b085e2	Inférence
+推荐_e8fcb9bb63	\n\n--- Recommandations ---\n
+推荐包_d834496b57	Paquets recommandés
+描述_412f54dc38	Description
+提前提醒_分钟_0c4a512c91	Rappel anticipé (minutes)
+提示_ab3656a956	Astuce
+提醒邮件已发送_含详情_子任务与日历邀请_7359e6549a	E-mail de rappel envoyé (avec détails, sous-tâches et invitation d'agenda)
+插入_022bf3283d	Insérer
+插入文档_6d53393c50	Insérer un document
+搜索_c85d9132a4	Rechercher…
+搜索_f04090805c	Rechercher
+搜索_pid_用户_命令_f1c406afb9	Rechercher PID/utilisateur/commande…
+搜索事项_a5b34743c2	Rechercher des éléments…
+搜索变量名_a66a6cba87	Rechercher un nom de variable…
+搜索失败_b9786d51c3	Échec de la recherche
+搜索安装_7bede136f7	Rechercher et installer
+搜索服务名_9646f29b1b	Rechercher un nom de service…
+搜索笔记_8699c6b13f	Rechercher des notes…
+搜索结果_0_1_项_bc8aaa1631	Résultats · « {0} » {1} éléments
+搜索结果_0_99e3cf5dae	Résultats (0)
+搜索结果_query_hits_si_3d502bbdbe	Résultats · « $query » ${hits.size} éléments
+搜索结果_total_71fe2c69d1	Résultats ($total)
+搜索范围_全部已启用源_共_0_个源_按名_b786d5dc17	Portée : toutes les sources activées ({0} sources), correspondance par nom et description. Rendez-vous sur la page « Sources de logiciels » pour passer aux miroirs locaux.
+搜索范围_全部已启用源_共_srclist_2017990f2b	Portée : toutes les sources activées (${srcList.size} sources), correspondance par nom et description. Rendez-vous sur la page « Sources de logiciels » pour passer aux miroirs locaux.
+搜索软件包_a162c7cf8d	Rechercher des paquets
+搜索软件包_名称或描述_如_nginx_ht_320fde8b40	Rechercher un paquet : nom ou description, ex. nginx / htop / python3
+搜索邮箱_8dad475e2f	Rechercher un e-mail…
+搜索页面或命令_ctrl_cmd_k_84c6582b79	Rechercher des pages ou des commandes… (Ctrl/Cmd+K)

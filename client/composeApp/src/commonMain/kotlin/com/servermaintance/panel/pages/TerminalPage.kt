@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -116,16 +119,16 @@ private fun TerminalPageHandheld() {
     var clientId by remember { mutableStateOf(loadClientId()) }
 
     PageScaffold(
-        title = "Web 终端",
-        desc = "root 权限的交互式 Shell（经 SSH PTY，原生自绘 ANSI 终端）",
+        title = L["web_终端_7a3963643f"],
+        desc = L["root_权限的交互式_shell_经_ssh_724c53e674"],
         actions = {
             PrimaryBtn(
-                text = "新会话",
+                text = L["新会话_db44360cd0"],
                 icon = "plus",
                 onClick = {
                     platformStore.remove(K_TERM_CLIENT)
                     clientId = loadClientId()
-                    AppState.toast("已创建新终端会话", ToastKind.Ok)
+                    AppState.toast(tr("已创建新终端会话_096edaffb2"), ToastKind.Ok)
                 },
             )
         },
@@ -147,7 +150,7 @@ private fun TerminalPageHandheld() {
 private fun TerminalPageDesktop() {
     val tabs = remember {
         mutableStateListOf(
-            DesktopTermTab(id = 1L, clientId = randomSessionClientId(), title = "会话 1"),
+            DesktopTermTab(id = 1L, clientId = randomSessionClientId(), title = L["会话_1_497c4ea2d5"]),
         )
     }
     var nextTabId by remember { mutableLongStateOf(2L) }
@@ -159,11 +162,11 @@ private fun TerminalPageDesktop() {
         val tab = DesktopTermTab(
             id = nextTabId++,
             clientId = randomSessionClientId(),
-            title = "会话 $titleSeq",
+            title = L["会话_titleseq_33244bea87"],
         )
         tabs.add(tab)
         activeTabId = tab.id
-        AppState.toast("已打开新会话选项卡", ToastKind.Ok)
+        AppState.toast(tr("已打开新会话选项卡_b298c97275"), ToastKind.Ok)
     }
 
     fun closeTab(id: Long) {
@@ -177,11 +180,11 @@ private fun TerminalPageDesktop() {
     }
 
     PageScaffold(
-        title = "Web 终端",
-        desc = "root 权限的交互式 Shell（经 SSH PTY，原生自绘 ANSI 终端）",
+        title = L["web_终端_7a3963643f"],
+        desc = L["root_权限的交互式_shell_经_ssh_724c53e674"],
         scrollBody = false,
         actions = {
-            PrimaryBtn(text = "新建会话", icon = "plus", onClick = { addTab() })
+            PrimaryBtn(text = L["新建会话_3da224c43d"], icon = "plus", onClick = { addTab() })
         },
     ) {
         DesktopSessionTabBar(
@@ -281,7 +284,7 @@ private fun DesktopSessionTabBar(
                         icon = "close",
                         onClick = { onClose(tab.id) },
                         tint = if (selected) Palette.muted else Palette.muted.copy(alpha = 0.7f),
-                        contentDescription = "关闭 ${tab.title}",
+                        contentDescription = trf("关闭_0_9d7b014ef2", tab.title),
                     )
                 }
             }
@@ -292,8 +295,8 @@ private fun DesktopSessionTabBar(
 @Composable
 private fun TerminalFooterHint() {
     Text(
-        text = "Ctrl+Shift+C/V 复制粘贴 · 会话离开本页后保留 2 分钟（server/shell.js GRACE_MS）· " +
-            "由面板在服务器上创建 SSH PTY，失败时回退到本地 pty / bash",
+        text = L["ctrl_shift_c_v_复制粘贴_会话_7c3872ffae"] +
+            L["由面板在服务器上创建_ssh_pty_失败时回退_39a58078ed"],
         color = Palette.muted,
         style = MaterialTheme.typography.bodySmall,
         modifier = Modifier.padding(bottom = 8.dp),
@@ -315,9 +318,9 @@ private fun TerminalSessionPanel(
     terminalHeight: androidx.compose.ui.unit.Dp? = null,
     inputEnabled: Boolean = true,
 ) {
-    var statusText by remember(clientId) { mutableStateOf("连接中") }
+    var statusText by remember(clientId) { mutableStateOf(L["连接中_699ade1654"]) }
     var statusKind by remember(clientId) { mutableStateOf(TermState.Connecting) }
-    var hostLabel by remember { mutableStateOf("root@—") }
+    var hostLabel by remember { mutableStateOf(L["root_bbdba6f152"]) }
     val scope = rememberCoroutineScope()
 
     val ptySink = remember { object { var send: (String) -> Unit = {} } }
@@ -339,7 +342,7 @@ private fun TerminalSessionPanel(
     }
 
     fun sendToPty(text: String) {
-        sendRaw("""{"t":"data","d":${JsonPrimitive(text).toString()}}""")
+        sendRaw(L["t_data_d_jsonpr_2eba79f9ce"])
     }
 
     SideEffect {
@@ -366,7 +369,7 @@ private fun TerminalSessionPanel(
     }
 
     LaunchedEffect(clientId, generation) {
-        statusText = "连接中"
+        statusText = L["连接中_699ade1654"]
         statusKind = TermState.Connecting
         while (isActive) {
             try {
@@ -375,9 +378,9 @@ private fun TerminalSessionPanel(
                 AppState.api.http.webSocket(url) {
                     session = this
                     statusKind = TermState.Ok
-                    statusText = "已连接"
-                    send("""{"t":"attach","id":${JsonPrimitive(clientId).toString()}}""")
-                    send("""{"t":"resize","cols":$lastCols,"rows":$lastRows}""")
+                    statusText = L["已连接_65fe35c45e"]
+                    send(L["t_attach_id_jso_d3ed36ea2e"])
+                    send(L["t_resize_cols_la_2e8250c6ac"])
 
                     for (frame in incoming) {
                         if (frame !is Frame.Text) continue
@@ -396,17 +399,17 @@ private fun TerminalSessionPanel(
                                 when (state) {
                                     "connected" -> {
                                         statusKind = TermState.Ok
-                                        statusText = detail.ifBlank { "已连接" }
+                                        statusText = detail.ifBlank { L["已连接_65fe35c45e"] }
                                     }
                                     "reconnecting" -> {
                                         statusKind = TermState.Warn
-                                        statusText = detail.ifBlank { "重连中…" }
+                                        statusText = detail.ifBlank { L["重连中_90fd688269"] }
                                     }
                                     "closed" -> {
                                         statusKind = TermState.Bad
-                                        statusText = detail.ifBlank { "会话已关闭" }
+                                        statusText = detail.ifBlank { L["会话已关闭_095a652630"] }
                                         val esc = 27.toChar()
-                                        screen.feed("\r\n" + esc + "[33m[会话已关闭]" + esc + "[0m\r\n")
+                                        screen.feed("\r\n" + esc + L["33m_会话已关闭_be33fffa31"] + esc + L["0m_62284f8a40"])
                                     }
                                 }
                             }
@@ -417,7 +420,7 @@ private fun TerminalSessionPanel(
                 throw e
             } catch (_: Exception) {
                 statusKind = TermState.Bad
-                statusText = "连接断开，3 秒后重连…"
+                statusText = L["连接断开_3_秒后重连_93086a0db5"]
             } finally {
                 session = null
             }
@@ -436,7 +439,7 @@ private fun TerminalSessionPanel(
 
     if (showCard) {
         PanelCard(
-            title = "会话",
+            title = L["会话_836ffe0e10"],
             collapsible = false,
             right = {
                 StatusDot(
@@ -476,7 +479,7 @@ private fun TerminalSessionPanel(
                 )
             }
             Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.End) {
-                GhostBtn(text = "清屏", icon = "trash", onClick = { screen.clearAll() })
+                GhostBtn(text = L["清屏_e8db7ce0cc"], icon = "trash", onClick = { screen.clearAll() })
             }
         }
     } else {
@@ -512,9 +515,9 @@ private fun TerminalSessionPanel(
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     if (resetOnNewSession) {
-                        GhostBtn(text = "新会话", icon = "plus", onClick = { startNewSession() })
+                        GhostBtn(text = L["新会话_db44360cd0"], icon = "plus", onClick = { startNewSession() })
                     }
-                    GhostBtn(text = "清屏", icon = "trash", onClick = { screen.clearAll() })
+                    GhostBtn(text = L["清屏_e8db7ce0cc"], icon = "trash", onClick = { screen.clearAll() })
                 }
             }
             Spacer(Modifier.height(6.dp))

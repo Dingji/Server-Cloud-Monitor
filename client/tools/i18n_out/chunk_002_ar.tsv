@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	نسخة relay الاحتياطية غير متاحة
+relay_备份结果_0cf7f02f06	نتائج النسخ الاحتياطي لـ relay
+relay_每日状态备份_32dee8ba2b	نسخة احتياطية يومية لحالة relay
+reorg_重建索引_2b9d2e3b0e	REORG (إعادة بناء الفهارس)
+reorg_重组表_6195b56608	REORG (إعادة تنظيم الجداول)
+reorgchk_校验_010830b6a4	REORGCHK (التحقق)
+repair_修复_8dd157c84c	REPAIR (الإصلاح)
+restart_值_77d45b4c24	قيمة RESTART
+root_密码登录_df671edd13	تسجيل الدخول بكلمة مرور root
+root_权限的交互式_shell_经_ssh_724c53e674	Shell تفاعلي بصلاحيات root (عبر SSH PTY، مع رسم طرفية ANSI أصلي)
+running_运行中_contain_7d4c0797f6	$running قيد التشغيل · ${containers.size - running} متوقف
+runstats_reorg_针对整库或所选表执_d40a81b4e9	يُنفَّذ RUNSTATS/REORG على قاعدة البيانات كاملة أو الجداول المحددة؛ وقد تستغرق الجداول الكبيرة وقتًا طويلًا.
+runstats_全库统计_e9fcb7b8fd	RUNSTATS إحصاءات قاعدة البيانات كاملة
+runstats_更新统计_a6a6663709	RUNSTATS (تحديث الإحصاءات)
+save_同步快照_afc91773af	SAVE (مزامنة لقطة)
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\nاسم المهمة: cm-$n
+settings.language.changed	تم تحديث اللغة
+settings.language.hint	يسري فورًا ويتم حفظ اختيارك. تُعكس واجهة العربية التخطيط تلقائيًا.
+settings.language.label	اللغة
+settings.language.title	لغة الواجهة
+setval_值_938e9aa8cf	قيمة setval
+shell_控制台_6f576115f4	وحدة Shell
+sites_enabled_为空_4516b41170	sites-enabled فارغ
+slo_与用量_a308fd44ff	SLO والاستخدام
+slo_目标已更新为_0_1_天_41ec05d358	تم تحديث هدف SLO إلى {0}% / {1} يوم
+slo_目标已更新为_t_dy_天_7716799870	تم تحديث هدف SLO إلى $t% / $dy يوم
+slo_目标应为_0_100_之间的百分数_254085fd3b	يجب أن يكون هدف SLO نسبة مئوية بين 0 و100
+slo_错误预算_47d719e135	ميزانية أخطاء SLO
+smtp_主机_9cb2a0f9f3	مضيف SMTP
+smtp_已配置_70f40873a7	تم إعداد SMTP
+smtp_授权码_273299a5a3	رمز تفويض SMTP
+smtp_服务器_941346a5f4	خادم SMTP
+smtp_未配置_先填账号授权码_c97b712442	لم يتم إعداد SMTP (أدخل الحساب ورمز التفويض أولًا)
+smtp_状态_8658366a9a	حالة SMTP
+smtp_设置已保存_e5e2238754	تم حفظ إعدادات SMTP
+smtp_账号_163_邮箱_4bbcd0b1d0	حساب SMTP (بريد 163)
+sql_控制台_a3458fb2ad	وحدة SQL
+sql_文本_gzip_通用_可编辑_48f716760f	نص SQL + gzip (عام، قابل للتحرير)
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	SQLite قاعدة بيانات بملف واحد: يُنشأ ملف جديد إن لم يكن موجودًا؛ يجب أن ينتهي اسم الملف بـ .db/.sqlite.
+sqlite_搜索目录_49521cf800	دليل البحث في SQLite
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	SQLite قاعدة بيانات مضمّنة بملف واحد دون مفهوم مستخدم/دور؛ يتحدد التحكم في الوصول من صلاحيات ملفات نظام التشغيل.
+sqlite_生成_sql_文本_gzi_f960464be7	· يولّد SQLite نص SQL + gzip، ويمكن استرجاعه مباشرة إلى ملف جديد.
+sqlite_语法_支持_tables_sc_41d445ac53	صياغة SQLite (تدعم أوامر النقطة مثل .tables/.schema)
+ssh2_可用_efe0e7bbc7	ssh2 متاح
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys مفاتيح المصادقة · relay_scripts سكربتات relay · ufw_conf جدار الحماية · cron_conf المهام المجدولة.
+ssh_凭据_0_527cdbdfec	بيانات اعتماد SSH · {0}
+ssh_凭据_h_label_24a0886915	بيانات اعتماد SSH · ${h.label}
+ssh_可达_df28fdb916	SSH متاح الوصول
+ssh_密码认证_f22e3cd826	مصادقة SSH بكلمة المرور
+ssh_授权密钥_authorized_key_4fee36881a	مفاتيح SSH المصادق عليها (authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	فحص للقراءة فقط لسطح تعرّض SSH، وجدار الحماية، والحسابات والصلاحيات، والتحديثات، والسجلات، ومزامنة الوقت؛ وتُنفَّذ إجراءات الإصلاح بعد التحقق من أمان الخادم
+ssh_服务配置_sshd_有效配置_b5a2f5733e	إعداد خدمة SSH (الإعداد الفعّال لـ sshd)
+ssh_端口_db451b3851	منفذ SSH
+ssh_设置已保存_a65c44f49c	تم حفظ إعدادات SSH
+ssh_连接_用于_web_终端的_pty_b26f43db91	اتصال SSH (PTY لطرفية الويب)
+ssh_通道_dbd1043d39	قناة SSH
+ssh_配置应用_c35c2ef2bf	تطبيق إعدادات SSH
+ssh_防爆破_3e3c79eef0	حماية SSH من التخمين
+ssl_证书_let_s_encrypt_332fd65bdb	شهادة SSL (Let's Encrypt)
+sudo_权限_e03e1e61f9	صلاحيات sudo
+swap_控制_12c3f63c98	التحكم بـ Swap
+systemd_单元名_c8ea5d11ad	اسم وحدة systemd
+systemd_定时器_0_dc0dc6e637	مؤقّت Systemd ({0})
+systemd_定时器_f8d95995f8	مؤقّت Systemd
+systemd_定时器_timers_si_6ade92f31f	مؤقّت Systemd (${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· يُدار مؤقّتات Systemd بواسطة systemd وتُعرض للقراءة فقط؛
+systemd_日志总占用_f776a05861	إجمالي استخدام سجلات systemd
+systemd_服务_fe73189369	خدمات systemd
+tcp_主机_c307455515	مضيف TCP
+tcp_端口_468daa15c6	منفذ TCP
+tcp_端口探活_731f0297a0	فحص نشاط منفذ TCP
+title_names_size_个_acb99452ee	$title · ${names.size} حزمة
+tls_证书_43af3d4e3c	شهادة TLS
+tmp_保留_0_天_f32c9b5407	يُحفظ /tmp لمدة {0} يوم
+tmp_保留_s_tmpdays_天_86426f5281	يُحفظ /tmp لمدة ${s.tmpDays} يوم
+tmp_保留天数_0d11396618	أيام الاحتفاظ بـ /tmp
+token_命中率_2bfb8e83db	نسبة إصابة الرموز
+token_总量_3f5fa71b8e	إجمالي الرموز
+token_构成_9af64ae64e	تكوين الرموز
+token_用量归集_81e6ced52c	تجميع استخدام الرموز
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	تُجمَّع إحصاءات الرموز عبر نافذة متحركة · البيانات منذ {0}
+top_会话_3c40651605	أفضل الجلسات
+top_进程_17603f0ba3	أفضل العمليات
+truncate_清空数据_2b621f28d2	TRUNCATE (مسح البيانات)
+ttfb_按线路_dd77200ec0	TTFB حسب المسار
+ua_族_886e5b0cbd	عائلات UA
+ufwrulescount_条规则_4d66159719	$ufwRulesCount قاعدة
+user_或_user_group_dab37bbd5c	user أو user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE لجميع قواعد البيانات
+vacuum_full_全部库_7cb397ec45	VACUUM FULL لجميع قواعد البيانات
+vacuum_full_重写表_6eacd637a2	VACUUM FULL (إعادة كتابة الجدول)
+vacuum_回收空间_1fab10fe60	VACUUM (استرداد المساحة)
+vacuum_重建文件_7a9b0fc30b	VACUUM (إعادة بناء الملف)
+w_a_个异常找到疑似变更_072ff64ee0	تم العثور على $w / $a حالة عدم اتساق مع تغييرات مشتبه بها
+wal_检查点_2010a0cc44	نقطة تفقد WAL
+web_终端_7a3963643f	طرفية الويب
+where_条件_如_id_10_211cc8803d	شرط WHERE، مثل id > 10
+where_条件_必填_d024e40edd	شرط WHERE (مطلوب)
+where_条件_必填_禁止分号_de5b786116	شرط WHERE (مطلوب، يُمنع الفاصلة المنقوطة)
+win.client.close_label	عند إغلاق النافذة
+win.client.desc_ask	اسأل في كل مرة تُغلق: البقاء في الخلفية أو الإنهاء.
+win.client.desc_quit	إنهاء Cloud Monitor فورًا بعد الإغلاق.
+win.client.desc_tray	إخفاء النافذة الرئيسية بعد الإغلاق والاستمرار في استقبال إشعارات التنبيهات في الشريط الجانبي.
+win.client.desc_tray_no_tray	تصغير إلى شريط المهام بعد الإغلاق والاستمرار في استقبال إشعارات التنبيهات في الخلفية.
+win.client.hint	السلوك عند النقر على زر إغلاق النافذة. يتم حفظ أول اختيار في مربع حوار الإغلاق هنا تلقائيًا أيضًا.
+win.client.title	عميل Windows
+win.client.updated_toast	تم تحديث سلوك الإغلاق
+win.close.ask	اسأل في كل مرة
+win.close.quit	إنهاء البرنامج فورًا
+win.close.tray	البقاء في الشريط الجانبي عند الإغلاق
+win.close.tray_taskbar	تصغير إلى شريط المهام عند الإغلاق
+win.dialog.body_taskbar	إنهاء البرنامج، أو التصغير إلى شريط المهام للاستمرار في استقبال تنبيهات الخادم في الخلفية.
+win.dialog.body_tray	إنهاء البرنامج، أو البقاء في الشريط الجانبي للاستمرار في استقبال تنبيهات الخادم في الخلفية.
+win.dialog.cancel	إلغاء
+win.dialog.minimize	تصغير إلى شريط المهام
+win.dialog.quit	إنهاء
+win.dialog.stay_tray	البقاء في الشريط الجانبي
+win.dialog.title	إغلاق Cloud Monitor
+youtube_视频_70a0be3df0	فيديو YouTube
+一_d274eee8a1	1

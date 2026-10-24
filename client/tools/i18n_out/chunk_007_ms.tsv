@@ -1,0 +1,120 @@
+删除模式_n_及其全部对象_cascade_7be2ccf5c3	Padam skema $n dan semua objeknya (CASCADE)?
+删除清单_9ef1393048	Padam manifes
+删除用户_0_其全部笔记_待办与共享将一并_2bdfec376d	Padam pengguna {0}? Semua nota, tugasan dan perkongsiannya turut dipadam dan tidak boleh dipulihkan!
+删除用户_bcfca951a1	Padam pengguna
+删除的笔记会先放到这里_可随时恢复_1e1ce2f496	Nota yang dipadam akan disimpan di sini dahulu dan boleh dipulihkan bila-bila masa
+删除看护项_a25ad06abe	Padam item pemantauan
+删除索引_0_603822ce94	Padam indeks {0}?
+删除索引_b35a3521e8	Padam indeks
+删除索引_n_36f8faee06	Padam indeks $n?
+删除约束_79e25fc4b0	Padam kekangan
+删除线_c85de9e58a	Garis potong
+删除结果_1e53f0d130	Padam hasil
+删除行_3a7d5b0104	Padam baris
+删除表_b9fd2c7a44	Padam jadual
+删除视图_3bcc039f64	Padam paparan
+删除角色_89dab40d48	Padam peranan
+删除触发器_74803e962b	Padam pencetus
+删除该行_定位_0_b6bfea70ab	Padam baris ini?\nLokasi: {0}
+删除该行_定位_loc_b3f2f5d90e	Padam baris ini?\nLokasi: $loc
+删除轮转日志_f8de13f44b	Padam log pengelilingan
+删除通知渠道_5fb682fc27	Padam saluran notifikasi
+删除键_ea51f84dd1	Padam kunci
+删除防火墙规则_f1c7ac57e4	Padam peraturan dinding api
+删除集合_0_及其全部文档_3a1fd80488	Padam koleksi {0} dan semua dokumennya?
+删除集合_e86f0eec01	Padam koleksi
+删除集合_n_及其全部文档_3e6b9c73f5	Padam koleksi $n dan semua dokumennya?
+删除静默窗口_ec702916cf	Padam tetingkap senyap
+到期提醒_ce425cc527	Peringatan tamat tempoh
+到期提醒_截止前_n_分钟发送_每日摘要_在设定_0805f20d0d	Peringatan tamat tempoh: dihantar N minit sebelum tarikh akhir; ringkasan harian: meringkaskan item "tamat tempoh + tamat tempoh hari ini" pada masa yang ditetapkan.
+到期时间_3144a998f0	Masa tamat tempoh
+到期邮件提醒_4e76e9fec7	Peringatan tamat tempoh melalui e-mel
+制定方案_fabaee1920	Wujudkan pelan
+刷新_38108eaa1d	Segar semula
+刷新中_ea0ab1492c	Menyegarkan…
+刷新全部配额_076a4d3565	Segar semula semua kuota
+刷新分析_6a65ab904e	Segar semula analisis
+刷新引擎信息_022b2c17cd	Segar semula maklumat enjin
+刷新当前页面_ea66e5616b	Segar semula halaman semasa
+刷新状态_7cc7f07a2c	Segar semula status
+刷新配额_851859899a	Segar semula kuota
+刷新间隔已更新为_0_0bc513729c	Tempoh segar semula dikemas kini kepada {0}
+刷新间隔已更新为_refreshlabel_e742c6c081	Tempoh segar semula dikemas kini kepada ${refreshLabel(v)}
+前往_23926d6146	Pergi ke
+剖析设置_3fa475fa54	Tetapan profiling
+剩余_0_共_1_a04477cc45	{0} berbaki / {1} jumlah
+剩余_fmt_bytes_d_availkb_fd7a85ca9b	${Fmt.bytes(d.availKb * 1024)} berbaki / ${Fmt.bytes(d.totalKb * 1024)} jumlah
+剩余天数_fb0ca9d4ed	Hari berbaki
+加密方式_4bf1dc061d	Kaedah penyulitan
+加签密钥_sec_开头_63ebeb3c8d	Kunci tandatangan (bermula dengan SEC)
+加签密钥_可空_a075da941a	Kunci tandatangan (pilihan)
+加粗_f670b2adc0	Tebal
+加载中_300ee3dee4	Memuatkan…
+加载中_ce56f617e4	Memuatkan
+加载单元日志_faba070327	Muat log unit
+加载失败_f6b7a41e56	Pemuatan gagal
+加载日志源_e64e9c0145	Memuatkan sumber log…
+加载详情失败_02c28cd84c	Gagal memuatkan butiran
+劣化_07f00d1b46	Merosot
+动作_d9d9827827	Tindakan
+动作历史_探测_拉起_恢复_放弃_ced77539db	Sejarah tindakan (pengesanan / penghidupkan / pemulihan / peninggalan)
+勾选后可批量操作_执行前照常预览变更_过程中显示_8b4692abd7	Tanda kotak untuk tindakan pukal: perubahan dipratonton sebelum dilaksanakan seperti biasa, dengan bar kemajuan keseluruhan dan log masa nyata semasa proses (maksimum 500 pakej setiap laksana, dibahagi secara automatik)
+包名_03c2d07a24	Nama pakej
+包含数据_1cf1ae1b58	Mengandungi data
+区域_17fc93c9cd	Wilayah
+区间_2e8dd83da0	Selang
+升序_c0276ec9a7	Meningkat
+升级_2e8e70958c	Naik taraf
+协议_b0c431675b	Protokol
+单价表_etc_relay_pricing_j_2bb5e45a84	Jadual harga: /etc/relay/pricing.json, menyokong kad liar mimo-*; model dengan -free dicaj 0.
+单位_mb_du_只统计同一文件系统内的内容_fbcbac3988	Unit: MB; du hanya mengira kandungan dalam sistem fail yang sama
+单元_9abfa4fb70	Unit
+单次_6fe4ab9915	Sekali sahaja
+单次时长_分钟_0e95dd9d82	Tempoh setiap laksana (minit)
+单次时间段_ee80d47d80	Tempoh sekali
+单次超时_毫秒_6917a6a5b4	Masa tamat setiap laksana (milisaat)
+单表备份_a2ec5e9278	Sandaran satu jadual
+单请求_token_e856ed3d96	Token setiap permintaan
+占用_0_50085c6df1	Digunakan {0}
+占用_7b81023b68	Digunakan
+占用_fmt_bytes_totalsize_c86f7a479b	Digunakan ${Fmt.bytes(totalSize)}
+占用分析_003851e93c	Analisis penggunaan
+危险操作会弹出确认框_所有操作都会写入审计日志_762239eaff	Operasi berbahaya akan memaparkan kotak pengesahan. Semua operasi direkod ke dalam log audit.
+即将_f48bcfb627	Tidak lama lagi
+卸载_200cf1550d	Nyahpasang
+卸载不再被任何软件包依赖的软件包_8ed32b0b41	Buang pakej yang tidak lagi diperlukan oleh mana-mana pakej lain
+历史加载失败_26115dcd28	Gagal memuatkan sejarah
+历史记录_19e0e3f3df	Sejarah
+历史趋势_83a53b6a5f	Trend sejarah
+压缩_4b8163f527	Mampat
+压缩集合_3a8375459c	Mampat koleksi
+原位置_00e56f7a13	Lokasi asal
+原因_1ff9c3d001	Sebab
+原因备注_0a726bdb00	Catatan sebab
+原密码_2bd80322a5	Kata laluan semasa
+原配置备份_0_45dc9a773d	\n\nSandaran konfigurasi asal: {0}
+原配置备份_it_bc51af7b89	\n\nSandaran konfigurasi asal: $it
+去登录_6c01b0cfd0	Pergi ke log masuk
+去重_sess_c93d23e294	Deduplikasi sess
+参数值_所有者_连接数_5fbebb4ba1	Nilai parameter / Pemilik / Sambungan
+参数名_如_work_mem_search_5337d4de4f	Nama parameter (cth. work_mem / search_path)
+参数已保存_5252465cd0	Parameter disimpan
+发件人名_c1dac198b4	Nama penghantar
+发件人地址_e83d394caa	Alamat penghantar
+发件人显示名_可空_cf0818ed1b	Nama paparan penghantar (pilihan)
+发件账号_c4c54b3c06	Akaun penghantaran
+发现不可用_d0375abbf5	Dikesan sebagai tidak tersedia
+发行版_6ef5fc415c	Distribusi
+发送中_c1b894480d	Menghantar…
+发送失败_e767d34c78	Penghantaran gagal
+发送测试邮件_1eace6fb59	Hantar e-mel ujian
+发送记录_90ed819b22	Sejarah penghantaran
+发送详情邮件_ad8277f7a5	Hantar e-mel butiran
+取下一个值_0101cf2ed1	Dapatkan nilai seterusnya
+取尾中_d2a2c10e52	Mengambil bahagian ekor…
+取消_4d0b4688c7	Batal
+取消共享_2b2e551005	Batalkan perkongsian
+取消对该用户的共享_67e86f5c00	Batalkan perkongsian dengan pengguna ini?
+取消选择_f02e943954	Nyahpilih
+受保护_9505edfd06	Dilindungi
+受窗口内上限约束_b1435a79c4	Tertakluk kepada had setiap tetingkap

@@ -1,0 +1,120 @@
+释放缓存_drop_caches_ca230e5d0c	Free caches (drop_caches)
+重发验证_94c7c8acad	Resend verification
+重启_385c272e35	Restart
+重启_容器_450f2d207a	Restart container
+重启中_ce2d2904e8	Restarting…
+重启面板_8c897105bf	Restart panel
+重启面板服务_614d93f0d9	Restart panel service
+重命名_1cd80fd7a8	Rename
+重命名列_b00ade07b3	Rename column
+重命名归类_9e71e978ba	Rename category
+重命名数据库_ef7709afc0	Rename database
+重复_6e708ba759	Recurring
+重复事项需要设置截止日期_60cc0d8dec	Recurring items require a due date
+重复告警冷却_秒_7f78078cd3	Repeat-alert cooldown (seconds)
+重建_f05cd1f881	Rebuild
+重建全部索引_2a72978110	Rebuild all indexes
+重新加载_5982c44c18	Reload
+重新加载全部_5eee24ce87	Reload all
+重新发送验证邮件_06d80dfad4	Resend verification email
+重新启用_重载_7b7fccf0ec	Re-enable + reload
+重新启用站点_54c7d8b461	Re-enable site
+重新读取_7784972fc8	Reload
+重置_3d81345303	Reset
+重置倒计时_e479a6cf2c	Reset countdown
+重置前预测_34c06dab29	Prediction before reset
+重置参数_reset_bc4949236f	Reset parameters (RESET)
+重置序列_9e7e595820	Restart sequence
+重置计数_a91633ab1a	Reset counters
+重置重启计数_54981f79a5	Reset restart counter
+重试_0_49cb25bbbf	 · retry {0}
+重试_e2d53a6d3a	Retry
+重试_故障切换_bd0ca3d8c5	Retries / failover
+重试与故障切换_fc1ba33011	Retries and failover
+重载_e7b13a8bf8	Reload
+重载规则_903c08bef9	Reload rules
+重连中_90fd688269	Reconnecting…
+针对当前数据库文件执行_vacuum_会重建文件_5783f13242	Runs against the current database file; VACUUM rebuilds the file, and VACUUM FULL is equivalent to VACUUM.
+链接_7150220549	Link
+链接已复制_url_bbec15f531	Link copied: $url
+链接文字_154a364e41	Link text
+锁定版本_fd3722179b	Hold version
+锁定的包不会被自动升级_当前_0_个_e9feae0738	Held packages are not upgraded automatically. Currently {0}
+错误_b859c7be75	Error
+错误_badcount_f4a4bdaa23	$badCount error(s)
+错误_耗时_67940c65fa	Errors / latency
+错误分布_79b5692f79	Error distribution
+错误日志限流_0_751648f504	Error-log rate limit {0}
+错误率_311526689a	Error rate
+键_0_类型_1_e5c94c0e35	Key {0} (type {1})
+键_5a8c893cd4	Keys
+键列表_1a724e4d16	Key list
+键名_f0b35799ef	Key name
+键总数_950b059b5a	Total keys
+键空间_3568205fa0	Keyspace
+镜像_e64cd65578	Mirror
+镜像切换是_debian_ubuntu_专有功能_73bbd10e7d	Mirror switching is Debian/Ubuntu-specific (apt sources.list). For other distributions, use the system's own repository tooling.
+间隔_940c88657e	Interval
+阈值_a05320e189	Threshold
+阈值告警由_server_hub_js_eval_87eb59fa4a	Threshold alerts are evaluated by server/hub.js evaluateAlerts() every 15 s; at most 200 are kept.
+防护中_a8d7b5d826	Protected
+防火墙_ufw_4e7735d125	Firewall (UFW)
+防火墙未启用或无规则_b1604ba8c5	(firewall not enabled or no rules)
+阿里云_ecs_建议使用_阿里云_内网源_beb7548e7b	· On Alibaba Cloud ECS, prefer "Alibaba Cloud (internal mirror)" to avoid public traffic charges.
+降序_a4c38f3ce2	Descending
+限定数据库_留空_恢复全部_8f54e161bd	Limit to database (blank = restore all)
+限定表_留空_全库_最多_60_张表_53f4483471	Limit to tables (blank = whole database, max 60 tables)
+限流_cc_防护_1cacc191c4	Rate limiting / CC protection
+限流区域_0_2073b98a9e	Rate-limit zones ({0})
+限流区域_f6cdd5f94a	Rate-limit zones
+限流区域_limit_req_limit_c_736ec91bec	Rate-limit zones (limit_req / limit_conn zone)
+限流区域_ratezones_size_faf401212d	Rate-limit zones (${rateZones.size})
+限流日志_cadf589c16	Rate-limit log
+限流配置_cbc1540b56	Rate-limit configuration
+限流配置_nginx_fail2ban_e86c77863d	Rate-limit configuration (nginx + fail2ban)
+随时把数据下载到本地备份_8e95a3fbc8	Download the data locally for backup at any time.
+集合_f8dd3e84b8	Collections
+集合与文档_a7e453bdc6	Collections & documents
+集合名_c399d8867e	Collection name
+需_2_天_24e3e9f50c	Needs ≥ 2 days
+需_2_天历史_decb0825e3	Needs 2 days of history
+需处理_ed5909bac1	Needs attention
+静默与维护窗口_edc48021ef	Silence & maintenance windows
+静默中_35571ad28f	Muted
+静默中_窗口_b5d161015a	Muted / window
+静默窗口_5bbd0724f7	Silence window
+静默窗口已创建_f3fcf66cdc	Silence window created
+靛蓝_6aa58f8c75	Indigo
+非流式_36e8d9631f	Non-streaming
+面板依赖_10de20077c	Panel dependency
+面板参数_af5afd63d4	Panel parameters
+面板只会在此目录范围内列出_打开_db_sq_cd08ea6180	The panel only lists/opens .db and .sqlite files within these directories (to avoid opening system files accidentally); newly added directories take effect immediately.
+面板同机目录_3c70d2a627	Panel host directories
+面板服务将重启_约_2_5_秒不可用_继续_adc9ece480	The panel service will restart (unavailable for ~2-5 s). Continue?
+面板管理的任务_8c1ae9316e	Tasks managed by the panel
+面板管理的定时任务_0_7c6321b375	Scheduled tasks managed by the panel ({0})
+面板管理的定时任务_cmrows_size_48d7d3450f	Scheduled tasks managed by the panel (${cmRows.size})
+面板设置_1357b4179b	Panel settings
+音频_点击用系统播放器打开_fd844cfc73	Audio · click to open in the system player
+页签_46c7c1c3b1	Tabs
+顶层_8dcb7af51d	(top level)
+项_64728a7727	items
+项目_22336e6b89	Project
+预发_8a98f5b5bd	Staging
+预算剩余_139fdaa6f2	Remaining budget
+预算周期应为_1_365_天_065d52fe4e	Budget period must be 1–365 days
+预览_0_322425d855	Preview · {0}
+预览_de61aa8e1c	Preview
+预览_p_path_f011fb7baf	Preview · ${p.path}
+预览失败_d285886c5b	Preview failed
+预览截断_共_0_5ac60ccca7	… (preview truncated, {0} total)
+预览截断_共_fmt_bytes_p_s_1235f7c440	… (preview truncated, ${Fmt.bytes(p.size)} total)
+预计耗尽_4605a4ef8b	Projected exhaustion
+预计触顶_b61c003290	Projected to hit the cap
+颜色_8ef4886033	Color
+颜色修改失败_184c2f8e4b	Failed to change color
+额外_afe1cf9d05	Extra
+风险_0_建议_1_d3770c73e2	{0} risks · {1} advisories
+风险_96a9697379	Risks
+风险_c_bad_建议_c_warn_d1fee66336	$c.bad risks · $c.warn advisories
+首字节_ttfb_分布_0cda03309d	TTFB distribution

@@ -1,0 +1,120 @@
+图片_a66a146a35	 〔Image〕 
+图片_alt_fbd9fb2a08	[Image: $alt]
+图片_be8da62ea1	Image
+图片加载中_c4f542b3bd	Loading image…
+在_0_上执行以下_sql_f143f41462	Run the following SQL on {0}?\n
+在_0_下新建文件_cfb4d5dd9f	Create a file under {0}
+在_0_下新建目录_fcaf22904d	Create a directory under {0}
+在_etc_relay_backup_env_f2bf93a0b1	Configure in /etc/relay/backup.env
+在_st_database_上执行以下_s_32e3429b67	Run the following SQL on ${st.database}?\n
+在_告警规则_页绑定渠道_afd267abd1	Bind a channel on the 「Alert Rules」 page
+在_默认值_注释_中填表注释_aa1bd06099	Enter the column comment in 「Default/Comment」
+在上方输入框快速添加一条待办_55d72d1b70	Quickly add a task in the input box above
+在哪个目录下找大文件_1daefdf153	Which directory to search for large files
+在推荐中过滤_655cfb330e	Filter in recommendations
+在文件管理中定位_0edd7a2317	Locate in File Manager
+在文本_字符串列中查找指定值_区分大小写按数据库_8a03a28c64	Find a value in text/string columns (case sensitivity follows the database default)
+在服务器上安装_label_可能需要数分钟_d_7bd49b35e9	Install $label on the server? This may take a few minutes (longer for Db2/MongoDB); the installer adds the required repositories and starts the service automatically.
+在本目录内按名称搜索_深度_4_0256e64630	Search this directory by name (depth 4)
+在浏览器打开_5eee313d53	Open in browser
+在线_0373ff9231	Online
+在线编辑_0_60ab9fcf96	Edit online · {0}
+在线编辑_path_substringa_0579abd86c	Edit online · ${path.substringAfterLast('/')}
+地址_67d2d7970f	Address
+地址已保存_请重新登录_f054bd16b1	Address saved. Please sign in again.
+均_轮_401ebb3923	Avg/turn
+均上下文_5c18041dd0	Avg context
+均值_0_p99_1_流式_2_95941eec2b	Avg {0} · P99 {1} · Streaming {2}%
+均值_0_最大_1_399e871129	Avg {0} · Max {1}
+均值_4010bf45e8	Avg 
+均值_a4d0f57c18	Avg
+均值_请求_af3edf0ac6	Avg/request
+均延迟_0_ttfb_1_eb21bb36d0	Avg latency {0} · TTFB {1}
+均延迟_c17351f67e	Avg latency
+块设备_lsblk_04b4c2fd97	Block devices (lsblk)
+域名_282d68464d	Domain
+基准_1_mbps_d5ed3c882d	 · Baseline 1 Mbps
+基线_0_分_1_项待处理_ae232d4842	Baseline {0} pts · {1} pending
+基线_sc_score_分_issu_567f97003b	Baseline ${sc.score} pts · $issues pending
+填_列列表_d888353d2e	Fill in 「Column list」
+填_列名_f780e11fca	Fill in 「Column name」
+填_列名_必填_新类型或默认值_可空_844aa868de	Fill in 「Column name」 (required) + new type or default/nullable
+填_列名_新名称_f1669916f4	Fill in 「Column name + New name」
+填_列名_类型_可选默认值_非空_d06c3f8a01	Fill in 「Column name + Type」, optional default/not null
+填_列名_默认值_注释输入框_f01e06ca3a	Fill in 「Column name + Default/Comment input」
+填_索引或约束名_列列表_可勾选唯一_6e37ae8a48	Fill in 「Index or constraint name + Column list」, unique optional
+填_约束名_列列表_bdcc41af4c	Fill in 「Constraint name + Column list」
+填_约束名_列列表_引用表_引用列_e2b26338ff	Fill in 「Constraint name + Column list + Referenced table + Referenced column」
+填入_9789ff4093	Fill in
+填序列名到_列名_新值到_默认值_序列值_d81881e3a9	Enter the sequence name in 「Column name」 + the new value in 「Default/Sequence value」
+填新所有者到_新名称_0a94ccd32e	Enter the new owner in 「New name」
+填新表名到_新名称_af4523ce04	Enter the new table name in 「New name」
+填索引名到_新名称_索引名_7cd409ab43	Enter the index name in 「New name/Index name」
+填约束名到_新名称_索引名_bb8b690583	Enter the constraint name in 「New name/Index name」
+备份_0_1_2_大库可能需要_3278894ce9	Back up {0} ({1} / {2})? Large databases may take a few minutes.
+备份_database_modelabel_4bfe247944	Back up $database ($modeLabel / $fmtLabel)? Large databases may take a few minutes.
+备份_tbl_为独立的_sql_压缩包_ebd38254e5	Back up $tbl as a standalone SQL archive?
+备份与恢复_dddaeefb0e	Backup & Restore
+备份中_335065c5e3	Backing up…
+备份中心_b031a1495d	Backup Center
+备份份数_e27f7251ad	Backup copies
+备份保存在服务器_0_可直接下载_1_2bb556350e	The backup is stored on server {0} and can be downloaded directly. {1}
+备份列表_2a4c87bca5	Backup list
+备份已删除_463724802f	Backup deleted
+备份恢复成功_01abfe5b6c	Backup restored successfully
+备份文件_0_fa83a4f5de	Backup files ({0})
+备份文件_f7fa5f4803	Backup files
+备份文件_items_size_b50a38fb1b	Backup files (${items.size})
+备注_e0361480e3	Notes
+复制_0_项_24fd395315	Copy {0} items
+复制_4edd1d0087	Copy
+复制_selected_size_项_88dfa2de82	Copy ${selected.size} items
+复制到_33771a2df3	Copy to…
+复制失败_f2c6b5167b	Copy failed
+复制结果_0d6cb0c3fd	Copy result
+复制表_91704416f5	Copy table
+复制表时包含数据_cd3f4e905f	Include data when copying the table
+复用率_c15d8906d5	Reuse rate
+复用率_估算_vs_真实缓存命中率_厂商_76b9b6d5a6	Reuse rate (estimated) vs actual cache hit rate (provider)
+复用率_真实命中率_差距越大越亏_8659217f8a	Reuse rate − actual hit rate (the wider the gap, the more you lose)
+外观_09b58aa342	Appearance
+外观_当前_accent_id_7bd176141e	Appearance · Current ${accent.id}
+多来源日志查看与实时跟随_原生渲染_无_webv_9574e78f0d	Multi-source log viewer with live tail (native rendering, no WebView)
+多轮_0_单轮_1_994729b389	 · Multi-turn {0} / Single-turn {1}
+多轮会话平均_f44e5a3880	Multi-turn session avg 
+多选_危险操作二次确认_一次最多_200_2bd793b66d	Multi-select · Confirm dangerous actions twice · Max 200 at a time
+大于_6857759f9f	> Greater than
+大于多少_mb_60434f4586	Greater than (MB)
+大于等于_be43f55fe3	≥ Greater than or equal
+大小_fd20702c73	Size
+大文件_1055b3e1a8	Large files
+天_26abf68dec	%/day
+天_f8bb0516cc	 days
+天蓝_99ab6c2904	Sky blue
+失败_01d770b029	 failed
+失败_3e3c8068bb	Failed
+失败_8703d7ba63	Failed:
+失败_failed_0a1e1046d9	Failed $failed
+失败尝试_lastb_56a9bc43bc	Failed attempts (lastb)
+失败率_c9951c649f	Failure rate
+失败的检查_587001c2d4	Failed checks
+套餐_线路_36fd12ba05	Plan / Line
+套餐命中率_b717e2e192	Plan hit rate
+套餐明细_0_共_1_次请求_有_1190dbaf57	Plan details {0} · {1} requests total · {2} valid
+如_200m_1g_6ccef2d6c3	e.g. 200M / 1G
+如_755_644_13c07b9c99	e.g. 755 / 644
+如_created_at_2024_01_37325cf2f0	e.g. created_at < '2024-01-01'
+如_db_01_机房a2_网关_0f9324e693	e.g. db-01 / DC-A2-Gateway
+如_index_html_e76a6ff3ae	e.g. index.html
+如_nginx_支付服务端口_abe972a2bd	e.g. nginx / payment service port
+如_root_ssh_id_ed25519_e782fdcf64	e.g. /root/.ssh/id_ed25519; recommended to keep the private key on the server
+如_官网首页_支付回调_83835cd09d	e.g. official site homepage / payment callback
+如_根分区快满_cpu_长期偏高_090f6860d1	e.g. root partition almost full / CPU high for a long time
+如_每晚备份窗口_f81f635f6e	e.g. nightly backup window
+如_运维值班群_405f221d39	e.g. ops on-call group
+如果有活动连接_删除会失败_是否强制终止这些连接_1bb6834bd3	Deletion will fail if there are active connections. Force-disconnect them and delete anyway?
+如需回滚_可通过_web_终端把备份文件复制回_91d4cbe18f	To roll back, copy the backup file back to /etc/apt/sources.list.d/ via the Web terminal, then run 「Update Index」.
+子任务_2a8ce33ff0	Subtask
+字符串值_7b6e787aab	String value
+字符集_5cd31abd5c	Character set
+存储占用_ddf9472312	Storage usage

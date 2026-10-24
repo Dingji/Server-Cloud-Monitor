@@ -1,0 +1,70 @@
+{
+ "total": 36,
+ "offset": 0,
+ "limit": 3,
+ "sections": [
+  "admin",
+  "comm",
+  "database",
+  "default",
+  "devel",
+  "doc",
+  "editors",
+  "fonts",
+  "gnome",
+  "httpd",
+  "interpreters",
+  "introspection",
+  "javascript",
+  "kernel",
+  "libdevel",
+  "libs",
+  "localization",
+  "math",
+  "metapackages",
+  "misc",
+  "net",
+  "non-free-firmware/admin",
+  "oldlibs",
+  "otherosfs",
+  "perl",
+  "python",
+  "rust",
+  "shells",
+  "text",
+  "utils",
+  "vcs",
+  "web",
+  "x11",
+  "zope"
+ ],
+ "rows": [
+  {
+   "name": "bind9-dnsutils",
+   "version": "1:9.20.24-1ubuntu0.4",
+   "section": "net",
+   "size_kb": 519,
+   "status": "ii",
+   "installed": true,
+   "size": "519 KB"
+  },
+  {
+   "name": "bind9-host",
+   "version": "1:9.20.24-1ubuntu0.4",
+   "section": "net",
+   "size_kb": 143,
+   "status": "ii",
+   "installed": true,
+   "size": "143 KB"
+  },
+  {
+   "name": "chrony",
+   "version": "4.8-2ubuntu1",
+   "section": "net",
+   "size_kb": 692,
+   "status": "ii",
+   "installed": true,
+   "size": "692 KB"
+  }
+ ]
+}

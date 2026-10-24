@@ -1,0 +1,120 @@
+本地地址_3f5bfd6a77	Lokale Adresse
+本地镜像数量_019cf81efd	Anzahl lokaler Images
+本月_389f0007de	Dieser Monat
+本月_token_01337f42b0	Token diesen Monat
+本月请求_066cf9ee8d	Anfragen diesen Monat
+本监控面板自身通过_nginx_panel_e67414791d	Dieses Monitoring-Panel selbst wird über den Pfad nginx /panel/ als Reverse-Proxy bereitgestellt (Konfiguration in der opencode-relay-Site-Datei 
+机器人_webhook_地址_55a5f7206f	Bot-Webhook-URL
+权限_560165a6d7	Berechtigungen
+权限_八进制_2b99f80c15	Berechtigungen (oktal)
+权限已改为_permtext_ev_perm_bde45d2842	Berechtigung geändert auf „${permText(ev.perm)}"
+权限已更新_c799b75cb4	Berechtigungen aktualisiert
+权限清单_0_14c573d55b	Berechtigungsliste - {0}
+权限清单_name_b9de84243d	Berechtigungsliste - $name
+条件_72f1cf759c	Bedingung
+来源_c63f79e636	Quelle
+来源ip_4ed6a09c87	Quell-IP
+来自_0_1_1f0e9aa76c	Von {0} · {1}
+来自_0_9f6c45367f	Von {0}
+来自_cloud_monitor_的测试消息_73081ba885	Testnachricht von Cloud Monitor
+来自_n_owneremail_18d34ec5d3	Von ${n.ownerEmail}
+来自持久化指标_30_秒采样_保留_30_天_的_ff4f75947f	Tägliche lineare Extrapolation aus persistierten Metriken (30-Sekunden-Abtastung, 30 Tage aufbewahrt); reichen die Stichproben weniger als 2 Tage aus, wird nur der aktuelle Wert angezeigt.
+查找_6cb005a629	Suchen
+查看_f7acefd2d4	Ansehen
+查看健康告警_d870779eae	Gesundheitswarnungen ansehen →
+查看匹配会话_c5264e1d4b	Übereinstimmende Sitzungen ansehen
+查看原始json_e542ba8dfb	Rohes JSON ansehen
+查看可清理项_cc9ca0dc55	Aufräumbare Einträge ansehen
+查询_711363c424	Abfrage
+查询中_15954fd62b	Abfrage läuft…
+查询失败_381ea3ac5e	Abfrage fehlgeschlagen
+标签_ae0a7afece	Tags
+标签_逗号分隔_7836a339d5	Tags (durch Komma getrennt)
+标记已读_504ecf732d	Als gelesen markieren
+标题_748d7dc7e3	Titel
+标题不能为空_f2d8d992fe	Titel darf nicht leer sein
+校验_20feeceade	Validieren
+校验全部集合_f0db88cf97	Alle Sammlungen validieren
+校验失败_2da7449d88	Validierung fehlgeschlagen
+样本_610da878ac	Stichproben
+根分区_e2b4769fcd	Root-Partition
+根分区使用率_64e9efb467	Auslastung der Root-Partition
+根分区可用_0fff0a9d78	Root-Partition verfügbar
+根目录_代理_6dc180f179	Root-Verzeichnis / Proxy
+根目录一级占用_9b452d20f7	Auslastung der obersten Ebene im Root-Verzeichnis
+格式_9d2601c843	Format
+格式化_7cc2d4ca96	Formatieren
+检查_40ffb34860	Prüfen
+检查_r_checks_size_项_2e6bee1606	{0} Einträge geprüft · {1} Risiken · {2} nicht abgedeckt
+检查中_9908c922f2	Wird geprüft
+检查时间_52e89a5739	Prüfzeit
+检查脚本_459d03768b	Prüfskript
+检查项_871b61f946	Prüfpunkte
+检查项_shown_size_70be8a7c92	Prüfpunkte ({0})
+检查项明细_0_0bd2e11781	Prüfpunkt-Details ({0})
+概览_5060421d15	Übersicht
+模型_98fd0cbd9c	Modell
+模型可用性巡检_69995a0a91	Modellverfügbarkeitsprüfung
+模型数_ecde946b92	Anzahl der Modelle
+模型用量_top_15_db609c4fde	Modellnutzung Top 15
+模型解析率_4d7c65560a	Parsequote der Modelle
+模型请求趋势_941648991c	Modellanfragetrend
+模式_命名空间_0_df78aa00e9	Schema / Namespace ({0})
+模式_命名空间_schemas_siz_4184811a96	Schema / Namespace (${schemas.size})
+模式_如_user_a8bfd4d94c	Muster, z. B. user:*
+模板_06d0f38dd2	Vorlage
+模板_c0d75437e9	-- Vorlage --
+次数_d4a97e7577	Anzahl
+正在加载笔记_d95b85e311	Lade Notizen…
+正在告警_ad193fe023	Alarmiert
+正在巡检_09dfe0b521	Inspektion läuft…
+正在读取备份列表_bbfed01c1d	Lade Sicherungsliste…
+正在读取审计日志_414fed4710	Lade Audit-Protokoll…
+正在读取配置_6dc75287f5	Lade Konfiguration…
+正在逐台探测_3e1b0b3e75	Hosts werden einzeln abgefragt…
+正常_f78d037abc	Normal
+此处创建的任务带_cm_前缀_可在下方表格_a7728c7ff7	· Hier erstellte Aufträge tragen das Präfix cm- und können direkt in der Tabelle unten gelöscht werden
+步长_ac69f5962f	Schrittweite
+每_10_秒自动刷新_0c62f6d07b	Alle 10 Sekunden automatisch aktualisieren
+每一项都会先测空闲_执行后再测_回报真实释放量_056371f472	Jeder Eintrag wird im Leerlauf gemessen und nach dem Ausführen erneut gemessen und gibt die tatsächlich freigegebene Menge zurück; das Datenverzeichnis wird nicht angefasst.
+每个事项的提醒开关在事项编辑弹窗里_e97512b037	Der Erinnerungsschalter jedes Eintrags befindet sich im Dialog zur Bearbeitung des Eintrags.
+每周_a93b55d8bf	Wöchentlich
+每天_0_00_440c0de302	Täglich um {0}:00
+每天_0_1_f762ef5aa9	Täglich {0}–{1}
+每天_5e4715ffc0	Täglich
+每天_it_from_it_to_0713d5eb6b	Täglich ${it.from}–${it.to}
+每天_s_hour_tostring_p_f4a08c25ea	Täglich ${s.hour.toString().padStart(2, '0')}:00
+每天固定时段_035cafe753	Täglich fester Zeitraum
+每天执行时刻_0_23_b9136dda70	Tägliche Ausführungsstunde (0-23)
+每小时_星期_请求热力图_545787dcfc	Anfragen-Heatmap nach Stunde × Wochentag
+每日_token_明细_78642770fa	Tägliche Token-Details
+每日_token_消耗_688c00a2db	Täglicher Token-Verbrauch
+每日会话_f198dfabd3	Tägliche Sitzungen
+每日开始_hh_mm_785f0f4695	Täglicher Beginn (HH:MM)
+每日明细_区间环比_094243d47a	Tägliche Details (Vergleich mit Vorperiode)
+每日结束_hh_mm_ec8711b104	Tägliches Ende (HH:MM)
+每日自动备份_7ccce9e358	Tägliche automatische Sicherung
+每日自动维护_799c82930f	Tägliche automatische Wartung
+每月_24aedc3608	Monatlich
+每次切换镜像前自动备份_路径_0_4331441441	Automatische Sicherung vor jedem Image-Wechsel, Pfad {0}
+每次变更的完整_apt_输出保存在服务器_lo_737e75d3ca	Die vollständige apt-Ausgabe jeder Änderung wird auf dem Server unter $logDir/pkg-*.log gespeichert.
+每页_faceb7dc18	Pro Seite 
+每页_it_d82aa397c2	Pro Seite $it
+每页_st_pagesize_44e647d312	Pro Seite ${st.pageSize}
+永久删除_0_此操作不可恢复_c22836ea42	„{0}" endgültig löschen? Dies kann nicht rückgängig gemacht werden.
+永久删除_a7fadbe126	Endgültig löschen
+永久删除表_0_及全部数据_a2a086dc93	Tabelle {0} und alle Daten endgültig löschen?
+永久删除表_st_table_及全部数据_b45d7de4bb	Tabelle ${st.table} und alle Daten endgültig löschen?
+没有匹配的包_f28a3dc6a5	Keine passenden Pakete
+没有匹配的已安装包_3aa1636e48	Keine passenden installierten Pakete
+没有匹配的服务_9248fe4a20	Keine passenden Dienste
+没有匹配的检查项_1ec567bb89	Keine passenden Prüfpunkte
+没有匹配的账号_4612b2a961	Keine passenden Konten
+没有匹配的进程_4b32ae9684	Keine passenden Prozesse
+没有发现明显缺失索引的表_949f90b6b4	Keine Tabellen mit offensichtlich fehlenden Indizes gefunden
+没有可分析的真实卷_0eec6083a7	Keine analysierbaren realen Volumes
+没有可执行该操作的包_34484f1862	Kein Paket, das diese Aktion ausführen kann
+没有已完成的事项_2cda631543	Keine abgeschlossenen Einträge
+没有慢查询记录_75d83e6845	Keine Slow-Query-Einträge
+没有活动连接_29a76a67b2	Keine aktiven Verbindungen
+没有符合条件的告警_5585202ce3	Keine Alarme, die den Kriterien entsprechen

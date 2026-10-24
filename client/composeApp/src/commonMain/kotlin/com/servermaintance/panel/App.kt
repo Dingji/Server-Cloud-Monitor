@@ -34,6 +34,10 @@ import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.ColorTheme
 import com.servermaintance.panel.ui.ThemeState
+import com.servermaintance.panel.i18n.LocaleState
+import com.servermaintance.panel.i18n.ProvideLocale
+import com.servermaintance.panel.i18n.StringRepository
+import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.ui.WithWindowCaption
 
 /**
@@ -52,6 +56,8 @@ fun App() {
     LaunchedEffect(Unit) {
         AccentState.load()
         ThemeState.load()
+        LocaleState.load()
+        StringRepository.preload()
         AppState.bootstrap()
         // NoteBox（笔记/待办）会话恢复：有保存的 cookie 才会真正发请求
         NoteBoxState.bootstrap()
@@ -83,10 +89,11 @@ fun App() {
     }
 
     MaterialTheme(colorScheme = m3Scheme) {
+        ProvideLocale {
         Surface(color = Palette.bg) {
             when (session) {
-                SessionState.Boot -> WithWindowCaption(AppInfo.NAME.uppercase(), "${AppInfo.VERSION_LABEL} · ${AppInfo.DESCRIPTION}") { BootSplash() }
-                SessionState.Login -> WithWindowCaption(AppInfo.NAME.uppercase(), "${AppInfo.VERSION_LABEL} · ${AppInfo.DESCRIPTION}") { LoginScreen() }
+                SessionState.Boot -> WithWindowCaption(AppInfo.NAME.uppercase(), "${AppInfo.VERSION_LABEL} · ${L["app.description"]}") { BootSplash() }
+                SessionState.Login -> WithWindowCaption(AppInfo.NAME.uppercase(), "${AppInfo.VERSION_LABEL} · ${L["app.description"]}") { LoginScreen() }
                 SessionState.Ready -> {
                     // 运维增强（拨测/规则/渠道/主机台账）都走面板 Bearer token
                     LaunchedEffect(Unit) {
@@ -99,6 +106,7 @@ fun App() {
                 }
             }
         }
+        }
     }
 }
 
@@ -108,7 +116,7 @@ private fun BootSplash() {
     Box(Modifier.fillMaxSize().background(Palette.bg), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "CLOUD MONITOR",
+                text = L["cloud_monitor_5768a16d7b"],
                 color = Palette.text,
                 fontSize = 15.sp,
                 fontFamily = FontFamily.Monospace,
@@ -116,7 +124,7 @@ private fun BootSplash() {
                 letterSpacing = 3.sp,
             )
             Text(
-                text = "加载中…",
+                text = L["common.loading"],
                 color = Palette.muted,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,

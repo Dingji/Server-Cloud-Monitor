@@ -1,0 +1,6 @@
+{
+ "available": false,
+ "hint": "未安装 pg_stat_statements 扩展。安装后需要重启 PostgreSQL 才能生效。",
+ "rows": [],
+ "columns": []
+}

@@ -1,0 +1,120 @@
+0_6_每6小时_任务写入_e_369a8da904	0 */6 * * * Ogni 6 ore. L'attività viene scritta in /etc/cron.d/cm-<nome> ed eseguita come root.
+0_个文件_81d82139e8	 · {0} file
+0_将进入回收站_保留_1_天_0a8a244509	«{0}» andrà nel cestino e sarà conservato per {1} giorni.
+0_条展示_命中_1_条_0e114bc461	({0} mostrati / {1} corrispondenze)
+0_表示立即_189b797c4f	0 significa subito
+10分钟_b82d31194e	10 minuti
+14_4_表示约_2_天烧完_sre_常用告_681c4dc86d	≥14,4× indica che il budget termina in circa 2 giorni (soglia di allarme comune in SRE). I 4xx sono problemi lato client e non conteggiano nel budget.
+163_邮箱_设置_pop3_smtp_2cd036d08b	Posta 163: Impostazioni → POP3/SMTP → attivare e generare un «codice di autorizzazione», poi inserirlo sotto (non è la password di accesso).
+1_列表_522d9cc510	1. Elenco
+1小时_3a9a579a96	1 ora
+24_小时发送_8e6d358b2e	Inviati in 24 ore
+24_小时失败_f23fa2b0e3	Falliti in 24 ore
+24_小时拉起次数_8c19db84c7	Riavvii in 24 ore
+24_小时通知_ed50056bf1	Notifiche in 24 ore
+24小时_45a2727884	24 ore
+2_秒_5198950435	2 secondi
+30_天_9401eee769	30 giorni
+30_天后自动清除_b6c489a29c	Cancellato automaticamente dopo 30 giorni
+33m_会话已关闭_be33fffa31	[33m[Sessione chiusa]
+402_额度_fbd56d7158	Quota 402
+403_权限_bd93595602	Permesso 403
+429_拦截_0_7a460e2aa8	429 bloccato {0}
+429_拦截_563bec273d	429 bloccato
+429_次数_9333e8c60f	Conteggio 429
+429_限流_5bd5af3cd2	429 con limite di velocità
+499_中断_8a0629ae88	499 interrotto
+4xx_0_499_中断_1_817ee52e07	4xx {0} · 499 interrotto {1}
+4xx_0_5xx_1_未授权_4116249143	4xx {0} · 5xx {1} · non autorizzato {2}
+4xx_0_无响应_1_cd8a2943ad	4xx {0} · nessuna risposta {1}
+4xx_错误_2368d2493d	Errori 4xx
+500_毫秒_cc7da43bcf	500 ms
+5xx_无响应_2355276e0d	5xx/nessuna risposta
+5xx_错误_6ed859ac67	Errori 5xx
+6小时_57937ccefc	6 ore
+7_天_e45a81074f	7 giorni
+account_lock_锁定_bbeaf242af	ACCOUNT LOCK (bloccato)
+account_unlock_解锁_b001d58ec0	ACCOUNT UNLOCK (sbloccato)
+acl_用户_0_b7e2c3ae45	Utenti ACL ({0})
+acl_用户_roles_size_8df0ffb733	Utenti ACL (${roles.size})
+act_服务_a3ebd5a4a1	Servizio $act
+analyze_会真实执行该语句以采集实际行数与_7e2c3ab4f2	ANALYZE esegue realmente l'istruzione per raccogliere il conteggio reale delle righe e i tempi. Verificare che sia una query in sola lettura; eseguire nel console SQL le istruzioni che scrivono dati.
+analyze_更新统计_ae3c35e60c	ANALYZE (aggiorna statistiche)
+api_地址_acd8a50431	Indirizzo API
+api_基础地址_走代理时填_5c7aa1a51e	Indirizzo di base API (da compilare se si usa un proxy)
+app.description	Client del pannello di monitoraggio e configurazione del server
+app_连接的_cloud_monitor_面板_0ee7660770	Indirizzo del pannello Cloud Monitor a cui l'app si connette. Predefinito http://8.153.153.176/panel; può essere sostituito con l'indirizzo di qualsiasi pannello distribuito.
+apt_任务进行中_0_6028d2fbd3	Attività apt in corso: {0}
+apt_缓存_c1fb672ce3	Cache APT
+auditd_未启用_2ca17006e2	auditd non abilitato
+auditd_记录的敏感文件变更_谁_用什么命令_de2731982f	Modifiche a file sensibili registrate da auditd: chi, con quale comando, quale file è stato modificato
+badprov_个供应商配额耗尽_363bea5ae6	$badProv quote dei fornitori esaurite
+banner_能顺带看到对端_openssh_版_6a7382b65e	Il banner mostra anche la versione OpenSSH del remoto, utile per valutare la necessità di aggiornamento
+bgsave_会在后台生成_rdb_文件_flu_221d58038d	BGSAVE crea un file RDB in background; FLUSHDB/ALL elimina tutti i dati e richiede una seconda conferma.
+bgsave_后台快照_7679d32e01	BGSAVE (istantanea in background)
+bilibili_视频_7fcd50c628	Video Bilibili
+certbot_安装日志_1bf087319a	Log di installazione di certbot
+certbot_已安装_7690d6f09a	certbot installato
+certbot_未安装_b2dd3df63b	certbot non installato
+chat_id_或_频道名_beb6893b9b	Chat ID o @nome_canale
+check_校验_8a646f2a85	CHECK (verifica)
+common.loading	Caricamento…
+corecount_核高负载_cores_afc43a96da	$coreCount core ad alto carico · $coresTotal core
+cpu_使用率_35b17729e2	Utilizzo CPU %
+cpu_使用率_bdf91f384b	Utilizzo CPU
+cpu_占用_89f8a08e80	Occupazione CPU
+cpu_占用_top_52d0789676	Top occupazione CPU
+cpu_核数_2a5bc46dd3	Core CPU
+cron_表达式_6859f82ab2	Espressione cron
+crontab_l_条目_6be8b3d177	Voci di crontab -l
+csv_内容_粘贴_17c5b7dbff	Contenuto CSV (incolla)
+csv_导入结果_3a4d7db0d7	Risultato importazione CSV
+ctrl_shift_c_v_复制粘贴_会话_7c3872ffae	Ctrl+Shift+C/V per copiare/incollare · la sessione resta attiva 2 minuti dopo l'uscita da questa pagina (server/shell.js GRACE_MS)· 
+curlabel_按天_12556e7b0c	$curLabel · al giorno
+curlabel_按天_可复用_vs_8cc7c3562a	$curLabel · al giorno · riutilizzabile vs. nuovo
+days_天_a6409fc14f	$days giorni
+db2_sql_以实例用户执行_51f6dbcefb	SQL Db2 (eseguito come utente di istanza)
+db2_授权_grant_revoke_eb50e06ee0	Permessi Db2 (GRANT / REVOKE)
+db2_用_grant_revoke_管理权限_209a33078b	Db2 gestisce i permessi con GRANT/REVOKE; l'utente deve prima essere creato sull'istanza (db2 CREATE USER o account di sistema).
+ddl_定义_可编辑后执行_20bea6e0ac	Definizione DDL (modificabile prima dell'esecuzione)
+ddl_执行结果_d203cf40d4	Risultato esecuzione DDL
+dirty_待写盘_a3b33885f4	Dirty (in attesa di scrittura su disco)
+docker_system_prune_af_ead57cbf4c	docker system prune -af: rimuove immagini/reti/container fermi non utilizzati
+docker_安装日志_08ccdea4e9	Log di installazione di Docker
+docker_容器_4372ba1200	Container Docker
+docker_引擎_755076c561	Motore Docker
+docker_清理_795b9faf02	Pulizia Docker
+drop_table_删除表_0a38c31f25	DROP TABLE (elimina tabella)
+du_尚未返回结果_0af775f143	du non ha ancora restituito risultati
+e_name_将进入回收站_保留_f_b07c62be90	«${e.name}» andrà nel cestino e sarà conservato per ${FileStore.trashDays.value} giorni.
+else_dat_3b7177d8b6	\n            else -> dateTime(t)\n        }\n    }\n\n    /** Visualizzazione percentuale: `99.1%` (precisione ≤0.1, zeri extra rimossi). */\n    fun pct(p: Number?, suffix: String = 
+error_log_累计_40739fb64e	Totale error.log
+etc_cron_d_其它任务_1075d72b5f	/etc/cron.d altre attività
+etc_cron_daily_cron_h_0b91b3ac69	· script /etc/cron.daily, cron.hourly:
+explain_分析_5739bed548	Analisi EXPLAIN
+fail2ban_未启用_dba20ac8ac	fail2ban non abilitato
+fail2ban_未安装_未运行_006151f653	fail2ban non installato/non in esecuzione
+fail2ban_监狱_fd16fed272	Jail fail2ban
+fail2ban_运行中_401151de3a	fail2ban in esecuzione
+fail2ban_防爆破_e5d811ec15	Fail2ban protezione anti brute-force
+failedcount_个服务失败_4bb48044cc	$failedCount servizi falliti
+failing_项失败_c0f4c9b479	$failing elementi falliti
+flushall_清空全部_d122dc5ecd	FLUSHALL (svuota tutto)
+flushdb_清空当前库_4587c55eaa	FLUSHDB (svuota il DB corrente)
+gzip_归档_39fcde3a7b	Archivio gzip
+h_label_采集完成_a374e6c968	Raccolta di {0} completata
+hmac_签名密钥_可空_d93d6e2984	Chiave di firma HMAC (facoltativa)
+http_方法_b1d337493c	Metodo HTTP
+inode_使用_0_小文件过多时会先耗尽_241698504d	Utilizzo inode {0}% (con troppi file piccoli gli inode si esauriscono per primi)
+inode_使用_m_inodeusedpc_cd43f1cf53	Utilizzo inode ${m.inodeUsedPct}% (con troppi file piccoli gli inode si esauriscono per primi)
+inode_使用率_5279b4b61c	Tasso di utilizzo inode
+ip_或域名_6ebd1799de	IP o nome di dominio
+ip_来源_f387b79f3d	Origine IP
+journal_apt_轮转日志_093250e13f	journal + APT + log ruotati
+journal_上限_0_1_天_d18e51fc4e	Limite journal {0} / {1} giorni
+journal_上限_1f54a3217f	Limite journal
+journal_上限_s_journalsi_1ef09f8f8d	Limite journal ${s.journalSize} / ${s.journalDays} giorni
+journal_保留天数_e74cafd94c	Giorni di retention di journal
+journal_日志_b4bd477c2c	Log journal
+json_文档_e422afa510	Documento JSON
+label_失败_4c06e7d781	<label> fallito

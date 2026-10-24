@@ -1,0 +1,120 @@
+变化_0713c8939f	Changements
+变更取自_auditd_文件完整性事件_配置_edc7e5af44	Les changements proviennent des événements d'intégrité de fichiers auditd (config / clés / nginx / sshd, etc.), $changeCount au total.
+变更预览_241ab41868	 · Aperçu des changements
+变量_b418ca60d4	Variable
+口径说明_53a989d8cc	Définition
+只告警_20b82131f2	Alerte seule
+只读_ffc1d065fb	Lecture seule
+只读_仅查看_可编辑_可修改_管理_可修_7350c52b3d	Lecture seule = consultation uniquement · Modifiable = modification possible · Gestion = modifier, supprimer et gérer le partage
+只选目录_bc8b48ee0e	Sélectionner le dossier uniquement
+可上传_rdb_文件名_内容_0e9334cab9	Peut téléverser les noms de fichiers .rdb + leur contenu.
+可修复_r_checks_count_e4b6314c85	Réparable : {0}
+可升级_546591fd74	Mise à niveau possible
+可升级_total_12792da8ef	Mise à niveau possible ($total)
+可复用_ec5baa1975	Réutilisable
+可复用_缓存上限_96e0d3a181	Réutilisable (limite de cache)
+可复用上下文_9727f037bf	Contexte réutilisable
+可安全清理_099dfd0be8	Nettoyage sûr
+可清理的孤立依赖_apt_get_s_auto_25a43a9abb	Dépendances orphelines nettoyables (apt-get -s autoremove)
+可用_e91365cf9e	Disponible
+可用性拨测_64f61a3d7a	Sonde de disponibilité
+可用空间_4981f67ab1	Espace disponible
+可空_b3563bf06a	Admet null
+可粘贴_mongodump_归档内容或上传后在列_40fb6a2727	Colez le contenu de l'archive mongodump ici, ou téléversez-le et restaurez-le depuis la liste ; collez le texte ici et indiquez un nom de fichier.
+可编辑_bff55f2cd9	Modifiable
+可达_3705c6f323	Accessible
+可达性_765d9ffdc9	Accessibilité
+可选_2f3b613ff2	Facultatif…
+可选_53e32830a5	Facultatif
+可选镜像_67237d63bf	Image facultative
+台账主机_acb80f963e	Hôte d'inventaire
+台账条目_a9bb9bd8ce	Entrée d'inventaire
+台账还是空的_登记机器的用途_环境_负责人与备注_4aebfb8210	L'inventaire est encore vide : renseignez l'usage, l'environnement, le responsable et les notes de chaque machine, afin que inspections et alertes aient un objet identifié
+台账里还没有主机_先到_纳管主机_登记_再回来配_cdc9d74097	Aucun hôte dans l'inventaire : enregistrez-les d'abord dans « Hôtes gérés », puis revenez configurer les identifiants SSH
+各套餐命中率_rangelabel_cb1ad2971f	Taux de correspondance par offre $rangeLabel
+合并_保留现有数据_01a4d7c1d8	Fusionner (conserver les données existantes)
+合并导入_保留现有对象_5693e46162	Import en fusion (conserver les objets existants)
+合规_540bc8b761	Conformité
+合规_r_counts_93f6bd5eb9	Conforme : {0}
+合计_0_03a6ed19a9	Total {0}
+合计_92bcbf71cb	Total
+同主仓库_01a7130455	Même dépôt principal
+同名文件已存在_19c091cec7	Un fichier du même nom existe déjà
+同时复制数据_d0295acd86	Copier aussi les données
+名称_1be7ae4fc2	Nom
+名称_值_576e23fba3	Nom / Valeur
+名称_可带模式_99f761c6de	Nom (peut contenir un motif)
+后台运行_d8478a3802	Exécuter en arrière-plan
+后天_639e8f00b7	Après-demain
+向_pid_pid_args_发送_si_1e664241d5	Envoyer SIGTERM au PID $pid ($args) ?
+否_8bf5c10ad9	Non
+含成本估算_c3584df84d	Avec estimation des coûts
+含数据_6aedaad68f	(avec données)
+含规则_拨测与手动广播_6fd5d428e5	Inclut les règles, les sondes et les diffusions manuelles
+含轮转历史_e8a206c9bc	Inclut l'historique de rotation
+启动_0_5c677d444c	Démarrer {0}
+启动_0_服务_16fc9bfc5e	▶ Démarrer le service {0}
+启动_ebd26da421	Démarrer
+启动_engine_name_服务_47b4573f31	▶ Démarrer le service ${engine.name}
+启动_label_d5cb754f2b	Démarrer $label
+启动_容器_76c73301e8	Démarrer le conteneur
+启动引擎_193b25d8af	Démarrer le moteur
+启动服务_f5f2a0dd6f	Démarrer le service
+启用_0_并重载_nginx_cec5f2e46f	Activer {0} et recharger nginx ?
+启用_d4e9ca3dd4	Activer
+启用_pg_stat_statements_扩展_a1da4a0b69	Activer l'extension pg_stat_statements
+启用_r_site_并重载_nginx_6f9eb4ba9b	Activer ${r.site} et recharger nginx ?
+启用中的探测项_06452808ea	Sondes activées
+启用告警_d6b9351330	Activer les alertes
+启用方式_script_由_relay_ale_ef278b0211	Activation via : $script, exécuté toutes les 5 minutes par relay-alert.timer.
+启用方法_9260bb76c1	Méthode d'activation
+启用每日摘要_0a9df7843b	Activer le résumé quotidien
+启用网卡_name_b24324d7d4	Activer la carte réseau $name ?
+启用邮件通知_25c29ea9b4	Activer les notifications par e-mail
+启用防火墙_32fbb16291	Activer le pare-feu
+告警_5078424f7e	Alerte
+告警中_265d5de4c9	En alerte
+告警中心_ba945698e9	Centre d'alertes
+告警事件流_7910b238b1	Flux d'événements d'alerte
+告警历史_c507274d75	Historique des alertes
+告警就会推送到群里而不只是停在面板上_cb3d792064	Les alertes seront poussées dans le groupe au lieu de rester uniquement sur le panneau.
+告警已关闭_a1c9fab7d6	Alertes désactivées
+告警日志_0_a892400684	Journal des alertes ({0})
+告警规则_0_条触发中_86ea51451b	{0} règles d'alerte déclenchées
+告警规则_de497c4e56	Règles d'alerte
+告警规则_o_rulefiring_条触发_3296034214	${o.ruleFiring} règles d'alerte déclenchées
+告警通道_复用_relay_每日报告的_smtp_c02c260a95	Canal d'alerte (réutilise le SMTP du rapport quotidien de relay)
+告警阈值_仪表盘右上角铃铛_c7224212dd	Seuils d'alerte (cloche en haut à droite du tableau de bord)
+告警阈值已保存_f6ed6094c3	Seuils d'alerte enregistrés
+告警防护开启_c43dfbff06	Protection d'alerte activée
+周_0_1_2_78c92bdbef	Semaine {0} {1}–{2}
+周期_0_天_已消耗_1_4364d28c73	Cycle de {0} jours · {1} % consommé
+周期_8a12b12125	Cycle
+周期内消耗_cdd79a773a	Consommation du cycle
+命中_0_bc8f08b9ae	Correspondances {0}
+命中_0_未命中_1_994cc4fd62	Correspondances {0} · échecs {1}
+命中_0_未命中_1_tok_0170ee1dc6	Correspondances {0} / échecs {1} tok · 
+命中_0_未命中_1_tok_覆_e84c124898	Correspondances {0} / échecs {1} tok · couverture 
+命中_7a130d7fde	Correspondance
+命中_上游返回_2xx_真正拿到了模型响应_479b4a776d	· Correspondance : l'amont a renvoyé 2xx, une vraie réponse du modèle a été obtenue.
+命中事件_5a9f9753fc	Événements de correspondance
+命中率趋势_rangelabel_gra_4543952724	Tendance du taux de correspondance $rangeLabel · $gran
+命令_b114b91547	Commande
+命令控制台_3e37a06e5f	Console de commandes
+命令输出_0_1eb07b8f1f	Sortie de commande : {0}
+命令输出_c_evidence_take_1_2639edb6ee	Sortie de commande : ${c.evidence.take(160)}
+响应解析失败_0_2b68ffa3e9	Échec de l'analyse de la réponse : {0}
+响应解析失败_text_take_300_e68936f4c8	Échec de l'analyse de la réponse : ${text.take(300)}
+响应需包含关键字_8194b1499c	La réponse doit contenir le mot-clé
+唯一_e805014aa5	Unique
+唯一索引_eea282cf7b	Index unique
+四_4f88740b34	Quatre
+回收_6eda6254dd	Réclamer
+回收站_0_c62b3efd3d	Corbeille{0}
+回收站_64ea8751fb	Corbeille
+回收站_保留_0_天_38b488832e	Corbeille (conservée {0} jours)
+回收站_保留_filestore_trash_9bbe7572c0	Corbeille (conservée ${FileStore.trashDays.value} jours)
+回收站已清空_226ab2d716	Corbeille vidée
+回收站是空的_e872522628	La corbeille est vide
+回调_url_8685de50ca	URL de rappel
+图片_0_b8121a43e1	[Image : {0}]

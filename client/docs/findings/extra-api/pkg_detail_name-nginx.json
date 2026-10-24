@@ -1,0 +1,46 @@
+{
+ "name": "nginx",
+ "summary": "small, powerful, scalable web/proxy server Nginx (\"engine X\") is a high-performance web and reverse proxy server created by Igor Sysoev. It can be used both as a standalone web server and as a proxy to reduce the load on back-end HTTP or mail servers.",
+ "description": "small, powerful, scalable web/proxy server Nginx (\"engine X\") is a high-performance web and reverse proxy server created by Igor Sysoev. It can be used both as a standalone web server and as a proxy to reduce the load on back-end HTTP or mail servers.",
+ "version": "1.28.3-2ubuntu1.11",
+ "section": "web",
+ "priority": "optional",
+ "homepage": "https://nginx.org",
+ "origin": "Ubuntu",
+ "maintainer": "Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>",
+ "bugs_url": "https://bugs.launchpad.net/ubuntu/+filebug",
+ "size_kb": 1593,
+ "size": "1.6 MB",
+ "depends": [
+  "libc6 (>= 2.34)",
+  "libcrypt1 (>= 1:4.1.0)",
+  "libpcre2-8-0 (>= 10.22)",
+  "libssl3t64 (>= 3.0.0)",
+  "zlib1g (>= 1:1.1.4)",
+  "nginx-common (= 1.28.3-2ubuntu1.11)"
+ ],
+ "recommends": [],
+ "installed_version": "1.28.3-2ubuntu1.11",
+ "candidate": "1.28.3-2ubuntu1.11",
+ "pinned": false,
+ "installed": true,
+ "installed_size_kb": 1593,
+ "upgradable": false,
+ "protected": "protected",
+ "file_count": 12,
+ "changelog_url": "",
+ "reverse_deps": [
+  "nginx-common",
+  "nginx-common",
+  "nginx-common",
+  "nginx-common"
+ ],
+ "meta": [
+  "Priority: optional",
+  "Section: web",
+  "Origin: Ubuntu",
+  "Priority: optional",
+  "Section: web",
+  "Origin: Ubuntu"
+ ]
+}

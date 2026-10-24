@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label Pemasangan selesai, memuat semula…
+label_安装日志_13ce1b1029	$label Log pemasangan
+label_实现中_70505f7ef8	“$label” sedang dilaksanakan…
+llm_api_中继的请求量_token_用量_6b89d708ea	Isipadu permintaan, penggunaan Token, kuota kumpulan kunci, ketersediaan model dan analisis kualiti untuk relay LLM API
+location_块_不要停用该站点以免面板与_4ae164b62b	blok location), jangan lumpuhkan laman ini kerana panel dan perkhidmatan relay akan turut terhenti.
+login.access_token	Token akses
+login.advanced	Lanjutan
+login.audit_notice	Semua tindakan direkod untuk audit
+login.connect_failed	Sambungan gagal:
+login.failed	Log masuk gagal
+login.normalized_url	Alamat dinormalkan
+login.not_logged_in	Belum log masuk
+login.password_required	Sila masukkan kata laluan
+login.remember_password	Ingat kata laluan
+login.restore_default_url	Pulihkan alamat lalai
+login.save_on_test_hint	Selepas menukar alamat, klik “Uji Sambungan” untuk menyimpannya
+login.server_config	Tetapan sambungan pelayan
+login.sign_in	Log masuk
+login.signing_in	Sedang log masuk…
+login.subtitle	Konsol pemantauan masa nyata dan konfigurasi pelayan
+login.test_connection	Uji sambungan
+login.testing	Sedang menguji…
+login_可登录_0e617ada9b	LOGIN (boleh log masuk)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(bait pusingan sebelumnya, bait pusingan ini) ialah kandungan yang telah dihantar pada pusingan terdahulu — ini had maksimum yang sepatutnya dicapai cache, tanpa bergantung pada laporan pembekal.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB tidak memulihkan ruang; validate/reindex ialah penyelenggaraan rutin yang biasa digunakan.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB menggunakan mongodump untuk mencipta arkib gzip (perlukan mongodump).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB hanya benar-benar mencipta pangkalan data apabila tulisan pertama ke dalam collection; di sini collection pengganti _cm_init akan dicipta.
+mongodb_的过滤条件支持_字段_值_558264a7d8	Penapis MongoDB menyokong bentuk {"medan":nilai} (ditukar secara dalaman kepada syarat pertanyaan) atau singkatan medan=nilai. Dokumen dipaparkan dalam JSON; _id ialah pengenal dokumen.
+mongodb_维护结果_aaeb39f907	Hasil penyelenggaraan MongoDB
+ms_毫秒_7ade5ab3a4	$ms ms
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (lalai root + socket)
+mysql_语法_8200e34cb7	Sintaks MySQL
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a statistik
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c semakan
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o pengoptimuman
+name_ver_连接正常_33d0a44ec7	$name $ver sambungan OK
+name_关闭_c8e887ebc0	$name: Mati
+name_开启_54ce939603	$name: Hidup
+nav.audit	Log audit
+nav.backups	Pusat sandaran
+nav.cron	Tugas berjadual
+nav.dashboard	Papan pemuka
+nav.databases	Pangkalan data
+nav.disks	Pengurusan cakera
+nav.docker	Container Docker
+nav.health_alerts	Amaran kesihatan
+nav.logs	Pusat log
+nav.memory	Pengurusan memori
+nav.network	Pengurusan rangkaian
+nav.note_mail	Pemberitahuan e-mel
+nav.note_settings	Tetapan NoteBox
+nav.note_transfer	Import / Eksport
+nav.note_users	Pengurusan pengguna
+nav.notes	Nota
+nav.ops_channels	Saluran pemberitahuan
+nav.ops_disk	Tadbir urus cakera
+nav.ops_files	Pengurusan fail
+nav.ops_hosts	Hos diurus
+nav.ops_remote	Metrik hos jauh
+nav.ops_rules	Peraturan amaran
+nav.ops_sec	Pemeriksaan garis dasar keselamatan
+nav.ops_uptime	Pengukuran ketersediaan
+nav.ops_watch	Penjagaan perkhidmatan
+nav.packages	Pengurusan pakej
+nav.page_placeholder	Halaman “{0}” sedang dilaksanakan…
+nav.pinned_hint	(disemat, tekan lama untuk nyahsemat)
+nav.processes	Pengurusan proses
+nav.relay	Relay OpenCode
+nav.section.app	Aplikasi
+nav.section.monitor	Pemantauan
+nav.section.notes	Nota
+nav.section.server	Pelayan
+nav.section.system	Sistem
+nav.section.tools	Alat
+nav.security	Pengurusan keselamatan
+nav.services	Perkhidmatan sistem
+nav.settings	Tetapan panel
+nav.slo	SLO dan penggunaan
+nav.terminal	Terminal Web
+nav.todos	Senarai tugasan
+nav.web	Laman web / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf konfig Nginx · sshd_config konfig SSH · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	Konfig nginx/sshd/fstab disahkan secara automatik selepas disimpan
+nginx_站点_0_6bcfddef71	Laman Nginx ({0})
+nginx_站点_sites_size_2db3c2b5be	Laman Nginx (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	SMTP dan peraturan amaran NoteBox
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox nota awan (kategori berbilang tahap · tong sampah · Markdown · perkongsian)
+notebox_地址未配置_3d37258011	Alamat NoteBox belum dikonfigurasi
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox tugasan (menyokong tarikh akhir dan peringatan e-mel)
+notebox_数据迁移_362725f18e	Migrasi data NoteBox
+notebox_服务可达_6a7506d6ac	Perkhidmatan NoteBox boleh diakses
+notebox_服务可达_未登录_e023d68cad	Perkhidmatan NoteBox boleh diakses (belum log masuk)
+notebox_服务地址_默认端口_13345_e0880dfda6	Alamat perkhidmatan NoteBox (port lalai 13345). Perlu log masuk semula selepas menukar.
+notebox_登录成功_013138644f	Log masuk NoteBox berjaya
+notebox_设置_efb5a47b98	Tetapan NoteBox
+notebox_账号_仅管理员_81b8d4ca26	Akaun NoteBox (pentadbir sahaja)
+online_台有近期数据_1fefff8cdc	$online hos mempunyai data terkini
+opencode_中继_2e021ee797	Relay OpenCode
+p95_延迟_57d63f8b46	Kelewatan P95
+p95_延迟_ba65a873bc	Kelewatan p95
+palette.accent_hint	Rupa · semasa {0}
+palette.open_page	Buka halaman {0}
+palette.pin	Semat “{0}”
+palette.pin_hint	Ruang kerja · tekan lama pada item bar sisi untuk menukar juga
+palette.reload_hint	F5 / Ctrl+R · Muat semula
+palette.theme_hint	Rupa · semasa {0}
+palette.unpin	Nyahsemat “{0}”
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (paksa tukar kata laluan)
+pg_自定义格式_0cc41d0ea4	Format tersuai PG
+postgresql_mysql_sql_42e513fca9	Pengurusan pangkalan data/jadual, konsol SQL, pandangan prestasi dan sandaran/pemulihan untuk PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	Format tersuai PostgreSQL -Fc (pemulihan lebih pantas)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (lalai guna pengesahan peer: su - postgres)
+rdb_快照_62f218ed40	Snapshot RDB
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis menjalankan BGSAVE dan menyalin fail RDB; pemulihan menulis semula direktori data dan memerlukan mulakan semula Redis.
+redis_命令控制台_fa42019a53	Konsol arahan Redis
+redis_维护_d2a01bfbd3	Penyelenggaraan Redis
+reindex_全部库_90545e1eeb	REINDEX semua pangkalan data
+reindex_重建索引_256956f94e	REINDEX / bina semula indeks
+reindex_重建索引_d81fcbf8d0	REINDEX (bina semula indeks)
+relay_alert_py_检查_smtp_告_012aaa3373	Pemeriksaan relay_alert.py, saluran amaran SMTP, paras ambang dan rekod amaran

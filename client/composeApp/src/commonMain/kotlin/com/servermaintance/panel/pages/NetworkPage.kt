@@ -1,4 +1,8 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.trfn
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -178,13 +182,13 @@ fun NetworkPage() {
         (tx / 1024.0).toFloat()
     }
 
-    PageScaffold(title = "网络管理") {
+    PageScaffold(title = L["网络管理_c953585213"]) {
 
         if (net == null && loading) {
-            LoadingState("加载中…")
+            LoadingState(L["common.loading"])
         }
         if (net == null && !loading && error != null) {
-            ErrorState(message = error ?: "加载失败", onRetry = { scope.launch { load() } })
+            ErrorState(message = error ?: L["加载失败_f6b7a41e56"], onRetry = { scope.launch { load() } })
         }
 
         /* N1 网卡卡片 */
@@ -202,9 +206,9 @@ fun NetworkPage() {
                         },
                     ) {
                         Text(
-                            i.arr("ipv4").joinToString(", ") { p ->
+                            i.arr("ipv4").joinToString(L["s_d3bc9a378d"]) { p ->
                                 (p as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
-                            }.ifEmpty { "无 IPv4" },
+                            }.ifEmpty { L["无_ipv4_1c7bda176d"] },
                             color = Palette.text,
                             fontSize = 15.sp,
                             fontFamily = FontFamily.Monospace,
@@ -214,7 +218,7 @@ fun NetworkPage() {
                             (p as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
                         }
                         Text(
-                            v6.ifEmpty { "无全局 IPv6" },
+                            v6.ifEmpty { L["无全局_ipv6_fdeea14453"] },
                             color = Palette.muted,
                             fontSize = 12.sp,
                         )
@@ -247,7 +251,7 @@ fun NetworkPage() {
 
         /* N4 监听端口 */
         PanelCard(
-            title = "监听端口 (${listening.size})",
+            title = trf("监听端口_0_07a35020a9", listening.size),
             cardKey = "net-listen",
             right = {
                 Row(
@@ -255,58 +259,58 @@ fun NetworkPage() {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
                 ) {
-                    Toggle(checked = auto, onCheckedChange = { auto = it }, label = "自动刷新")
+                    Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
                     Chip(monitorRefreshLabel(AppState.meRefreshMs()), tone = Level.Muted)
-                    GhostBtn(text = "刷新", onClick = { scope.launch { load() } })
+                    GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { load() } })
                 }
             },
         ) {
             if (net == null) {
-                LoadingState("加载中…")
+                LoadingState(L["common.loading"])
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<JsonObject>(title = "协议", weight = 0.8f, mono = true) {
+                        TableCol<JsonObject>(title = L["协议_b0c431675b"], weight = 0.8f, mono = true) {
                             TableText(it.str("netid"), mono = true)
                         },
-                        TableCol<JsonObject>(title = "本地地址", weight = 1.6f, mono = true) {
+                        TableCol<JsonObject>(title = L["本地地址_3f5bfd6a77"], weight = 1.6f, mono = true) {
                             TableText(it.str("local"), mono = true, maxLines = 3)
                         },
-                        TableCol<JsonObject>(title = "对端", weight = 1.6f, mono = true) {
+                        TableCol<JsonObject>(title = L["对端_58e5dbe70d"], weight = 1.6f, mono = true) {
                             TableText(it.str("peer"), mono = true, color = Palette.muted, maxLines = 3)
                         },
-                        TableCol<JsonObject>(title = "进程", weight = 2f, mono = true) {
+                        TableCol<JsonObject>(title = L["进程_4eb4768d27"], weight = 2f, mono = true) {
                             TableText(cleanProc(it.str("process")), mono = true, color = Palette.muted, maxLines = 3)
                         },
                     ),
                     rows = listening,
-                    emptyText = "无监听端口",
+                    emptyText = L["无监听端口_e179a92a15"],
                 )
             }
         }
 
         /* N5 已建立连接 */
-        PanelCard(title = "已建立连接 (${established.size})", cardKey = "net-estab") {
+        PanelCard(title = trf("已建立连接_0_ac05618709", established.size), cardKey = "net-estab") {
             if (net == null) {
-                LoadingState("加载中…")
+                LoadingState(L["common.loading"])
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<JsonObject>(title = "本地", weight = 2f, mono = true) {
+                        TableCol<JsonObject>(title = L["本地_e8666c377c"], weight = 2f, mono = true) {
                             TableText(it.str("local"), mono = true, maxLines = 3)
                         },
-                        TableCol<JsonObject>(title = "远程", weight = 2f, mono = true) {
+                        TableCol<JsonObject>(title = L["远程_801947aa9a"], weight = 2f, mono = true) {
                             TableText(it.str("peer"), mono = true, color = Palette.muted, maxLines = 3)
                         },
-                        TableCol<JsonObject>(title = "进程", weight = 2f, mono = true) {
+                        TableCol<JsonObject>(title = L["进程_4eb4768d27"], weight = 2f, mono = true) {
                             TableText(cleanProc(it.str("process")), mono = true, color = Palette.muted, maxLines = 3)
                         },
                     ),
                     rows = established,
-                    emptyText = "无已建立连接",
+                    emptyText = L["无已建立连接_28fcae6254"],
                 )
                 Spacer(Modifier.height(8.dp))
-                Text("连接统计", color = Palette.muted, fontSize = 12.sp)
+                Text(L["连接统计_6527f81b7c"], color = Palette.muted, fontSize = 12.sp)
                 Spacer(Modifier.height(4.dp))
                 Text(
                     net?.str("summary") ?: "",
@@ -320,7 +324,7 @@ fun NetworkPage() {
 
         /* N6 防火墙 (UFW) */
         PanelCard(
-            title = "防火墙 (UFW)",
+            title = L["防火墙_ufw_4e7735d125"],
             cardKey = "net-ufw",
             right = {
                 Row(
@@ -328,16 +332,16 @@ fun NetworkPage() {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
                 ) {
-                    if (ufwActive) LevelBadge("已启用", Level.Ok) else LevelBadge("未启用", Level.Warn)
+                    if (ufwActive) LevelBadge(L["已启用_25d2843150"], Level.Ok) else LevelBadge(L["未启用_8bb38ef00c"], Level.Warn)
                     if (ufwActive) {
                         DangerBtn(
-                            text = "禁用防火墙",
+                            text = L["禁用防火墙_7551af008d"],
                             onClick = {
                                 scope.launch {
                                     val ok = Modal.confirm(
-                                        title = "禁用防火墙",
-                                        text = "禁用后服务器将无主机层防火墙保护！",
-                                        okText = "确认",
+                                        title = L["禁用防火墙_7551af008d"],
+                                        text = L["禁用后服务器将无主机层防火墙保护_40b5c7f326"],
+                                        okText = L["确认_b56d9ac6c5"],
                                         danger = true,
                                     )
                                     if (ok) netAction("ufw-disable", reload = { reloadAll() })
@@ -346,13 +350,13 @@ fun NetworkPage() {
                         )
                     } else {
                         PrimaryBtn(
-                            text = "启用防火墙",
+                            text = L["启用防火墙_32fbb16291"],
                             onClick = {
                                 scope.launch {
                                     val ok = Modal.confirm(
-                                        title = "启用防火墙",
-                                        text = "将启用 UFW（默认拒绝入站）。请确认已允许 22 端口：ufw allow 22/tcp",
-                                        okText = "确认",
+                                        title = L["启用防火墙_32fbb16291"],
+                                        text = L["将启用_ufw_默认拒绝入站_请确认已允许_2_ebeb8137d3"],
+                                        okText = L["确认_b56d9ac6c5"],
                                         danger = true,
                                     )
                                     if (ok) netAction("ufw-enable", reload = { reloadAll() })
@@ -361,7 +365,7 @@ fun NetworkPage() {
                         )
                     }
                     GhostBtn(
-                        text = "重载规则",
+                        text = L["重载规则_903c08bef9"],
                         onClick = { scope.launch { netAction("ufw-reload") } },
                     )
                 }
@@ -375,17 +379,17 @@ fun NetworkPage() {
                 Field(
                     value = spec,
                     onValueChange = { spec = it },
-                    hint = "端口规格，如 8080/tcp 或 3306",
+                    hint = L["端口规格_如_8080_tcp_或_3306_b254f7025d"],
                     mono = true,
                     modifier = Modifier.weight(1f),
                 )
                 PrimaryBtn(
-                    text = "+ 允许 (ALLOW)",
+                    text = L["允许_allow_769b4bcd7c"],
                     onClick = {
                         scope.launch {
                             val s = spec.trim()
                             if (s.isEmpty()) {
-                                AppState.toast("请输入端口规格", ToastKind.Warn)
+                                AppState.toast(tr("请输入端口规格_747e55b43b"), ToastKind.Warn)
                                 return@launch
                             }
                             netAction("ufw-allow", params = jsonObjectOf("spec" to s), reload = { loadSecurity() })
@@ -393,12 +397,12 @@ fun NetworkPage() {
                     },
                 )
                 DangerBtn(
-                    text = "− 拒绝 (DENY)",
+                    text = L["拒绝_deny_15eaa6f7a5"],
                     onClick = {
                         scope.launch {
                             val s = spec.trim()
                             if (s.isEmpty()) {
-                                AppState.toast("请输入端口规格", ToastKind.Warn)
+                                AppState.toast(tr("请输入端口规格_747e55b43b"), ToastKind.Warn)
                                 return@launch
                             }
                             netAction("ufw-deny", params = jsonObjectOf("spec" to s), reload = { loadSecurity() })
@@ -415,36 +419,36 @@ fun NetworkPage() {
                         TableCol<JsonObject>(title = "#", weight = 0.5f, align = TextAlign.End, mono = true) {
                             Text(it.num("num").toLong().toString(), fontSize = 12.sp)
                         },
-                        TableCol<JsonObject>(title = "规则", weight = 2.4f, mono = true) {
+                        TableCol<JsonObject>(title = L["规则_ed904c685a"], weight = 2.4f, mono = true) {
                             Text(it.str("rule"), fontSize = 12.sp)
                         },
-                        TableCol<JsonObject>(title = "动作", weight = 0.9f) {
+                        TableCol<JsonObject>(title = L["动作_d9d9827827"], weight = 0.9f) {
                             val a = it.str("action")
                             LevelBadge(a, if (a == "ALLOW") Level.Ok else Level.Bad)
                         },
-                        TableCol<JsonObject>(title = "来源", weight = 1.4f, mono = true) {
+                        TableCol<JsonObject>(title = L["来源_c63f79e636"], weight = 1.4f, mono = true) {
                             Text(it.str("from"), fontSize = 12.sp, color = Palette.muted)
                         },
-                        TableCol<JsonObject>(title = "备注", weight = 1.4f) {
+                        TableCol<JsonObject>(title = L["备注_e0361480e3"], weight = 1.4f) {
                             Text(it.str("comment"), fontSize = 12.sp, color = Palette.muted)
                         },
                         TableCol<JsonObject>(title = "", weight = 0.8f) { rule ->
                             DangerBtn(
-                                text = "删除",
+                                text = L["删除_3755f56f2f"],
                                 onClick = {
                                     scope.launch {
                                         val n = rule.num("num").toLong()
                                         val ok = Modal.confirm(
-                                            title = "删除防火墙规则",
-                                            text = "删除 UFW 规则 #$n？",
-                                            okText = "删除",
+                                            title = L["删除防火墙规则_f1c7ac57e4"],
+                                            text = L["删除_ufw_规则_n_969e18703f"],
+                                            okText = L["删除_3755f56f2f"],
                                             danger = true,
                                         )
                                         if (!ok) return@launch
                                         netAction(
                                             action = "ufw-delete",
                                             params = jsonObjectOf("num" to n),
-                                            outputTitle = "删除结果",
+                                            outputTitle = L["删除结果_1e53f0d130"],
                                             reload = { loadSecurity() },
                                         )
                                     }
@@ -456,7 +460,7 @@ fun NetworkPage() {
                 )
             } else {
                 Text(
-                    ufwRaw.joinToString("\n").ifEmpty { "(防火墙未启用或无规则)" },
+                    ufwRaw.joinToString("\n").ifEmpty { L["防火墙未启用或无规则_b1604ba8c5"] },
                     color = Palette.muted,
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
@@ -466,7 +470,7 @@ fun NetworkPage() {
 
             Spacer(Modifier.height(8.dp))
             Text(
-                "禁用防火墙前请确认安全组仍在外层提供保护；启用前确保 22 端口已放行。防火墙规则表在执行操作后刷新。",
+                L["禁用防火墙前请确认安全组仍在外层提供保护_启用前_431e4ce24a"],
                 color = Palette.muted,
                 fontSize = 12.sp,
             )
@@ -475,7 +479,7 @@ fun NetworkPage() {
         /* N7 网卡开关 */
         val toggleIfaces = ifaces.filter { it.str("name") != "lo" }
         if (toggleIfaces.isNotEmpty()) {
-            PanelCard(title = "网卡开关", cardKey = "net-toggle") {
+            PanelCard(title = L["网卡开关_0cbd1185e2"], cardKey = "net-toggle") {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
@@ -485,13 +489,13 @@ fun NetworkPage() {
                         val up = i.str("operstate") == "UP"
                         if (up) {
                             DangerBtn(
-                                text = "$name: 关闭",
+                                text = trfn("name_关闭_c8e887ebc0", "name" to name),
                                 onClick = {
                                     scope.launch {
                                         val ok = Modal.confirm(
-                                            title = "关闭网卡",
-                                            text = "禁用网卡 $name？ 远程连接可能中断！",
-                                            okText = "确认",
+                                            title = L["关闭网卡_62663eaa23"],
+                                            text = trfn("禁用网卡_name_远程连接可能中断_18ef23c099", "name" to name),
+                                            okText = L["确认_b56d9ac6c5"],
                                             danger = true,
                                         )
                                         if (ok) {
@@ -506,13 +510,13 @@ fun NetworkPage() {
                             )
                         } else {
                             GhostBtn(
-                                text = "$name: 开启",
+                                text = trfn("name_开启_54ce939603", "name" to name),
                                 onClick = {
                                     scope.launch {
                                         val ok = Modal.confirm(
-                                            title = "开启网卡",
-                                            text = "启用网卡 $name？",
-                                            okText = "确认",
+                                            title = L["开启网卡_e65c5b5c1b"],
+                                            text = trfn("启用网卡_name_b24324d7d4", "name" to name),
+                                            okText = L["确认_b56d9ac6c5"],
                                         )
                                         if (ok) {
                                             netAction(
@@ -536,12 +540,12 @@ fun NetworkPage() {
 
 @Composable
 private fun NetTrafficCard(rxKb: List<Float>, txKb: List<Float>) {
-    PanelCard(title = "实时流量 (近 60 秒)", cardKey = "net-traffic") {
+    PanelCard(title = L["实时流量_近_60_秒_1fa853d958"], cardKey = "net-traffic") {
         if (rxKb.isEmpty()) {
-            Text("等待 WS 推送…", color = Palette.muted, fontSize = 12.5.sp)
+            Text(L["等待_ws_推送_b35761ce7b"], color = Palette.muted, fontSize = 12.5.sp)
         } else {
             MultiLineChart(
-                series = listOf("下行 KB/s" to rxKb, "上行 KB/s" to txKb),
+                series = listOf(L["下行_kb_s_4c180f6bfe"] to rxKb, L["上行_kb_s_aedc7f02cc"] to txKb),
                 colors = listOf(Color(0xFF22C55E), Color(0xFF38BDF8)),
                 yFormat = { "${it.toInt()}K" },
             )
@@ -551,8 +555,8 @@ private fun NetTrafficCard(rxKb: List<Float>, txKb: List<Float>) {
 
 @Composable
 private fun NetRouteCard(route: JsonObject?, dns: String) {
-    PanelCard(title = "路由 / DNS", cardKey = "net-route") {
-        Text("默认网关", color = Palette.muted, fontSize = 12.sp)
+    PanelCard(title = L["路由_dns_ab170c66cb"], cardKey = "net-route") {
+        Text(L["默认网关_e44b012e45"], color = Palette.muted, fontSize = 12.sp)
         Spacer(Modifier.height(2.dp))
         Text(
             if (route == null) "—" else "${route.str("gw")} via ${route.str("dev")}",

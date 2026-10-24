@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,18 +32,18 @@ private val TOKENS_PATHS = mapOf(
     "mdl" to "/relay/models?days=30",
 )
 
-private val WIN = listOf(
-    "d" to ("今日" to 1),
-    "w" to ("本周" to 7),
-    "m" to ("本月" to 30),
+private val WIN  get() = listOf(
+    "d" to (L["今日_574cd4fb79"] to 1),
+    "w" to (L["本周_e16e8248b1"] to 7),
+    "m" to (L["本月_389f0007de"] to 30),
 )
 
-private val TOKEN_COLORS = listOf(
-    "输入" to RelayColors.reqBlue,
-    "输出" to RelayColors.outputPurple,
-    "缓存读" to RelayColors.streamGreen,
-    "缓存写" to Color_orange(),
-    "推理" to RelayColors.errRed,
+private val TOKEN_COLORS  get() = listOf(
+    L["输入_e8850440f2"] to RelayColors.reqBlue,
+    L["输出_ded698ae1e"] to RelayColors.outputPurple,
+    L["缓存读_37ec7f1ba3"] to RelayColors.streamGreen,
+    L["缓存写_6d103bdf73"] to Color_orange(),
+    L["推理_c9d3b085e2"] to RelayColors.errRed,
 )
 
 private fun Color_orange() = androidx.compose.ui.graphics.Color(0xFFF59E0B)
@@ -62,38 +64,38 @@ fun RelayTokensTab() {
     val winLabel = WIN.firstOrNull { it.first == win }?.second?.first ?: ""
 
     RangeRow(
-        options = WIN.map { (k, v) -> k to "${v.first} (近${v.second}天)" },
+        options = WIN.map { (k, v) -> k to trf("0_近_1_天_e59c7ee3cd", v.first, v.second) },
         current = win,
         onSelect = { win = it },
-        leading = "统计窗口",
+        leading = L["统计窗口_d51cf620a9"],
         modifier = Modifier.padding(bottom = 12.dp),
         trailing = {
             androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
-            Muted("Token 统计按滚动窗口聚合 · 数据自 ${t.str("since").ifEmpty { "-" }}")
+            Muted(trf("token_统计按滚动窗口聚合_数据自_0_f4e9537a97", t.str("since").ifEmpty { "-" }))
         },
     )
 
     StatRow(
         listOf(
             StatItem(
-                label = "Token 总量",
+                label = L["token_总量_3f5fa71b8e"],
                 value = rNum(t.num("total")),
-                sub = "采样 ${rNum(t.num("measured"))}/${rNum(t.num("requests"))} · 覆盖 ${rPlain(t.num("coverage"))}%",
+                sub = trf("采样_0_1_覆盖_2_68982a2499", rNum(t.num("measured")), rNum(t.num("requests")), rPlain(t.num("coverage"))),
             ),
             StatItem(
-                label = "输入 / 输出",
+                label = L["输入_输出_337468db22"],
                 value = "${rNum(t.num("input"))} / ${rNum(t.num("output"))}",
-                sub = "推理 ${rNum(t.num("reasoning"))} · 输出占比 ${pct1(t.num("output_share"))}",
+                sub = trf("推理_0_输出占比_1_0dae9a01a8", rNum(t.num("reasoning")), pct1(t.num("output_share"))),
             ),
             StatItem(
-                label = "缓存读 / 写",
+                label = L["缓存读_写_75e0fcf350"],
                 value = "${rNum(t.num("cache_read"))} / ${rNum(t.num("cache_write"))}",
-                sub = "缓存命中率 ${pct1(t.num("cache_hit_rate"))}",
+                sub = trf("缓存命中率_0_3db6d625f8", pct1(t.num("cache_hit_rate"))),
             ),
             StatItem(
-                label = "单请求 Token",
+                label = L["单请求_token_e856ed3d96"],
                 value = rNum(t.num("avg_per_request")),
-                sub = "最大 ${rNum(t.num("max_request"))} · 请求 ${rNum(t.num("requests"))}",
+                sub = trf("最大_0_请求_1_635480efa0", rNum(t.num("max_request")), rNum(t.num("requests"))),
             ),
         ),
     )
@@ -101,30 +103,30 @@ fun RelayTokensTab() {
     /* ---------------- 每日 Token 消耗 + 构成 ---------------- */
     val daily = t.arr("daily").filterIsInstance<JsonObject>()
     GridLayout(columns = 2, spacing = 14.dp) {
-        PanelCard(title = "每日 Token 消耗", cardKey = "tk-daily") {
+        PanelCard(title = L["每日_token_消耗_688c00a2db"], cardKey = "tk-daily") {
             RelayMultiBar(
                 labels = daily.map { it.str("day").takeLast(5) },
                 series = listOf(
-                    BarSer("输入", daily.map { it.num("input").toFloat() }, RelayColors.reqBlue),
-                    BarSer("输出", daily.map { it.num("output").toFloat() }, RelayColors.outputPurple),
-                    BarSer("缓存读", daily.map { it.num("cache_read").toFloat() }, RelayColors.streamGreen),
+                    BarSer(L["输入_e8850440f2"], daily.map { it.num("input").toFloat() }, RelayColors.reqBlue),
+                    BarSer(L["输出_ded698ae1e"], daily.map { it.num("output").toFloat() }, RelayColors.outputPurple),
+                    BarSer(L["缓存读_37ec7f1ba3"], daily.map { it.num("cache_read").toFloat() }, RelayColors.streamGreen),
                 ),
                 stacked = true,
                 height = 230.dp,
             )
         }
 
-        PanelCard(title = "Token 构成", cardKey = "tk-composition", right = { Muted(winLabel) }) {
+        PanelCard(title = L["token_构成_9af64ae64e"], cardKey = "tk-composition", right = { Muted(winLabel) }) {
             val parts = listOf(
-                "输入" to t.num("input"),
-                "输出" to t.num("output"),
-                "缓存读" to t.num("cache_read"),
-                "缓存写" to t.num("cache_write"),
-                "推理" to t.num("reasoning"),
+                L["输入_e8850440f2"] to t.num("input"),
+                L["输出_ded698ae1e"] to t.num("output"),
+                L["缓存读_37ec7f1ba3"] to t.num("cache_read"),
+                L["缓存写_6d103bdf73"] to t.num("cache_write"),
+                L["推理_c9d3b085e2"] to t.num("reasoning"),
             ).filter { it.second > 0 }
             val total = parts.sumOf { it.second }.takeIf { it > 0 } ?: 1.0
             if (parts.isEmpty()) {
-                Muted("该窗口无 Token 数据")
+                Muted(L["该窗口无_token_数据_edac8cd9eb"])
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     parts.forEach { (label, v) ->
@@ -148,7 +150,7 @@ fun RelayTokensTab() {
     }
 
     /* ---------------- 按模型 Token 统计（日/周/月 并排） ---------------- */
-    RelaySection(title = "按模型 Token 统计（日 / 周 / 月 并排）", cardKey = "tk-models") {
+    RelaySection(title = L["按模型_token_统计_日_周_月_并_1820d55c9f"], cardKey = "tk-models") {
         val byWin: Map<String, Map<String, JsonObject>> = wins.mapValues { (_, obj) ->
             obj.arr("models").filterIsInstance<JsonObject>().associateBy { it.str("model") }
         }
@@ -195,32 +197,32 @@ fun RelayTokensTab() {
         }.sortedByDescending { it.num("m_total") }
 
         if (rows.isEmpty()) {
-            Muted("无模型 Token 数据")
+            Muted(L["无模型_token_数据_a505d4ac3a"])
         } else {
             relayTable(
                 rows = rows,
                 cols = listOf(
-                    RCol("model", "模型", mono = true, width = 1.7f),
-                    RCol("d_total", "今日 Token", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("w_total", "本周 Token", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("m_total", "本月 Token", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("d_n", "今日请求", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("w_n", "本周请求", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("m_n", "本月请求", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("m_input", "输入(月)", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("m_output", "输出(月)", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("m_cache", "缓存(月)", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("m_avg", "均值/请求", num = true, fmt = { rNum(jnum(it)) }),
-                    RCol("share", "当前窗口占比", num = true, fmt = { pct1(jnum(it)) }),
+                    RCol("model", L["模型_98fd0cbd9c"], mono = true, width = 1.7f),
+                    RCol("d_total", L["今日_token_d0b5adbe07"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("w_total", L["本周_token_23360d9af4"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("m_total", L["本月_token_01337f42b0"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("d_n", L["今日请求_731c00a176"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("w_n", L["本周请求_441334771a"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("m_n", L["本月请求_066cf9ee8d"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("m_input", L["输入_月_e27a6074cd"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("m_output", L["输出_月_8701d8542e"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("m_cache", L["缓存_月_6f6d3ae971"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("m_avg", L["均值_请求_af3edf0ac6"], num = true, fmt = { rNum(jnum(it)) }),
+                    RCol("share", L["当前窗口占比_903b7cd486"], num = true, fmt = { pct1(jnum(it)) }),
                 ),
-                emptyText = "无模型 Token 数据",
+                emptyText = L["无模型_token_数据_a505d4ac3a"],
             )
         }
     }
 
     /* ---------------- 按模型 Token 分布图 ---------------- */
     RelaySection(
-        title = "按模型 Token 分布图",
+        title = L["按模型_token_分布图_a371a816cb"],
         cardKey = "tk-modelchart",
         right = { Muted(winLabel) },
     ) {
@@ -228,9 +230,9 @@ fun RelayTokensTab() {
         RelayMultiBar(
             labels = winModels.map { it.str("model") },
             series = listOf(
-                BarSer("输入", winModels.map { it.num("input").toFloat() }, RelayColors.reqBlue),
-                BarSer("输出", winModels.map { it.num("output").toFloat() }, RelayColors.outputPurple),
-                BarSer("缓存读", winModels.map { it.num("cache_read").toFloat() }, RelayColors.streamGreen),
+                BarSer(L["输入_e8850440f2"], winModels.map { it.num("input").toFloat() }, RelayColors.reqBlue),
+                BarSer(L["输出_ded698ae1e"], winModels.map { it.num("output").toFloat() }, RelayColors.outputPurple),
+                BarSer(L["缓存读_37ec7f1ba3"], winModels.map { it.num("cache_read").toFloat() }, RelayColors.streamGreen),
             ),
             stacked = true,
             height = 240.dp,
@@ -238,20 +240,20 @@ fun RelayTokensTab() {
     }
 
     /* ---------------- 每日 Token 明细 ---------------- */
-    RelaySection(title = "每日 Token 明细", cardKey = "tk-dailytable") {
+    RelaySection(title = L["每日_token_明细_78642770fa"], cardKey = "tk-dailytable") {
         relayTable(
             rows = daily.takeLast(30),
             cols = listOf(
-                RCol("day", "日期", mono = true),
-                RCol("n", "请求", num = true, fmt = { rNum(jnum(it)) }),
-                RCol("measured", "已测量", num = true, fmt = { rNum(jnum(it)) }),
-                RCol("input", "输入", num = true, fmt = { rNum(jnum(it)) }),
-                RCol("output", "输出", num = true, fmt = { rNum(jnum(it)) }),
-                RCol("cache_read", "缓存读", num = true, fmt = { rNum(jnum(it)) }),
-                RCol("reasoning", "推理", num = true, fmt = { rNum(jnum(it)) }),
-                RCol("total", "合计", num = true, fmt = { rNum(jnum(it)) }),
+                RCol("day", L["日期_b6fed9af83"], mono = true),
+                RCol("n", L["请求_926f6b6b6a"], num = true, fmt = { rNum(jnum(it)) }),
+                RCol("measured", L["已测量_a418169c62"], num = true, fmt = { rNum(jnum(it)) }),
+                RCol("input", L["输入_e8850440f2"], num = true, fmt = { rNum(jnum(it)) }),
+                RCol("output", L["输出_ded698ae1e"], num = true, fmt = { rNum(jnum(it)) }),
+                RCol("cache_read", L["缓存读_37ec7f1ba3"], num = true, fmt = { rNum(jnum(it)) }),
+                RCol("reasoning", L["推理_c9d3b085e2"], num = true, fmt = { rNum(jnum(it)) }),
+                RCol("total", L["合计_92bcbf71cb"], num = true, fmt = { rNum(jnum(it)) }),
             ),
-            emptyText = "暂无数据",
+            emptyText = L["暂无数据_b246458f20"],
         )
     }
 }

@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.trf
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.JsonElement
@@ -105,7 +107,7 @@ object FileStore {
             lastError.value = null
             return
         }
-        lastError.value = "$path: ${e.message ?: "请求失败"}"
+        lastError.value = trf("0_1_4d3c418a83", path, e.message ?: L["请求失败_8fdc4112a4"])
     }
 
     /** 返回 null=成功，非空=可直接 toast 的失败文案。 */
@@ -117,10 +119,10 @@ object FileStore {
         null
     } catch (e: ApiException) {
         if (e.code == 404) unsupported.value = true else lastError.value = e.message
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     } catch (e: Exception) {
         lastError.value = e.message
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     } finally {
         busy.value = false
     }
@@ -184,9 +186,9 @@ object FileStore {
         previewFile(path)
         val p = preview.value ?: return lastError.value
         return when {
-            p.binary -> "这是二进制文件，不能在线编辑，请下载后用编辑器打开"
-            p.tooLarge -> "文件 ${Fmt.bytes(p.size)} 超过可编辑上限 ${Fmt.bytes(p.limit)}，请用终端或上传覆盖"
-            p.truncated -> "文件被截断预览（${Fmt.bytes(p.size)}），在线编辑会丢失内容，建议先下载备份"
+            p.binary -> L["这是二进制文件_不能在线编辑_请下载后用编辑器打_d2f2d93e6e"]
+            p.tooLarge -> trf("文件_0_超过可编辑上限_1_请用终端或_bf27cf6d14", Fmt.bytes(p.size), Fmt.bytes(p.limit))
+            p.truncated -> trf("文件被截断预览_0_在线编辑会丢失内容_建_1d7dde5641", Fmt.bytes(p.size))
             else -> {
                 editing.value = path
                 null
@@ -240,17 +242,17 @@ object FileStore {
         null
     } catch (e: ApiException) {
         if (e.code == 404) unsupported.value = true else lastError.value = e.message
-        e.message ?: "上传失败"
+        e.message ?: L["上传失败_a6f805694b"]
     } catch (e: Exception) {
-        e.message ?: "上传失败"
+        e.message ?: L["上传失败_a6f805694b"]
     } finally { busy.value = false }
 
     suspend fun download(path: String): Pair<ByteArray?, String?> = try {
         api.download("/ops/files/download?path=${urlEncode(path)}") to null
     } catch (e: ApiException) {
-        null to (e.message ?: "下载失败")
+        null to (e.message ?: L["下载失败_e0dab22b1a"])
     } catch (e: Exception) {
-        null to (e.message ?: "下载失败")
+        null to (e.message ?: L["下载失败_e0dab22b1a"])
     }
 
     suspend fun search(q: String, depth: Int = 4) {
@@ -279,7 +281,7 @@ object FileStore {
         call("/ops/files/extract", jsonObjectOf("path" to path, "to" to to)) { refresh() }
 
     fun isTextish(e: FileEntry): Boolean = !e.isDir && (
-        e.typeLabel != "符号链接" && (
+        e.typeLabel != com.servermaintance.panel.i18n.apiTag("符号链接_bcf783908a") && (
             e.name.endsWith(".conf") || e.name.endsWith(".cfg") || e.name.endsWith(".sh") ||
                 e.name.endsWith(".py") || e.name.endsWith(".js") || e.name.endsWith(".ts") ||
                 e.name.endsWith(".kt") || e.name.endsWith(".json") || e.name.endsWith(".yaml") ||

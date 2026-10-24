@@ -1,0 +1,120 @@
+删除模式_n_及其全部对象_cascade_7be2ccf5c3	$n şemasını ve tüm nesnelerini sil (CASCADE)?
+删除清单_9ef1393048	Manifestoyu sil
+删除用户_0_其全部笔记_待办与共享将一并_2bdfec376d	{0} kullanıcısı silinsin mi? Tüm notları, yapılacaklar listesi ve paylaşımları da silinecek ve geri getirilemez!
+删除用户_bcfca951a1	Kullanıcıyı sil
+删除的笔记会先放到这里_可随时恢复_1e1ce2f496	Silinen notlar önce buraya konur ve istediğiniz zaman geri yüklenebilir
+删除看护项_a25ad06abe	İzleme öğesini sil
+删除索引_0_603822ce94	{0} dizini silinsin mi?
+删除索引_b35a3521e8	Dizini sil
+删除索引_n_36f8faee06	$n dizini silinsin mi?
+删除约束_79e25fc4b0	Kısıtlamayı sil
+删除线_c85de9e58a	Üstü çizili
+删除结果_1e53f0d130	Sonucu sil
+删除行_3a7d5b0104	Satırı sil
+删除表_b9fd2c7a44	Tabloyu sil
+删除视图_3bcc039f64	Görünümü sil
+删除角色_89dab40d48	Rolü sil
+删除触发器_74803e962b	Tetikleyiciyi sil
+删除该行_定位_0_b6bfea70ab	Bu satır silinsin mi?\nKonum: {0}
+删除该行_定位_loc_b3f2f5d90e	Bu satır silinsin mi?\nKonum: $loc
+删除轮转日志_f8de13f44b	Dönen günlükleri sil
+删除通知渠道_5fb682fc27	Bildirim kanalını sil
+删除键_ea51f84dd1	Anahtarı sil
+删除防火墙规则_f1c7ac57e4	Güvenlik duvarı kuralını sil
+删除集合_0_及其全部文档_3a1fd80488	{0} koleksiyonunu ve tüm belgelerini silinsin mi?
+删除集合_e86f0eec01	Koleksiyonu sil
+删除集合_n_及其全部文档_3e6b9c73f5	$n koleksiyonunu ve tüm belgelerini silinsin mi?
+删除静默窗口_ec702916cf	Sessizlik penceresini sil
+到期提醒_ce425cc527	Bitiş hatırlatıcısı
+到期提醒_截止前_n_分钟发送_每日摘要_在设定_0805f20d0d	Bitiş hatırlatıcısı: sürenin bitiminden N dakika önce gönderilir; günlük özet: "süresi dolan + bugün dolacak" öğeleri belirlenen saatte özetler.
+到期时间_3144a998f0	Bitiş zamanı
+到期邮件提醒_4e76e9fec7	Bitiş e-posta hatırlatıcısı
+制定方案_fabaee1920	Plan oluştur
+刷新_38108eaa1d	Yenile
+刷新中_ea0ab1492c	Yenileniyor…
+刷新全部配额_076a4d3565	Tüm kotaları yenile
+刷新分析_6a65ab904e	Analizleri yenile
+刷新引擎信息_022b2c17cd	Motor bilgisini yenile
+刷新当前页面_ea66e5616b	Mevcut sayfayı yenile
+刷新状态_7cc7f07a2c	Durumu yenile
+刷新配额_851859899a	Kotayı yenile
+刷新间隔已更新为_0_0bc513729c	Yenileme aralığı {0} olarak güncellendi
+刷新间隔已更新为_refreshlabel_e742c6c081	Yenileme aralığı ${refreshLabel(v)} olarak güncellendi
+前往_23926d6146	Git
+剖析设置_3fa475fa54	Profilleme ayarları
+剩余_0_共_1_a04477cc45	{0} kaldı / toplam {1}
+剩余_fmt_bytes_d_availkb_fd7a85ca9b	${Fmt.bytes(d.availKb * 1024)} kaldı / toplam ${Fmt.bytes(d.totalKb * 1024)}
+剩余天数_fb0ca9d4ed	Kalan gün
+加密方式_4bf1dc061d	Şifreleme yöntemi
+加签密钥_sec_开头_63ebeb3c8d	İmza anahtarı (SEC ile başlar)
+加签密钥_可空_a075da941a	İmza anahtarı (isteğe bağlı)
+加粗_f670b2adc0	Kalın
+加载中_300ee3dee4	Yükleniyor…
+加载中_ce56f617e4	Yükleniyor
+加载单元日志_faba070327	Birim günlüklerini yükle
+加载失败_f6b7a41e56	Yükleme başarısız
+加载日志源_e64e9c0145	Günlük kaynakları yükleniyor…
+加载详情失败_02c28cd84c	Ayrıntılar yüklenemedi
+劣化_07f00d1b46	Kötüleşme
+动作_d9d9827827	Eylem
+动作历史_探测_拉起_恢复_放弃_ced77539db	Eylem geçmişi (algılama / başlatma / kurtarma / vazgeçme)
+勾选后可批量操作_执行前照常预览变更_过程中显示_8b4692abd7	Toplu işlem için işaretleyin: değişiklikler her zamanki gibi çalıştırmadan önce önizlenir; işlem sırasında genel ilerleme çubuğu ve gerçek zamanlı günlükler gösterilir (çalıştırmada en fazla 500 paket, otomatik olarak bölünür)
+包名_03c2d07a24	Paket adı
+包含数据_1cf1ae1b58	Veri içerir
+区域_17fc93c9cd	Bölge
+区间_2e8dd83da0	Aralık
+升序_c0276ec9a7	Artan
+升级_2e8e70958c	Yükselt
+协议_b0c431675b	Protokol
+单价表_etc_relay_pricing_j_2bb5e45a84	Fiyat tablosu: /etc/relay/pricing.json, mimo-* joker karakterlerini destekler; -free içeren modeller 0 olarak faturalandırılır.
+单位_mb_du_只统计同一文件系统内的内容_fbcbac3988	Birim: MB; du yalnızca aynı dosya sistemi içindeki içeriği sayar
+单元_9abfa4fb70	Birim
+单次_6fe4ab9915	Tek seferlik
+单次时长_分钟_0e95dd9d82	Sefer başına süre (dakika)
+单次时间段_ee80d47d80	Tek zaman aralığı
+单次超时_毫秒_6917a6a5b4	Sefer başına zaman aşımı (milisaniye)
+单表备份_a2ec5e9278	Tek tablo yedeklemesi
+单请求_token_e856ed3d96	İstek başına Token
+占用_0_50085c6df1	Kullanım {0}
+占用_7b81023b68	Kullanım
+占用_fmt_bytes_totalsize_c86f7a479b	Kullanım ${Fmt.bytes(totalSize)}
+占用分析_003851e93c	Kullanım analizi
+危险操作会弹出确认框_所有操作都会写入审计日志_762239eaff	Tehlikeli işlemlerde onay kutusu gösterilir. Tüm işlemler denetim günlüğüne yazılır.
+即将_f48bcfb627	Yakında
+卸载_200cf1550d	Kaldır
+卸载不再被任何软件包依赖的软件包_8ed32b0b41	Artık başka hiçbir paket tarafından gerekmeyen paketleri kaldır
+历史加载失败_26115dcd28	Geçmiş yüklenemedi
+历史记录_19e0e3f3df	Geçmiş
+历史趋势_83a53b6a5f	Geçmiş eğilim
+压缩_4b8163f527	Sıkıştır
+压缩集合_3a8375459c	Koleksiyonu sıkıştır
+原位置_00e56f7a13	Orijinal konum
+原因_1ff9c3d001	Neden
+原因备注_0a726bdb00	Neden notu
+原密码_2bd80322a5	Mevcut parola
+原配置备份_0_45dc9a773d	\n\nOrijinal yapılandırma yedeği: {0}
+原配置备份_it_bc51af7b89	\n\nOrijinal yapılandırma yedeği: $it
+去登录_6c01b0cfd0	Oturum açmaya git
+去重_sess_c93d23e294	sess yinelenenlerini kaldır
+参数值_所有者_连接数_5fbebb4ba1	Parametre değeri / Sahip / Bağlantılar
+参数名_如_work_mem_search_5337d4de4f	Parametre adı (örn. work_mem / search_path)
+参数已保存_5252465cd0	Parametre kaydedildi
+发件人名_c1dac198b4	Gönderen adı
+发件人地址_e83d394caa	Gönderen adresi
+发件人显示名_可空_cf0818ed1b	Gönderen görünen adı (isteğe bağlı)
+发件账号_c4c54b3c06	Gönderim hesabı
+发现不可用_d0375abbf5	Kullanılamaz olarak bulundu
+发行版_6ef5fc415c	Dağıtım
+发送中_c1b894480d	Gönderiliyor…
+发送失败_e767d34c78	Gönderim başarısız
+发送测试邮件_1eace6fb59	Test e-postası gönder
+发送记录_90ed819b22	Gönderim geçmişi
+发送详情邮件_ad8277f7a5	Ayrıntı e-postası gönder
+取下一个值_0101cf2ed1	Sonraki değeri al
+取尾中_d2a2c10e52	Son kısım alınıyor…
+取消_4d0b4688c7	İptal
+取消共享_2b2e551005	Paylaşımı kaldır
+取消对该用户的共享_67e86f5c00	Bu kullanıcıyla paylaşım kaldırılsın mı?
+取消选择_f02e943954	Seçimi kaldır
+受保护_9505edfd06	Korumalı
+受窗口内上限约束_b1435a79c4	Pencere içi sınıra tabi

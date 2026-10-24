@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label Cài đặt hoàn tất, đang làm mới…
+label_安装日志_13ce1b1029	$label Nhật ký cài đặt
+label_实现中_70505f7ef8	Đang triển khai “$label”…
+llm_api_中继的请求量_token_用量_6b89d708ea	Lượng yêu cầu, mức sử dụng Token, hạn mức nhóm khóa, khả năng sẵn có của mô hình và phân tích chất lượng của LLM API relay
+location_块_不要停用该站点以免面板与_4ae164b62b	khối location), đừng tắt trang này nếu không bảng điều khiển và dịch vụ trung gian sẽ cùng ngừng hoạt động.
+login.access_token	Mã thông báo truy cập
+login.advanced	Nâng cao
+login.audit_notice	Tất cả thao tác đều được ghi vào nhật ký kiểm toán
+login.connect_failed	Kết nối thất bại:
+login.failed	Đăng nhập thất bại
+login.normalized_url	Địa chỉ đã chuẩn hóa
+login.not_logged_in	Chưa đăng nhập
+login.password_required	Vui lòng nhập mật khẩu
+login.remember_password	Ghi nhớ mật khẩu
+login.restore_default_url	Khôi phục địa chỉ mặc định
+login.save_on_test_hint	Sau khi đổi địa chỉ, nhấn “Kiểm tra kết nối” để lưu lại
+login.server_config	Cấu hình kết nối máy chủ
+login.sign_in	Đăng nhập
+login.signing_in	Đang đăng nhập…
+login.subtitle	Bảng điều khiển giám sát thời gian thực và cấu hình máy chủ
+login.test_connection	Kiểm tra kết nối
+login.testing	Đang kiểm tra…
+login_可登录_0e617ada9b	LOGIN (có thể đăng nhập)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(byte vòng trước, byte vòng hiện tại) là nội dung đã gửi ở các vòng trước — đây là mức trần mà bộ nhớ đệm cần đạt tới, không phụ thuộc vào số liệu nhà cung cấp báo cáo.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB không thu hồi dung lượng; validate/reindex là bảo trì định kỳ thường dùng.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB dùng mongodump để tạo tệp gzip (cần mongodump).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB chỉ thực sự tạo cơ sở dữ liệu khi ghi vào collection lần đầu; tại đây sẽ tạo collection giữ chỗ _cm_init.
+mongodb_的过滤条件支持_字段_值_558264a7d8	Bộ lọc của MongoDB hỗ trợ dạng {"trường":giá trị} (bên trong chuyển thành điều kiện truy vấn) hoặc dạng rút gọn trường=giá trị. Tài liệu hiển thị dạng JSON; _id là định danh tài liệu.
+mongodb_维护结果_aaeb39f907	Kết quả bảo trì MongoDB
+ms_毫秒_7ade5ab3a4	$ms ms
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (mặc định root + socket)
+mysql_语法_8200e34cb7	Cú pháp MySQL
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a thống kê
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c kiểm tra
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o tối ưu hóa
+name_ver_连接正常_33d0a44ec7	$name $ver kết nối bình thường
+name_关闭_c8e887ebc0	$name: Tắt
+name_开启_54ce939603	$name: Bật
+nav.audit	Nhật ký kiểm toán
+nav.backups	Trung tâm sao lưu
+nav.cron	Tác vụ định kỳ
+nav.dashboard	Bảng điều khiển
+nav.databases	Cơ sở dữ liệu
+nav.disks	Quản lý ổ đĩa
+nav.docker	Container Docker
+nav.health_alerts	Cảnh báo sức khỏe
+nav.logs	Trung tâm nhật ký
+nav.memory	Quản lý bộ nhớ
+nav.network	Quản lý mạng
+nav.note_mail	Thông báo email
+nav.note_settings	Cài đặt NoteBox
+nav.note_transfer	Nhập / Xuất
+nav.note_users	Quản lý người dùng
+nav.notes	Ghi chú
+nav.ops_channels	Kênh thông báo
+nav.ops_disk	Quản trị ổ đĩa
+nav.ops_files	Quản lý tệp
+nav.ops_hosts	Máy chủ được quản lý
+nav.ops_remote	Chỉ số máy chủ từ xa
+nav.ops_rules	Quy tắc cảnh báo
+nav.ops_sec	Kiểm tra chuẩn bảo mật
+nav.ops_uptime	Đo khả dụng
+nav.ops_watch	Chăm sóc dịch vụ
+nav.packages	Quản lý gói phần mềm
+nav.page_placeholder	Trang “{0}” đang triển khai…
+nav.pinned_hint	(đã ghim, nhấn giữ để bỏ ghim)
+nav.processes	Quản lý tiến trình
+nav.relay	Relay OpenCode
+nav.section.app	Ứng dụng
+nav.section.monitor	Giám sát
+nav.section.notes	Ghi chú
+nav.section.server	Máy chủ
+nav.section.system	Hệ thống
+nav.section.tools	Công cụ
+nav.security	Quản lý bảo mật
+nav.services	Dịch vụ hệ thống
+nav.settings	Cài đặt bảng điều khiển
+nav.slo	SLO và mức sử dụng
+nav.terminal	Terminal Web
+nav.todos	Danh sách cần làm
+nav.web	Website / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf cấu hình Nginx · sshd_config cấu hình SSH · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	Cấu hình nginx/sshd/fstab được tự kiểm tra sau khi lưu
+nginx_站点_0_6bcfddef71	Trang Nginx ({0})
+nginx_站点_sites_size_2db3c2b5be	Trang Nginx (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	SMTP và quy tắc cảnh báo NoteBox
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox ghi chú đám mây (phân loại nhiều cấp · thùng rác · Markdown · chia sẻ)
+notebox_地址未配置_3d37258011	Chưa cấu hình địa chỉ NoteBox
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox công việc (hạn chót & nhắc qua email)
+notebox_数据迁移_362725f18e	Di trú dữ liệu NoteBox
+notebox_服务可达_6a7506d6ac	Dịch vụ NoteBox có thể truy cập
+notebox_服务可达_未登录_e023d68cad	Dịch vụ NoteBox có thể truy cập (chưa đăng nhập)
+notebox_服务地址_默认端口_13345_e0880dfda6	Địa chỉ dịch vụ NoteBox (cổng mặc định 13345). Cần đăng nhập lại sau khi đổi.
+notebox_登录成功_013138644f	Đăng nhập NoteBox thành công
+notebox_设置_efb5a47b98	Cài đặt NoteBox
+notebox_账号_仅管理员_81b8d4ca26	Tài khoản NoteBox (chỉ quản trị viên)
+online_台有近期数据_1fefff8cdc	$online máy chủ có dữ liệu gần đây
+opencode_中继_2e021ee797	Relay OpenCode
+p95_延迟_57d63f8b46	Độ trễ P95
+p95_延迟_ba65a873bc	Độ trễ p95
+palette.accent_hint	Giao diện · hiện tại {0}
+palette.open_page	Mở trang {0}
+palette.pin	Ghim “{0}”
+palette.pin_hint	Không gian làm việc · nhấn giữ mục trên thanh bên để chuyển đổi
+palette.reload_hint	F5 / Ctrl+R · Tải lại
+palette.theme_hint	Giao diện · hiện tại {0}
+palette.unpin	Bỏ ghim “{0}”
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (buộc đổi mật khẩu)
+pg_自定义格式_0cc41d0ea4	Định dạng tùy chỉnh PG
+postgresql_mysql_sql_42e513fca9	Quản lý cơ sở dữ liệu/bảng, bảng điều khiển SQL, thông tin hiệu năng và sao lưu/phục hồi cho PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	Định dạng tùy chỉnh PostgreSQL -Fc (phục hồi nhanh hơn)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (mặc định dùng xác thực peer: su - postgres)
+rdb_快照_62f218ed40	Ảnh chụp RDB
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis chạy BGSAVE và sao chép tệp RDB; khôi phục sẽ ghi đè thư mục dữ liệu và cần khởi động lại Redis để có hiệu lực.
+redis_命令控制台_fa42019a53	Bảng điều khiển lệnh Redis
+redis_维护_d2a01bfbd3	Bảo trì Redis
+reindex_全部库_90545e1eeb	REINDEX toàn bộ cơ sở dữ liệu
+reindex_重建索引_256956f94e	REINDEX / xây dựng lại chỉ mục
+reindex_重建索引_d81fcbf8d0	REINDEX (xây dựng lại chỉ mục)
+relay_alert_py_检查_smtp_告_012aaa3373	Kiểm tra relay_alert.py, kênh cảnh báo SMTP, ngưỡng và bản ghi cảnh báo

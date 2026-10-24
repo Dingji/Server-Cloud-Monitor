@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.JsonElement
@@ -203,7 +205,7 @@ object OpsState {
             lastError.value = null
             return
         }
-        lastError.value = "$path: ${e.message ?: "请求失败"}"
+        lastError.value = trf("0_1_4d3c418a83", path, e.message ?: L["请求失败_8fdc4112a4"])
     }
 
     suspend fun loadAll() {
@@ -240,7 +242,7 @@ object OpsState {
         if (e is ApiException && e.code == 404) {
             unsupported.value = true
             lastError.value = null
-        } else lastError.value = "$path: ${e.message ?: "请求失败"}"
+        } else lastError.value = trf("0_1_4d3c418a83", path, e.message ?: L["请求失败_8fdc4112a4"])
     }
 
     suspend fun loadTasks() {
@@ -320,10 +322,10 @@ object OpsState {
         null
     } catch (e: ApiException) {
         if (e.code == 404) unsupported.value = true else lastError.value = e.message
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     } catch (e: Exception) {
         lastError.value = e.message
-        e.message ?: "操作失败"
+        e.message ?: L["操作失败_09e424b5e8"]
     }
 
     /** 拨测任务：form 里带的字段直接透传，服务器负责校验（返回 400 文案）。 */
@@ -336,9 +338,9 @@ object OpsState {
         loadTasks(); loadSla()
         null to o.obj("task")?.task()
     } catch (e: ApiException) {
-        (e.message ?: "拨测失败") to null
+        (e.message ?: L["拨测失败_7b0bb7893f"]) to null
     } catch (e: Exception) {
-        (e.message ?: "拨测失败") to null
+        (e.message ?: L["拨测失败_7b0bb7893f"]) to null
     }
 
     suspend fun saveRule(body: JsonObject): String? = mutate("/ops/alerts/rule/save", body) { loadRules() }
@@ -349,7 +351,7 @@ object OpsState {
         api.post("/ops/alerts/rule/test", body)
         loadRules(); loadNotifyLog()
         null
-    } catch (e: Exception) { e.message ?: "试跑失败" }
+    } catch (e: Exception) { e.message ?: L["试跑失败_778e634d3d"] }
 
     suspend fun saveChannel(body: JsonObject): String? = mutate("/ops/alerts/channel/save", body) { loadChannels() }
     suspend fun deleteChannel(id: String): String? = mutate("/ops/alerts/channel/delete", jsonObjectOf("id" to id)) { loadChannels() }
@@ -360,8 +362,8 @@ object OpsState {
     suspend fun testChannel(id: String, text: String = ""): String? = try {
         val o = api.post("/ops/alerts/channel/test", jsonObjectOf("id" to id, "text" to text))
         loadChannels(); loadNotifyLog()
-        if (o.bool("ok")) null else o.key("result")?.pr("error")?.ifBlank { "发送失败" } ?: "发送失败"
-    } catch (e: Exception) { e.message ?: "发送失败" }
+        if (o.bool("ok")) null else o.key("result")?.pr("error")?.ifBlank { L["发送失败_e767d34c78"] } ?: L["发送失败_e767d34c78"]
+    } catch (e: Exception) { e.message ?: L["发送失败_e767d34c78"] }
 
     suspend fun saveSilence(body: JsonObject): String? = mutate("/ops/alerts/silence/save", body) { loadSilences() }
     suspend fun deleteSilence(id: String): String? = mutate("/ops/alerts/silence/delete", jsonObjectOf("id" to id)) { loadSilences() }

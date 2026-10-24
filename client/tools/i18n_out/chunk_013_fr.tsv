@@ -1,0 +1,120 @@
+当前索引更新于_0_1c82f67640	Index mis à jour le {0}
+当前采集到的指标_8e4e47b457	Métriques actuellement collectées
+当前镜像_ed71a792a7	Image actuelle
+当前页面_b7d5886b05	 · Page actuelle
+彻底删除_0_项_无法恢复_9f56fcff22	Supprimer définitivement {0} éléments, irrécupérable.
+彻底删除_8c0b37b684	Supprimer définitivement
+彻底删除_trash_size_项_无法恢_87a3623728	Supprimer définitivement ${trash.size} éléments, irrécupérable.
+彻底卸载_33072f5e11	Désinstaller complètement
+待办_csv_3308e95082	CSV des tâches
+待办_未完成_已完成_7422fade10	Tâches (à faire / terminées)
+待办清单_febc09d1b1	Liste de tâches
+待探测_51805a6f50	Sonde en attente
+待检测_05fb47fc35	Vérification en attente
+待邮箱验证_bada0c2e46	En attente de vérification de l'e-mail
+待验证_0b48e4bdd8	En attente de vérification
+必须带_http_或_https_e74acdc586	Doit commencer par http:// ou https://
+快捷_14249f75ba	Rapide
+快捷模板_423595bef4	Modèles rapides :
+快速备份_1cbe05845d	Sauvegarde rapide
+性能洞察_71fa3a4ff8	Aperçus de performance
+总_0_新增_1_1fd58b4e12	Total {0} · Nouveaux {1}
+总_token_2d5ae33603	Tokens au total
+总占用_3da7163a84	 Occupation totale
+总大小_0_a2c8d9634b	Taille totale {0}
+总大小_fmt_bytes_totalsiz_53ae231269	Taille totale ${Fmt.bytes(totalSize)}
+总容量_8b60ba80ea	Capacité totale
+总尝试_56d2a2d4f5	Tentatives totales
+总成功率_0_重试_1_32f597c3de	Taux de réussite global {0}% · Réessais {1}
+总成功率_322a0370e9	Taux de réussite global
+总成功率_61b76516e3	Taux de réussite global 
+总探测_572bee6277	Pings totaux
+总流量_出_6efb4930fb	Trafic total (sortant)
+总耗时_2db420d198	Temps total
+总览_c122e1758c	Vue d'ensemble
+总览与监控_70e2feb12d	Vue d'ensemble et supervision
+总计_3af1ac5b4e	Total
+总请求_d1cac3ca3b	Requêtes totales
+总账号_02ceb243fe	Comptes au total
+恢复_79748ca1c6	Restaurer
+恢复_mongodb_归档_ad961869c7	Restaurer l'archive MongoDB
+恢复_redis_7dd20f103c	Restaurer Redis
+恢复中_176238056c	Restauration en cours…
+恢复中_d6426a51e5	Restauration en cours
+恢复于_0_57aae0c315	Restauré le {0}
+恢复于_rtmrecover_recover_471df21a46	Restauré le ${rTmRecover(recoverAt)}
+恢复备份到目标数据库_00fbc874c2	Restaurer la sauvegarde vers la base de destination
+恢复失败_08c8ed5980	Échec de la restauration :
+恢复失败_76842a0348	Échec de la restauration
+恢复完成_笔记_0_条_待办_1_条_7aa19232cf	Restauration terminée : {0} notes, {1} tâches
+恢复完整备份_640eea92dc	Restaurer la sauvegarde complète
+恢复方式_4a0ce48265	Méthode de restauration
+恢复时是否通知_e60cfd9684	Notifier à la restauration
+恢复结果_25404d8096	Résultat de la restauration
+恢复通知_9d088c33ba	Notification de restauration
+恢复默认地址_4c7fd3785e	Rétablir l'adresse par défaut
+想到什么_立刻记下来_c54f483edc	Notez tout de suite ce qui vous vient à l'esprit…
+慢查询_slowlog_89cb405eab	Requêtes lentes (SLOWLOG)
+慢查询_剖析_e7d6b1beb3	Requêtes lentes (analyse)
+慢查询_热点语句_e4c8bb10fe	Requêtes lentes / instructions les plus sollicitées
+成功_0_错误_1_超时_2_4e74aeecc7	Réussis {0} · Erreurs {1} · Délais dépassés {2}
+成功_51991a5d11	Réussi
+成功导入_0_条待办_0f7f47eb57	{0} tâches importées avec succès
+成功导入_0_条笔记_f1edf5b407	{0} notes importées avec succès
+成功导入_n_条待办_37eadf2708	$n tâches importées avec succès
+成功导入_n_条笔记_2f9691a596	$n notes importées avec succès
+成功率_0_047cd91c6c	Taux de réussite {0}%
+成功率_2xx_占比_服务可用性_非_5_a3d7b27e95	Taux de réussite = part des 2xx ; disponibilité du service = part des non-5xx. Un grand écart indique que les échecs proviennent surtout de paramètres ou quotas côté client, et non d'un incident en amont.
+成功率_df9dc72f2d	Taux de réussite
+成功率_monfmt_fixed_sr_1_4fbf1cc803	Taux de réussite ${MonFmt.fixed(sr, 1)}%
+成功率_延迟分位_错误分布_配额消耗与_toke_9c60795c78	Taux de réussite, percentiles de latence, répartition des erreurs, consommation des quotas et usage des tokens
+成功登录_last_d5df9592bd	Connexions réussies (dernières)
+我_34f201bc50	Moi
+我已知晓风险_强制执行_cd4e2f773d	Je connais les risques, forcer l'exécution
+我明白风险_执行_a77f5cd3f3	Je connais les risques, exécuter
+或_systemd_单元_nginx_serv_14c65e1864	ou l'unité systemd : nginx.service
+或点左上角_新建笔记_创建_4bb6db19d3	ou cliquez sur « Nouvelle note » en haut à gauche
+截止日期_9b3177f0b7	Date d'échéance
+截止时间_864048b32f	Heure d'échéance
+所有操作均被审计记录_511c89f737	Toutes les actions sont journalisées pour audit
+所有管理操作均写入审计日志_logs_a_e2b87d13a1	 · Toutes les actions d'administration sont écrites dans le journal d'audit (logs/audit.log)
+所有者_ff3beb8e45	Propriétaire
+所有软件包均为最新版本_ee413e3b4c	Tous les paquets sont à jour.
+手动_2a4a4de806	Manuelle
+手动编辑的_root_crontab_请通过_72bfbdde79	· Modifier le crontab de root via le terminal Web (crontab -e)
+手动进程_040082d08d	Processus manuel
+打包_0_项到_1_29836a27f5	Empaqueter {0} éléments vers {1}
+打包_selected_size_项到_e42700bf89	Empaqueter ${selected.size} éléments vers ${l.dir}
+打包_tar_gz_ff1dd64457	Empaqueter tar.gz
+打包为_tar_gz_3ea0166662	Empaqueter en tar.gz
+打包完成_be69db469a	Empaquetage terminé
+打开_65fc81e161	Ouvrir
+打开所在目录_b4bf69d6b9	Ouvrir le dossier parent
+执行_0_70b4feea4a	Exécuter {0} ?
+执行_28febba225	Exécuter
+执行_act_a3e97e4bee	Exécuter $act ?
+执行_action_b272ecea51	Exécuter $action ?
+执行_apt_get_install_y_ce_6568cc1ca1	Exécuter apt-get install -y certbot, environ 1-3 minutes.
+执行_b_0_b_1695afa501	Exécuter <b>{0}</b> ?
+执行_b_name_b_67f5a659e6	Exécuter <b>$name</b> ?
+执行_create_extension_if_n_aac00658d4	Exécuter CREATE EXTENSION IF NOT EXISTS $n ?
+执行_create_extension_pg_s_6d03312f5d	Exécuter CREATE EXTENSION pg_stat_statements ? Après l'activation, il faut encore l'ajouter à shared_preload_libraries et redémarrer la base avant le début des statistiques.
+执行_ctrl_enter_ecfb73b4d6	Exécuter (Ctrl+Enter)
+执行_daemon_stop_dfe266a216	Exécuter daemon-stop ?
+执行_ddl_769fdda3d6	Exécuter DDL
+执行_ddl_操作_0ed0a31f65	Exécuter une opération DDL
+执行_prune_6b4f1926c7	Exécuter prune ?
+执行_trim_de3f191099	Exécuter TRIM
+执行一次_relay_状态热备份_sqlite_8bc4bec089	Effectuer une sauvegarde à chaud de l'état du relay (backup online SQLite, sans interrompre le service de relais).
+执行中_1f425b6bf0	En cours d'exécution
+执行修复_18ad6adf19	Lancer la réparation
+执行单元_2466ded40e	Exécuter l'unité
+执行命令_bf162782f5	Exécuter la commande
+执行失败_9746cfc7d2	Échec de l'exécution
+执行异常_f5990190d3	Erreur d'exécution
+执行拉起_24779c513a	Lancer le démarrage
+执行清理_bebeb0649b	Lancer le nettoyage
+执行结果_1b213f405b	Résultat de l'exécution
+执行自愈_d499e88a86	Lancer l'auto-réparation
+执行计划_analyze_cc0577dcef	Plan d'exécution (ANALYZE)
+执行计划_json_5d921dfd27	Plan d'exécution JSON

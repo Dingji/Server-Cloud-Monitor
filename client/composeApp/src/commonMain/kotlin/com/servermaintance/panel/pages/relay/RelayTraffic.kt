@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,24 +48,24 @@ fun RelayTrafficTab() {
     StatRow(
         listOf(
             StatItem(
-                label = "今日请求",
+                label = L["今日请求_731c00a176"],
                 value = rNum(today.num("requests")),
-                sub = "环比昨日 ${delta(today.num("requests"), yest.num("requests"))}",
+                sub = trf("环比昨日_0_e52d529e62", delta(today.num("requests"), yest.num("requests"))),
             ),
             StatItem(
-                label = "今日出站",
+                label = L["今日出站_ae22fbbb49"],
                 value = rBytes(today.num("bytes_out")),
-                sub = "环比 ${delta(today.num("bytes_out"), yest.num("bytes_out"))}",
+                sub = trf("环比_0_e9d96f96a1", delta(today.num("bytes_out"), yest.num("bytes_out"))),
             ),
             StatItem(
-                label = "今日错误",
+                label = L["今日错误_97f268b84a"],
                 value = rNum(today.num("errors")),
                 sub = "4xx ${rNum(today.num("errors_4xx"))} · 5xx ${rNum(today.num("errors_5xx"))}",
             ),
             StatItem(
-                label = "今日成功率",
+                label = L["今日成功率_70d58b9151"],
                 value = pct1(today.num("success_rate")),
-                sub = "均延迟 ${rPlain(today.num("avg_latency"))} · TTFB ${rPlain(today.num("avg_ttfb"))}",
+                sub = trf("均延迟_0_ttfb_1_eb21bb36d0", rPlain(today.num("avg_latency")), rPlain(today.num("avg_ttfb"))),
             ),
         ),
     )
@@ -72,7 +74,7 @@ fun RelayTrafficTab() {
     val md = feed["models-daily"]
     val mdDays = md.arr("days").map { jstr(it).takeLast(5) }
     val mdModels = md.arr("models").map { jstr(it) }
-    RelaySection(title = "模型请求趋势", cardKey = "rl-md") {
+    RelaySection(title = L["模型请求趋势_941648991c"], cardKey = "rl-md") {
         RelayMultiBar(
             labels = mdDays,
             series = mdModels.take(8).mapIndexed { i, m ->
@@ -90,18 +92,18 @@ fun RelayTrafficTab() {
 
     /* ---------------- 模型用量 Top 15 ---------------- */
     val models = feed["models"].arr("models").filterIsInstance<JsonObject>().take(15)
-    RelaySection(title = "模型用量 Top 15", cardKey = "rl-traffic-models") {
+    RelaySection(title = L["模型用量_top_15_db609c4fde"], cardKey = "rl-traffic-models") {
         relayTable(
             rows = models,
             cols = listOf(
-                RCol("model", "模型", mono = true, width = 1.6f),
-                RCol("route", "线路", fmt = { jstr(it).ifEmpty { "-" } }, tone = { Level.Info }),
-                RCol("requests", "请求", num = true),
-                RCol("bytes_out", "输出", num = true, fmt = { rBytes(jnum(it)) }),
-                RCol("avg_latency", "均延迟", num = true, fmt = { rPlain(jnum(it)) }),
+                RCol("model", L["模型_98fd0cbd9c"], mono = true, width = 1.6f),
+                RCol("route", L["线路_5922d95f29"], fmt = { jstr(it).ifEmpty { "-" } }, tone = { Level.Info }),
+                RCol("requests", L["请求_926f6b6b6a"], num = true),
+                RCol("bytes_out", L["输出_ded698ae1e"], num = true, fmt = { rBytes(jnum(it)) }),
+                RCol("avg_latency", L["均延迟_c17351f67e"], num = true, fmt = { rPlain(jnum(it)) }),
                 RCol("p95_latency", "P95", num = true, fmt = { rPlain(jnum(it)) }),
                 RCol(
-                    "success_rate", "成功率", num = true,
+                    "success_rate", L["成功率_df9dc72f2d"], num = true,
                     fmt = { pct1(jnum(it)) },
                     color = {
                         val v = jnum(it)
@@ -112,91 +114,91 @@ fun RelayTrafficTab() {
                         }
                     },
                 ),
-                RCol("sessions", "会话", num = true),
-                RCol("last_seen", "最近", fmt = { rTm(it) }),
+                RCol("sessions", L["会话_836ffe0e10"], num = true),
+                RCol("last_seen", L["最近_8c73d90eca"], fmt = { rTm(it) }),
             ),
-            emptyText = "暂无模型数据",
+            emptyText = L["暂无模型数据_0c50fd6d6b"],
         )
     }
 
     /* ---------------- 状态码 / 线路 / 方法 ---------------- */
     GridLayout(columns = 3, spacing = 14.dp) {
-        PanelCard(title = "状态码分布", cardKey = "rl-traffic-status") {
+        PanelCard(title = L["状态码分布_b43479251a"], cardKey = "rl-traffic-status") {
             relayTable(
                 rows = feed["status"].arr("status").filterIsInstance<JsonObject>(),
                 cols = listOf(
-                    RCol("status", "状态码", mono = true),
-                    RCol("c", "数量", num = true),
-                    RCol("attempts", "尝试", num = true),
+                    RCol("status", L["状态码_2fd51d31a7"], mono = true),
+                    RCol("c", L["数量_b9ae893190"], num = true),
+                    RCol("attempts", L["尝试_31d1e44656"], num = true),
                 ),
-                emptyText = "暂无数据",
+                emptyText = L["暂无数据_b246458f20"],
             )
         }
-        PanelCard(title = "线路分布", cardKey = "rl-traffic-routes") {
+        PanelCard(title = L["线路分布_3032cd9f4d"], cardKey = "rl-traffic-routes") {
             relayTable(
                 rows = feed["routes"].arr("routes").filterIsInstance<JsonObject>(),
                 cols = listOf(
-                    RCol("route", "线路", mono = true),
-                    RCol("reqs", "请求", num = true),
-                    RCol("ok", "成功", num = true),
-                    RCol("bout", "出站", num = true, fmt = { rBytes(jnum(it)) }),
-                    RCol("avg_rt", "均延迟", num = true, fmt = { rPlain(jnum(it)) }),
+                    RCol("route", L["线路_5922d95f29"], mono = true),
+                    RCol("reqs", L["请求_926f6b6b6a"], num = true),
+                    RCol("ok", L["成功_51991a5d11"], num = true),
+                    RCol("bout", L["出站_c9b439d70a"], num = true, fmt = { rBytes(jnum(it)) }),
+                    RCol("avg_rt", L["均延迟_c17351f67e"], num = true, fmt = { rPlain(jnum(it)) }),
                     RCol("avg_ttfb", "TTFB", num = true, fmt = { rPlain(jnum(it)) }),
-                    RCol("retried", "重试", num = true),
+                    RCol("retried", L["重试_e2d53a6d3a"], num = true),
                 ),
-                emptyText = "暂无数据",
+                emptyText = L["暂无数据_b246458f20"],
             )
         }
-        PanelCard(title = "HTTP 方法", cardKey = "rl-traffic-methods") {
+        PanelCard(title = L["http_方法_b1d337493c"], cardKey = "rl-traffic-methods") {
             relayTable(
                 rows = feed["methods"].arr("methods").filterIsInstance<JsonObject>(),
                 cols = listOf(
-                    RCol("method", "方法", mono = true),
-                    RCol("requests", "请求", num = true),
-                    RCol("bytes_out", "出站", num = true, fmt = { rBytes(jnum(it)) }),
-                    RCol("clients", "客户端", num = true),
-                    RCol("errors", "错误", num = true),
+                    RCol("method", L["方法_b77e2ac8f4"], mono = true),
+                    RCol("requests", L["请求_926f6b6b6a"], num = true),
+                    RCol("bytes_out", L["出站_c9b439d70a"], num = true, fmt = { rBytes(jnum(it)) }),
+                    RCol("clients", L["客户端_09afbbcc9b"], num = true),
+                    RCol("errors", L["错误_b859c7be75"], num = true),
                 ),
-                emptyText = "暂无数据",
+                emptyText = L["暂无数据_b246458f20"],
             )
         }
     }
 
     /* ---------------- 接口端点 ---------------- */
-    RelaySection(title = "接口端点", cardKey = "rl-traffic-endpoints") {
+    RelaySection(title = L["接口端点_a8989ccc29"], cardKey = "rl-traffic-endpoints") {
         relayTable(
             rows = feed["endpoints"].arr("endpoints").filterIsInstance<JsonObject>(),
             cols = listOf(
-                RCol("uri", "路径", mono = true, width = 2f),
-                RCol("requests", "请求", num = true),
-                RCol("bytes_out", "出站", num = true, fmt = { rBytes(jnum(it)) }),
-                RCol("avg_latency", "均延迟", num = true, fmt = { rPlain(jnum(it)) }),
+                RCol("uri", L["路径_9132e087f1"], mono = true, width = 2f),
+                RCol("requests", L["请求_926f6b6b6a"], num = true),
+                RCol("bytes_out", L["出站_c9b439d70a"], num = true, fmt = { rBytes(jnum(it)) }),
+                RCol("avg_latency", L["均延迟_c17351f67e"], num = true, fmt = { rPlain(jnum(it)) }),
                 RCol("avg_ttfb", "TTFB", num = true, fmt = { rPlain(jnum(it)) }),
             ),
-            emptyText = "暂无数据",
+            emptyText = L["暂无数据_b246458f20"],
         )
     }
 
     /* ---------------- 每日明细（区间环比） ---------------- */
-    RelaySection(title = "每日明细（区间环比）", cardKey = "rl-traffic-daily") {
+    RelaySection(title = L["每日明细_区间环比_094243d47a"], cardKey = "rl-traffic-daily") {
         relayTable(
             rows = daily.takeLast(30),
             cols = listOf(
-                RCol("day", "日期", mono = true),
-                RCol("requests", "请求", num = true),
-                RCol("bytes_out", "出站", num = true, fmt = { rBytes(jnum(it)) }),
-                RCol("bytes_in", "入站", num = true, fmt = { rBytes(jnum(it)) }),
-                RCol("errors", "错误", num = true),
-                RCol("errors_4xx", "4xx", num = true),
-                RCol("errors_5xx", "5xx", num = true),
-                RCol("sessions", "会话", num = true),
-                RCol("clients", "客户端", num = true),
-                RCol("models", "模型数", num = true),
-                RCol("success_rate", "成功率", num = true, fmt = { pct1(jnum(it)) }),
-                RCol("avg_latency", "均延迟", num = true, fmt = { rPlain(jnum(it)) }),
+                RCol("day", L["日期_b6fed9af83"], mono = true),
+                RCol("requests", L["请求_926f6b6b6a"], num = true),
+                RCol("bytes_out", L["出站_c9b439d70a"], num = true, fmt = { rBytes(jnum(it)) }),
+                RCol("bytes_in", L["入站_1057bbf420"], num = true, fmt = { rBytes(jnum(it)) }),
+                RCol("errors", L["错误_b859c7be75"], num = true),
+                RCol("errors_4xx", L["4xx_0392d44f6f"], num = true),
+                RCol("errors_5xx", L["5xx_0749258bd2"], num = true),
+                RCol("sessions", L["会话_836ffe0e10"], num = true),
+                RCol("clients", L["客户端_09afbbcc9b"], num = true),
+                RCol("models", L["模型数_ecde946b92"], num = true),
+                RCol("success_rate", L["成功率_df9dc72f2d"], num = true, fmt = { pct1(jnum(it)) }),
+                RCol("avg_latency", L["均延迟_c17351f67e"], num = true, fmt = { rPlain(jnum(it)) }),
                 RCol("avg_ttfb", "TTFB", num = true, fmt = { rPlain(jnum(it)) }),
             ),
-            emptyText = "暂无数据",
+            emptyText = L["暂无数据_b246458f20"],
         )
     }
 }

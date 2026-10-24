@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label Instalación completada, actualizando…
+label_安装日志_13ce1b1029	$label Registro de instalación
+label_实现中_70505f7ef8	«$label» en implementación…
+llm_api_中继的请求量_token_用量_6b89d708ea	Volumen de solicitudes, uso de tokens, cuota del pool de claves, disponibilidad de modelos y análisis de calidad del relay de LLM API
+location_块_不要停用该站点以免面板与_4ae164b62b	bloque location), no desactive este sitio o el panel y el servicio de relay se caerán a la vez.
+login.access_token	Token de acceso
+login.advanced	Avanzado
+login.audit_notice	Todas las operaciones quedan registradas para auditoría
+login.connect_failed	Error de conexión:
+login.failed	Error de inicio de sesión
+login.normalized_url	Dirección normalizada
+login.not_logged_in	Sesión no iniciada
+login.password_required	Introduzca la contraseña
+login.remember_password	Recordar contraseña
+login.restore_default_url	Restablecer dirección predeterminada
+login.save_on_test_hint	Tras cambiar la dirección, haga clic en «Probar conexión» para guardarla
+login.server_config	Configuración de conexión al servidor
+login.sign_in	Iniciar sesión
+login.signing_in	Iniciando sesión…
+login.subtitle	Consola de monitorización en tiempo real y configuración del servidor
+login.test_connection	Probar conexión
+login.testing	Probando…
+login_可登录_0e617ada9b	LOGIN (se puede iniciar sesión)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(bytes del turno anterior, bytes del turno actual) es el contenido ya enviado en turnos anteriores; ese es el límite máximo que la caché debería alcanzar, sin depender de lo que reporte el proveedor.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB no libera espacio; validate/reindex son mantenimiento rutinario.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB usa mongodump para crear archivos gzip (requiere mongodump).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB solo crea la base de datos en la primera escritura en una colección; aquí se crea la colección marcador _cm_init.
+mongodb_的过滤条件支持_字段_值_558264a7d8	Los filtros de MongoDB admiten la forma {"campo":valor} (convertida internamente en condición de consulta) o la abreviatura campo=valor. Los documentos se muestran en JSON; _id es el identificador del documento.
+mongodb_维护结果_aaeb39f907	Resultados de mantenimiento de MongoDB
+ms_毫秒_7ade5ab3a4	$ms ms
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (predeterminado root + socket)
+mysql_语法_8200e34cb7	Sintaxis de MySQL
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a estadísticas
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c verificación
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o optimización
+name_ver_连接正常_33d0a44ec7	$name $ver conexión correcta
+name_关闭_c8e887ebc0	$name: Desactivado
+name_开启_54ce939603	$name: Activado
+nav.audit	Registro de auditoría
+nav.backups	Centro de copias de seguridad
+nav.cron	Tareas programadas
+nav.dashboard	Panel
+nav.databases	Bases de datos
+nav.disks	Gestión de discos
+nav.docker	Contenedores Docker
+nav.health_alerts	Alertas de salud
+nav.logs	Centro de registros
+nav.memory	Gestión de memoria
+nav.network	Gestión de red
+nav.note_mail	Notificaciones por correo
+nav.note_settings	Ajustes de NoteBox
+nav.note_transfer	Importar / Exportar
+nav.note_users	Gestión de usuarios
+nav.notes	Notas
+nav.ops_channels	Canales de notificación
+nav.ops_disk	Gobernanza de discos
+nav.ops_files	Gestión de archivos
+nav.ops_hosts	Hosts gestionados
+nav.ops_remote	Métricas de hosts remotos
+nav.ops_rules	Reglas de alerta
+nav.ops_sec	Inspección de la línea base de seguridad
+nav.ops_uptime	Sondeo de disponibilidad
+nav.ops_watch	Vigilancia de servicios
+nav.packages	Gestión de paquetes
+nav.page_placeholder	Página «{0}» en implementación…
+nav.pinned_hint	(fijado, mantenga pulsado para desfijar)
+nav.processes	Gestión de procesos
+nav.relay	Relay de OpenCode
+nav.section.app	Aplicaciones
+nav.section.monitor	Monitorización
+nav.section.notes	Notas
+nav.section.server	Servidor
+nav.section.system	Sistema
+nav.section.tools	Herramientas
+nav.security	Gestión de seguridad
+nav.services	Servicios del sistema
+nav.settings	Ajustes del panel
+nav.slo	SLO y uso
+nav.terminal	Terminal web
+nav.todos	Lista de tareas
+nav.web	Sitios web / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf config Nginx · sshd_config config SSH · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	Las configs nginx/sshd/fstab se validan automáticamente al guardar
+nginx_站点_0_6bcfddef71	Sitios Nginx ({0})
+nginx_站点_sites_size_2db3c2b5be	Sitios Nginx (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	SMTP y reglas de alerta de NoteBox
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox notas en la nube (categorías multinivel · papelera · Markdown · compartir)
+notebox_地址未配置_3d37258011	Dirección de NoteBox sin configurar
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox tareas (vencimientos y recordatorios por correo)
+notebox_数据迁移_362725f18e	Migración de datos de NoteBox
+notebox_服务可达_6a7506d6ac	Servicio NoteBox accesible
+notebox_服务可达_未登录_e023d68cad	Servicio NoteBox accesible (sin sesión iniciada)
+notebox_服务地址_默认端口_13345_e0880dfda6	Dirección del servicio NoteBox (puerto predeterminado 13345). Vaya a iniciar sesión de nuevo tras cambiarla.
+notebox_登录成功_013138644f	Sesión de NoteBox iniciada correctamente
+notebox_设置_efb5a47b98	Ajustes de NoteBox
+notebox_账号_仅管理员_81b8d4ca26	Cuenta de NoteBox (solo administradores)
+online_台有近期数据_1fefff8cdc	$online hosts con datos recientes
+opencode_中继_2e021ee797	Relay de OpenCode
+p95_延迟_57d63f8b46	Latencia P95
+p95_延迟_ba65a873bc	Latencia p95
+palette.accent_hint	Apariencia · actual {0}
+palette.open_page	Abrir página {0}
+palette.pin	Fijar «{0}»
+palette.pin_hint	Espacio de trabajo · mantenga pulsado un elemento de la barra lateral para cambiarlo también
+palette.reload_hint	F5 / Ctrl+R · Recargar
+palette.theme_hint	Apariencia · actual {0}
+palette.unpin	Desfijar «{0}»
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (cambio de contraseña forzado)
+pg_自定义格式_0cc41d0ea4	Formato personalizado PG
+postgresql_mysql_sql_42e513fca9	Gestión de bases y tablas, consola SQL, análisis de rendimiento y copia/restauración para PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	Formato personalizado de PostgreSQL -Fc (restauración más rápida)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (autenticación peer por defecto: su - postgres)
+rdb_快照_62f218ed40	Instantánea RDB
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis ejecuta BGSAVE y copia el archivo RDB; la restauración sobrescribe el directorio de datos y requiere reiniciar Redis.
+redis_命令控制台_fa42019a53	Consola de comandos Redis
+redis_维护_d2a01bfbd3	Mantenimiento de Redis
+reindex_全部库_90545e1eeb	REINDEX todas las bases de datos
+reindex_重建索引_256956f94e	REINDEX / reconstruir índices
+reindex_重建索引_d81fcbf8d0	REINDEX (reconstruir índices)
+relay_alert_py_检查_smtp_告_012aaa3373	Comprobación de relay_alert.py, canal de alertas SMTP, umbrales y registros de alertas

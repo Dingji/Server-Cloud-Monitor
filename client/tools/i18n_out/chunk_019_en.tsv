@@ -1,0 +1,120 @@
+注_册_6ec40f6f72	Sign up
+注册_0_5ad4a3af5f	Sign up {0}
+注册中_44941e2818	Signing up…
+注册失败_a1d7fb5dfc	Sign-up failed
+注册成功_4a1935bccf	Sign-up successful
+注册成功_请查收验证邮件_4d1b9bd9db	Sign-up successful, please check your verification email
+活动_active_9032cdb7c5	Active (active)
+活动_b2548636f0	Active
+活动统计_3be3732c86	Activity statistics
+活动连接_0_e7e5929f6f	Active connections ({0})
+活动连接_procs_size_477bb041cd	Active connections (${procs.size})
+活跃会话_42a08c5386	Active sessions
+流式_0_非流式_1_bfb0038923	Streaming {0} · Non-streaming {1}
+流式_e4d8c16cd2	Streaming
+流式会话时长分布_8068bcaea8	Streaming session duration distribution
+流式占比_43c882ec7b	Streaming share
+流式按模型_1fcdeff1cf	Streaming by model
+流式请求_每日_d59ef41152	Streaming requests (daily)
+流量分析_3953320414	Traffic analysis
+浅色_80ec9e2b1b	Light
+测试_0b5d7ed54b	Test
+测试中_49562bf14c	Testing…
+测试发送_614cdaef43	Send test
+测试连接_10b7d8eccc	Test connection
+测试邮件发送结果_9b487677ed	Test email send result
+测试邮件已发送_请查收_bb593d799c	Test email sent, please check your inbox
+测速_304d8c0081	Speed test
+测速全部_42afec91d1	Test all speeds
+浏览_ef23ea67b0	Browse
+消息格式_19b61b1c63	Message format
+涉及文件_f54d77becb	Affected files
+深色_30b2c979ac	Dark
+添加_94191ce210	Add
+添加_ibm_官方源并安装_ibm_db2_体积_69ef7f8cc7	Add the IBM official repo and install ibm-db2 (large download, license must be accepted)
+添加_mongodb_官方源并安装_mongod_76b4de74d6	Add the MongoDB official repo and install mongodb-org
+添加主键_9a777b36f3	Add primary key
+添加于_0_配额查询于_1_1c991e5cd8	Added {0} · Quota checked {1}
+添加公钥_3121954aea	Add public key
+添加列_90fcf205d2	Add column
+添加唯一约束_79a24c40af	Add unique constraint
+添加外键_0c123f4308	Add foreign key
+添加失败_9d563ebbbd	Add failed
+添加子任务_1f50119c5b	Add subtask
+添加子任务_bcec5e13ad	Add subtask…
+添加密钥_0f17b63bac	Add key
+添加密钥_provid_0f9d502f28	Add key - $provId
+清单_01af8c6eed	List
+清单名称不能为空_6250381cc7	List name cannot be empty
+清单已删除_内容已移到上一级_71c8380991	List deleted, contents moved to the parent level
+清单已更新_f933c18e79	List updated
+清屏_e8db7ce0cc	Clear screen
+清理_907c3945d8	Clean up
+清理_apt_缓存_55c020f574	Clean apt cache
+清理历史_ea36817cb3	Clear history
+清理失败_6f2390db7a	Cleanup failed
+清理孤立依赖_1a60a375a7	Purge orphaned dependencies
+清理已完成_149b3c638f	Cleanup complete
+清理旧备份_17d95953c3	Clean old backups
+清理未使用资源_aef1da41a9	Clean unused resources
+清理缓存_a2cf5ddefb	Clear cache
+清理项_0_989c8b8e7c	Cleanup item {0}
+清理项_d7920a5280	Cleanup items
+清空_0_的所有数据_truncate_不_4ddee29cf3	Delete ALL data in {0} (TRUNCATE)? This cannot be undone!
+清空_0_窗口内的重启记录_重新给满自愈额度_00414f7998	Clear restart records within the "{0}" window and reset the self-healing quota to full.
+清空_84fcd70d42	Clear
+清空_e_name_窗口内的重启记录_重新_f999fa445b	Clear restart records within the "${e.name}" window and reset the self-healing quota to full.
+清空_st_table_的所有数据_tru_663aed317c	Delete ALL data in ${st.table} (TRUNCATE)? This cannot be undone!
+清空后恢复_clean_可能丢数据_641f717946	Restore after wipe (--clean, may lose data)
+清空回收站_4833ca01fc	Empty trash
+清空数据_91ad897e58	Clear data
+清空日志_1ef9339dba	Clear logs
+清空表_618d964e8f	Truncate table
+清空页缓存_目录项与_inode_缓存_内存紧张_25f5e6c734	Clear page cache, dentries and inode cache; temporarily reclaims memory when memory is tight.
+清除_7b15e5e8e7	Clear
+清除最近访问_d3f083d97b	Clear recent access
+渠道_c152be9f50	Channel
+渠道名称_99e9ec8d48	Channel name
+渠道已保存_建议先点_测试发送_8a20b90f03	Channel saved, it is recommended to click “Send test” first
+渠道总数_70a84a2aa8	Total channels
+渠道类型_7ba72e5172	Channel type
+温度_cc6b6c25c5	Temperature 
+源文件_be43b936dd	Source file
+源文件备份_0_4a529aae31	Source file backup ({0})
+滚动窗口_f4ad4453d0	Rolling window
+点_全部探测_刷新状态_4e0ea4e2f7	Click “Probe all” to refresh status
+点上方_新建用户_创建第一个账号_a49eedd915	Click “New user” above to create the first account
+点击列名可排序_编辑_删除主键_0_a9f0b6e928	Click a column name to sort · Edit/delete primary key ({0})
+点击列名可排序_该表无主键_编辑需手写_wh_554ef50292	Click a column name to sort · No primary key on this table; edits require a manual WHERE
+点右上角_新建笔记_开始_96865806de	Click “New note” in the top-right corner to start
+点左上角_新建笔记_创建_90394355e9	Click “New note” in the top-left corner to create
+燃烧率_1_正好按预算节奏消耗_6_表_9e0d1c9091	Burn rate 1× = spending exactly at the budget pace; ≥6× means the whole period budget is burned in about 5 days;
+燃烧率_b7f530cc1b	Burn rate
+版本_989d1affa0	Version
+版本_依赖_维护窗口等_3f2cbde76d	Version, dependencies, maintenance windows, etc.
+版本锁定_f00c209863	Version pinning
+物理内存_c8353b5f3b	Physical memory
+物理挂载点_63c0461fc1	Physical mount points
+状态_62e951a692	Status
+状态_路线_0f4ee76007	Status / Route
+状态变化才发信_3e6b8f558f	Only notify on status change
+状态文件_ba5e6e9f66	State file
+状态码_2fd51d31a7	Status code
+状态码分布_b43479251a	Status code distribution
+状态码分布_近期访问日志_0405a22fb0	Status code distribution (recent access logs)
+环境_aa3833ea2a	Environment
+环境不具备_17f075425e	Environment unavailable
+环比_0_e9d96f96a1	vs. previous period {0}
+环比上一周期_787f54131c	vs. previous period
+环比昨日_0_e52d529e62	vs. yesterday {0}
+琥珀_84c5d7ae27	Amber
+生产_35d6fec69f	Production
+生产环境_7f152260df	Production environment
+生效中_4de07ee065	In effect
+生效位置_applied_8b922ae94b	Effective location (applied)
+用_file_覆盖_redis_当前数据_会覆_3f0f894cfc	Overwrite Redis current data with $file? This will overwrite dump.rdb in the data directory, take effect after restarting Redis, and existing data will be lost.
+用于仪表盘网络吞吐进度条_按真实上限显示占用比例_9f3376c761	Used for the dashboard network throughput progress bar, showing usage against the real cap; when unset, the 1 Mbps baseline is used.
+用户_9ba763ea34	Users
+用户_权限_0_467c74d975	Users / Permissions ({0})
+用户_权限_roles_size_cbb2b92096	Users / Permissions (${roles.size})
+用户_组_1e6a976270	Users/Groups

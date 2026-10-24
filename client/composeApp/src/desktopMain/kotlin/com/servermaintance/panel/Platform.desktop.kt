@@ -6,6 +6,7 @@ import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.util.prefs.Preferences
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import com.servermaintance.panel.i18n.trf
 import kotlinx.coroutines.launch
 
 private class PrefsStore : KeyValueStore {
@@ -78,7 +79,7 @@ actual fun pickTextFiles(extensions: List<String>, multiple: Boolean, onPicked: 
         fc.isMultiSelectionEnabled = multiple
         if (extensions.isNotEmpty()) {
             val filter = javax.swing.filechooser.FileNameExtensionFilter(
-                "文本文件 (${extensions.joinToString(" ") { "*.$it" }})",
+                trf("文本文件_0_69e2147621", extensions.joinToString(" ") { "*.$it" }),
                 *extensions.toTypedArray(),
             )
             fc.addChoosableFileFilter(filter)

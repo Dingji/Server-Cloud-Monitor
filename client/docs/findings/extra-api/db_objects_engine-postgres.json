@@ -1,0 +1,55 @@
+{
+ "engine": "postgres",
+ "database": null,
+ "sections": [
+  {
+   "title": "视图",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "物化视图",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "序列",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "函数 / 存储过程",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "触发器",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "已安装扩展",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  },
+  {
+   "title": "可用扩展(前 40)",
+   "columns": [],
+   "rows": [],
+   "error": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?",
+   "note": ""
+  }
+ ]
+}

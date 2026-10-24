@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -93,8 +96,8 @@ private fun UsersInner() {
     var error by remember { mutableStateOf<String?>(null) }
     var dialog by remember { mutableStateOf<UserDialogTarget?>(null) }
     var q by remember { mutableStateOf("") }
-    var roleFilter by remember { mutableStateOf("全部角色") }
-    var statusFilter by remember { mutableStateOf("全部状态") }
+    var roleFilter by remember { mutableStateOf(L["全部角色_9adaf88c6d"]) }
+    var statusFilter by remember { mutableStateOf(L["全部状态_1a4c26d92d"]) }
 
     suspend fun load() {
         try {
@@ -104,9 +107,9 @@ private fun UsersInner() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: ApiException) {
-            if (!e.isAuth) error = e.message ?: "加载失败"
+            if (!e.isAuth) error = e.message ?: L["加载失败_f6b7a41e56"]
         } catch (e: Exception) {
-            error = e.message ?: "加载失败"
+            error = e.message ?: L["加载失败_f6b7a41e56"]
         }
     }
 
@@ -115,9 +118,9 @@ private fun UsersInner() {
         scope.launch {
             try {
                 withContext(Dispatchers.IO) { NoteBoxState.api.resendUserVerification(u.int("id")) }
-                NoteBoxState.toast("验证邮件已重新发送", ToastKind.Ok)
+                NoteBoxState.toast(tr("验证邮件已重新发送_2dcdc605ce"), ToastKind.Ok)
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "发送失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("发送失败_e767d34c78"), ToastKind.Err)
             }
         }
     }
@@ -128,18 +131,18 @@ private fun UsersInner() {
             val on = u.int("active") == 1 && u.str("status") != "disabled"
             if (on) {
                 val ok = Modal.confirm(
-                    "停用用户",
-                    "停用 ${u.str("email")} ？其会话将立即失效。",
-                    okText = "停用", danger = true,
+                    L["停用用户_3f2f67ac37"],
+                    trf("停用_0_其会话将立即失效_bd25e844b8", u.str("email")),
+                    okText = L["停用_d989e55188"], danger = true,
                 )
                 if (!ok) return@launch
             }
             try {
                 withContext(Dispatchers.IO) { NoteBoxState.api.updateUser(u.int("id"), active = !on) }
-                NoteBoxState.toast(if (on) "已停用 ${u.str("email")}" else "已启用 ${u.str("email")}", ToastKind.Ok)
+                NoteBoxState.toast(if (on) trf("已停用_0_c934ebc3bd", u.str("email")) else trf("已启用_0_29dab49ed0", u.str("email")), ToastKind.Ok)
                 load()
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "操作失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("操作失败_09e424b5e8"), ToastKind.Err)
             }
         }
     }
@@ -148,17 +151,17 @@ private fun UsersInner() {
     fun remove(u: JsonObject) {
         scope.launch {
             val ok = Modal.confirm(
-                "删除用户",
-                "删除用户 ${u.str("email")} ？其全部笔记、待办与共享将一并删除，不可恢复！",
-                okText = "删除", danger = true,
+                L["删除用户_bcfca951a1"],
+                trf("删除用户_0_其全部笔记_待办与共享将一并_2bdfec376d", u.str("email")),
+                okText = L["删除_3755f56f2f"], danger = true,
             )
             if (!ok) return@launch
             try {
                 withContext(Dispatchers.IO) { NoteBoxState.api.deleteUser(u.int("id")) }
-                NoteBoxState.toast("已删除 ${u.str("email")}", ToastKind.Ok)
+                NoteBoxState.toast(trf("已删除_0_a0892ec5c3", u.str("email")), ToastKind.Ok)
                 load()
             } catch (e: Exception) {
-                NoteBoxState.toast(e.message ?: "删除失败", ToastKind.Err)
+                NoteBoxState.toast(e.message ?: tr("删除失败_72250c5922"), ToastKind.Err)
             }
         }
     }
@@ -166,8 +169,8 @@ private fun UsersInner() {
     LaunchedEffect(Unit) { load() }
 
     PageScaffold(
-        title = "用户管理",
-        desc = "NoteBox 账号（仅管理员）",
+        title = L["用户管理_baf84751a2"],
+        desc = L["notebox_账号_仅管理员_81b8d4ca26"],
         actions = { NoteUserChip() },
         scrollBody = false, // 列表区独立滚动
     ) {
@@ -192,14 +195,14 @@ private fun UsersInner() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            SearchField(q, { q = it }, Modifier.weight(1f), placeholder = "搜索邮箱…")
+            SearchField(q, { q = it }, Modifier.weight(1f), placeholder = L["搜索邮箱_8dad475e2f"])
             Box(Modifier.widthIn(max = 130.dp)) {
-                SelectField(roleFilter, listOf("全部角色", "管理员", "普通用户"), { roleFilter = it }, placeholder = "全部角色")
+                SelectField(roleFilter, listOf(L["全部角色_9adaf88c6d"], L["管理员_ef84e765e0"], L["普通用户_bd8d896aad"]), { roleFilter = it }, placeholder = L["全部角色_9adaf88c6d"])
             }
             Box(Modifier.widthIn(max = 140.dp)) {
-                SelectField(statusFilter, listOf("全部状态", "已启用", "待邮箱验证", "已停用"), { statusFilter = it }, placeholder = "全部状态")
+                SelectField(statusFilter, listOf(L["全部状态_1a4c26d92d"], L["已启用_25d2843150"], L["待邮箱验证_bada0c2e46"], L["已停用_6c7dcbb73a"]), { statusFilter = it }, placeholder = L["全部状态_1a4c26d92d"])
             }
-            PrimaryBtn(text = "新建用户", icon = "plus", onClick = { dialog = UserDialogTarget(null) })
+            PrimaryBtn(text = L["新建用户_30416407e5"], icon = "plus", onClick = { dialog = UserDialogTarget(null) })
         }
 
         when {
@@ -210,15 +213,15 @@ private fun UsersInner() {
             else -> {
                 val filtered = rows.filter { u ->
                     val emailOk = q.isEmpty() || u.str("email").contains(q, ignoreCase = true)
-                    val roleOk = roleFilter == "全部角色" ||
-                        (u.str("role") == "admin") == (roleFilter == "管理员")
+                    val roleOk = roleFilter == L["全部角色_9adaf88c6d"] ||
+                        (u.str("role") == "admin") == (roleFilter == L["管理员_ef84e765e0"])
                     val status = u.str("status")
                     val st = when {
-                        status == "pending" -> "待邮箱验证"
-                        status == "disabled" || u.int("active") != 1 -> "已停用"
-                        else -> "已启用"
+                        status == "pending" -> L["待邮箱验证_bada0c2e46"]
+                        status == "disabled" || u.int("active") != 1 -> L["已停用_6c7dcbb73a"]
+                        else -> L["已启用_25d2843150"]
                     }
-                    emailOk && roleOk && (statusFilter == "全部状态" || st == statusFilter)
+                    emailOk && roleOk && (statusFilter == L["全部状态_1a4c26d92d"] || st == statusFilter)
                 }
                 if (filtered.isEmpty()) {
                     Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -232,12 +235,12 @@ private fun UsersInner() {
                             }
                             Spacer(Modifier.size(12.dp))
                             Text(
-                                if (rows.isEmpty()) "还没有用户" else "没有匹配的账号",
+                                if (rows.isEmpty()) L["还没有用户_7e3b44aaac"] else L["没有匹配的账号_4612b2a961"],
                                 color = Palette.text, fontSize = 13.sp, fontWeight = FontWeight.Medium,
                             )
                             if (rows.isEmpty()) {
                                 Spacer(Modifier.size(4.dp))
-                                Text("点上方「新建用户」创建第一个账号", color = Palette.muted, fontSize = 11.5.sp)
+                                Text(L["点上方_新建用户_创建第一个账号_a49eedd915"], color = Palette.muted, fontSize = 11.5.sp)
                             }
                         }
                     }
@@ -282,9 +285,9 @@ private fun UsersInner() {
                         }
                         load()
                         dialog = null
-                        NoteBoxState.toast("已保存 $email", ToastKind.Ok)
+                        NoteBoxState.toast(tr("已保存_email_4726a5328b"), ToastKind.Ok)
                     } catch (e: Exception) {
-                        NoteBoxState.toast(e.message ?: "保存失败", ToastKind.Err)
+                        NoteBoxState.toast(e.message ?: tr("保存失败_40525a7328"), ToastKind.Err)
                     }
                 }
             },
@@ -305,10 +308,10 @@ private fun UserStatRow(total: Int, admins: Int, pending: Int, disabled: Int) {
         Modifier.fillMaxWidth().padding(bottom = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        UserStatTile("总账号", "$total", "users", Modifier.weight(1f))
-        UserStatTile("管理员", "$admins", "shield", Modifier.weight(1f), tone = AccentState.current.secondary)
-        UserStatTile("待验证", "$pending", "mail", Modifier.weight(1f), tone = Palette.warn, warn = pending > 0)
-        UserStatTile("已停用", "$disabled", "power", Modifier.weight(1f), tone = Palette.muted, warn = disabled > 0 && pending == 0)
+        UserStatTile(L["总账号_02ceb243fe"], "$total", "users", Modifier.weight(1f))
+        UserStatTile(L["管理员_ef84e765e0"], "$admins", "shield", Modifier.weight(1f), tone = AccentState.current.secondary)
+        UserStatTile(L["待验证_0b48e4bdd8"], "$pending", "mail", Modifier.weight(1f), tone = Palette.warn, warn = pending > 0)
+        UserStatTile(L["已停用_6c7dcbb73a"], "$disabled", "power", Modifier.weight(1f), tone = Palette.muted, warn = disabled > 0 && pending == 0)
     }
 }
 
@@ -411,12 +414,12 @@ private fun UserRow(
                     maxLines = 1, overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false),
                 )
-                if (isMe) Chip("我", tone = Level.Info)
-                if (isAdmin) LevelBadge("管理员", Level.Info) else LevelBadge("普通用户", Level.Muted)
+                if (isMe) Chip(L["我_34f201bc50"], tone = Level.Info)
+                if (isAdmin) LevelBadge(L["管理员_ef84e765e0"], Level.Info) else LevelBadge(L["普通用户_bd8d896aad"], Level.Muted)
                 when {
-                    status == "pending" -> LevelBadge("待邮箱验证", Level.Warn)
-                    status == "disabled" || u.int("active") != 1 -> LevelBadge("已停用", Level.Muted)
-                    else -> LevelBadge("已启用", Level.Ok)
+                    status == "pending" -> LevelBadge(L["待邮箱验证_bada0c2e46"], Level.Warn)
+                    status == "disabled" || u.int("active") != 1 -> LevelBadge(L["已停用_6c7dcbb73a"], Level.Muted)
+                    else -> LevelBadge(L["已启用_25d2843150"], Level.Ok)
                 }
             }
             Spacer(Modifier.size(5.dp))
@@ -426,8 +429,8 @@ private fun UserRow(
             ) {
                 MetaChip("note", "${u.int("notes")}")
                 MetaChip("checkSquare", "${u.int("todos")}")
-                MetaChip("calendar", "注册 ${tsShort(u.long("created_at"))}")
-                MetaChip("clock", "登录 ${tsShort(u.long("last_login"))}")
+                MetaChip("calendar", trf("注册_0_5ad4a3af5f", tsShort(u.long("created_at"))))
+                MetaChip("clock", trf("登录_0_0e5eb0faa5", tsShort(u.long("last_login"))))
             }
         }
         Spacer(Modifier.size(10.dp))
@@ -435,18 +438,18 @@ private fun UserRow(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            GhostBtn(text = "编辑", icon = "edit", onClick = onEdit)
+            GhostBtn(text = L["编辑_a7f814c0a4"], icon = "edit", onClick = onEdit)
             if (status == "pending") {
-                GhostBtn(text = "重发验证", icon = "mail", onClick = onResend)
+                GhostBtn(text = L["重发验证_94c7c8acad"], icon = "mail", onClick = onResend)
             } else {
                 val on = u.int("active") == 1 && status != "disabled"
                 GhostBtn(
-                    text = if (on) "停用" else "启用",
+                    text = if (on) L["停用_d989e55188"] else L["启用_d4e9ca3dd4"],
                     icon = if (on) "power" else "checkCircle",
                     onClick = onToggleActive,
                 )
             }
-            DangerBtn(text = "删除", icon = "trash", onClick = onDelete)
+            DangerBtn(text = L["删除_3755f56f2f"], icon = "trash", onClick = onDelete)
         }
     }
 }
@@ -478,7 +481,7 @@ private fun UserEditDialog(
     val creating = user == null
     var email by remember(user) { mutableStateOf(user?.str("email") ?: "") }
     var pass by remember(user) { mutableStateOf("") }
-    var role by remember(user) { mutableStateOf(if (user?.str("role") == "admin") "管理员" else "普通用户") }
+    var role by remember(user) { mutableStateOf(if (user?.str("role") == "admin") L["管理员_ef84e765e0"] else L["普通用户_bd8d896aad"]) }
     var active by remember(user) { mutableStateOf(user == null || user.int("active") == 1) }
 
     Box(
@@ -519,12 +522,12 @@ private fun UserEditDialog(
                 Spacer(Modifier.size(10.dp))
                 Column(Modifier.weight(1f)) {
                     Text(
-                        if (creating) "新建用户" else "编辑用户",
+                        if (creating) L["新建用户_30416407e5"] else L["编辑用户_2b8f00100b"],
                         color = Palette.text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold,
                     )
                     Spacer(Modifier.size(1.dp))
                     Text(
-                        if (creating) "创建 NoteBox 账号并分配角色" else user?.str("email").orEmpty(),
+                        if (creating) L["创建_notebox_账号并分配角色_2911541ceb"] else user?.str("email").orEmpty(),
                         color = Palette.muted, fontSize = 11.sp,
                         fontFamily = if (creating) FontFamily.Default else FontFamily.Monospace,
                         maxLines = 1, overflow = TextOverflow.Ellipsis,
@@ -543,11 +546,11 @@ private fun UserEditDialog(
             }
 
             Column(Modifier.padding(16.dp)) {
-                Field(email, { email = it }, Modifier.fillMaxWidth(), label = "邮箱", hint = "you@example.com", mono = true, singleLine = true)
+                Field(email, { email = it }, Modifier.fillMaxWidth(), label = L["邮箱_9ed627bcf6"], hint = L["you_example_com_50e2b46ef8"], mono = true, singleLine = true)
                 Spacer(Modifier.size(10.dp))
                 Field(
                     pass, { pass = it }, Modifier.fillMaxWidth(),
-                    label = "密码", hint = if (creating) "至少 8 位" else "留空则不修改",
+                    label = L["密码_c839a8ff17"], hint = if (creating) L["至少_8_位_bfd5e79db7"] else L["留空则不修改_05999682bf"],
                     password = true, singleLine = true,
                 )
                 Spacer(Modifier.size(10.dp))
@@ -555,10 +558,10 @@ private fun UserEditDialog(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    SelectField(role, listOf("普通用户", "管理员"), { role = it }, Modifier.weight(1f), label = "角色")
+                    SelectField(role, listOf(L["普通用户_bd8d896aad"], L["管理员_ef84e765e0"]), { role = it }, Modifier.weight(1f), label = L["角色_6b26695e4d"])
                     Column(Modifier.weight(1f)) {
-                        Text("状态", color = Palette.muted, fontSize = 11.sp, modifier = Modifier.padding(bottom = 4.dp))
-                        CheckRow(active, { active = it }, "已启用")
+                        Text(L["状态_62e951a692"], color = Palette.muted, fontSize = 11.sp, modifier = Modifier.padding(bottom = 4.dp))
+                        CheckRow(active, { active = it }, L["已启用_25d2843150"])
                     }
                 }
                 Spacer(Modifier.size(16.dp))
@@ -569,18 +572,18 @@ private fun UserEditDialog(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    GhostBtn(text = "取消", onClick = onClose)
+                    GhostBtn(text = L["win.dialog.cancel"], onClick = onClose)
                     Spacer(Modifier.size(8.dp))
-                    PrimaryBtn(text = if (creating) "创建" else "保存", icon = "save", onClick = {
+                    PrimaryBtn(text = if (creating) L["创建_fcbd093292"] else L["保存_fadf24dbc5"], icon = "save", onClick = {
                         if (email.trim().isEmpty()) {
-                            NoteBoxState.toast("请输入邮箱", ToastKind.Warn)
+                            NoteBoxState.toast(tr("请输入邮箱_f2dc24deb8"), ToastKind.Warn)
                             return@PrimaryBtn
                         }
                         if (creating && pass.length < 8) {
-                            NoteBoxState.toast("新建用户需要至少 8 位的密码", ToastKind.Warn)
+                            NoteBoxState.toast(tr("新建用户需要至少_8_位的密码_59c185c76b"), ToastKind.Warn)
                             return@PrimaryBtn
                         }
-                        onSave(email.trim(), pass, if (role == "管理员") "admin" else "user", active)
+                        onSave(email.trim(), pass, if (role == L["管理员_ef84e765e0"]) "admin" else "user", active)
                     })
                 }
             }

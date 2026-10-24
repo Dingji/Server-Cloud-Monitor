@@ -1,0 +1,120 @@
+导出_fmt_uppercase_5fa0136e39	Exportar ${fmt.uppercase()}
+导出失败_38ab583870	Falha ao exportar:
+导出数据库_8eb2a58640	Exportar banco de dados
+将_0_1_复制到_2_40d7c9a939	Copiar {0}.{1} para {2}
+将_0_移入回收站_可随时恢复_b035da26b3	Mover "{0}" para a lixeira? Você pode restaurá-lo a qualquer momento.
+将_db_tbl_复制到_target_bfe49531fd	Copiar $db.$tbl para $target
+将_journald_日志体积限制到_200mb_88b7b48940	Limitar o tamanho dos logs do journald a 200MB
+将_name_加入_sudo_组_e6b5bf2823	Adicionar $name ao grupo sudo?
+将_src_打包为_tar_gz_大目录可能耗_0e4d5baded	Compactar $src em tar.gz (diretórios grandes podem demorar).
+将_vm_swappiness_设置为_v_并_d6d34ffc96	Definir vm.swappiness como $v e tornar a configuração persistente?
+将停止_0_服务_不会删除数据_3644eaaa47	O serviço {0} será parado (os dados não serão excluídos).
+将停止_label_服务_不会删除数据_b8004f9ec0	O serviço $label será parado (os dados não serão excluídos).
+将写入并重载_sshd_body_warn_b8307d441d	O sshd será gravado e recarregado:\n$body$warn
+将删除_0_中满足条件的数据_1_此操_6705d19e0e	Os dados de {0} que atenderem aos critérios serão excluídos:\n{1}\nEsta ação não pode ser desfeita.
+将删除_st_table_中满足条件的数据_4e3f9bc4e7	Os dados de ${st.table} que atenderem aos critérios serão excluídos:\n$w\nEsta ação não pode ser desfeita.
+将删除用户_name_及其家目录_userde_38f9f46e9a	O usuário $name e seu diretório inicial serão excluídos (userdel -r); não pode ser desfeito!
+将启动_0_服务_1f105846d4	O serviço {0} será iniciado.
+将启动_label_服务_b82e5baf55	O serviço $label será iniciado.
+将启用_ufw_默认拒绝入站_请确认已允许_2_ebeb8137d3	O UFW será habilitado (entrada negada por padrão). Confirme que a porta 22 está permitida: ufw allow 22/tcp
+将强制删除容器_0_docker_rm_f_e5e8832e8e	O contêiner {0} será excluído à força (docker rm -f); os volumes de dados do contêiner não serão afetados.
+将执行_apt_get_install_fail_e1244066c3	O apt-get install fail2ban será executado e o serviço iniciado (requer acesso à Internet, pode levar 1-2 minutos).
+将执行_apt_get_install_y_d_5218b05b7a	O apt-get install -y docker.io será executado, cerca de 1-3 minutos.
+将执行_drop_caches_3_系统可能短暂_6626720ff2	O drop_caches=3 será executado; o sistema pode ficar lento por instantes. Continuar?
+将按已保存的计划执行清理项_journal_ap_762e3baf6f	Os itens de limpeza salvos (journal, APT, logs rotacionados etc.) serão executados conforme o agendamento.
+将永久删除_db_及其全部数据_不可恢复_a493b3bdb0	O $db e todos os seus dados serão excluídos permanentemente; não pode ser desfeito!
+将添加_root_定时任务_每天_03_00_执_0937e4afe4	Uma tarefa cron para root será adicionada, diariamente às 03:00:\n$cmd
+将添加_root_定时任务_每天_03_00_执_e6ee798c58	Uma tarefa cron para root será adicionada, diariamente às 03:00:\n{0}
+将自动备份当前源文件并执行_apt_get_up_0276b8cab1	Os arquivos de origem atuais terão backup e o apt-get update será executado; se a atualização falhar, há rollback automático. Leva cerca de 30-120 segundos.
+小于_7d11896ff4	< Menor que
+小于等于_190834de3e	≤ Menor ou igual a
+小文件数量占比_e37f172da2	Proporção de arquivos pequenos
+小时_99f6904ff3	Hora
+尚未执行过任何修复动作_fe7c3d4771	Nenhuma ação de correção executada ainda
+尚未运行健康检查_ba6dfd78c0	Nenhuma verificação de saúde executada ainda
+尝试_31d1e44656	Tentar
+属主_444fd7bd13	Proprietário
+属主已更新_dce00bf89c	Proprietário atualizado
+属性_7d3c35c29b	Propriedades
+峰值时段_6bb7941d45	Período de pico
+峰值轮_4cecb849cf	Rodada de pico
+工作区_保留收藏_b4859ec177	Área de trabalho · Manter favoritos
+工作数据库_866878eb8f	Banco de dados de trabalho
+工作日_27b4a6aed2	Dia útil
+工具_f7bb5ad4da	Ferramentas:
+已上传_0_62e7aadbe5	{0} enviado
+已上传_f_name_06d42217a4	${f.name} enviado
+已上传并覆盖_0_56609744b2	{0} enviado e substituído
+已上传并覆盖_f_name_da9914d31d	${f.name} enviado e substituído
+已产生不可用事件_a2f7f57fb3	Um evento de indisponibilidade foi gerado
+已保存_cdfab96f75	Salvo
+已保存_email_4726a5328b	$email salvo
+已保存_saved_36d870566a	Salvo: $saved
+已保存_下一次重复已自动排期_866a056587	Salvo · próxima ocorrência agendada automaticamente
+已保存到_path_6a5d7deabb	Salvo em $path
+已保存到_saved_49bd95c1fb	Salvo em $saved
+已停止_75dddf524e	Parado
+已停止公开分享_9a9cf049a9	Compartilhamento público interrompido
+已停用_0_c934ebc3bd	{0} desativado
+已停用_6c7dcbb73a	Desativado
+已停用自动维护_836de837e0	Manutenção automática desativada
+已共享给_ev_email_permt_77651d6ed4	Compartilhado com ${ev.email} (${permText(ev.perm)})
+已切换为浅色模式_910f7b8537	Modo claro ativado
+已切换为深色模式_b03918bd9e	Modo escuro ativado
+已切换到_0_f0c31c31dc	Alternado para {0}
+已切换到_appstate_config_0ccf0355a4	Alternado para ${AppState.config().normalizedUrl()}
+已创建归类_name_4dcdef1d04	Categoria "$name" criada
+已创建新终端会话_096edaffb2	Nova sessão de terminal criada
+已创建清单_name_0235b26a57	Lista "$name" criada
+已删除_0_a0892ec5c3	{0} excluído
+已删除_0_行_a56ea85604	{0} linhas excluídas
+已删除_fb5fe1e266	Excluído
+已到期_75e6c9fb6f	Expirado
+已加载的审计规则_575f3a8203	Regras de auditoria carregadas
+已占_028e892f8e	Em uso
+已取消保存_1f0e8fda6a	Salvamento cancelado
+已取消带宽上限_4d02387c26	Limite de largura de banda removido
+已取消置顶_64ca5ea597	Fixação cancelada
+已启用_0_29dab49ed0	{0} habilitado
+已启用_25d2843150	Habilitado
+已启用的源文件_0_7a8ed113e1	Arquivos de origem habilitados ({0})
+已启用的源文件_files_size_3ef3f7d5ad	Arquivos de origem habilitados (${files.size})
+已启用自动维护_26c95d2e69	Manutenção automática ativada
+已回滚_c4ab8c16f8	Revertido
+已固定_46f9ebb3cb	(Fixado)
+已复制_e381a5763d	Copiado
+已复制到剪贴板_c2bb6d50ae	Copiado para a área de transferência
+已复制笔记_578fe5f530	Nota copiada
+已存_it_secretset_jointo_371806c69d	{0} salvo
+已存在_a867d42ddf	Já existe
+已安装_eb88ff57c9	Instalado
+已安装_total_438379cb60	Instalado ($total)
+已完成_e99b48a29b	Concluído
+已完成_下一次重复已自动排期_2f89384a29	Concluído · próxima ocorrência agendada automaticamente
+已导入_n_条待办_c3352cbaa8	$n tarefas importadas
+已导入_n_条笔记_09e6db7128	$n notas importadas
+已建立连接_0_ac05618709	Conexões estabelecidas ({0})
+已建立连接_established_siz_bb2e6b06da	Conexões estabelecidas (${established.size})
+已开启实时跟随_b8c950e7d3	Acompanhamento ao vivo ativado
+已归档_5cfbea2b76	Arquivado
+已彻底删除_21ae7be063	Excluído permanentemente
+已恢复_0_120218aebb	"{0}" restaurado
+已恢复_6aa9ad7241	Restaurado
+已截断_61c54972d5	 · Truncado
+已打开新会话选项卡_b298c97275	Nova aba de sessão aberta
+已执行计划清理_b29e9620a4	Limpeza agendada executada
+已扫描_0_个索引文件_9909c34fb8	 · {0} arquivos de índice verificados
+已扫描_scanned_个索引文件_b6efc4ae77	 · $scanned arquivos de índice verificados
+已按保留期清理轮转日志_deca9628b4	Logs rotacionados limpos conforme a retenção
+已按当前值试跑_结果见发送记录_467ceb202b	Execução de teste com os valores atuais (ver registro de envio)
+已推送到铃铛与渠道_336daad702	Enviado para o sino e aos canais
+已插入_ok_个文件_5032d55e92	$ok arquivos inseridos
+已收藏_41f91d9758	 · Adicionado aos favoritos
+已是最新_5985ee9a3c	Já está atualizado
+已更新_112f98675e	Atualizado
+已有_apt_任务在执行_请等待完成_52d32c3717	Já há uma tarefa apt em execução; aguarde a conclusão
+已有账号_c9bc5e7bff	Já tem uma conta?
+已格式化_简单模式_注意字符串内关键词也会被换行_ff56058a41	Formatado (modo simples; observe que palavras-chave dentro das cadeias também são quebradas)
+已检查全部看护项_7ceab11b1c	Todos os itens monitorados verificados
+已永久删除_b2e5fd714f	Excluído permanentemente
+已测量_a418169c62	Medido

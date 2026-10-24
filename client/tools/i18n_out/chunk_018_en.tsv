@@ -1,0 +1,121 @@
+本地地址_3f5bfd6a77	Local address
+本地镜像数量_019cf81efd	Local image count
+本月_389f0007de	This month
+本月_token_01337f42b0	Tokens this month
+本月请求_066cf9ee8d	Requests this month
+本监控面板自身通过_nginx_panel_e67414791d	This monitoring panel itself is reverse-proxied through the nginx /panel/ path (configuration located in the opencode-relay site file 
+机器人_webhook_地址_55a5f7206f	Bot Webhook URL
+权限_560165a6d7	Permissions
+权限_八进制_2b99f80c15	Permissions (octal)
+权限已改为_permtext_ev_perm_bde45d2842	Permission changed to "${permText(ev.perm)}"
+权限已更新_c799b75cb4	Permissions updated
+权限清单_0_14c573d55b	Permission list - {0}
+权限清单_name_b9de84243d	Permission list - $name
+条件_72f1cf759c	Condition
+来源_c63f79e636	Source
+来源ip_4ed6a09c87	Source IP
+来自_0_1_1f0e9aa76c	From {0} · {1}
+来自_0_9f6c45367f	From {0}
+来自_cloud_monitor_的测试消息_73081ba885	Test message from Cloud Monitor
+来自_n_owneremail_18d34ec5d3	From ${n.ownerEmail}
+来自持久化指标_30_秒采样_保留_30_天_的_ff4f75947f	Daily linear extrapolation from persisted metrics (30-second sampling, retained for 30 days); with fewer than 2 days of samples only the current value is shown.
+查找_6cb005a629	Find
+查看_f7acefd2d4	View
+查看健康告警_d870779eae	View health alerts →
+查看匹配会话_c5264e1d4b	View matching sessions
+查看原始json_e542ba8dfb	View raw JSON
+查看可清理项_cc9ca0dc55	View cleanable items
+查询_711363c424	Query
+查询中_15954fd62b	Querying…
+查询失败_381ea3ac5e	Query failed
+标签_ae0a7afece	Tags
+标签_逗号分隔_7836a339d5	Tags (comma-separated)
+标记已读_504ecf732d	Mark as read
+标题_748d7dc7e3	Title
+标题不能为空_f2d8d992fe	Title cannot be empty
+校验_20feeceade	Validate
+校验全部集合_f0db88cf97	Validate all collections
+校验失败_2da7449d88	Validation failed
+样本_610da878ac	Samples
+根分区_e2b4769fcd	Root partition
+根分区使用率_64e9efb467	Root partition usage
+根分区可用_0fff0a9d78	Root partition available
+根目录_代理_6dc180f179	Root directory / Proxy
+根目录一级占用_9b452d20f7	Top-level root usage
+格式_9d2601c843	Format
+格式化_7cc2d4ca96	Format
+检查_40ffb34860	Check
+检查_r_checks_size_项_2e6bee1606	Checked {0} items · {1} risks · {2} uncovered
+检查中_9908c922f2	Checking
+检查时间_52e89a5739	Check time
+检查脚本_459d03768b	Check script
+检查项_871b61f946	Check items
+检查项_shown_size_70be8a7c92	Check items ({0})
+检查项明细_0_0bd2e11781	Check item details ({0})
+概览_5060421d15	Overview
+模型_98fd0cbd9c	Model
+模型可用性巡检_69995a0a91	Model availability check
+模型数_ecde946b92	Model count
+模型用量_top_15_db609c4fde	Model usage Top 15
+模型解析率_4d7c65560a	Model parse rate
+模型请求趋势_941648991c	Model request trend
+模式_命名空间_0_df78aa00e9	Schema / Namespace ({0})
+模式_命名空间_schemas_siz_4184811a96	Schema / Namespace (${schemas.size})
+模式_如_user_a8bfd4d94c	Pattern, e.g. user:*
+模板_06d0f38dd2	Template
+模板_c0d75437e9	-- Template --
+次数_d4a97e7577	Count
+正在加载笔记_d95b85e311	Loading notes…
+正在告警_ad193fe023	Alerting
+正在巡检_09dfe0b521	Running inspection…
+正在读取备份列表_bbfed01c1d	Reading backup list…
+正在读取审计日志_414fed4710	Reading audit log…
+正在读取配置_6dc75287f5	Reading configuration…
+正在逐台探测_3e1b0b3e75	Probing each host…
+正常_f78d037abc	Normal
+此处创建的任务带_cm_前缀_可在下方表格_a7728c7ff7	· Tasks created here use the cm- prefix and can be deleted directly in the table below
+步长_ac69f5962f	Step
+每_10_秒自动刷新_0c62f6d07b	Auto-refresh every 10 seconds
+每一项都会先测空闲_执行后再测_回报真实释放量_056371f472	Each item is measured while idle and again after running, reporting the actual amount freed; the data directory is never touched.
+每个事项的提醒开关在事项编辑弹窗里_e97512b037	The reminder toggle for each item is in the item edit dialog.
+每周_a93b55d8bf	Weekly
+每天_0_00_440c0de302	Daily at {0}:00
+每天_0_1_f762ef5aa9	Daily {0}–{1}
+每天_5e4715ffc0	Daily
+每天_it_from_it_to_0713d5eb6b	Daily ${it.from}–${it.to}
+每天_s_hour_tostring_p_f4a08c25ea	Daily ${s.hour.toString().padStart(2, '0')}:00
+每天固定时段_035cafe753	Fixed daily time window
+每天执行时刻_0_23_b9136dda70	Daily execution hour (0-23)
+每小时_星期_请求热力图_545787dcfc	Hour × Weekday request heatmap
+每日_token_明细_78642770fa	Daily Token details
+每日_token_消耗_688c00a2db	Daily Token usage
+每日会话_f198dfabd3	Daily sessions
+每日开始_hh_mm_785f0f4695	Daily start (HH:MM)
+每日明细_区间环比_094243d47a	Daily details (period comparison)
+每日结束_hh_mm_ec8711b104	Daily end (HH:MM)
+每日自动备份_7ccce9e358	Daily automatic backup
+每日自动维护_799c82930f	Daily automatic maintenance
+每月_24aedc3608	Monthly
+每次切换镜像前自动备份_路径_0_4331441441	Auto-backup before each image switch, path {0}
+每次变更的完整_apt_输出保存在服务器_lo_737e75d3ca	The full apt output of each change is saved on the server at $logDir/pkg-*.log.
+每页_faceb7dc18	Per page 
+每页_it_d82aa397c2	Per page $it
+每页_st_pagesize_44e647d312	Per page ${st.pageSize}
+永久删除_0_此操作不可恢复_c22836ea42	Permanently delete "{0}"? This cannot be undone.
+永久删除_a7fadbe126	Delete permanently
+永久删除表_0_及全部数据_a2a086dc93	Permanently delete table {0} and all data?
+永久删除表_st_table_及全部数据_b45d7de4bb	Permanently delete table ${st.table} and all data?
+没有匹配的包_f28a3dc6a5	No matching packages
+没有匹配的已安装包_3aa1636e48	No matching installed packages
+没有匹配的服务_9248fe4a20	No matching services
+没有匹配的检查项_1ec567bb89	No matching check items
+没有匹配的账号_4612b2a961	No matching accounts
+没有匹配的进程_4b32ae9684	No matching processes
+没有发现明显缺失索引的表_949f90b6b4	No tables with obviously missing indexes found
+没有可分析的真实卷_0eec6083a7	No real volumes available for analysis
+没有可执行该操作的包_34484f1862	No package that can perform this operation
+没有已完成的事项_2cda631543	No completed items
+没有慢查询记录_75d83e6845	No slow query records
+没有活动连接_29a76a67b2	No active connections
+没有符合条件的告警_5585202ce3	No alerts matching the criteria
+查看原始_json_e542ba8dfb	View raw JSON

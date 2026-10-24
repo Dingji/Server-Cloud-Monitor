@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -247,7 +250,7 @@ class RelayFeed(val paths: Map<String, String>) {
                         } catch (e: CancellationException) {
                             throw e
                         } catch (e: Throwable) {
-                            errors[key] = e.message ?: e::class.simpleName ?: "请求失败"
+                            errors[key] = e.message ?: e::class.simpleName ?: L["请求失败_8fdc4112a4"]
                         }
                     }
                 }.awaitAll()
@@ -260,7 +263,7 @@ class RelayFeed(val paths: Map<String, String>) {
     /** 一条都没拿到 → 页面级降级（"中继采集器不可用"）。 */
     val allFailed: Boolean get() = paths.isNotEmpty() && data.isEmpty() && errors.isNotEmpty()
 
-    val firstError: String get() = errors.values.firstOrNull() ?: "未知错误"
+    val firstError: String get() = errors.values.firstOrNull() ?: L["未知错误_5f76edc5de"]
 
     operator fun get(key: String): JsonObject = data[key] as? JsonObject ?: EMPTY_OBJ
 
@@ -305,15 +308,15 @@ suspend fun relayAction(
     payload: JsonObject = jsonObjectOf(),
     confirmFirst: Boolean = false,
     danger: Boolean = false,
-    confirmText: String = "执行",
+    confirmText: String = L["执行_28febba225"],
     confirmMsg: String? = null,
     confirmTitle: String? = null,
     reload: (suspend () -> Unit)? = null,
 ) {
     if (confirmFirst) {
         val ok = Modal.confirm(
-            title = confirmTitle ?: if (danger) "确认操作" else "确认执行",
-            text = confirmMsg ?: "执行 <b>$name</b>？",
+            title = confirmTitle ?: if (danger) L["确认操作_3161d348cc"] else L["确认执行_ae1109f3ef"],
+            text = confirmMsg ?: trf("执行_b_0_b_1695afa501", name),
             okText = confirmText,
             danger = danger,
         )
@@ -330,7 +333,7 @@ suspend fun relayAction(
             .mapNotNull { k -> (obj.key(k) as? JsonPrimitive)?.safeContent()?.takeIf { s -> s.isNotBlank() } }
             .firstOrNull()
     }
-    AppState.toast(msg ?: "操作完成", ToastKind.Ok)
+    AppState.toast(msg ?: tr("操作完成_66c6340147"), ToastKind.Ok)
     reload?.invoke()
 }
 
@@ -385,7 +388,7 @@ fun relayTable(
     rows: List<JsonObject>,
     cols: List<RCol>,
     modifier: Modifier = Modifier,
-    emptyText: String = "暂无数据",
+    emptyText: String = L["暂无数据_b246458f20"],
     maxRows: Int = 0,
     onRowClick: ((JsonObject) -> Unit)? = null,
 ) {
@@ -551,7 +554,7 @@ fun RangeRow(
     current: String,
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier,
-    leading: String = "统计窗口",
+    leading: String = L["统计窗口_d51cf620a9"],
     trailing: (@Composable RowScope.() -> Unit)? = null,
 ) {
     Row(
@@ -577,7 +580,7 @@ fun RelaySection(
     content: @Composable ColumnScope.() -> Unit,
 ) = PanelCard(title = title, cardKey = cardKey, right = right, content = content)
 
-/** 单行说明（JS `<div class="muted small">`）。 */
+/** 单行说明（JS `<div class=L["muted_small_98921c403b"]>`）。 */
 @Composable
 fun Muted(text: String, modifier: Modifier = Modifier) {
     Text(
@@ -594,10 +597,10 @@ fun HistTable(rows: List<JsonElement>) {
     relayTable(
         rows = rows.filterIsInstance<JsonObject>(),
         cols = listOf(
-            RCol("bucket", "区间", mono = true),
-            RCol("count", "数量", num = true),
+            RCol("bucket", L["区间_2e8dd83da0"], mono = true),
+            RCol("count", L["数量_b9ae893190"], num = true),
         ),
-        emptyText = "无数据",
+        emptyText = L["无数据_6ffa7e6d35"],
     )
 }
 
@@ -648,7 +651,7 @@ fun JsonObject.firstNum(vararg keys: String): Double {
 fun FeedError(feed: RelayFeed, onRetry: (() -> Unit)? = null) {
     if (feed.allFailed) {
         ErrorState(
-            message = "中继采集器不可用",
+            message = L["中继采集器不可用_e768a2ecc1"],
             output = feed.firstError,
             onRetry = onRetry,
         )

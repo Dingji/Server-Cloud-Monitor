@@ -1,4 +1,6 @@
 package com.servermaintance.panel.pages.relay
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,67 +62,67 @@ fun RelayQualityTab() {
     StatRow(
         listOf(
             StatItem(
-                label = "端到端延迟 P50/P95/P99",
+                label = L["端到端延迟_p50_p95_p99_a56b61f255"],
                 value = listOf(s.num("p50_latency"), s.num("p95_latency"), s.num("p99_latency"))
                     .joinToString("/") { fixed(it, 0) } + " ms",
-                sub = "最大 ${rPlain(s.num("max_latency"))} ms · 均值 ${rPlain(s.num("avg_latency"))}",
+                sub = trf("最大_0_ms_均值_1_6ebc8829c9", rPlain(s.num("max_latency")), rPlain(s.num("avg_latency"))),
             ),
             StatItem(
-                label = "TTFB P50/P95",
+                label = L["ttfb_p50_p95_12a4a635de"],
                 value = fixed(overall?.num("p50") ?: 0.0, 0) + " ms",
-                sub = "端到端均值 ${rPlain(overall?.num("avg_total") ?: 0.0)} ms · 样本 ${rNum(overall?.num("samples") ?: 0.0)}",
+                sub = trf("端到端均值_0_ms_样本_1_19bba62269", rPlain(overall?.num("avg_total") ?: 0.0), rNum(overall?.num("samples") ?: 0.0)),
             ),
             StatItem(
-                label = "流式占比",
+                label = L["流式占比_43c882ec7b"],
                 value = pct1(s.num("streaming_rate")),
-                sub = "流式 ${rNum(s.num("streaming"))} · 非流式 ${rNum(s.num("requests") - s.num("streaming"))}",
+                sub = trf("流式_0_非流式_1_bfb0038923", rNum(s.num("streaming")), rNum(s.num("requests") - s.num("streaming"))),
             ),
             StatItem(
-                label = "重试 / 故障切换",
+                label = L["重试_故障切换_bd0ca3d8c5"],
                 value = rNum(s.num("retried")),
-                sub = "切换率 ${rPlain(s.num("failover_rate"))}%",
+                sub = trf("切换率_0_5f66fea7ee", rPlain(s.num("failover_rate"))),
             ),
         ),
     )
 
     /* ---------------- 延迟直方图 ×2 ---------------- */
     GridLayout(columns = 2, spacing = 14.dp) {
-        PanelCard(title = "端到端延迟分布", cardKey = "rl-q-lat") {
+        PanelCard(title = L["端到端延迟分布_add045c5a6"], cardKey = "rl-q-lat") {
             HistTable(feed["latency"].arr("histogram"))
         }
-        PanelCard(title = "首字节 TTFB 分布", cardKey = "rl-q-ttfb") {
+        PanelCard(title = L["首字节_ttfb_分布_0cda03309d"], cardKey = "rl-q-ttfb") {
             HistTable(tt.arr("histogram"))
         }
     }
 
     /* ---------------- TTFB 按线路 × 时长分布 ---------------- */
     GridLayout(columns = 2, spacing = 14.dp) {
-        PanelCard(title = "TTFB 按线路", cardKey = "rl-q-route") {
+        PanelCard(title = L["ttfb_按线路_dd77200ec0"], cardKey = "rl-q-route") {
             relayTable(
                 rows = tt.arr("by_route").filterIsInstance<JsonObject>(),
                 cols = listOf(
-                    RCol("route", "线路", mono = true),
+                    RCol("route", L["线路_5922d95f29"], mono = true),
                     RCol("p50", "P50", num = true, fmt = { rPlain(jnum(it)) }),
                     RCol("p95", "P95", num = true, fmt = { rPlain(jnum(it)) }),
-                    RCol("avg", "均值", num = true, fmt = { rPlain(jnum(it)) }),
-                    RCol("count", "样本", num = true),
+                    RCol("avg", L["均值_a4d0f57c18"], num = true, fmt = { rPlain(jnum(it)) }),
+                    RCol("count", L["样本_610da878ac"], num = true),
                 ),
-                emptyText = "暂无数据",
+                emptyText = L["暂无数据_b246458f20"],
             )
         }
-        PanelCard(title = "流式会话时长分布", cardKey = "rl-q-dur") {
+        PanelCard(title = L["流式会话时长分布_8068bcaea8"], cardKey = "rl-q-dur") {
             HistTable(st.arr("duration"))
         }
     }
 
     /* ---------------- 流式请求（每日） ---------------- */
     val streamDaily = st.arr("daily").filterIsInstance<JsonObject>()
-    RelaySection(title = "流式请求（每日）", cardKey = "rl-stream") {
+    RelaySection(title = L["流式请求_每日_d59ef41152"], cardKey = "rl-stream") {
         RelayMultiBar(
             labels = streamDaily.map { it.str("day").takeLast(5) },
             series = listOf(
-                BarSer("流式", streamDaily.map { it.num("streaming").toFloat() }, RelayColors.streamGreen),
-                BarSer("非流式", streamDaily.map { it.num("other").toFloat() }, RelayColors.otherGrey),
+                BarSer(L["流式_e4d8c16cd2"], streamDaily.map { it.num("streaming").toFloat() }, RelayColors.streamGreen),
+                BarSer(L["非流式_36e8d9631f"], streamDaily.map { it.num("other").toFloat() }, RelayColors.otherGrey),
             ),
             stacked = true,
             height = 170.dp,
@@ -128,86 +130,86 @@ fun RelayQualityTab() {
     }
 
     /* ---------------- 流式按模型 ---------------- */
-    RelaySection(title = "流式按模型", cardKey = "rl-q-bymodel") {
+    RelaySection(title = L["流式按模型_1fcdeff1cf"], cardKey = "rl-q-bymodel") {
         relayTable(
             rows = st.arr("by_model").filterIsInstance<JsonObject>().take(15),
             cols = listOf(
-                RCol("model", "模型", mono = true, width = 2f),
-                RCol("streaming", "流式", num = true),
-                RCol("total", "总计", num = true),
+                RCol("model", L["模型_98fd0cbd9c"], mono = true, width = 2f),
+                RCol("streaming", L["流式_e4d8c16cd2"], num = true),
+                RCol("total", L["总计_3af1ac5b4e"], num = true),
             ),
-            emptyText = "暂无数据",
+            emptyText = L["暂无数据_b246458f20"],
         )
     }
 
     /* ---------------- 报文大小分布 ×2 ---------------- */
     GridLayout(columns = 2, spacing = 14.dp) {
         PanelCard(
-            title = "报文大小分布（请求）",
+            title = L["报文大小分布_请求_978ad9741c"],
             cardKey = "rl-q-size-in",
             right = {
-                Muted("均值 ${rBytes(sz.num("avg_request"))} · 最大 ${rBytes(sz.num("max_request"))}")
+                Muted(trf("均值_0_最大_1_399e871129", rBytes(sz.num("avg_request")), rBytes(sz.num("max_request"))))
             },
         ) { HistTable(sz.arr("request")) }
         PanelCard(
-            title = "报文大小分布（响应）",
+            title = L["报文大小分布_响应_eb73297921"],
             cardKey = "rl-q-size-out",
             right = {
-                Muted("均值 ${rBytes(sz.num("avg_response"))} · 最大 ${rBytes(sz.num("max_response"))}")
+                Muted(trf("均值_0_最大_1_399e871129", rBytes(sz.num("avg_response")), rBytes(sz.num("max_response"))))
             },
         ) { HistTable(sz.arr("response")) }
     }
 
     /* ---------------- 重试与故障切换 × 上游状态 ---------------- */
     GridLayout(columns = 2, spacing = 14.dp) {
-        PanelCard(title = "重试与故障切换", cardKey = "rl-q-failover") {
+        PanelCard(title = L["重试与故障切换_fc1ba33011"], cardKey = "rl-q-failover") {
             relayTable(
                 rows = fo.arr("daily").filterIsInstance<JsonObject>(),
                 cols = listOf(
-                    RCol("day", "日期", mono = true),
-                    RCol("requests", "请求", num = true),
-                    RCol("retried", "重试", num = true),
-                    RCol("first_try", "首次成功", num = true),
-                    RCol("attempts", "总尝试", num = true),
-                    RCol("failed", "失败", num = true),
+                    RCol("day", L["日期_b6fed9af83"], mono = true),
+                    RCol("requests", L["请求_926f6b6b6a"], num = true),
+                    RCol("retried", L["重试_e2d53a6d3a"], num = true),
+                    RCol("first_try", L["首次成功_59d8e1af26"], num = true),
+                    RCol("attempts", L["总尝试_56d2a2d4f5"], num = true),
+                    RCol("failed", L["失败_3e3c8068bb"], num = true),
                 ),
-                emptyText = "暂无数据",
+                emptyText = L["暂无数据_b246458f20"],
             )
         }
-        PanelCard(title = "上游状态明细", cardKey = "rl-q-upstream") {
-            Muted("上游状态码", Modifier.padding(bottom = 6.dp))
+        PanelCard(title = L["上游状态明细_7ead630c85"], cardKey = "rl-q-upstream") {
+            Muted(L["上游状态码_834b18aa72"], Modifier.padding(bottom = 6.dp))
             relayTable(
                 rows = fo.arr("upstream_status").filterIsInstance<JsonObject>(),
                 cols = listOf(
-                    RCol("us", "状态", mono = true),
-                    RCol("c", "数量", num = true),
+                    RCol("us", L["状态_62e951a692"], mono = true),
+                    RCol("c", L["数量_b9ae893190"], num = true),
                 ),
-                emptyText = "暂无数据",
+                emptyText = L["暂无数据_b246458f20"],
             )
             Spacer(Modifier.height(10.dp))
-            Muted("上游地址", Modifier.padding(bottom = 6.dp))
+            Muted(L["上游地址_330a45ad1e"], Modifier.padding(bottom = 6.dp))
             relayTable(
                 rows = fo.arr("upstreams").filterIsInstance<JsonObject>(),
                 cols = listOf(
-                    RCol("addr", "地址", mono = true),
-                    RCol("requests", "请求", num = true),
+                    RCol("addr", L["地址_67d2d7970f"], mono = true),
+                    RCol("requests", L["请求_926f6b6b6a"], num = true),
                 ),
-                emptyText = "暂无数据",
+                emptyText = L["暂无数据_b246458f20"],
             )
         }
     }
 
     /* ---------------- 每小时 × 星期 请求热力图 ---------------- */
-    RelaySection(title = "每小时 × 星期 请求热力图", cardKey = "rl-q-heat") {
+    RelaySection(title = L["每小时_星期_请求热力图_545787dcfc"], cardKey = "rl-q-heat") {
         WeekHeat(feed["weekday"].arr("cells"))
     }
 
     /* ---------------- 模型可用性巡检 ---------------- */
-    RelaySection(title = "模型可用性巡检", cardKey = "rl-q-ms") {
+    RelaySection(title = L["模型可用性巡检_69995a0a91"], cardKey = "rl-q-ms") {
         val providers = ms.obj("providers") ?: JsonObject(emptyMap())
         val generatedAt = ms.str("generated_at")
         if (providers.isEmpty()) {
-            Muted("无巡检数据")
+            Muted(L["无巡检数据_5f815bb00d"])
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 providers.entries.forEach { (pid, pvRaw) ->
@@ -216,31 +218,31 @@ fun RelayQualityTab() {
                         .mapNotNull { (k, v) -> (v as? JsonObject)?.let { k to it } }
                     val okCount = models.count { (_, m) -> m.str("status") == "ok" }
                     Text(
-                        "$pid · $okCount/${models.size} 可用 · 巡检于 ${rTmTail(pv.str("checked_at").ifEmpty { generatedAt })}",
+                        trf("0_1_2_可用_巡检于_70d3d7439a", pid, okCount, models.size, rTmTail(pv.str("checked_at").ifEmpty { generatedAt })),
                         color = Palette.muted,
                         style = MaterialTheme.typography.bodySmall,
                     )
                     relayTable(
                         rows = models.map { (k, m) -> m.withName(k) },
                         cols = listOf(
-                            RCol("__name", "模型", mono = true, width = 1.6f),
+                            RCol(L["name_8682df30d2"], L["模型_98fd0cbd9c"], mono = true, width = 1.6f),
                             RCol(
-                                "__st", "状态 / 路线",
+                                L["st_9f58083c27"], L["状态_路线_0f4ee76007"],
                                 fmt = { jstr(it) },
                                 tone = { if (jstr(it).startsWith("OK")) Level.Ok else Level.Bad },
                             ),
-                            RCol("__at", "检查时间", width = 1.2f, fmt = { rTm(it) }),
+                            RCol(L["at_d3b6faf45f"], L["检查时间_52e89a5739"], width = 1.2f, fmt = { rTm(it) }),
                         ),
-                        emptyText = "无模型",
+                        emptyText = L["无模型_f7d175950c"],
                     )
                 }
                 Spacer(Modifier.height(4.dp))
                 ActionBtn(
-                    text = "立即巡检",
+                    text = L["立即巡检_53b8079f5e"],
                     name = "modelcheck",
                     icon = "scan",
                     confirmFirst = true,
-                    confirmText = "执行",
+                    confirmText = L["执行_28febba225"],
                     reload = reload,
                 )
             }
@@ -248,21 +250,21 @@ fun RelayQualityTab() {
     }
 
     /* ---------------- 最近错误 ---------------- */
-    RelaySection(title = "最近错误", cardKey = "rl-q-errors") {
+    RelaySection(title = L["最近错误_5e8913a82d"], cardKey = "rl-q-errors") {
         relayTable(
             rows = feed["errors"].arr("errors").filterIsInstance<JsonObject>().take(40),
             cols = listOf(
-                RCol("time", "时间", width = 1.1f, fmt = { rTm(it) }),
-                RCol("model", "模型", mono = true, width = 1.4f),
-                RCol("route", "线路", mono = true),
-                RCol("uri", "路径", mono = true, width = 1.8f),
-                RCol("status", "状态", num = true),
-                RCol("bytes_out", "出站", num = true, fmt = { rBytes(jnum(it)) }),
-                RCol("latency", "延迟", num = true, fmt = { rPlain(jnum(it)) }),
-                RCol("attempts", "尝试", num = true),
-                RCol("upstream_status", "上游", num = true, fmt = { jstr(it).ifEmpty { "-" } }),
+                RCol("time", L["时间_89b4aa6364"], width = 1.1f, fmt = { rTm(it) }),
+                RCol("model", L["模型_98fd0cbd9c"], mono = true, width = 1.4f),
+                RCol("route", L["线路_5922d95f29"], mono = true),
+                RCol("uri", L["路径_9132e087f1"], mono = true, width = 1.8f),
+                RCol("status", L["状态_62e951a692"], num = true),
+                RCol("bytes_out", L["出站_c9b439d70a"], num = true, fmt = { rBytes(jnum(it)) }),
+                RCol("latency", L["延迟_e9f0921480"], num = true, fmt = { rPlain(jnum(it)) }),
+                RCol("attempts", L["尝试_31d1e44656"], num = true),
+                RCol("upstream_status", L["上游_ed38f4eac2"], num = true, fmt = { jstr(it).ifEmpty { "-" } }),
             ),
-            emptyText = "暂无错误",
+            emptyText = L["暂无错误_cd5f469fc5"],
         )
     }
 }

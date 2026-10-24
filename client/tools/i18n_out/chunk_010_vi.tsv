@@ -1,0 +1,120 @@
+存在风险_34748d1f0d	Có rủi ro
+存放位置_182f3cab1b	Vị trí lưu trữ
+孤立依赖清理_3088424930	Dọn dẹp phụ thuộc mồ côi
+安全升级_只做向上兼容的升级_不卸载其它包_841c2b3607	"Nâng cấp an toàn" chỉ thực hiện nâng cấp tương thích ngược và không gỡ bỏ gói khác; "Nâng cấp toàn bộ" có thể gỡ các gói xung đột, rủi ro cao hơn — xem trước thay đổi sẽ được hiển thị trước khi thực hiện.
+安全基线巡检_cb83870cad	Kiểm tra đường chuẩn bảo mật
+安全更新_d02224fdc8	Cập nhật bảo mật
+安全管理_27a60a5c86	Quản lý bảo mật
+安装_087db63ab1	Cài đặt
+安装_0_340ee35e2a	⬇ Cài đặt {0}
+安装_0_710b3a3d30	Cài đặt {0}
+安装_certbot_b472f9adf8	Cài đặt certbot
+安装_docker_f131e1cdff	Cài đặt Docker
+安装_engine_name_d4fe147ff5	⬇ Cài đặt ${engine.name}
+安装_fail2ban_38aa818b73	Cài đặt Fail2ban
+安装_label_0399b4e4de	Cài đặt $label
+安装_t_label_36d02c935b	Cài đặt ${t.label}
+安装中_b2c6913616	Đang cài đặt…
+安装大小_85c8cf1c58	Dung lượng cài đặt
+安装并启动_d20e3e1fda	Cài đặt và khởi động
+安装引擎_e5276cf0a5	＋ Cài đặt engine
+安装扩展_354d80ae67	Cài đặt tiện ích mở rộng
+安装约需_1_3_分钟_取决于网络_完成后此页_75a815fda1	Quá trình cài mất khoảng 1-3 phút (tùy mạng); trang này sẽ tự động sẵn sàng khi hoàn tất.
+安装配置_02517d8d8f	Cấu hình cài đặt
+完成_33246f6a5e	Xong
+完成_e982a7473c	 Xong
+完成进度_722d50c7b4	Tiến độ hoàn tất
+完整_6e6e581133	Toàn bộ
+完整_结构_数据_6aebce144a	Toàn bộ (cấu trúc + dữ liệu)
+完整升级_05b1a3ac5b	Nâng cấp toàn bộ
+完整升级_含移除_3bed74b0f0	Nâng cấp toàn bộ (bao gồm gỡ bỏ)
+完整升级可能移除与新版本冲突的软件包_请仔细核对_50ce8ea44d	Nâng cấp toàn bộ có thể gỡ các gói xung đột với phiên bản mới; vui lòng kiểm tra kỹ nội dung xem trước.
+完整备份_json_cbe231e819	Sao lưu toàn bộ JSON
+完整性检查_495199337a	Kiểm tra toàn vẹn
+完整日志_4a1b1f9673	Toàn bộ nhật ký:
+完整说明与依赖列表_0cf5ceed2a	Mô tả đầy đủ và danh sách phụ thuộc
+定时任务_c97ffbda2e	Tác vụ định kỳ
+定时器_70cbf60aeb	Bộ đếm thời gian
+定时维护计划_8560c2fd47	Kế hoạch bảo trì định kỳ
+定时采集运行中_4b7159cb16	Thu thập theo lịch đang chạy
+实例用户_6be929149e	Người dùng instance
+实时_每_2_秒刷新_c4c5d531ed	Thời gian thực · làm mới mỗi 2 giây
+实时刷新_556a3ffff3	Làm mới thời gian thực
+实时活动_最近请求_d2ee85344c	Hoạt động thời gian thực (yêu cầu gần đây)
+实时流量_近_60_秒_1fa853d958	Lưu lượng thời gian thực (60 giây gần nhất)
+实时磁盘_i_o_193640917c	I/O ổ đĩa thời gian thực
+实时资源占用_c8bda73ba6	Sử dụng tài nguyên thời gian thực
+实时跟随_8e180d6871	Theo dõi thời gian thực
+实时跟随经_websocket_订阅_最大保留_5bfbd4a38a	Theo dõi thời gian thực qua đăng ký WebSocket, giữ tối đa ${Fmt.count(MAX_LINES)} dòng;
+实时跟随经_websocket_订阅_最大保留_bb1ab8a92b	Theo dõi thời gian thực qua đăng ký WebSocket, giữ tối đa {0} dòng;
+实时连接_2e937edd01	Kết nối thời gian thực
+审计不可用_5ba8cd56a3	Kiểm toán không khả dụng
+审计日志_7666cd4323	Nhật ký kiểm toán
+审计服务_17e6a7950d	Dịch vụ kiểm toán
+审计规则_bc6a3d7a3f	Quy tắc kiểm toán
+客户端4xx_499dc47a60	Client 4xx
+客户端_09afbbcc9b	Client
+客户端_4xx_d966c5f146	Client 4xx
+客户端与会话_fd8ce68403	Client và phiên
+客户端数_4821cbdb7b	Số lượng client
+客户端软件_afcacf7cb8	Phần mềm client
+客户端软件构成_aaec3233f0	Cơ cấu phần mềm client
+客户端错误_不计入_71aa68fd1c	Lỗi client (không tính)
+家目录_f273ea575f	Thư mục home
+容器_d179a3480d	Container
+容器列表_6ee925b478	Danh sách container
+容器日志_0_176db5f47c	Nhật ký container {0}
+容器日志_2a0f3b0fac	Nhật ký container …
+容器日志_id_take_12_faa2c2b1bc	Nhật ký container ${id.take(12)}
+容量趋势_近_7_天_d77b3aebd5	Xu hướng dung lượng (7 ngày gần đây)
+密码_c839a8ff17	Mật khẩu
+密码_授权码_d2c3e3135f	Mật khẩu / mã ủy quyền
+密码_无_e55f2504ae	Mật khẩu (không có)
+密码_留空_不改_d56e21cbcb	Mật khẩu (để trống = không đổi)
+密码_留空不变_5e4f64d946	Mật khẩu (để trống thì giữ nguyên)
+密码_留空保持不变_6d05826ea3	Mật khẩu (để trống để giữ nguyên)
+密码_至少_8_位_692b63ec1c	Mật khẩu (tối thiểu 8 ký tự)
+密码修改成功_f0e65f05ad	Đổi mật khẩu thành công
+密码已更新_eb5719cf68	Đã cập nhật mật khẩu
+密码更新后其它设备的登录将会失效_9b16aec699	Sau khi cập nhật mật khẩu, phiên đăng nhập trên các thiết bị khác sẽ bị vô hiệu hóa.
+密码有效期_如_2030_01_01_空_不变_4b3bee9f12	Thời hạn mật khẩu (vd 2030-01-01, để trống = giữ nguyên)
+密码至少需要_8_位_b6a69b6e34	Mật khẩu cần ít nhất 8 ký tự
+密钥_0_可用_1_426c7d2a6e	Khóa {0} · khả dụng {1}
+密钥_0d1965e139	Khóa
+密钥池_6ab58f884e	Kho khóa
+对_0_张表执行_1_004762155e	Chạy {1} trên {0} bảng?
+对_0_执行_1_0df7a13871	Chạy {1} trên {0}?
+对_selected_size_张表执行_209354c5c6	Chạy $act trên ${selected.size} bảng?
+对_st_table_执行_label_a6b8052291	Chạy $label trên ${st.table}?
+对_target_执行_action_d5673f5e8f	Chạy $action trên $target?
+对_unit_执行_systemctl_ac_ba3c9e7d90	Chạy systemctl $act trên $unit?
+对外端口_fe3302e0a7	Cổng hướng ngoài
+对容器_0_执行_docker_restar_c942faf88e	Chạy docker restart trên container {0}?
+对容器_0_执行_docker_start_a6406fd5d5	Chạy docker start trên container {0}?
+对容器_0_执行_docker_stop_02eec7a6e4	Chạy docker stop trên container {0}?
+对容器_id_take_12_执行_do_558a792531	Chạy docker start trên container ${id.take(12)}?
+对容器_id_take_12_执行_do_724af26fed	Chạy docker restart trên container ${id.take(12)}?
+对容器_id_take_12_执行_do_c78695043c	Chạy docker stop trên container ${id.take(12)}?
+对所有支持的挂载点执行_fstrim_优化_ss_82318eb7af	Chạy fstrim trên mọi điểm gắn hỗ trợ để tối ưu SSD
+对方邮箱_需已注册并验证_a4de8e4a8f	Email người nhận (cần đã đăng ký và xác minh)
+对端_58e5dbe70d	Điểm cuối bên kia
+对象_539cb3b0a6	Đối tượng
+对象数量_7a08198ac2	Số lượng đối tượng
+对象浏览器_162b30cd08	Trình duyệt đối tượng
+导入_csv_eee6da0840	Nhập CSV
+导入_csv_到_0_230452d08d	Nhập CSV vào {0}
+导入_csv_到_st_table_ffcc6cb46a	Nhập CSV vào ${st.table}
+导入_notebox_导出的_json_备份文_9e7560aff1	Nhập tệp sao lưu .json xuất từ NoteBox, chứa toàn bộ ghi chú và việc cần làm.
+导入_sql_文件_用于恢复_3313acce03	Nhập tệp SQL (để khôi phục)
+导入_导出_995e254175	Nhập / Xuất
+导入中_de56a0bf71	Đang nhập…
+导入中_f0a7986c54	Đang nhập
+导入中_请稍候_6259769fcb	Đang nhập, vui lòng đợi…
+导入失败_aeec838ca4	Nhập thất bại:
+导入待办_1a771a17b3	Nhập việc cần làm
+导入方式_0eac17d654	Phương thức nhập
+导入笔记_ef0dc85571	Nhập ghi chú
+导出_0_31a404b60a	Xuất {0}
+导出_0_为_sql_压缩包_078b43a5d3	Xuất {0} thành tệp SQL nén?
+导出_188896795f	Xuất
+导出_db_为_sql_压缩包_28584b981a	Xuất $db thành tệp SQL nén?

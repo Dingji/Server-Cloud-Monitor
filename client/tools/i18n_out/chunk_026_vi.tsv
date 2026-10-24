@@ -1,0 +1,19 @@
+首次_a5a7c570b3	Lần đầu
+首次成功_59d8e1af26	Lần đầu thành công
+首行是否为列名_0c92d3b892	Dòng đầu tiên có phải là tên cột không
+验证_80144e2e73	Xác minh
+验证邮件已发送_请查收_24_小时内有效_若未_b397297e85	Email xác minh đã được gửi, vui lòng kiểm tra hộp thư (có hiệu lực trong 24 giờ). Nếu chưa nhận được, hãy liên hệ quản trị viên để kích hoạt.
+验证邮件已重新发送_2dcdc605ce	Email xác minh đã được gửi lại
+高_b096b3f5ac	Cao
+高级_c009d0ab82	Nâng cao
+默认_0_5ce2332f3f	Mặc định {0}
+默认_bb17cdb052	(mặc định)
+默认_c8d09cf955	Mặc định
+默认_configstore_default_0733ed0183	Mặc định ${ConfigStore.DEFAULT_URL}
+默认_https_api_telegram_12d4c4cae0	Mặc định https://api.telegram.org
+默认_noteboxstore_defaul_80d6354637	Mặc định ${NoteBoxStore.DEFAULT_URL}
+默认值_d93919c37b	Giá trị mặc định
+默认值_注释_序列值_74bbba44ab	Giá trị mặc định / Chú thích / Giá trị tuần tự
+默认值或注释文本_fc754f6441	Giá trị mặc định hoặc văn bản chú thích
+默认库_8e2aece25f	Cơ sở dữ liệu mặc định
+默认网关_e44b012e45	Cổng mặc định

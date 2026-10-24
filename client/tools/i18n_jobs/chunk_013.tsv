@@ -1,0 +1,120 @@
+当前索引更新于_0_1c82f67640	当前索引更新于 {0}
+当前采集到的指标_8e4e47b457	当前采集到的指标
+当前镜像_ed71a792a7	当前镜像
+当前页面_b7d5886b05	 · 当前页面
+彻底删除_0_项_无法恢复_9f56fcff22	彻底删除 {0} 项，无法恢复。
+彻底删除_8c0b37b684	彻底删除
+彻底删除_trash_size_项_无法恢_87a3623728	彻底删除 ${trash.size} 项，无法恢复。
+彻底卸载_33072f5e11	彻底卸载
+待办_csv_3308e95082	待办 CSV
+待办_未完成_已完成_7422fade10	待办（未完成 / 已完成）
+待办清单_febc09d1b1	待办清单
+待探测_51805a6f50	待探测
+待检测_05fb47fc35	待检测
+待邮箱验证_bada0c2e46	待邮箱验证
+待验证_0b48e4bdd8	待验证
+必须带_http_或_https_e74acdc586	必须带 http:// 或 https://
+快捷_14249f75ba	快捷
+快捷模板_423595bef4	快捷模板：
+快速备份_1cbe05845d	快速备份
+性能洞察_71fa3a4ff8	性能洞察
+总_0_新增_1_1fd58b4e12	总 {0} · 新增 {1}
+总_token_2d5ae33603	总 Token
+总占用_3da7163a84	 总占用
+总大小_0_a2c8d9634b	总大小 {0}
+总大小_fmt_bytes_totalsiz_53ae231269	总大小 ${Fmt.bytes(totalSize)}
+总容量_8b60ba80ea	总容量
+总尝试_56d2a2d4f5	总尝试
+总成功率_0_重试_1_32f597c3de	总成功率 {0}% · 重试 {1}
+总成功率_322a0370e9	总成功率
+总成功率_61b76516e3	总成功率 
+总探测_572bee6277	总探测
+总流量_出_6efb4930fb	总流量(出)
+总耗时_2db420d198	总耗时
+总览_c122e1758c	总览
+总览与监控_70e2feb12d	总览与监控
+总计_3af1ac5b4e	总计
+总请求_d1cac3ca3b	总请求
+总账号_02ceb243fe	总账号
+恢复_79748ca1c6	恢复
+恢复_mongodb_归档_ad961869c7	恢复 MongoDB 归档
+恢复_redis_7dd20f103c	恢复 Redis
+恢复中_176238056c	恢复中…
+恢复中_d6426a51e5	恢复中
+恢复于_0_57aae0c315	恢复于 {0}
+恢复于_rtmrecover_recover_471df21a46	恢复于 ${rTmRecover(recoverAt)}
+恢复备份到目标数据库_00fbc874c2	恢复备份到目标数据库
+恢复失败_08c8ed5980	恢复失败：
+恢复失败_76842a0348	恢复失败
+恢复完成_笔记_0_条_待办_1_条_7aa19232cf	恢复完成：笔记 {0} 条，待办 {1} 条
+恢复完整备份_640eea92dc	恢复完整备份
+恢复方式_4a0ce48265	恢复方式
+恢复时是否通知_e60cfd9684	恢复时是否通知
+恢复结果_25404d8096	恢复结果
+恢复通知_9d088c33ba	恢复通知
+恢复默认地址_4c7fd3785e	恢复默认地址
+想到什么_立刻记下来_c54f483edc	想到什么，立刻记下来…
+慢查询_slowlog_89cb405eab	慢查询 (SLOWLOG)
+慢查询_剖析_e7d6b1beb3	慢查询（剖析）
+慢查询_热点语句_e4c8bb10fe	慢查询 / 热点语句
+成功_0_错误_1_超时_2_4e74aeecc7	成功 {0} · 错误 {1} · 超时 {2}
+成功_51991a5d11	成功
+成功导入_0_条待办_0f7f47eb57	成功导入 {0} 条待办
+成功导入_0_条笔记_f1edf5b407	成功导入 {0} 条笔记
+成功导入_n_条待办_37eadf2708	成功导入 $n 条待办
+成功导入_n_条笔记_2f9691a596	成功导入 $n 条笔记
+成功率_0_047cd91c6c	成功率 {0}%
+成功率_2xx_占比_服务可用性_非_5_a3d7b27e95	成功率 = 2xx 占比；服务可用性 = 非 5xx 占比。两者差距大说明失败主要来自客户端参数或配额，而非上游故障。
+成功率_df9dc72f2d	成功率
+成功率_monfmt_fixed_sr_1_4fbf1cc803	成功率 ${MonFmt.fixed(sr, 1)}%
+成功率_延迟分位_错误分布_配额消耗与_toke_9c60795c78	成功率、延迟分位、错误分布、配额消耗与 token 用量归集
+成功登录_last_d5df9592bd	成功登录 (last)
+我_34f201bc50	我
+我已知晓风险_强制执行_cd4e2f773d	我已知晓风险，强制执行
+我明白风险_执行_a77f5cd3f3	我明白风险，执行
+或_systemd_单元_nginx_serv_14c65e1864	或 systemd 单元: nginx.service
+或点左上角_新建笔记_创建_4bb6db19d3	或点左上角「新建笔记」创建
+截止日期_9b3177f0b7	截止日期
+截止时间_864048b32f	截止时间
+所有操作均被审计记录_511c89f737	所有操作均被审计记录
+所有管理操作均写入审计日志_logs_a_e2b87d13a1	 · 所有管理操作均写入审计日志 (logs/audit.log)
+所有者_ff3beb8e45	所有者
+所有软件包均为最新版本_ee413e3b4c	所有软件包均为最新版本。
+手动_2a4a4de806	手动
+手动编辑的_root_crontab_请通过_72bfbdde79	· 手动编辑的 root crontab 请通过 Web 终端操作（crontab -e）
+手动进程_040082d08d	手动进程
+打包_0_项到_1_29836a27f5	打包 {0} 项到 {1}
+打包_selected_size_项到_e42700bf89	打包 ${selected.size} 项到 ${l.dir}
+打包_tar_gz_ff1dd64457	打包 tar.gz
+打包为_tar_gz_3ea0166662	打包为 tar.gz
+打包完成_be69db469a	打包完成
+打开_65fc81e161	打开
+打开所在目录_b4bf69d6b9	打开所在目录
+执行_0_70b4feea4a	执行 {0} ？
+执行_28febba225	执行
+执行_act_a3e97e4bee	执行 $act ？
+执行_action_b272ecea51	执行 $action ？
+执行_apt_get_install_y_ce_6568cc1ca1	执行 apt-get install -y certbot，约 1-3 分钟。
+执行_b_0_b_1695afa501	执行 <b>{0}</b>？
+执行_b_name_b_67f5a659e6	执行 <b>$name</b>？
+执行_create_extension_if_n_aac00658d4	执行 CREATE EXTENSION IF NOT EXISTS $n？
+执行_create_extension_pg_s_6d03312f5d	执行 CREATE EXTENSION pg_stat_statements？启用后还需将其加入 shared_preload_libraries 并重启数据库才会开始统计。
+执行_ctrl_enter_ecfb73b4d6	执行 (Ctrl+Enter)
+执行_daemon_stop_dfe266a216	执行 daemon-stop ？
+执行_ddl_769fdda3d6	执行 DDL
+执行_ddl_操作_0ed0a31f65	执行 DDL 操作
+执行_prune_6b4f1926c7	执行 prune ？
+执行_trim_de3f191099	执行 TRIM
+执行一次_relay_状态热备份_sqlite_8bc4bec089	执行一次 relay 状态热备份（SQLite 在线备份，不中断中继服务）。
+执行中_1f425b6bf0	执行中
+执行修复_18ad6adf19	执行修复
+执行单元_2466ded40e	执行单元
+执行命令_bf162782f5	执行命令
+执行失败_9746cfc7d2	执行失败
+执行异常_f5990190d3	执行异常
+执行拉起_24779c513a	执行拉起
+执行清理_bebeb0649b	执行清理
+执行结果_1b213f405b	执行结果
+执行自愈_d499e88a86	执行自愈
+执行计划_analyze_cc0577dcef	执行计划（ANALYZE）
+执行计划_json_5d921dfd27	执行计划 JSON

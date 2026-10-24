@@ -1,4 +1,6 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -110,11 +112,11 @@ object AppState {
             if (e.isAuth) {
                 cfg = cfg.forgetSession(); ConfigStore.save(cfg)
                 _session.value = SessionState.Login
-                _banner.value = "会话已过期，请重新登录"
+                _banner.value = L["会话已过期_请重新登录_32f89bb43c"]
             } else {
                 // Network trouble: still show the login screen with a hint.
                 _session.value = SessionState.Login
-                _banner.value = "无法连接服务器：${e.message}"
+                _banner.value = trf("无法连接服务器_0_8f6c19cfd1", e.message)
             }
         }
     }
@@ -138,7 +140,7 @@ object AppState {
             cfg = cfg.forgetSession()
             ConfigStore.save(cfg)
             _session.value = SessionState.Login
-            _banner.value = "会话已过期，请重新登录"
+            _banner.value = L["会话已过期_请重新登录_32f89bb43c"]
             stopHub()
         }
     }
@@ -201,7 +203,7 @@ object AppState {
         val h = _api.health()
         val name = (h["name"] as? kotlinx.serialization.json.JsonPrimitive)?.safeContent() ?: "cloud-monitor"
         val ver = (h["version"] as? kotlinx.serialization.json.JsonPrimitive)?.safeContent() ?: "?"
-        return "$name $ver 连接正常"
+        return trf("0_1_连接正常_0fdc75bf10", name, ver)
     }
 
     private fun restartHub() {

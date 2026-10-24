@@ -1,0 +1,120 @@
+变化_0713c8939f	Modifiche
+变更取自_auditd_文件完整性事件_配置_edc7e5af44	Le modifiche provengono dagli eventi di integrità dei file di auditd (configurazione / chiavi / nginx / sshd ecc.), $changeCount in totale.
+变更预览_241ab41868	 · Anteprima modifiche
+变量_b418ca60d4	Variabile
+口径说明_53a989d8cc	Definizione
+只告警_20b82131f2	Solo avvisi
+只读_ffc1d065fb	Sola lettura
+只读_仅查看_可编辑_可修改_管理_可修_7350c52b3d	Sola lettura = solo visualizzazione · Modificabile = si può cambiare · Gestione = modificare, eliminare e gestire la condivisione
+只选目录_bc8b48ee0e	Seleziona solo la directory
+可上传_rdb_文件名_内容_0e9334cab9	Puoi caricare nomi di file .rdb + contenuto.
+可修复_r_checks_count_e4b6314c85	Riparabile: {0}
+可升级_546591fd74	Aggiornabile
+可升级_total_12792da8ef	Aggiornabile ($total)
+可复用_ec5baa1975	Riutilizzabile
+可复用_缓存上限_96e0d3a181	Riutilizzabile (limite cache)
+可复用上下文_9727f037bf	Contesto riutilizzabile
+可安全清理_099dfd0be8	Pulizia sicura
+可清理的孤立依赖_apt_get_s_auto_25a43a9abb	Dipendenze orfane ripulibili (apt-get -s autoremove)
+可用_e91365cf9e	Disponibile
+可用性拨测_64f61a3d7a	Sonda di disponibilità
+可用空间_4981f67ab1	Spazio disponibile
+可空_b3563bf06a	Amette null
+可粘贴_mongodump_归档内容或上传后在列_40fb6a2727	Incolla qui il contenuto dell'archivio mongodump oppure caricalo e ripristinalo dall'elenco; incolla il testo qui e specifica un nome file.
+可编辑_bff55f2cd9	Modificabile
+可达_3705c6f323	Raggiungibile
+可达性_765d9ffdc9	Raggiungibilità
+可选_2f3b613ff2	Facoltativo…
+可选_53e32830a5	Facoltativo
+可选镜像_67237d63bf	Immagine facoltativa
+台账主机_acb80f963e	Host di inventario
+台账条目_a9bb9bd8ce	Voce di inventario
+台账还是空的_登记机器的用途_环境_负责人与备注_4aebfb8210	L'inventario è ancora vuoto: registra scopo, ambiente, responsabile e note di ogni macchina, così ispezioni e avvisi avranno un destinatario
+台账里还没有主机_先到_纳管主机_登记_再回来配_cdc9d74097	Non ci sono ancora host nell'inventario: registrali prima in «Host gestiti», poi torna per configurare le credenziali SSH
+各套餐命中率_rangelabel_cb1ad2971f	Tasso di hit per piano $rangeLabel
+合并_保留现有数据_01a4d7c1d8	Unisci (conserva i dati esistenti)
+合并导入_保留现有对象_5693e46162	Importa con unione (conserva gli oggetti esistenti)
+合规_540bc8b761	Conformità
+合规_r_counts_93f6bd5eb9	Conforme: {0}
+合计_0_03a6ed19a9	Totale {0}
+合计_92bcbf71cb	Totale
+同主仓库_01a7130455	Come il repo principale
+同名文件已存在_19c091cec7	Esiste già un file con lo stesso nome
+同时复制数据_d0295acd86	Copia anche i dati
+名称_1be7ae4fc2	Nome
+名称_值_576e23fba3	Nome / Valore
+名称_可带模式_99f761c6de	Nome (può contenere un pattern)
+后台运行_d8478a3802	Esegui in background
+后天_639e8f00b7	Dopodomani
+向_pid_pid_args_发送_si_1e664241d5	Inviare SIGTERM al PID $pid ($args)?
+否_8bf5c10ad9	No
+含成本估算_c3584df84d	Con stima dei costi
+含数据_6aedaad68f	(con dati)
+含规则_拨测与手动广播_6fd5d428e5	Include regole, sonde e trasmissioni manuali
+含轮转历史_e8a206c9bc	Include la cronologia di rotazione
+启动_0_5c677d444c	Avvia {0}
+启动_0_服务_16fc9bfc5e	▶ Avvia il servizio {0}
+启动_ebd26da421	Avvia
+启动_engine_name_服务_47b4573f31	▶ Avvia il servizio ${engine.name}
+启动_label_d5cb754f2b	Avvia $label
+启动_容器_76c73301e8	Avvia il container
+启动引擎_193b25d8af	Avvia il motore
+启动服务_f5f2a0dd6f	Avvia il servizio
+启用_0_并重载_nginx_cec5f2e46f	Abilitare {0} e ricaricare nginx?
+启用_d4e9ca3dd4	Abilita
+启用_pg_stat_statements_扩展_a1da4a0b69	Abilita l'estensione pg_stat_statements
+启用_r_site_并重载_nginx_6f9eb4ba9b	Abilitare ${r.site} e ricaricare nginx?
+启用中的探测项_06452808ea	Sonde abilitate
+启用告警_d6b9351330	Abilita avvisi
+启用方式_script_由_relay_ale_ef278b0211	Abilitazione: $script, eseguita ogni 5 minuti da relay-alert.timer.
+启用方法_9260bb76c1	Metodo di abilitazione
+启用每日摘要_0a9df7843b	Abilita il riepilogo giornaliero
+启用网卡_name_b24324d7d4	Abilitare la scheda di rete $name?
+启用邮件通知_25c29ea9b4	Abilita le notifiche via email
+启用防火墙_32fbb16291	Abilita il firewall
+告警_5078424f7e	Avviso
+告警中_265d5de4c9	In avviso
+告警中心_ba945698e9	Centro avvisi
+告警事件流_7910b238b1	Flusso degli eventi di avviso
+告警历史_c507274d75	Cronologia degli avvisi
+告警就会推送到群里而不只是停在面板上_cb3d792064	Gli avvisi verranno inviati al gruppo anziché restare solo sul pannello.
+告警已关闭_a1c9fab7d6	Avvisi disattivati
+告警日志_0_a892400684	Registro avvisi ({0})
+告警规则_0_条触发中_86ea51451b	{0} regole di avviso in attivazione
+告警规则_de497c4e56	Regole di avviso
+告警规则_o_rulefiring_条触发_3296034214	${o.ruleFiring} regole di avviso in attivazione
+告警通道_复用_relay_每日报告的_smtp_c02c260a95	Canale avvisi (riusa l'SMTP del report giornaliero di relay)
+告警阈值_仪表盘右上角铃铛_c7224212dd	Soglie di avviso (icona a campanella in alto a destra della dashboard)
+告警阈值已保存_f6ed6094c3	Soglie di avviso salvate
+告警防护开启_c43dfbff06	Protezione avvisi attiva
+周_0_1_2_78c92bdbef	Settimana {0} {1}–{2}
+周期_0_天_已消耗_1_4364d28c73	Ciclo di {0} giorni · {1}% consumato
+周期_8a12b12125	Ciclo
+周期内消耗_cdd79a773a	Consumo nel ciclo
+命中_0_bc8f08b9ae	Hit {0}
+命中_0_未命中_1_994cc4fd62	Hit {0} · miss {1}
+命中_0_未命中_1_tok_0170ee1dc6	Hit {0} / miss {1} tok · 
+命中_0_未命中_1_tok_覆_e84c124898	Hit {0} / miss {1} tok · copertura 
+命中_7a130d7fde	Hit
+命中_上游返回_2xx_真正拿到了模型响应_479b4a776d	· Hit: l'upstream ha restituito 2xx, è arrivata una vera risposta del modello.
+命中事件_5a9f9753fc	Eventi di hit
+命中率趋势_rangelabel_gra_4543952724	Andamento del tasso di hit $rangeLabel · $gran
+命令_b114b91547	Comando
+命令控制台_3e37a06e5f	Console comandi
+命令输出_0_1eb07b8f1f	Output del comando: {0}
+命令输出_c_evidence_take_1_2639edb6ee	Output del comando: ${c.evidence.take(160)}
+响应解析失败_0_2b68ffa3e9	Analisi della risposta non riuscita: {0}
+响应解析失败_text_take_300_e68936f4c8	Analisi della risposta non riuscita: ${text.take(300)}
+响应需包含关键字_8194b1499c	La risposta deve contenere la parola chiave
+唯一_e805014aa5	Univoco
+唯一索引_eea282cf7b	Indice univoco
+四_4f88740b34	Quattro
+回收_6eda6254dd	Recupera
+回收站_0_c62b3efd3d	Cestino{0}
+回收站_64ea8751fb	Cestino
+回收站_保留_0_天_38b488832e	Cestino (conservato {0} giorni)
+回收站_保留_filestore_trash_9bbe7572c0	Cestino (conservato ${FileStore.trashDays.value} giorni)
+回收站已清空_226ab2d716	Cestino svuotato
+回收站是空的_e872522628	Il cestino è vuoto
+回调_url_8685de50ca	URL di callback
+图片_0_b8121a43e1	[Immagine: {0}]

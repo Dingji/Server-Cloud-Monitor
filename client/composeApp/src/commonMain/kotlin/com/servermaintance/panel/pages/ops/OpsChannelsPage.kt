@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.ops
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,10 +72,10 @@ fun OpsChannelsPage() {
     fun openFormForType(typeKey: String, name: String, existing: OpsChannel?) {
         scope.launch {
             val cfg = existing?.cfg ?: emptyMap()
-            val masked = { k: String -> if (existing != null && existing.secretSet.contains(k)) "••••••" else cfg[k].orEmpty() }
-            val base = listOf(FormField.Text("name", "渠道名称", value = name))
+            val masked = { k: String -> if (existing != null && existing.secretSet.contains(k)) L["s_bc98c951ea"] else cfg[k].orEmpty() }
+            val base = listOf(FormField.Text("name", L["渠道名称_99e9ec8d48"], value = name))
             val fields = base + cfgFields(typeKey, cfg, masked)
-            val f = Modal.prompt(if (existing == null) "新建渠道 · ${typeLabel(typeKey)}" else "编辑「${existing.name}」", fields, okText = "保存")
+            val f = Modal.prompt(if (existing == null) trf("新建渠道_0_05cd02b38f", typeLabel(typeKey)) else trf("编辑_0_70e0b308bd", existing.name), fields, okText = L["保存_fadf24dbc5"])
                 ?: return@launch
             val cfgObj = JsonObject(f.entries.filter { it.key.startsWith("cfg.") }
                 .associate { (k, v) -> k.removePrefix("cfg.") to JsonPrimitive(v) })
@@ -84,7 +87,7 @@ fun OpsChannelsPage() {
                 "cfg" to cfgObj,
             ))
             if (err == null) {
-                AppState.toast("渠道已保存，建议先点“测试发送”", ToastKind.Ok)
+                AppState.toast(tr("渠道已保存_建议先点_测试发送_8a20b90f03"), ToastKind.Ok)
             } else {
                 AppState.toast(err, ToastKind.Err, ms = 6000)
             }
@@ -98,28 +101,28 @@ fun OpsChannelsPage() {
             val chosen = presetType ?: existing?.type
             if (chosen == null) {
                 val t = Modal.prompt(
-                    "新建通知渠道",
+                    L["新建通知渠道_ce4914887a"],
                     listOf(
-                        FormField.Select("type", "渠道类型", options = typeNames, value = typeNames.firstOrNull().orEmpty()),
-                        FormField.Text("name", "渠道名称", hint = "如 运维值班群"),
+                        FormField.Select("type", L["渠道类型_7ba72e5172"], options = typeNames, value = typeNames.firstOrNull().orEmpty()),
+                        FormField.Text("name", L["渠道名称_99e9ec8d48"], hint = L["如_运维值班群_405f221d39"]),
                     ),
-                    okText = "下一步",
+                    okText = L["下一步_ea0ef2ae72"],
                 ) ?: return@launch
                 val key = types.firstOrNull { it.second == t["type"] }?.first ?: "webhook"
                 openFormForType(key, t["name"].orEmpty(), existing = null)
             } else {
-                openFormForType(chosen, existing?.name ?: "新渠道", existing)
+                openFormForType(chosen, existing?.name ?: L["新渠道_fd0cc5a2d3"], existing)
             }
         }
     }
 
     PageScaffold(
-        title = "通知渠道",
-        desc = "把告警送到人：Webhook / 企业微信 / 钉钉 / 飞书 / Telegram / 邮件，凭据只存服务器",
+        title = L["通知渠道_56807dfa08"],
+        desc = L["把告警送到人_webhook_企业微信_c503ab6c52"],
         actions = {
-            GhostBtn(text = "刷新", onClick = { scope.launch { OpsState.loadChannels() } }, icon = "refresh")
+            GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { OpsState.loadChannels() } }, icon = "refresh")
             Spacer(Modifier.size(8.dp))
-            PrimaryBtn(text = "新建渠道", onClick = { openForm(null) }, icon = "plus")
+            PrimaryBtn(text = L["新建渠道_5c08b54484"], onClick = { openForm(null) }, icon = "plus")
         },
     ) {
         if (unsupported) {
@@ -128,34 +131,36 @@ fun OpsChannelsPage() {
         }
         val t = totals
         GridLayout(columns = 4, spacing = 12.dp) {
-            StatTile(label = "渠道总数", value = "${t?.channelTotal ?: channels.size}", sub = "${t?.channelEnabled ?: channels.count { it.enabled }} 个启用", icon = "share")
-            StatTile(label = "24 小时发送", value = "${t?.sent24h ?: 0}", sub = "含规则、拨测与手动广播", icon = "mail")
+            StatTile(label = L["渠道总数_70a84a2aa8"], value = "${t?.channelTotal ?: channels.size}", sub = trf("0_个启用_bf27192e40", t?.channelEnabled ?: channels.count { it.enabled }), icon = "share")
+            StatTile(label = L["24_小时发送_8e6d358b2e"], value = "${t?.sent24h ?: 0}", sub = L["含规则_拨测与手动广播_6fd5d428e5"], icon = "mail")
             StatTile(
-                label = "24 小时失败", value = "${t?.failed24h ?: 0}",
-                sub = if ((t?.failed24h ?: 0) > 0) "自动退避重试 3 次后放弃" else "无失败记录",
+                label = L["24_小时失败_f23fa2b0e3"], value = "${t?.failed24h ?: 0}",
+                sub = if ((t?.failed24h ?: 0) > 0) L["自动退避重试_3_次后放弃_49f0c34833"] else L["无失败记录_fc59ed91cc"],
                 icon = "warning", valueColor = if ((t?.failed24h ?: 0) > 0) Palette.bad else Palette.ok,
             )
-            StatTile(label = "告警规则", value = "${t?.ruleTotal ?: 0}", sub = "在「告警规则」页绑定渠道", icon = "filter")
+            StatTile(label = L["nav.ops_rules"], value = "${t?.ruleTotal ?: 0}", sub = L["在_告警规则_页绑定渠道_afd267abd1"], icon = "filter")
         }
 
-        PanelCard("渠道", cardKey = "ops-ch-list", collapsible = false) {
+        PanelCard(title = L["渠道_c152be9f50"], cardKey = "ops-ch-list", collapsible = false) {
             if (channels.isEmpty()) {
                 EmptyState(
-                    "还没有通知渠道。新建一个企业微信/钉钉机器人或 Webhook，再到「告警规则」里绑定，" +
-                        "告警就会推送到群里而不只是停在面板上。",
+                    L["还没有通知渠道_新建一个企业微信_钉钉机器人或_ad8bca4340"] +
+                        L["告警就会推送到群里而不只是停在面板上_cb3d792064"],
                     icon = "mail",
                 )
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<OpsChannel>("名称", weight = 1.3f) { TableText(it.name) },
-                        TableCol<OpsChannel>("类型", weight = 1.2f) { Chip(typeLabel(it.type), tone = Level.Info) },
-                        TableCol<OpsChannel>("目标", weight = 2.6f, mono = true) { TableText(channelTarget(it), mono = true) },
-                        TableCol<OpsChannel>("凭据", weight = 1.0f) {
-                            TableText(if (it.secretSet.isEmpty()) "无密钥" else "已存 ${it.secretSet.joinToString(",")}",
-                                color = Palette.muted)
+                        TableCol<OpsChannel>(L["名称_1be7ae4fc2"], weight = 1.3f) { TableText(it.name) },
+                        TableCol<OpsChannel>(L["类型_e4e46c7235"], weight = 1.2f) { Chip(typeLabel(it.type), tone = Level.Info) },
+                        TableCol<OpsChannel>(L["目标_941f08313a"], weight = 2.6f, mono = true) { TableText(channelTarget(it), mono = true) },
+                        TableCol<OpsChannel>(L["凭据_131caf7289"], weight = 1.0f) {
+                            TableText(
+                                if (it.secretSet.isEmpty()) L["无密钥_e80f2d522d"] else trf("已存_it_secretset_jointo_371806c69d", it.secretSet.joinToString(L["s_d3bc9a378d"])),
+                                color = Palette.muted,
+                            )
                         },
-                        TableCol<OpsChannel>("最近发送", weight = 1.4f) { c ->
+                        TableCol<OpsChannel>(L["最近发送_2187d92802"], weight = 1.4f) { c ->
                             Column {
                                 ChannelSendState(c)
                                 if (c.lastSend > 0) Text(
@@ -164,24 +169,24 @@ fun OpsChannelsPage() {
                                 )
                             }
                         },
-                        TableCol<OpsChannel>("操作", weight = 2.2f) { c ->
+                        TableCol<OpsChannel>(L["操作_f3ea6d345e"], weight = 2.2f) { c ->
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                GhostBtn(text = "测试发送", onClick = {
+                                GhostBtn(text = L["测试发送_614cdaef43"], onClick = {
                                     busyId = c.id
                                     scope.launch {
-                                        val err = OpsState.testChannel(c.id, "来自 Cloud Monitor 的测试消息")
+                                        val err = OpsState.testChannel(c.id, L["来自_cloud_monitor_的测试消息_73081ba885"])
                                         busyId = null
-                                        AppState.toast(err ?: "${c.name}：已送达", if (err == null) ToastKind.Ok else ToastKind.Err, ms = 7000)
+                                        AppState.toast(err ?: trf("c_name_已送达_fbc14953a8", c.name), if (err == null) ToastKind.Ok else ToastKind.Err, ms = 7000)
                                     }
                                 }, enabled = busyId == null, icon = "external")
-                                GhostBtn(text = "编辑", onClick = { openForm(c) }, icon = "edit")
-                                GhostBtn(text = if (c.enabled) "停用" else "启用", onClick = {
-                                    scope.launch { AppState.toast(OpsState.toggleChannel(c.id, !c.enabled) ?: "已更新", ToastKind.Ok) }
+                                GhostBtn(text = L["编辑_a7f814c0a4"], onClick = { openForm(c) }, icon = "edit")
+                                GhostBtn(text = if (c.enabled) L["停用_d989e55188"] else L["启用_d4e9ca3dd4"], onClick = {
+                                    scope.launch { AppState.toast(OpsState.toggleChannel(c.id, !c.enabled) ?: tr("已更新_112f98675e"), ToastKind.Ok) }
                                 }, icon = if (c.enabled) "stop" else "play")
-                                GhostBtn(text = "删除", onClick = {
+                                GhostBtn(text = L["删除_3755f56f2f"], onClick = {
                                     scope.launch {
-                                        if (Modal.confirm("删除通知渠道", "删除「${c.name}」？引用它的规则将不再向该渠道推送。", okText = "删除", danger = true)) {
-                                            AppState.toast(OpsState.deleteChannel(c.id) ?: "已删除", ToastKind.Ok)
+                                        if (Modal.confirm(L["删除通知渠道_5fb682fc27"], trf("删除_0_引用它的规则将不再向该渠道推送_2a68290638", c.name), okText = L["删除_3755f56f2f"], danger = true)) {
+                                            AppState.toast(OpsState.deleteChannel(c.id) ?: tr("已删除_fb5fe1e266"), ToastKind.Ok)
                                         }
                                     }
                                 }, icon = "trash")
@@ -194,31 +199,31 @@ fun OpsChannelsPage() {
             }
         }
 
-        PanelCard("发送记录", cardKey = "ops-ch-log") {
+        PanelCard(title = L["发送记录_90ed819b22"], cardKey = "ops-ch-log") {
             DataTable(
                 columns = listOf(
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("时间", weight = 1.3f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("渠道", weight = 1.2f) { TableText(it.channelName) },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("触发", weight = 1.0f) {
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["时间_89b4aa6364"], weight = 1.3f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["渠道_c152be9f50"], weight = 1.2f) { TableText(it.channelName) },
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["触发_27eccf9785"], weight = 1.0f) {
                         Chip(when (it.source) {
-                            "rule" -> "规则"
-                            "test" -> "测试"
-                            "manual" -> "手动"
+                            "rule" -> L["规则_ed904c685a"]
+                            "test" -> L["测试_0b5d7ed54b"]
+                            "manual" -> L["手动_2a4a4de806"]
                             else -> it.source
                         }, tone = Level.Muted)
                     },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("标题", weight = 2.2f) { TableText(it.title) },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("结果", weight = 0.9f) {
-                        if (it.ok) Chip("已送达", tone = Level.Ok) else Chip("失败", tone = Level.Bad)
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["标题_748d7dc7e3"], weight = 2.2f) { TableText(it.title) },
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["结果_0a2c91cec6"], weight = 0.9f) {
+                        if (it.ok) Chip(L["已送达_da986b8ec5"], tone = Level.Ok) else Chip(L["失败_3e3c8068bb"], tone = Level.Bad)
                     },
-                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>("错误 / 耗时", weight = 2.0f) {
-                        TableText(listOfNotNull(it.error.takeIf { e -> e.isNotBlank() }, "${it.ms} ms").joinToString(" · "),
+                    TableCol<com.servermaintance.panel.core.OpsNotifyRec>(L["错误_耗时_67940c65fa"], weight = 2.0f) {
+                        TableText(listOfNotNull(it.error.takeIf { e -> e.isNotBlank() }, "${it.ms} ms").joinToString(L["s_d3dacf895c"]),
                             color = if (it.ok) Palette.muted else Palette.bad)
                     },
                 ),
                 rows = notifyLog,
                 rowKey = { "${it.ts}-${it.channelId}-${it.title}" },
-                emptyText = "暂无发送记录",
+                emptyText = L["暂无发送记录_8190202072"],
                 maxRows = 20,
             )
         }
@@ -227,35 +232,35 @@ fun OpsChannelsPage() {
 
 private fun cfgFields(type: String, cfg: Map<String, String>, masked: (String) -> String): List<FormField> = when (type) {
     "wecom" -> listOf(
-        FormField.Text("cfg.webhook", "机器人 Webhook 地址", value = cfg["webhook"].orEmpty(), mono = true),
-        FormField.Select("cfg.msgtype", "消息格式", options = listOf("markdown", "text"), value = cfg["msgtype"].orEmpty().ifBlank { "markdown" }),
+        FormField.Text("cfg.webhook", L["机器人_webhook_地址_55a5f7206f"], value = cfg["webhook"].orEmpty(), mono = true),
+        FormField.Select("cfg.msgtype", L["消息格式_19b61b1c63"], options = listOf("markdown", "text"), value = cfg["msgtype"].orEmpty().ifBlank { "markdown" }),
     )
     "dingtalk" -> listOf(
-        FormField.Text("cfg.webhook", "机器人 Webhook 地址", value = cfg["webhook"].orEmpty(), mono = true),
-        FormField.Password("cfg.secret", "加签密钥（SEC 开头）", value = masked("secret")),
-        FormField.Text("cfg.atMobiles", "@ 的手机号（逗号分隔，可空）", value = cfg["atMobiles"].orEmpty(), mono = true),
+        FormField.Text("cfg.webhook", L["机器人_webhook_地址_55a5f7206f"], value = cfg["webhook"].orEmpty(), mono = true),
+        FormField.Password("cfg.secret", L["加签密钥_sec_开头_63ebeb3c8d"], value = masked("secret")),
+        FormField.Text("cfg.atMobiles", L["的手机号_逗号分隔_可空_696997a0c4"], value = cfg["atMobiles"].orEmpty(), mono = true),
     )
     "feishu" -> listOf(
-        FormField.Text("cfg.webhook", "机器人 Webhook 地址", value = cfg["webhook"].orEmpty(), mono = true),
-        FormField.Password("cfg.secret", "加签密钥（可空）", value = masked("secret")),
+        FormField.Text("cfg.webhook", L["机器人_webhook_地址_55a5f7206f"], value = cfg["webhook"].orEmpty(), mono = true),
+        FormField.Password("cfg.secret", L["加签密钥_可空_a075da941a"], value = masked("secret")),
     )
     "telegram" -> listOf(
-        FormField.Password("cfg.botToken", "Bot Token", value = masked("botToken")),
-        FormField.Text("cfg.chatId", "Chat ID 或 @频道名", value = cfg["chatId"].orEmpty(), mono = true),
-        FormField.Text("cfg.apiBase", "API 基础地址（走代理时填）", value = cfg["apiBase"].orEmpty(), mono = true, hint = "默认 https://api.telegram.org"),
+        FormField.Password("cfg.botToken", L["bot_token_f447a0bae0"], value = masked("botToken")),
+        FormField.Text("cfg.chatId", L["chat_id_或_频道名_beb6893b9b"], value = cfg["chatId"].orEmpty(), mono = true),
+        FormField.Text("cfg.apiBase", L["api_基础地址_走代理时填_5c7aa1a51e"], value = cfg["apiBase"].orEmpty(), mono = true, hint = L["默认_https_api_telegram_12d4c4cae0"]),
     )
     "email" -> listOf(
-        FormField.Text("cfg.host", "SMTP 服务器", value = cfg["host"].orEmpty(), mono = true),
-        FormField.Text("cfg.port", "端口", value = cfg["port"].orEmpty().ifBlank { "465" }, mono = true),
-        FormField.Select("cfg.security", "加密方式", options = listOf("ssl", "starttls"), value = cfg["security"].orEmpty().ifBlank { "ssl" }),
-        FormField.Text("cfg.user", "登录账号", value = cfg["user"].orEmpty(), mono = true),
-        FormField.Password("cfg.password", "密码 / 授权码", value = masked("password")),
-        FormField.Text("cfg.from", "发件人显示名（可空）", value = cfg["from"].orEmpty(), mono = true),
-        FormField.Text("cfg.to", "收件人（逗号分隔）", value = cfg["to"].orEmpty(), mono = true),
+        FormField.Text("cfg.host", L["smtp_服务器_941346a5f4"], value = cfg["host"].orEmpty(), mono = true),
+        FormField.Text("cfg.port", L["端口_6cbb7335b5"], value = cfg["port"].orEmpty().ifBlank { "465" }, mono = true),
+        FormField.Select("cfg.security", L["加密方式_4bf1dc061d"], options = listOf("ssl", "starttls"), value = cfg["security"].orEmpty().ifBlank { "ssl" }),
+        FormField.Text("cfg.user", L["登录账号_4500709ede"], value = cfg["user"].orEmpty(), mono = true),
+        FormField.Password("cfg.password", L["密码_授权码_d2c3e3135f"], value = masked("password")),
+        FormField.Text("cfg.from", L["发件人显示名_可空_cf0818ed1b"], value = cfg["from"].orEmpty(), mono = true),
+        FormField.Text("cfg.to", L["收件人_逗号分隔_7352ac40b2"], value = cfg["to"].orEmpty(), mono = true),
     )
     else -> listOf(
-        FormField.Text("cfg.url", "回调 URL", value = cfg["url"].orEmpty(), mono = true),
-        FormField.Password("cfg.secret", "HMAC 签名密钥（可空）", value = masked("secret")),
-        FormField.Text("cfg.secretHeader", "签名头名称", value = cfg["secretHeader"].orEmpty().ifBlank { "X-Cloud-Monitor-Signature" }, mono = true),
+        FormField.Text("cfg.url", L["回调_url_8685de50ca"], value = cfg["url"].orEmpty(), mono = true),
+        FormField.Password("cfg.secret", L["hmac_签名密钥_可空_d93d6e2984"], value = masked("secret")),
+        FormField.Text("cfg.secretHeader", L["签名头名称_9630afa6a5"], value = cfg["secretHeader"].orEmpty().ifBlank { L["x_cloud_monitor_signatur_16a40ebce0"] }, mono = true),
     )
 }

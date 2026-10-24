@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages.ops
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -75,21 +78,21 @@ fun OpsUptimePage() {
     fun openForm(existing: OpsTask?) {
         scope.launch {
             val fields = listOf(
-                FormField.Text("name", "任务名称", value = existing?.name ?: "", hint = "如 官网首页 / 支付回调"),
-                FormField.Select("type", "拨测类型", options = TASK_TYPES.values.toList(), value = TASK_TYPES[existing?.type] ?: "HTTP/HTTPS"),
-                FormField.Text("url", "URL（HTTP/HTTPS）", value = existing?.url ?: "", mono = true, hint = "必须带 http:// 或 https://"),
-                FormField.Text("host", "主机 / 域名（TCP、Ping、DNS、证书）", value = existing?.host ?: "", mono = true),
-                FormField.Text("port", "端口（TCP / 证书）", value = (existing?.port ?: 0).toString(), mono = true, hint = "证书默认 443"),
-                FormField.Text("expectStatus", "期望状态码", value = existing?.expectStatus ?: "200-299,301,302", mono = true),
-                FormField.Text("keyword", "响应需包含关键字", value = existing?.keyword ?: "", mono = true, hint = "留空表示不校验"),
-                FormField.Text("intervalSec", "拨测间隔（秒）", value = (existing?.intervalSec ?: 60).toString(), mono = true),
-                FormField.Text("failThreshold", "连续失败几次算不可用", value = (existing?.failThreshold ?: 2).toString(), mono = true),
-                FormField.Text("timeoutMs", "单次超时（毫秒）", value = (existing?.timeoutMs ?: 8000).toString(), mono = true),
-                FormField.Text("certWarnDays", "证书剩余天数告警线", value = (existing?.certWarnDays ?: 14).toString(), mono = true),
-                FormField.Select("channel", "通知渠道", options = channelOptions(), value = existing?.channelIds?.firstOrNull()?.let { OpsState.channelName(it) } ?: channelOptions().first()),
-                FormField.Text("group", "分组", value = existing?.group ?: "默认"),
+                FormField.Text("name", L["任务名称_2e30469899"], value = existing?.name ?: "", hint = L["如_官网首页_支付回调_83835cd09d"]),
+                FormField.Select("type", L["拨测类型_4ed688984c"], options = TASK_TYPES.values.toList(), value = TASK_TYPES[existing?.type] ?: "HTTP/HTTPS"),
+                FormField.Text("url", L["ops.uptime.url_label"], value = existing?.url ?: "", mono = true, hint = L["必须带_http_或_https_e74acdc586"]),
+                FormField.Text("host", L["主机_域名_tcp_ping_dns_证书_2724aed620"], value = existing?.host ?: "", mono = true),
+                FormField.Text("port", L["端口_tcp_证书_000343bdda"], value = (existing?.port ?: 0).toString(), mono = true, hint = L["证书默认_443_5250696a3c"]),
+                FormField.Text("expectStatus", L["期望状态码_4bbf3ddcd6"], value = existing?.expectStatus ?: L["200_299_301_302_5c4d44816c"], mono = true),
+                FormField.Text("keyword", L["响应需包含关键字_8194b1499c"], value = existing?.keyword ?: "", mono = true, hint = L["留空表示不校验_9bdf35fdf2"]),
+                FormField.Text("intervalSec", L["拨测间隔_秒_7c2e24962c"], value = (existing?.intervalSec ?: 60).toString(), mono = true),
+                FormField.Text("failThreshold", L["连续失败几次算不可用_aecb4e631c"], value = (existing?.failThreshold ?: 2).toString(), mono = true),
+                FormField.Text("timeoutMs", L["单次超时_毫秒_6917a6a5b4"], value = (existing?.timeoutMs ?: 8000).toString(), mono = true),
+                FormField.Text("certWarnDays", L["证书剩余天数告警线_064149de24"], value = (existing?.certWarnDays ?: 14).toString(), mono = true),
+                FormField.Select("channel", L["nav.ops_channels"], options = channelOptions(), value = existing?.channelIds?.firstOrNull()?.let { OpsState.channelName(it) } ?: channelOptions().first()),
+                FormField.Text("group", L["分组_97d8a6c05b"], value = existing?.group ?: L["默认_c8d09cf955"]),
             )
-            val f = Modal.prompt(if (existing == null) "新建拨测任务" else "编辑「${existing.name}」", fields, okText = "保存") ?: return@launch
+            val f = Modal.prompt(if (existing == null) L["新建拨测任务_cd03f12322"] else trf("编辑_0_70e0b308bd", existing.name), fields, okText = L["保存_fadf24dbc5"]) ?: return@launch
             val typeKey = TASK_TYPES.entries.firstOrNull { it.value == f["type"] }?.key ?: "http"
             val err = OpsState.saveTask(jsonObjectOf(
                 "id" to existing?.id,
@@ -108,19 +111,19 @@ fun OpsUptimePage() {
                 "group" to f["group"],
                 "enabled" to (existing?.enabled ?: true),
             ))
-            AppState.toast(err ?: "拨测任务已保存", if (err == null) ToastKind.Ok else ToastKind.Err, ms = 6000)
+            AppState.toast(err ?: tr("拨测任务已保存_c628e8f14a"), if (err == null) ToastKind.Ok else ToastKind.Err, ms = 6000)
         }
     }
 
     PageScaffold(
-        title = "可用性拨测",
-        desc = "网站 / 端口 / 证书 / DNS 的周期探测与可用率（SLA）统计",
+        title = L["可用性拨测_64f61a3d7a"],
+        desc = L["网站_端口_证书_dns_的周期探测_0eddb57091"],
         actions = {
-            GhostBtn(text = "刷新", onClick = {
+            GhostBtn(text = L["刷新_38108eaa1d"], onClick = {
                 scope.launch { OpsState.loadAll(); OpsState.loadSla(7) }
             }, icon = "refresh")
             Spacer(Modifier.size(8.dp))
-            PrimaryBtn(text = "新建拨测", onClick = { openForm(null) }, icon = "plus")
+            PrimaryBtn(text = L["新建拨测_02d832478b"], onClick = { openForm(null) }, icon = "plus")
         },
     ) {
         if (unsupported) {
@@ -129,20 +132,20 @@ fun OpsUptimePage() {
         }
         val t = totals
         if (t == null && tasks.isEmpty()) {
-            LoadingState("读取拨测任务…")
+            LoadingState(L["读取拨测任务_99a5f23cd0"])
             return@PageScaffold
         }
 
         GridLayout(columns = 4, spacing = 12.dp) {
-            StatTile(label = "拨测任务", value = "${t?.probeTotal ?: 0}", sub = "启用中的探测项", icon = "satellite")
+            StatTile(label = L["拨测任务_aca6ce04f6"], value = "${t?.probeTotal ?: 0}", sub = L["启用中的探测项_06452808ea"], icon = "satellite")
             StatTile(
-                label = "当前不可用", value = "${t?.probeDown ?: 0}",
-                sub = if ((t?.probeDown ?: 0) > 0) "已产生不可用事件" else "全部在线",
+                label = L["当前不可用_bd15b2e133"], value = "${t?.probeDown ?: 0}",
+                sub = if ((t?.probeDown ?: 0) > 0) L["已产生不可用事件_a2f7f57fb3"] else L["全部在线_44e9a836b2"],
                 icon = "warning", valueColor = if ((t?.probeDown ?: 0) > 0) Palette.bad else Palette.ok,
             )
             StatTile(
-                label = "近 30 天可用率", value = if (t?.sla30 == null) "—" else Fmt.pct(t.sla30),
-                sub = "按每次探测结果聚合", icon = "gauge",
+                label = L["近_30_天可用率_d672bf40c4"], value = if (t?.sla30 == null) "—" else Fmt.pct(t.sla30),
+                sub = L["按每次探测结果聚合_030b2e6a6a"], icon = "gauge",
                 valueColor = when {
                     t?.sla30 == null -> Palette.muted
                     t.sla30 >= 99.9 -> Palette.ok
@@ -151,34 +154,34 @@ fun OpsUptimePage() {
                 },
             )
             StatTile(
-                label = "证书即将到期", value = "${t?.certExpiring ?: 0}",
-                sub = "低于告警线的证书任务", icon = "shieldAlert",
+                label = L["证书即将到期_e004d9a87f"], value = "${t?.certExpiring ?: 0}",
+                sub = L["低于告警线的证书任务_695579ce30"], icon = "shieldAlert",
                 valueColor = if ((t?.certExpiring ?: 0) > 0) Palette.warn else Palette.muted,
             )
         }
 
-        PanelCard("任务", cardKey = "ops-up-tasks", collapsible = false) {
+        PanelCard(title = L["任务_3172b317f9"], cardKey = "ops-up-tasks", collapsible = false) {
             if (tasks.isEmpty()) {
-                EmptyState("还没有拨测任务：新建一个官网/接口 URL 就能开始统计可用率", icon = "satellite")
+                EmptyState(L["还没有拨测任务_新建一个官网_接口_url_就能_15fdd99609"], icon = "satellite")
             } else {
                 DataTable(
                     columns = listOf(
-                        TableCol<OpsTask>("任务", weight = 1.4f) { x ->
+                        TableCol<OpsTask>(L["任务_3172b317f9"], weight = 1.4f) { x ->
                             Column {
                                 Text(text = x.name, color = if (selected == x.id) Palette.ok else Palette.text, fontSize = 12.5.sp)
                                 Text(text = "${x.group} · ${TASK_TYPE_LABELS[x.type] ?: x.type}", color = Palette.muted, fontSize = 11.sp)
                             }
                         },
-                        TableCol<OpsTask>("目标", weight = 1.8f, mono = true) { TableText(taskTarget(it).ifBlank { "—" }, mono = true) },
-                        TableCol<OpsTask>("状态", weight = 0.9f) { TaskStateBadge(it) },
-                        TableCol<OpsTask>("最近结果", weight = 1.3f, mono = true) { x ->
+                        TableCol<OpsTask>(L["目标_941f08313a"], weight = 1.8f, mono = true) { TableText(taskTarget(it).ifBlank { "—" }, mono = true) },
+                        TableCol<OpsTask>(L["状态_62e951a692"], weight = 0.9f) { TaskStateBadge(it) },
+                        TableCol<OpsTask>(L["最近结果_d3d6d2384b"], weight = 1.3f, mono = true) { x ->
                             Column {
                                 Text(
                                     text = listOfNotNull(
                                         x.lastCode?.let { "HTTP $it" },
-                                        x.certDays?.let { "证书 ${it}天" },
+                                        x.certDays?.let { trf("证书_0_天_ba20b6315c", it) },
                                         "${x.lastMs}ms",
-                                    ).joinToString(" · ").ifBlank { "未探测" },
+                                    ).joinToString(L["s_d3dacf895c"]).ifBlank { L["未探测_f0c3554820"] },
                                     color = Palette.text, fontSize = 11.5.sp, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                                 )
                                 if (x.lastError.isNotBlank()) {
@@ -188,36 +191,36 @@ fun OpsUptimePage() {
                                 }
                             }
                         },
-                        TableCol<OpsTask>("连续失败", weight = 0.8f, align = TextAlign.End, mono = true) {
+                        TableCol<OpsTask>(L["连续失败_49a04090b4"], weight = 0.8f, align = TextAlign.End, mono = true) {
                             TableText("${it.consecFails} / ${it.failThreshold}", textAlign = TextAlign.End,
                                 color = if (it.consecFails >= it.failThreshold) Palette.bad else Palette.muted, mono = true)
                         },
-                        TableCol<OpsTask>("间隔", weight = 0.7f, align = TextAlign.End, mono = true) {
+                        TableCol<OpsTask>(L["间隔_940c88657e"], weight = 0.7f, align = TextAlign.End, mono = true) {
                             TableText("${it.intervalSec}s", textAlign = TextAlign.End, mono = true)
                         },
-                        TableCol<OpsTask>("操作", weight = 2.1f) { x ->
+                        TableCol<OpsTask>(L["操作_f3ea6d345e"], weight = 2.1f) { x ->
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                                GhostBtn(text = "立即拨测", onClick = {
+                                GhostBtn(text = L["立即拨测_3abf5bbd80"], onClick = {
                                     busy = true
                                     scope.launch {
                                         val (err, t2) = OpsState.runTask(x.id)
                                         busy = false
                                         AppState.toast(
-                                            err ?: "${x.name}：${if (t2?.lastOk == true) "在线" else "不可用"}（${t2?.lastMs ?: 0}ms）",
+                                            err ?: trf("0_1_2_ms_63a6b07660", x.name, if (t2?.lastOk == true) L["在线_0373ff9231"] else L["不可用_beff4a1cd1"], t2?.lastMs ?: 0),
                                             if (err == null && t2?.lastOk == true) ToastKind.Ok else ToastKind.Warn, ms = 6000,
                                         )
                                         selected = x.id
                                     }
                                 }, enabled = !busy, icon = "play")
                                 GhostBtn(text = "SLA", onClick = { selected = if (selected == x.id) null else x.id }, icon = "chart")
-                                GhostBtn(text = "编辑", onClick = { openForm(x) }, icon = "edit")
-                                GhostBtn(text = if (x.enabled) "停用" else "启用", onClick = {
-                                    scope.launch { AppState.toast(OpsState.toggleTask(x.id) ?: if (x.enabled) "已停用" else "已启用", ToastKind.Ok) }
+                                GhostBtn(text = L["编辑_a7f814c0a4"], onClick = { openForm(x) }, icon = "edit")
+                                GhostBtn(text = if (x.enabled) L["停用_d989e55188"] else L["启用_d4e9ca3dd4"], onClick = {
+                                    scope.launch { AppState.toast(OpsState.toggleTask(x.id) ?: if (x.enabled) tr("已停用_6c7dcbb73a") else tr("已启用_25d2843150"), ToastKind.Ok) }
                                 }, icon = if (x.enabled) "stop" else "play")
-                                GhostBtn(text = "删除", onClick = {
+                                GhostBtn(text = L["删除_3755f56f2f"], onClick = {
                                     scope.launch {
-                                        if (Modal.confirm("删除拨测任务", "删除「${x.name}」及其后续统计？已归档的按日数据仍保留。", okText = "删除", danger = true)) {
-                                            AppState.toast(OpsState.deleteTask(x.id) ?: "已删除", ToastKind.Ok)
+                                        if (Modal.confirm(L["删除拨测任务_2193297dfe"], trf("删除_0_及其后续统计_已归档的按日数据仍保_79a549e6e8", x.name), okText = L["删除_3755f56f2f"], danger = true)) {
+                                            AppState.toast(OpsState.deleteTask(x.id) ?: tr("已删除_fb5fe1e266"), ToastKind.Ok)
                                             if (selected == x.id) selected = null
                                         }
                                     }
@@ -234,66 +237,66 @@ fun OpsUptimePage() {
 
         val row = selected?.let { id -> sla?.tasks?.firstOrNull { it.id == id } }
         PanelCard(
-            title = if (row == null) "近 7 天可用率（全部任务平均）" else "近 7 天可用率 · ${row.name}",
+            title = if (row == null) L["近_7_天可用率_全部任务平均_b880984a79"] else trf("近_7_天可用率_0_d5a7782c4f", row.name),
             cardKey = "ops-up-sla",
             right = {
-                GhostBtn(text = "7 天", onClick = { scope.launch { OpsState.loadSla(7) } })
-                GhostBtn(text = "30 天", onClick = { scope.launch { OpsState.loadSla(30) } })
+                GhostBtn(text = L["7_天_e45a81074f"], onClick = { scope.launch { OpsState.loadSla(7) } })
+                GhostBtn(text = L["30_天_9401eee769"], onClick = { scope.launch { OpsState.loadSla(30) } })
             },
         ) {
             val days = row?.daily ?: aggregateDaily(sla)
             val points = days.mapNotNull { it.availability?.toFloat() }
             if (points.size < 2) {
-                EmptyState("至少两次拨测后才有趋势；当前数据不足", icon = "chart")
+                EmptyState(L["至少两次拨测后才有趋势_当前数据不足_9dba5c89f9"], icon = "chart")
             } else {
                 LineChart(points = points, yMin = 0f, yMax = 100f, yFormat = { "${it.toInt()}%" })
                 Row(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                    OpsLabelValue("窗口", "${days.count { it.checks > 0 }} 天有数据")
-                    OpsLabelValue("总探测", "${row?.checks ?: days.sumOf { it.checks }} 次")
-                    OpsLabelValue("失败", "${row?.downChecks ?: days.sumOf { it.down }} 次")
-                    OpsLabelValue("平均耗时", row?.avgMs?.let { "${it} ms" } ?: "—")
+                    OpsLabelValue(L["窗口_a70a15135c"], trf("0_天有数据_4f2de73c11", days.count { it.checks > 0 }))
+                    OpsLabelValue(L["总探测_572bee6277"], trf("0_次_78d0ccda13", row?.checks ?: days.sumOf { it.checks }))
+                    OpsLabelValue(L["失败_3e3c8068bb"], trf("0_次_78d0ccda13", row?.downChecks ?: days.sumOf { it.down }))
+                    OpsLabelValue(L["平均耗时_397236acf6"], row?.avgMs?.let { "${it} ms" } ?: "—")
                 }
             }
         }
 
         if (selected != null) {
-            PanelCard("该任务最近探测明细", cardKey = "ops-up-history") {
+            PanelCard(title = L["该任务最近探测明细_a5b3a95ce9"], cardKey = "ops-up-history") {
                 DataTable(
                     columns = listOf(
-                        TableCol<com.servermaintance.panel.core.OpsProbePoint>("时间", weight = 1.4f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
-                        TableCol<com.servermaintance.panel.core.OpsProbePoint>("结果", weight = 0.9f) {
-                            if (it.ok) Chip("成功", tone = Level.Ok) else Chip("失败", tone = Level.Bad)
+                        TableCol<com.servermaintance.panel.core.OpsProbePoint>(L["时间_89b4aa6364"], weight = 1.4f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
+                        TableCol<com.servermaintance.panel.core.OpsProbePoint>(L["结果_0a2c91cec6"], weight = 0.9f) {
+                            if (it.ok) Chip(L["成功_51991a5d11"], tone = Level.Ok) else Chip(L["失败_3e3c8068bb"], tone = Level.Bad)
                         },
-                        TableCol<com.servermaintance.panel.core.OpsProbePoint>("状态码", weight = 0.8f, align = TextAlign.End, mono = true) {
+                        TableCol<com.servermaintance.panel.core.OpsProbePoint>(L["状态码_2fd51d31a7"], weight = 0.8f, align = TextAlign.End, mono = true) {
                             TableText(it.code?.toString() ?: "—", textAlign = TextAlign.End, mono = true)
                         },
-                        TableCol<com.servermaintance.panel.core.OpsProbePoint>("耗时", weight = 0.8f, align = TextAlign.End, mono = true) {
+                        TableCol<com.servermaintance.panel.core.OpsProbePoint>(L["耗时_a9704e1997"], weight = 0.8f, align = TextAlign.End, mono = true) {
                             TableText("${it.ms} ms", textAlign = TextAlign.End, mono = true)
                         },
-                        TableCol<com.servermaintance.panel.core.OpsProbePoint>("说明", weight = 1.8f) { TableText(it.error.ifBlank { "—" }, color = if (it.error.isBlank()) Palette.muted else Palette.bad) },
+                        TableCol<com.servermaintance.panel.core.OpsProbePoint>(L["说明_26670dda42"], weight = 1.8f) { TableText(it.error.ifBlank { "—" }, color = if (it.error.isBlank()) Palette.muted else Palette.bad) },
                     ),
                     rows = history,
                     rowKey = { "${it.ts}-${it.id}" },
-                    emptyText = "暂无探测记录",
+                    emptyText = L["暂无探测记录_9006abbcd2"],
                     maxRows = 30,
                 )
             }
         }
 
-        PanelCard("不可用与恢复事件", cardKey = "ops-up-events") {
+        PanelCard(title = L["不可用与恢复事件_18f9f3771e"], cardKey = "ops-up-events") {
             DataTable(
                 columns = listOf(
-                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>("时间", weight = 1.4f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
-                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>("任务", weight = 1.4f) { TableText(it.name) },
-                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>("事件", weight = 1.0f) {
-                        if (it.state == "down") Chip("不可用", tone = Level.Bad) else Chip("恢复", tone = Level.Ok)
+                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>(L["时间_89b4aa6364"], weight = 1.4f, mono = true) { TableText(Fmt.dateTime(it.ts), mono = true) },
+                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>(L["任务_3172b317f9"], weight = 1.4f) { TableText(it.name) },
+                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>(L["事件_550e328062"], weight = 1.0f) {
+                        if (it.state == "down") Chip(L["不可用_beff4a1cd1"], tone = Level.Bad) else Chip(L["恢复_79748ca1c6"], tone = Level.Ok)
                     },
-                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>("耗时", weight = 0.8f, align = TextAlign.End, mono = true) { TableText("${it.ms} ms", textAlign = TextAlign.End, mono = true) },
-                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>("原因", weight = 2.0f) { TableText(it.error.ifBlank { "—" }, color = Palette.muted) },
+                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>(L["耗时_a9704e1997"], weight = 0.8f, align = TextAlign.End, mono = true) { TableText("${it.ms} ms", textAlign = TextAlign.End, mono = true) },
+                    TableCol<com.servermaintance.panel.core.OpsUptimeEvent>(L["原因_1ff9c3d001"], weight = 2.0f) { TableText(it.error.ifBlank { "—" }, color = Palette.muted) },
                 ),
                 rows = events,
                 rowKey = { it.ts.toString() },
-                emptyText = "暂无事件：所有任务都在线",
+                emptyText = L["暂无事件_所有任务都在线_705a26c232"],
                 maxRows = 15,
             )
         }

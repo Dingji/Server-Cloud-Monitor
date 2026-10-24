@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label Εγκατάσταση ολοκληρώθηκε, ανανέωση…
+label_安装日志_13ce1b1029	$label Αρχείο εγκατάστασης
+label_实现中_70505f7ef8	Υλοποίηση «$label»…
+llm_api_中继的请求量_token_用量_6b89d708ea	Όγκος αιτημάτων, χρήση Token, όριο πισίνας κλειδιών, διαθεσιμότητα μοντέλων και ανάλυση ποιότητας για το relay του LLM API
+location_块_不要停用该站点以免面板与_4ae164b62b	μπλοκ location), μην απενεργοποιήσετε αυτόν τον ιστότοπο, διαφορετικά και το panel και η υπηρεσία relay θα σταματήσουν μαζί.
+login.access_token	Τοκεν πρόσβασης
+login.advanced	Προχωρημένα
+login.audit_notice	Όλες οι ενέργειες καταγράφονται για έλεγχο
+login.connect_failed	Αποτυχία σύνδεσης:
+login.failed	Αποτυχία σύνδεσης
+login.normalized_url	Κανονικοποιημένη διεύθυνση
+login.not_logged_in	Μη συνδεδεμένο
+login.password_required	Πληκτρολογήστε τον κωδικό πρόσβασης
+login.remember_password	Απομνημόνευση κωδικού
+login.restore_default_url	Επαναφορά προεπιλεγμένης διεύθυνσης
+login.save_on_test_hint	Αφού αλλάξετε τη διεύθυνση, πατήστε «Δοκιμή σύνδεσης» για αποθήκευση
+login.server_config	Ρυθμίσεις σύνδεσης διακομιστή
+login.sign_in	Σύνδεση
+login.signing_in	Γίνεται σύνδεση…
+login.subtitle	Κονσόλα παρακολούθησης σε πραγματικό χρόνο και ρυθμίσεων διακομιστή
+login.test_connection	Δοκιμή σύνδεσης
+login.testing	Δοκιμή…
+login_可登录_0e617ada9b	LOGIN (δυνατή σύνδεση)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(οκτέτα προηγούμενου γύρου, οκτέτα τρέχοντος γύρου) είναι το περιεχόμενο που έχει ήδη σταλεί σε προηγούμενους γύρους — αυτό είναι το ανώτατο όριο που πρέπει να φτάσει η cache, ανεξάρτητα από τις αναφορές του προμηθευτή.\n
+mongodb_不做空间回收_validate_634509e00a	Το MongoDB δεν ανακτά χώρο το validate/reindex είναι συνηθισμένη συντήρηση.
+mongodb_使用_mongodump_生_c5b1c88a48	· Το MongoDB χρησιμοποιεί το mongodump για αρχεία gzip (απαιτείται mongodump).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	Το MongoDB δημιουργεί τη βάση δεδομένων μόνο στην πρώτη εγγραφή σε μια collection εδώ θα δημιουργηθεί η τοποθέτηση collection _cm_init.
+mongodb_的过滤条件支持_字段_值_558264a7d8	Τα φίλτρα MongoDB υποστηρίζουν τη μορφή {"πεδίο":τιμή} (μετατρέπεται εσωτερικά σε συνθήκη ερώτηματος) ή τη συντομευμένη μορφή πεδίο=τιμή. Τα έγγραφα εμφανίζονται ως JSON το _id είναι το αναγνωριστικό εγγράφου.
+mongodb_维护结果_aaeb39f907	Αποτελέσματα συντήρησης MongoDB
+ms_毫秒_7ade5ab3a4	$ms ms
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB (προεπιλογή root + socket)
+mysql_语法_8200e34cb7	Σύνταξη MySQL
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a στατιστικά
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c επαλήθευση
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o βελτιστοποίηση
+name_ver_连接正常_33d0a44ec7	$name $ver η σύνδεση είναι εντάξει
+name_关闭_c8e887ebc0	$name: Κλειστό
+name_开启_54ce939603	$name: Ανοιχτό
+nav.audit	Αρχείο ελέγχου
+nav.backups	Κέντρο αντιγράφων ασφαλείας
+nav.cron	Προγραμματισμένες εργασίες
+nav.dashboard	Πίνακας ελέγχου
+nav.databases	Βάσεις δεδομένων
+nav.disks	Διαχείριση δίσκων
+nav.docker	Κοντέινερ Docker
+nav.health_alerts	Ειδοποιήσεις υγείας
+nav.logs	Κέντρο αρχείων
+nav.memory	Διαχείριση μνήμης
+nav.network	Διαχείριση δικτύου
+nav.note_mail	Ειδοποιήσεις μέσω email
+nav.note_settings	Ρυθμίσεις NoteBox
+nav.note_transfer	Εισαγωγή / Εξαγωγή
+nav.note_users	Διαχείριση χρηστών
+nav.notes	Σημειώσεις
+nav.ops_channels	Κανάλια ειδοποιήσεων
+nav.ops_disk	Διακυβέρνηση δίσκων
+nav.ops_files	Διαχείριση αρχείων
+nav.ops_hosts	Διαχειριζόμενοι υπολογιστές
+nav.ops_remote	Μετρήσεις απομακρυσμένων υπολογιστών
+nav.ops_rules	Κανόνες ειδοποίησης
+nav.ops_sec	Έλεγχος βασικής γραμμής ασφάλειας
+nav.ops_uptime	Δοκιμή διαθεσιμότητας
+nav.ops_watch	Εποπτεία υπηρεσιών
+nav.packages	Διαχείριση πακέτων
+nav.page_placeholder	Η σελίδα «{0}» υλοποιείται…
+nav.pinned_hint	(καρφιτσωμένο, πατήστε παρατεταμένα για αποκαρφίτσωμα)
+nav.processes	Διαχείριση διεργασιών
+nav.relay	Relay OpenCode
+nav.section.app	Εφαρμογές
+nav.section.monitor	Παρακολούθηση
+nav.section.notes	Σημειώσεις
+nav.section.server	Διακομιστής
+nav.section.system	Σύστημα
+nav.section.tools	Εργαλεία
+nav.security	Διαχείριση ασφάλειας
+nav.services	Υπηρεσίες συστήματος
+nav.settings	Ρυθμίσεις πίνακα
+nav.slo	SLO και χρήση
+nav.terminal	Web τερματικό
+nav.todos	Λίστα εργασιών
+nav.web	Ιστοτόποι / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf διαμόρφωση Nginx · sshd_config διαμόρφωση SSH · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	Οι διαμορφώσεις nginx/sshd/fstab επαληθεύονται αυτόματα μετά την αποθήκευση
+nginx_站点_0_6bcfddef71	Ιστοτόποι Nginx ({0})
+nginx_站点_sites_size_2db3c2b5be	Ιστοτόποι Nginx (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	SMTP και κανόνες ειδοποίησης NoteBox
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox σημειώσεις στο cloud (πολυεπίπεδες κατηγορίες · κάδος απορριμμάτων · Markdown · κοινοποίηση)
+notebox_地址未配置_3d37258011	Η διεύθυνση NoteBox δεν έχει ρυθμιστεί
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox εργασίες (προθεσμίες και υπενθυμίσεις μέσω email)
+notebox_数据迁移_362725f18e	Μεταφορά δεδομένων NoteBox
+notebox_服务可达_6a7506d6ac	Η υπηρεσία NoteBox είναι προσβάσιμη
+notebox_服务可达_未登录_e023d68cad	Η υπηρεσία NoteBox είναι προσβάσιμη (μη συνδεδεμένο)
+notebox_服务地址_默认端口_13345_e0880dfda6	Η διεύθυνση της υπηρεσίας NoteBox (προεπιλεγμένη θύρα 13345). Χρειάζεται ξανά σύνδεση μετά την αλλαγή.
+notebox_登录成功_013138644f	Επιτυχής σύνδεση στο NoteBox
+notebox_设置_efb5a47b98	Ρυθμίσεις NoteBox
+notebox_账号_仅管理员_81b8d4ca26	Λογαριασμός NoteBox (μόνο διαχειριστές)
+online_台有近期数据_1fefff8cdc	$online υπολογιστές με πρόσφατα δεδομένα
+opencode_中继_2e021ee797	Relay OpenCode
+p95_延迟_57d63f8b46	Καθυστέρηση P95
+p95_延迟_ba65a873bc	Καθυστέρηση p95
+palette.accent_hint	Εμφάνιση · τρέχον {0}
+palette.open_page	Άνοιγμα σελίδας {0}
+palette.pin	Καρφίτσωμα «{0}»
+palette.pin_hint	Χώρος εργασίας · πατήστε παρατεταμένα σε στοιχείο πλευρικής μπάρας για εναλλαγή
+palette.reload_hint	F5 / Ctrl+R · Επαναφόρτωση
+palette.theme_hint	Εμφάνιση · τρέχον {0}
+palette.unpin	Αποκαρφίτσωμα «{0}»
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE (αναγκαστική αλλαγή κωδικού)
+pg_自定义格式_0cc41d0ea4	Προσαρμοσμένη μορφή PG
+postgresql_mysql_sql_42e513fca9	Διαχείριση βάσεων/πινάκων, κονσόλα SQL, αναλύσεις απόδοσης και αντίγραφα/επαναφορά για PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB
+postgresql_自定义格式_fc_更快恢_080c860e81	Προσαρμοσμένη μορφή PostgreSQL -Fc (ταχύτερη επαναφορά)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL (προεπιλογή με επαλήθευση peer: su - postgres)
+rdb_快照_62f218ed40	Στιγμιότυπο RDB
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Το Redis εκτελεί BGSAVE και αντιγράφει το αρχείο RDB η επαναφορά αντικαθιστά το κατάλογο δεδομένων και απαιτεί επανεκκίνηση του Redis.
+redis_命令控制台_fa42019a53	Κονσόλα εντολών Redis
+redis_维护_d2a01bfbd3	Συντήρηση Redis
+reindex_全部库_90545e1eeb	REINDEX όλων των βάσεων
+reindex_重建索引_256956f94e	REINDEX / επαναδημιουργία ευρετηρίων
+reindex_重建索引_d81fcbf8d0	REINDEX (επαναδημιουργία ευρετηρίων)
+relay_alert_py_检查_smtp_告_012aaa3373	Έλεγχος relay_alert.py, κανάλι ειδοποιήσεων SMTP, κατώφλια και αρχεία ειδοποιήσεων

@@ -1,0 +1,120 @@
+仅本地_5c28a4b5d1	Solo local
+仅结构_15c49958e4	Solo estructura
+仅结构_8cdf512d85	(Solo estructura)
+仅结构_不含数据_86341bfbf0	Solo estructura (sin datos)
+仅运行_affb726f94	Solo en ejecución
+仅面板铃铛_3ecf2a6ea9	Solo campana del panel
+今天_17e83cc25e	Hoy
+今天_hm_b5123a00e4	Hoy $hm
+今天到期_fb2cb94029	Vence hoy
+今日_0_会话_1_客户端_2_dfa0d41ced	Hoy {0} · Sesiones {1} · Clientes {2}
+今日_0_新增_1_e17159d28e	Hoy {0} · Nuevos {1}
+今日_0_请求_f79a1b4d82	{0} solicitudes hoy
+今日_24_小时分布_d5b7360f18	Distribución por horas de hoy (24 h)
+今日_574cd4fb79	Hoy
+今日_token_d0b5adbe07	Token de hoy
+今日出站_ae22fbbb49	Saliente de hoy
+今日成功率_70d58b9151	Tasa de éxito de hoy
+今日请求_0_8e7833564f	Solicitudes de hoy {0}
+今日请求_731c00a176	Solicitudes de hoy
+今日邮件发送成功_060f80e076	Correos enviados con éxito hoy
+今日错误_97f268b84a	Errores de hoy
+从_0_切换到_94f8b2509a	Cambiado de {0} a:\n\n
+从未发信_d605d91365	Nunca enviado
+从镜像站拉取最新软件包列表_安装新包前建议先刷新_18f22cecb1	Obtiene la lista más reciente de paquetes desde el mirror; se recomienda actualizarla antes de instalar paquetes nuevos.
+代码_21cdbf098d	 〔Código〕 
+代码_33246dda76	Código
+以_0_执行_结果支持多语句_1_052948bd3b	Ejecutar como {0} · El resultado admite varias sentencias · {1}
+以_dbmeta_label_st_engi_c4aac0c4ce	Ejecutar como ${DbMeta.label(st.engineId)} · El resultado admite varias sentencias · $dialect
+以下已安装包依赖它_卸载可能连带移除或导致异常_f26237adcd	Los siguientes paquetes instalados dependen de él; al quitarlo también se pueden eliminar o provocar fallos:\n
+以后_ac5d03ece3	Más tarde
+仪表盘_2c0ab88554	Panel
+任何拿到链接的人_无需登录_可查看_3f77643748	Cualquiera con el enlace (sin iniciar sesión) puede verlo
+任务_3172b317f9	Tareas
+任务名_c8d6eeaa4c	Nombre de la tarea
+任务名称_2e30469899	Nombre de la tarea
+任务启动失败_服务端未返回任务_id_500799f8a2	Error al iniciar la tarea: el servidor no devolvió el id de la tarea
+任务执行失败_97312db4c3	Error al ejecutar la tarea
+任务文件_8f4e93dc3d	Archivo de la tarea
+任务状态已丢失_服务端可能重启过_请重新发起该_3a4e99bf96	Estado de la tarea perdido (es posible que el servidor se haya reiniciado), vuelve a intentar la operación
+休眠_0_c11a981edd	Suspender {0}
+优先级_7cabe771eb	Prioridad
+优秀_3e61f36792	Excelente
+会自动执行配置校验_d447aa930e	(la validación de la configuración se ejecuta automáticamente)
+会话_1_497c4ea2d5	Sesión 1
+会话_836ffe0e10	Sesión
+会话_titleseq_33244bea87	Sesión $titleSeq
+会话上下文明细_内存视图_22c78a29f0	Detalles del contexto de sesión (vista en memoria)
+会话上下文构成_ce6fae8e45	Composición del contexto de sesión
+会话内存视图_fcd9415f11	Vista de memoria de sesión
+会话分布_按请求数_b85c7c435b	Distribución de sesiones (por número de solicitudes)
+会话已关闭_095a652630	Sesión cerrada
+会话已过期_请重新登录_32f89bb43c	Sesión caducada, vuelve a iniciar sesión
+会话批量清理_55815972d3	Limpieza masiva de sesiones
+会话排行_按上下文字节_0_1_6f0f0e51a3	Ranking de sesiones (por bytes de contexto)  {0} · {1} sesiones / {2} turnos · total {3}
+会话排行_按上下文字节_e47849da63	Ranking de sesiones (por bytes de contexto)
+会话数_4d72abd2e9	Número de sesiones
+会话数_今日_9cd79de908	Número de sesiones (hoy)
+估算成本_f05235023c	Coste estimado
+位置_88c34452cc	Ubicación
+低_b9ee259b7f	Bajo
+低于告警线的证书任务_695579ce30	Tareas de certificados por debajo del umbral de aviso
+作用范围_95a5e61424	Ámbito
+使用_ssl_465_端口勾选_316a136e99	Usar SSL (marcar para el puerto 465)
+使用率_8ca02f90d1	Uso
+例如_工作_项目资料_190eafea68	p. ej. Trabajo, documentos de proyectos
+供应商状态_ed8f7c5676	Estado del proveedor
+依赖_0_推荐依赖_1_反向依赖_2507ad6a45	Dependencias {0} · Recomendadas {1} · Inversas {2}
+依赖_2ebf56c207	\n\n--- Dependencias ---\n
+依赖_depn_推荐依赖_recn_684b03c97f	Dependencias $depN · Recomendadas $recN · Inversas $revN
+保存_fadf24dbc5	Guardar
+保存_smtp_设置_31e1de2129	Guardar ajustes SMTP
+保存中_6644f06197	Guardando…
+保存地址_b4507bac53	Guardar dirección
+保存失败_40525a7328	Error al guardar
+保存失败_b12163000c	Error al guardar:
+保存失败或被取消_7e2bbcfe18	Error al guardar o cancelado
+保存并重连_a440c33bd4	Guardar y reconectar
+保存数据库连接_ccfc22f810	Guardar conexión de base de datos
+保存文件_184adfdabf	Guardar archivo
+保存被取消_82f61f25b1	Guardado cancelado
+保存通知规则_81afc138cf	Guardar reglas de notificación
+保存阈值_1a6c3945df	Guardar umbral
+保留_0_份_6f62f9cd31	Conservar {0} copias
+保留_30_份_relay_backup_tim_b625d85371	Conservar 30 copias; relay-backup.timer se ejecuta a diario a las 03:30.
+保留最近_n_个_855e3ce9c7	Conservar los últimos N
+修复失败_3d6dfbe1ad	Error en la reparación
+修复执行记录_2669e0f726	Registro de ejecución de reparaciones
+修复未成功_d8d320b456	Reparación no completada
+修改_c9c77517fe	Editar
+修改会写入_etc_ssh_sshd_conf_4cb39a7a47	Los cambios se escriben en /etc/ssh/sshd_config.d/99-cloud-monitor.conf; primero se ejecuta sshd -t para validar y, si falla, el cambio se descarta automáticamente. Configura las claves antes de desactivar la autenticación por contraseña.
+修改列_类型_默认值_可空_8bebfff9e5	Editar columna (tipo/valor predeterminado/nullable)
+修改失败_9abb465039	Error al editar
+修改密码_0_1a306d5990	Cambiar contraseña - {0}
+修改密码_0ae20ac3af	Cambiar contraseña
+修改密码_n_00b25b96ac	Cambiar contraseña - $n
+修改密码_name_d9c700cba6	Cambiar contraseña - $name
+修改所有者_3876d6ab1f	Cambiar propietario
+修改时间_af71bc5cc4	Fecha de modificación
+修改登录密码_321d9d86f6	Cambiar contraseña de inicio de sesión
+修改端口_路径需编辑_config_json_后_983be325ee	Para cambiar el puerto o la ruta, edita config.json y reinicia
+修改限流阈值_编辑_00_limits_conf_1152af13c3	Para cambiar los límites de velocidad: edita 00-limits.conf y luego nginx -t && systemctl reload nginx.
+修改面板密码_17fc433ccc	Cambiar contraseña del panel
+倒计时_80176c18f3	Cuenta atrás
+候选_0461e4db19	Candidatos
+值_321b955840	Valor
+值越小越倾向使用物理内存_数据库服务器常用_10_d669b666d0	Cuanto menor es el valor, más se usa la memoria física; en servidores de bases de datos suele usarse 10.
+偏快_8900d928c6	Algo rápido
+停止_0_e0be2c8b16	Detener {0}
+停止_a17f70a8d3	Detener
+停止_fail2ban_c4775a3abd	Detener Fail2ban
+停止_label_8f0e06c363	Detener $label
+停止_容器_c97111b01f	Detener contenedor
+停止分享_55c70caa51	Dejar de compartir
+停止后将失去_ssh_防爆破保护_cf3e594655	Al detenerlo se perderá la protección SSH contra fuerza bruta.
+停止引擎_f83e27f9a5	Detener motor
+停止自愈_8e53c62499	Detener autorreparación
+停止跟随_72312418e3	Dejar de seguir
+停用_0_其会话将立即失效_bd25e844b8	¿Desactivar {0}? Sus sesiones dejarán de ser válidas de inmediato.
+停用_d989e55188	Desactivar
+停用用户_3f2f67ac37	Desactivar usuario

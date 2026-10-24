@@ -1,4 +1,7 @@
 package com.servermaintance.panel.pages
+import com.servermaintance.panel.i18n.trf
+import com.servermaintance.panel.i18n.L
+import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -39,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.servermaintance.panel.AppInfo
 import com.servermaintance.panel.ClientSettingsSection
+import com.servermaintance.panel.i18n.LanguageSettingsCard
 import com.servermaintance.panel.core.ApiException
 import com.servermaintance.panel.core.AppState
 import com.servermaintance.panel.core.Fmt
@@ -104,7 +108,7 @@ import kotlinx.serialization.json.JsonObject
 private val REFRESH_CHOICES = listOf(500, 1000, 2000, 3000, 5000, 10000)
 
 private fun refreshLabel(ms: Int): String =
-    if (ms >= 1000) "${(ms / 1000.0).let { if (it == it.toLong().toDouble()) it.toLong().toString() else it.toString() }} 秒" else "$ms 毫秒"
+    if (ms >= 1000) trf("0_秒_99598b798a", (ms / 1000.0).let { if (it == it.toLong().toDouble()) it.toLong().toString() else it.toString() }) else trf("0_毫秒_dd9d131b83", ms)
 
 private data class FileEntry(
     val name: String,
@@ -137,13 +141,13 @@ fun SettingsPage() {
 
     LaunchedEffect(Unit) { load() }
 
-    PageScaffold(title = "面板设置", desc = "连接地址、告警阈值、面板参数、凭据与配置文件编辑") {
+    PageScaffold(title = L["nav.settings"], desc = L["连接地址_告警阈值_面板参数_凭据与配置文件编辑_39893de3a4"]) {
         when {
-            loading && cfg == null -> PanelCard(title = "面板设置") { LoadingState("正在读取配置…") }
-            errText != null -> PanelCard(title = "读取失败") {
+            loading && cfg == null -> PanelCard(title = L["nav.settings"]) { LoadingState(L["正在读取配置_6dc75287f5"]) }
+            errText != null -> PanelCard(title = L["读取失败_d9f607a200"]) {
                 ErrorState(errText!!, onRetry = { scope.launch { load() } })
             }
-            cfg == null -> PanelCard(title = "面板设置") { ErrorState("暂无数据", onRetry = { scope.launch { load() } }) }
+            cfg == null -> PanelCard(title = L["nav.settings"]) { ErrorState(L["暂无数据_b246458f20"], onRetry = { scope.launch { load() } }) }
 
             else -> {
                 ServerConnectionCard()
@@ -151,6 +155,8 @@ fun SettingsPage() {
                 AlertThresholdsCard(alertCfg, onSaved = { scope.launch { load() } })
                 Spacer(Modifier.height(14.dp))
                 ThemeCard()
+                Spacer(Modifier.height(14.dp))
+                LanguageSettingsCard()
                 Spacer(Modifier.height(14.dp))
                 ClientSettingsSection()
                 Spacer(Modifier.height(14.dp))
@@ -182,11 +188,11 @@ private fun ServerConnectionCard() {
     val scope = rememberCoroutineScope()
 
     PanelCard(
-        title = "服务器连接地址",
+        title = L["服务器连接地址_36039bdf94"],
         right = { PanelIcon("link", size = 14.dp) },
     ) {
         Text(
-            text = "App 连接的 Cloud Monitor 面板地址。默认 http://8.153.153.176/panel，可改为任意已部署面板的地址。",
+            text = L["app_连接的_cloud_monitor_面板_0ee7660770"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )
@@ -199,12 +205,12 @@ private fun ServerConnectionCard() {
             Field(
                 value = url,
                 onValueChange = { url = it; result = null },
-                hint = "http://主机[:端口][/路径]",
+                hint = L["settings.panel_url.hint"],
                 mono = true,
                 modifier = Modifier.weight(1f),
             )
             GhostBtn(
-                text = if (testing) "测试中…" else "测试连接",
+                text = if (testing) L["测试中_49562bf14c"] else L["login.test_connection"],
                 enabled = !testing && !saving,
                 onClick = {
                     scope.launch {
@@ -229,18 +235,18 @@ private fun ServerConnectionCard() {
                 },
             )
             PrimaryBtn(
-                text = if (saving) "保存中…" else "保存并重连",
+                text = if (saving) L["保存中_6644f06197"] else L["保存并重连_a440c33bd4"],
                 enabled = !testing && !saving,
                 onClick = {
                     scope.launch {
                         saving = true
                         try {
                             AppState.reconfigure(url)
-                            AppState.toast("服务器地址已保存", ToastKind.Ok)
-                            result = "已切换到 ${AppState.config().normalizedUrl()}"
+                            AppState.toast(tr("服务器地址已保存_9e2bd5bc83"), ToastKind.Ok)
+                            result = tr("已切换到_appstate_config_0ccf0355a4")
                         } catch (e: Exception) {
                             result = e.message
-                            AppState.toast(e.message ?: "切换失败", ToastKind.Err)
+                            AppState.toast(e.message ?: tr("切换失败_9e2fdc4fee"), ToastKind.Err)
                         } finally {
                             saving = false
                         }
@@ -252,14 +258,17 @@ private fun ServerConnectionCard() {
             Spacer(Modifier.height(8.dp))
             Text(
                 text = it,
-                color = if (it.contains("无法") || it.contains("失败")) Palette.bad else Palette.ok,
+                color = if (
+                    com.servermaintance.panel.i18n.textHasI18nKey(it, "无法_bc9f0cc8da") ||
+                        com.servermaintance.panel.i18n.textHasI18nKey(it, "失败_3e3c8068bb")
+                ) Palette.bad else Palette.ok,
                 fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
         Spacer(Modifier.height(6.dp))
         Text(
-            text = "当前令牌会在切换到不同服务器时自动失效，需重新登录。",
+            text = L["当前令牌会在切换到不同服务器时自动失效_需重新登_faee75ab2a"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )
@@ -278,19 +287,19 @@ private fun AlertThresholdsCard(al: JsonObject?, onSaved: () -> Unit) {
     var cd by remember(al) { mutableStateOf(((al ?: jsonObjectOf())["cooldownMin"]?.let { (it as? kotlinx.serialization.json.JsonPrimitive)?.content } ?: "10")) }
     val scope = rememberCoroutineScope()
 
-    PanelCard(title = "告警阈值（仪表盘右上角铃铛）") {
+    PanelCard(title = L["告警阈值_仪表盘右上角铃铛_c7224212dd"]) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Toggle(checked = enabled, onCheckedChange = { enabled = it }, label = "启用告警")
-            Field(value = cpu, onValueChange = { cpu = it }, label = "CPU ≥ %", modifier = Modifier.weight(1f))
-            Field(value = mem, onValueChange = { mem = it }, label = "内存 ≥ %", modifier = Modifier.weight(1f))
-            Field(value = disk, onValueChange = { disk = it }, label = "磁盘 ≥ %", modifier = Modifier.weight(1f))
-            Field(value = cd, onValueChange = { cd = it }, label = "冷却(分钟)", modifier = Modifier.weight(1.2f))
+            Toggle(checked = enabled, onCheckedChange = { enabled = it }, label = L["启用告警_d6b9351330"])
+            Field(value = cpu, onValueChange = { cpu = it }, label = L["cpu_45ab473ccb"], modifier = Modifier.weight(1f))
+            Field(value = mem, onValueChange = { mem = it }, label = L["内存_ba57ca4da5"], modifier = Modifier.weight(1f))
+            Field(value = disk, onValueChange = { disk = it }, label = L["磁盘_874593fffd"], modifier = Modifier.weight(1f))
+            Field(value = cd, onValueChange = { cd = it }, label = L["冷却_分钟_c84b0ae919"], modifier = Modifier.weight(1.2f))
             PrimaryBtn(
-                text = "保存阈值",
+                text = L["保存阈值_1a6c3945df"],
                 onClick = {
                     scope.launch {
                         Actions.run(
@@ -302,7 +311,7 @@ private fun AlertThresholdsCard(al: JsonObject?, onSaved: () -> Unit) {
                                 "disk" to (disk.toIntOrNull() ?: 95),
                                 "cooldownMin" to (cd.toIntOrNull() ?: 10),
                             ),
-                            successToast = "告警阈值已保存",
+                            successToast = L["告警阈值已保存_f6ed6094c3"],
                         )
                         onSaved()
                     }
@@ -311,7 +320,7 @@ private fun AlertThresholdsCard(al: JsonObject?, onSaved: () -> Unit) {
         }
         Spacer(Modifier.height(6.dp))
         Text(
-            text = "超过阈值时页面右上角铃铛会弹出告警；同一指标在冷却时间内不重复提醒。",
+            text = L["超过阈值时页面右上角铃铛会弹出告警_同一指标在冷_3d09697f8d"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )
@@ -327,33 +336,33 @@ private fun ThemeCard() {
     var accentLocal by remember { mutableStateOf(current.id) }
     var themeLocal by remember { mutableStateOf(ThemeState.mode) }
 
-    PanelCard(title = "外观") {
-        Text("显示模式", color = Palette.muted, style = MaterialTheme.typography.labelMedium)
+    PanelCard(title = L["外观_09b58aa342"]) {
+        Text(L["显示模式_4a8bb8aba3"], color = Palette.muted, style = MaterialTheme.typography.labelMedium)
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             ThemeModeChip(
-                label = "深色",
+                label = L["深色_30b2c979ac"],
                 icon = "moon",
                 selected = themeLocal == ColorTheme.Dark,
                 onClick = {
                     themeLocal = ColorTheme.Dark
                     ThemeState.apply(ColorTheme.Dark)
-                    AppState.toast("已切换为深色模式", ToastKind.Ok)
+                    AppState.toast(tr("已切换为深色模式_b03918bd9e"), ToastKind.Ok)
                 },
             )
             ThemeModeChip(
-                label = "浅色",
+                label = L["浅色_80ec9e2b1b"],
                 icon = "sun",
                 selected = themeLocal == ColorTheme.Light,
                 onClick = {
                     themeLocal = ColorTheme.Light
                     ThemeState.apply(ColorTheme.Light)
-                    AppState.toast("已切换为浅色模式", ToastKind.Ok)
+                    AppState.toast(tr("已切换为浅色模式_910f7b8537"), ToastKind.Ok)
                 },
             )
         }
         Spacer(Modifier.height(14.dp))
-        Text("强调色", color = Palette.muted, style = MaterialTheme.typography.labelMedium)
+        Text(L["强调色_6f67371e05"], color = Palette.muted, style = MaterialTheme.typography.labelMedium)
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Accents.all.forEach { a ->
@@ -369,7 +378,7 @@ private fun ThemeCard() {
                         .clickable {
                             accentLocal = a.id
                             AccentState.apply(a.id)
-                            AppState.toast("主题色已更新", ToastKind.Ok)
+                            AppState.toast(tr("主题色已更新_3214de16ac"), ToastKind.Ok)
                         },
                     contentAlignment = Alignment.Center,
                 ) {
@@ -383,7 +392,7 @@ private fun ThemeCard() {
         }
         Spacer(Modifier.height(6.dp))
         Text(
-            text = "显示模式与强调色会立即生效并保存在本机。",
+            text = L["显示模式与强调色会立即生效并保存在本机_52e8737036"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )
@@ -433,7 +442,7 @@ private fun PanelParamsCard(c: JsonObject) {
     }
     val scope = rememberCoroutineScope()
 
-    PanelCard(title = "面板参数") {
+    PanelCard(title = L["面板参数_af5afd63d4"]) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -449,22 +458,22 @@ private fun PanelParamsCard(c: JsonObject) {
                         val ok = Actions.run(
                             path = "/config",
                             body = jsonObjectOf("refreshMs" to v),
-                            successToast = "刷新间隔已更新为 ${refreshLabel(v)}",
+                            successToast = trf("刷新间隔已更新为_0_0bc513729c", refreshLabel(v)),
                         )
                         if (ok != null) AppState.hub.setRefreshInterval(v)
                     }
                 },
-                label = "数据刷新间隔",
+                label = L["数据刷新间隔_783b4fd825"],
                 modifier = Modifier.weight(1.4f),
             )
             Field(
                 value = netMbps,
                 onValueChange = { netMbps = it },
-                label = "出口带宽上限（Mbps，0 = 不限）",
+                label = L["出口带宽上限_mbps_0_不限_333a869c1c"],
                 modifier = Modifier.weight(1.4f),
             )
             PrimaryBtn(
-                text = "应用带宽",
+                text = L["应用带宽_15d87c726e"],
                 onClick = {
                     scope.launch {
                         val mbps = netMbps.toDoubleOrNull() ?: 0.0
@@ -472,7 +481,7 @@ private fun PanelParamsCard(c: JsonObject) {
                         Actions.run(
                             path = "/config",
                             body = jsonObjectOf("netLimitBps" to bps),
-                            successToast = if (mbps > 0) "出口带宽上限已设为 $mbps Mbps" else "已取消带宽上限",
+                            successToast = if (mbps > 0) trf("出口带宽上限已设为_0_mbps_8e30001052", mbps) else L["已取消带宽上限_4d02387c26"],
                         )
                     }
                 },
@@ -480,34 +489,34 @@ private fun PanelParamsCard(c: JsonObject) {
         }
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "用于仪表盘网络吞吐进度条，按真实上限显示占用比例；未设置时沿用 1 Mbps 基准。",
+            text = L["用于仪表盘网络吞吐进度条_按真实上限显示占用比例_9f3376c761"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )
         Spacer(Modifier.height(8.dp))
 
-        KeyValueRow("监听地址", "${c.str("bind")}:${c.int("port")}")
-        KeyValueRow("访问路径", "${c.str("basePath")}/")
-        KeyValueRow("运行模式", if (c.bool("underSystemd")) "systemd 服务" else "手动进程")
+        KeyValueRow(L["监听地址_4fc129411a"], "${c.str("bind")}:${c.int("port")}")
+        KeyValueRow(L["访问路径_48ec0b4545"], "${c.str("basePath")}/")
+        KeyValueRow(L["运行模式_340e9a6dff"], if (c.bool("underSystemd")) L["systemd_服务_fe73189369"] else L["手动进程_040082d08d"])
 
         Spacer(Modifier.height(10.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
             DangerBtn(
-                text = "重启面板服务",
+                text = L["重启面板服务_614d93f0d9"],
                 onClick = {
                     scope.launch {
                         val ok = Modal.confirm(
-                            title = "重启面板",
-                            text = "面板服务将重启（约 2-5 秒不可用），继续？",
+                            title = L["重启面板_8c897105bf"],
+                            text = L["面板服务将重启_约_2_5_秒不可用_继续_adc9ece480"],
                             danger = true,
                         )
                         if (!ok) return@launch
-                        Actions.run(path = "/restart", body = jsonObjectOf(), successToast = "重启中…")
+                        Actions.run(path = "/restart", body = jsonObjectOf(), successToast = L["重启中_ce2d2904e8"])
                     }
                 },
             )
             Text(
-                text = "修改端口/路径需编辑 config.json 后重启",
+                text = L["修改端口_路径需编辑_config_json_后_983be325ee"],
                 color = Palette.muted,
                 style = MaterialTheme.typography.bodySmall,
             )
@@ -543,20 +552,20 @@ private fun PasswordCard() {
     var newPw by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
-    PanelCard(title = "修改面板密码") {
+    PanelCard(title = L["修改面板密码_17fc433ccc"]) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Field(value = oldPw, onValueChange = { oldPw = it }, password = true, label = "当前密码", modifier = Modifier.weight(1f))
-            Field(value = newPw, onValueChange = { newPw = it }, password = true, label = "新密码（至少 8 位）", modifier = Modifier.weight(1f))
+            Field(value = oldPw, onValueChange = { oldPw = it }, password = true, label = L["当前密码_33abf70fd5"], modifier = Modifier.weight(1f))
+            Field(value = newPw, onValueChange = { newPw = it }, password = true, label = L["新密码_至少_8_位_0d551cb025"], modifier = Modifier.weight(1f))
             PrimaryBtn(
-                text = "更新密码",
+                text = L["更新密码_2f3ed4c7a4"],
                 onClick = {
                     scope.launch {
                         if (oldPw.isBlank() || newPw.length < 8) {
-                            AppState.toast("新密码至少 8 位", ToastKind.Warn)
+                            AppState.toast(tr("新密码至少_8_位_695025596e"), ToastKind.Warn)
                             return@launch
                         }
                         val r = Actions.run(
@@ -565,7 +574,7 @@ private fun PasswordCard() {
                             successToast = null,
                         )
                         if (r != null) {
-                            AppState.toast((r as? JsonObject)?.str("output")?.ifBlank { "密码已更新" } ?: "密码已更新", ToastKind.Ok)
+                            AppState.toast((r as? JsonObject)?.str("output")?.ifBlank { tr("密码已更新_eb5719cf68") } ?: tr("密码已更新_eb5719cf68"), ToastKind.Ok)
                             oldPw = ""; newPw = ""
                         }
                     }
@@ -574,7 +583,7 @@ private fun PasswordCard() {
         }
         Spacer(Modifier.height(6.dp))
         Text(
-            text = "密码更新后其它设备的登录将会失效。",
+            text = L["密码更新后其它设备的登录将会失效_9b16aec699"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )
@@ -593,24 +602,24 @@ private fun SshCard(c: JsonObject) {
     var pw by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
-    PanelCard(title = "SSH 连接（用于 Web 终端的 PTY）") {
+    PanelCard(title = L["ssh_连接_用于_web_终端的_pty_b26f43db91"]) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Field(value = host, onValueChange = { host = it }, label = "主机", mono = true, modifier = Modifier.weight(1.2f))
-            Field(value = port, onValueChange = { port = it }, label = "端口", mono = true, modifier = Modifier.weight(0.6f))
-            Field(value = user, onValueChange = { user = it }, label = "用户", mono = true, modifier = Modifier.weight(0.8f))
+            Field(value = host, onValueChange = { host = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.weight(1.2f))
+            Field(value = port, onValueChange = { port = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.weight(0.6f))
+            Field(value = user, onValueChange = { user = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.weight(0.8f))
             Field(
                 value = pw,
                 onValueChange = { pw = it },
                 password = true,
-                label = "密码（留空保持不变）",
+                label = L["密码_留空保持不变_6d05826ea3"],
                 modifier = Modifier.weight(1.4f),
             )
             PrimaryBtn(
-                text = "保存",
+                text = L["保存_fadf24dbc5"],
                 onClick = {
                     scope.launch {
                         Actions.run(
@@ -623,7 +632,7 @@ private fun SshCard(c: JsonObject) {
                                     "password" to pw,
                                 )
                             ),
-                            successToast = "SSH 设置已保存",
+                            successToast = L["ssh_设置已保存_a65c44f49c"],
                         )
                         pw = ""
                     }
@@ -633,8 +642,8 @@ private fun SshCard(c: JsonObject) {
         Spacer(Modifier.height(6.dp))
         Text(
             text = if (ssh.bool("hasKey"))
-                "终端优先使用密钥认证（keys/pty_key），密码为备用。修改后新终端会话生效。"
-            else "当前未配置私钥，将使用密码认证。修改后新终端会话生效。",
+                L["终端优先使用密钥认证_keys_pty_key_72bf1b066b"]
+            else L["当前未配置私钥_将使用密码认证_修改后新终端会话_e7d9729ea6"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )
@@ -680,72 +689,72 @@ private fun DbCredsCard(c: JsonObject) {
     var sqRoots by remember(c) { mutableStateOf(sq.str("roots")) }
     val scope = rememberCoroutineScope()
 
-    PanelCard(title = "数据库连接凭据", right = { PanelIcon("database", size = 14.dp) }) {
+    PanelCard(title = L["数据库连接凭据_6d0ff7df04"], right = { PanelIcon("database", size = 14.dp) }) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("PostgreSQL（默认使用 peer 认证 su - postgres）", color = Palette.text, style = MaterialTheme.typography.labelMedium)
+            Text(L["postgresql_默认使用_peer_认证_79cef40e30"], color = Palette.text, style = MaterialTheme.typography.labelMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(pgUser, { pgUser = it }, label = "用户", mono = true, modifier = Modifier.weight(1f))
-                Field(pgHost, { pgHost = it }, label = "TCP 主机", hint = "留空=本地 socket", mono = true, modifier = Modifier.weight(1.4f))
-                Field(pgPort, { pgPort = it }, label = "端口", hint = "5432", mono = true, modifier = Modifier.weight(0.7f))
+                Field(pgUser, { pgUser = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.weight(1f))
+                Field(pgHost, { pgHost = it }, label = L["tcp_主机_c307455515"], hint = L["留空_本地_socket_06d40d9475"], mono = true, modifier = Modifier.weight(1.4f))
+                Field(pgPort, { pgPort = it }, label = L["端口_6cbb7335b5"], hint = "5432", mono = true, modifier = Modifier.weight(0.7f))
                 Field(pgPw, { pgPw = it }, password = true,
-                    label = if (pg.bool("hasPassword")) "密码（留空不变）" else "密码（无）",
+                    label = if (pg.bool("hasPassword")) L["密码_留空不变_5e4f64d946"] else L["密码_无_e55f2504ae"],
                     modifier = Modifier.weight(1.2f))
             }
 
-            Text("MySQL / MariaDB（默认 root + socket）", color = Palette.text, style = MaterialTheme.typography.labelMedium)
+            Text(L["mysql_mariadb_默认_root_707ba8cdb6"], color = Palette.text, style = MaterialTheme.typography.labelMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(myUser, { myUser = it }, label = "用户", mono = true, modifier = Modifier.weight(1f))
-                Field(myHost, { myHost = it }, label = "TCP 主机", hint = "留空=本地 socket", mono = true, modifier = Modifier.weight(1.4f))
-                Field(myPort, { myPort = it }, label = "端口", hint = "3306", mono = true, modifier = Modifier.weight(0.7f))
+                Field(myUser, { myUser = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.weight(1f))
+                Field(myHost, { myHost = it }, label = L["tcp_主机_c307455515"], hint = L["留空_本地_socket_06d40d9475"], mono = true, modifier = Modifier.weight(1.4f))
+                Field(myPort, { myPort = it }, label = L["端口_6cbb7335b5"], hint = "3306", mono = true, modifier = Modifier.weight(0.7f))
                 Field(myPw, { myPw = it }, password = true,
-                    label = if (my.bool("hasPassword")) "密码（留空不变）" else "密码（无）",
+                    label = if (my.bool("hasPassword")) L["密码_留空不变_5e4f64d946"] else L["密码_无_e55f2504ae"],
                     modifier = Modifier.weight(1.2f))
             }
 
-            Text("IBM Db2", color = Palette.text, style = MaterialTheme.typography.labelMedium)
+            Text(L["ibm_db2_0d09be87e3"], color = Palette.text, style = MaterialTheme.typography.labelMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(db2Inst, { db2Inst = it }, label = "实例用户", mono = true, modifier = Modifier.weight(1.2f))
-                Field(dbName, { dbName = it }, label = "数据库", hint = "SAMPLE", mono = true, modifier = Modifier.weight(1.2f))
-                Field(db2Port, { db2Port = it }, label = "端口", hint = "50000", mono = true, modifier = Modifier.weight(0.7f))
+                Field(db2Inst, { db2Inst = it }, label = L["实例用户_6be929149e"], mono = true, modifier = Modifier.weight(1.2f))
+                Field(dbName, { dbName = it }, label = L["数据库_f4dbbc63a5"], hint = "SAMPLE", mono = true, modifier = Modifier.weight(1.2f))
+                Field(db2Port, { db2Port = it }, label = L["端口_6cbb7335b5"], hint = "50000", mono = true, modifier = Modifier.weight(0.7f))
             }
 
             Text("Redis", color = Palette.text, style = MaterialTheme.typography.labelMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(rdHost, { rdHost = it }, label = "主机", mono = true, modifier = Modifier.weight(1.4f))
-                Field(rdPort, { rdPort = it }, label = "端口", mono = true, modifier = Modifier.weight(0.7f))
-                Field(rdDb, { rdDb = it }, label = "默认库", mono = true, modifier = Modifier.weight(0.7f))
+                Field(rdHost, { rdHost = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.weight(1.4f))
+                Field(rdPort, { rdPort = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.weight(0.7f))
+                Field(rdDb, { rdDb = it }, label = L["默认库_8e2aece25f"], mono = true, modifier = Modifier.weight(0.7f))
                 Field(rdPw, { rdPw = it }, password = true,
-                    label = if (rd.bool("hasPassword")) "密码（留空不变）" else "密码（无）",
+                    label = if (rd.bool("hasPassword")) L["密码_留空不变_5e4f64d946"] else L["密码_无_e55f2504ae"],
                     modifier = Modifier.weight(1.2f))
             }
 
             Text("MongoDB", color = Palette.text, style = MaterialTheme.typography.labelMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(moHost, { moHost = it }, label = "主机", mono = true, modifier = Modifier.weight(1.4f))
-                Field(moPort, { moPort = it }, label = "端口", mono = true, modifier = Modifier.weight(0.7f))
-                Field(moUser, { moUser = it }, label = "用户", hint = "留空=不认证", mono = true, modifier = Modifier.weight(1.1f))
-                Field(moAuth, { moAuth = it }, label = "认证库", mono = true, modifier = Modifier.weight(1f))
+                Field(moHost, { moHost = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.weight(1.4f))
+                Field(moPort, { moPort = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.weight(0.7f))
+                Field(moUser, { moUser = it }, label = L["用户_9ba763ea34"], hint = L["留空_不认证_dc56430dda"], mono = true, modifier = Modifier.weight(1.1f))
+                Field(moAuth, { moAuth = it }, label = L["认证库_e00e7c38bb"], mono = true, modifier = Modifier.weight(1f))
                 Field(moPw, { moPw = it }, password = true,
-                    label = if (mo.bool("hasPassword")) "密码（留空不变）" else "密码（无）",
+                    label = if (mo.bool("hasPassword")) L["密码_留空不变_5e4f64d946"] else L["密码_无_e55f2504ae"],
                     modifier = Modifier.weight(1.2f))
             }
 
-            Text("SQLite 搜索目录", color = Palette.text, style = MaterialTheme.typography.labelMedium)
+            Text(L["sqlite_搜索目录_49521cf800"], color = Palette.text, style = MaterialTheme.typography.labelMedium)
             Field(
                 value = sqRoots,
                 onValueChange = { sqRoots = it },
-                label = "允许搜索的根目录（冒号分隔）",
+                label = L["允许搜索的根目录_冒号分隔_9f54070414"],
                 mono = true,
                 modifier = Modifier.fillMaxWidth(),
             )
             Text(
-                text = "面板只会在此目录范围内列出/打开 .db、.sqlite 文件（防止误开系统文件），新增目录后立即生效。",
+                text = L["面板只会在此目录范围内列出_打开_db_sq_cd08ea6180"],
                 color = Palette.muted,
                 style = MaterialTheme.typography.bodySmall,
             )
 
             PrimaryBtn(
-                text = "保存数据库连接",
+                text = L["保存数据库连接_ccfc22f810"],
                 onClick = {
                     scope.launch {
                         // 空密码不传，避免覆盖服务端已保存的值（同 settings.js 的 undefined 处理）
@@ -779,7 +788,7 @@ private fun DbCredsCard(c: JsonObject) {
                                 "sqlite" to jsonObjectOf("roots" to sqRoots.trim()),
                             )
                         )
-                        val ok = Actions.run(path = "/config", body = body, successToast = "数据库连接已保存")
+                        val ok = Actions.run(path = "/config", body = body, successToast = L["数据库连接已保存_68d2c61647"])
                         if (ok != null) {
                             pgPw = ""; myPw = ""; rdPw = ""; moPw = ""
                         }
@@ -842,9 +851,9 @@ private fun FileEditorCard() {
     LaunchedEffect(Unit) { browse("/etc/") }
 
     PanelCard(
-        title = "配置文件编辑器",
+        title = L["配置文件编辑器_44f49d6269"],
         right = {
-            Text("（/etc、/var/www、/opt、/srv、/root）", color = Palette.muted,
+            Text(L["etc_var_www_opt_srv_6efb68416c"], color = Palette.muted,
                 style = MaterialTheme.typography.bodySmall)
         },
     ) {
@@ -854,9 +863,9 @@ private fun FileEditorCard() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Field(value = dir, onValueChange = { dir = it }, mono = true, modifier = Modifier.weight(2f))
-            GhostBtn(text = "浏览", onClick = { scope.launch { browse(dir) } })
+            GhostBtn(text = L["浏览_ef23ea67b0"], onClick = { scope.launch { browse(dir) } })
             Text(
-                text = "nginx/sshd/fstab 配置保存后会自动校验",
+                text = L["nginx_sshd_fstab_配置保存后会自_b9f4e65369"],
                 color = Palette.muted,
                 style = MaterialTheme.typography.bodySmall,
             )
@@ -866,15 +875,15 @@ private fun FileEditorCard() {
 
         Spacer(Modifier.height(8.dp))
         when {
-            loading -> LoadingState("列目录中…")
-            entries.isEmpty() -> EmptyState("（空目录）")
+            loading -> LoadingState(L["列目录中_1d7fe661c3"])
+            entries.isEmpty() -> EmptyState(L["空目录_d170f2a5ad"])
             else -> DataTable<FileEntry>(
                 columns = listOf(
-                    TableCol(title = "权限", weight = 1f, mono = true) {
+                    TableCol(title = L["权限_560165a6d7"], weight = 1f, mono = true) {
                         Text(it.mode, color = Palette.muted, fontFamily = FontFamily.Monospace,
                             style = MaterialTheme.typography.bodySmall, maxLines = 1)
                     },
-                    TableCol(title = "名称", weight = 5f, mono = true) {
+                    TableCol(title = L["名称_1be7ae4fc2"], weight = 5f, mono = true) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = it.name,
@@ -912,7 +921,7 @@ private fun FileEditorCard() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = curPath ?: "未选择文件",
+                text = curPath ?: L["未选择文件_dbb4430dc0"],
                 color = if (curPath == null) Palette.muted else Palette.text,
                 fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.bodySmall,
@@ -920,16 +929,16 @@ private fun FileEditorCard() {
             )
             if (curInfo.isNotBlank()) Text(curInfo, color = Palette.muted, style = MaterialTheme.typography.bodySmall)
             PrimaryBtn(
-                text = "保存文件",
+                text = L["保存文件_184adfdabf"],
                 enabled = curPath != null,
                 onClick = {
                     scope.launch {
                         val p = curPath ?: return@launch
                         val risky = Regex("nginx|sshd|fstab").containsMatchIn(p)
                         val ok = Modal.confirm(
-                            title = "保存文件",
-                            text = "写入 $p？" + if (risky) "（会自动执行配置校验）" else "",
-                            okText = "保存",
+                            title = L["保存文件_184adfdabf"],
+                            text = L["写入_p_f48e1e9bc1"] + if (risky) L["会自动执行配置校验_d447aa930e"] else "",
+                            okText = L["保存_fadf24dbc5"],
                             danger = true,
                         )
                         if (!ok) return@launch
@@ -937,14 +946,14 @@ private fun FileEditorCard() {
                             val r = Actions.run(
                                 path = "/file",
                                 body = jsonObjectOf("path" to p, "content" to content),
-                                successToast = "文件已保存",
+                                successToast = L["文件已保存_09f0eaa4ba"],
                             )
                             validation = (r as? JsonObject)?.obj("validation")?.let {
-                                if (it.bool("ok")) "配置校验通过" else "校验失败"
+                                if (it.bool("ok")) L["配置校验通过_574e62b3c4"] else L["校验失败_2da7449d88"]
                             }
                         } catch (e: ApiException) {
                             validation = null
-                            Modal.output("保存失败", (e.output ?: e.message).orEmpty(), isError = true)
+                            Modal.output(L["保存失败_40525a7328"], (e.output ?: e.message).orEmpty(), isError = true)
                         }
                     }
                 },
@@ -973,7 +982,10 @@ private fun FileEditorCard() {
             )
             validation?.let {
                 Spacer(Modifier.height(6.dp))
-                LevelBadge(text = it, level = if (it.contains("通过")) Level.Ok else Level.Bad)
+                LevelBadge(
+                    text = it,
+                    level = if (com.servermaintance.panel.i18n.textHasI18nKey(it, "通过_dcc4233255")) Level.Ok else Level.Bad,
+                )
             }
         }
     }
@@ -986,12 +998,12 @@ private fun FileEditorCard() {
 private fun AboutCard(c: JsonObject) {
     val me = AppState.me.value
     val nodeVer = (me?.obj("info")?.str("nodeVersion")).orEmpty()
-    PanelCard(title = "关于") {
+    PanelCard(title = L["关于_bed172efc9"]) {
         Text(
             text = "${AppInfo.NAME} ${AppInfo.VERSION_LABEL} · ${AppInfo.COPYRIGHT}" +
                 (if (nodeVer.isNotBlank()) " · Node $nodeVer" else "") +
-                " · 数据每 ${refreshLabel(c.int("refreshMs"))} 从 /proc 实时采集" +
-                " · 所有管理操作均写入审计日志 (logs/audit.log)",
+                trf("数据每_0_从_proc_实时采集_cf5df3d1ba", refreshLabel(c.int("refreshMs"))) +
+                L["所有管理操作均写入审计日志_logs_a_e2b87d13a1"],
             color = Palette.muted,
             style = MaterialTheme.typography.bodySmall,
         )

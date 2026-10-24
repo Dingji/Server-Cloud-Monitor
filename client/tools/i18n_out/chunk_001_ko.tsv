@@ -1,0 +1,120 @@
+label_安装完成_正在刷新_7df73f0205	$label 설치 완료, 새로 고치는 중…
+label_安装日志_13ce1b1029	$label 설치 로그
+label_实现中_70505f7ef8	“$label” 구현 중…
+llm_api_中继的请求量_token_用量_6b89d708ea	LLM API 릴레이의 요청 수, Token 사용량, 키 풀 할당량, 모델 가용성 및 품질 분석
+location_块_不要停用该站点以免面板与_4ae164b62b	location 블록), 이 사이트를 비활성화하면 패널과 릴레이 서비스가 동시에 중단됩니다.
+login.access_token	액세스 토큰
+login.advanced	고급
+login.audit_notice	모든 작업이 감사 로그로 기록됩니다
+login.connect_failed	연결 실패:
+login.failed	로그인 실패
+login.normalized_url	정규화된 주소
+login.not_logged_in	로그인하지 않음
+login.password_required	비밀번호를 입력하세요
+login.remember_password	비밀번호 기억
+login.restore_default_url	기본 주소로 복원
+login.save_on_test_hint	주소를 변경한 뒤 “연결 테스트”를 클릭하면 저장됩니다
+login.server_config	서버 연결 설정
+login.sign_in	로그인
+login.signing_in	로그인 중…
+login.subtitle	서버 실시간 모니터링 및 구성 콘솔
+login.test_connection	연결 테스트
+login.testing	테스트 중…
+login_可登录_0e617ada9b	LOGIN (로그인 가능)
+min_上一轮字节_本轮字节_是前面轮次已发_15048744a9	min(이전 라운드 바이트, 이번 라운드 바이트)는 이전 라운드에서 이미 전송된 내용입니다 — 이것이 캐시가 실제로 적중해야 하는 상한이며, 벤더 보고값에 의존하지 않습니다.\n
+mongodb_不做空间回收_validate_634509e00a	MongoDB는 공간을 회수하지 않습니다. validate/reindex는 정기 유지 관리에 자주 사용됩니다.
+mongodb_使用_mongodump_生_c5b1c88a48	· MongoDB는 mongodump로 gzip 아카이브를 만듭니다(mongodump 필요).
+mongodb_在首次写入集合时才真正创建数据库_786d0aea73	MongoDB는 컬렉션에 처음 쓰기할 때 데이터베이스가 실제로 생성됩니다. 여기서는 자리 표시자 _cm_init 컬렉션이 생성됩니다.
+mongodb_的过滤条件支持_字段_值_558264a7d8	MongoDB 필터는 {"필드":값} 형식(내부적으로 쿼리 조건으로 변환) 또는 필드=값 축약형을 지원합니다. 문서는 JSON으로 표시되며 _id가 문서 식별자입니다.
+mongodb_维护结果_aaeb39f907	MongoDB 유지 관리 결과
+ms_毫秒_7ade5ab3a4	$ms 밀리초
+mysql_mariadb_默认_root_707ba8cdb6	MySQL / MariaDB(기본 root + socket)
+mysql_语法_8200e34cb7	MySQL 구문
+mysqlcheck_a_统计_f07484c062	mysqlcheck -a 통계
+mysqlcheck_c_校验_a3300ec3cc	mysqlcheck -c 검증
+mysqlcheck_o_优化_d454d03db1	mysqlcheck -o 최적화
+name_ver_连接正常_33d0a44ec7	$name $ver 연결 정상
+name_关闭_c8e887ebc0	$name: 꺼짐
+name_开启_54ce939603	$name: 켜짐
+nav.audit	감사 로그
+nav.backups	백업 센터
+nav.cron	예약 작업
+nav.dashboard	대시보드
+nav.databases	데이터베이스
+nav.disks	디스크 관리
+nav.docker	Docker 컨테이너
+nav.health_alerts	상태 경고
+nav.logs	로그 센터
+nav.memory	메모리 관리
+nav.network	네트워크 관리
+nav.note_mail	메일 알림
+nav.note_settings	NoteBox 설정
+nav.note_transfer	가져오기 / 내보내기
+nav.note_users	사용자 관리
+nav.notes	노트
+nav.ops_channels	알림 채널
+nav.ops_disk	디스크 거버넌스
+nav.ops_files	파일 관리
+nav.ops_hosts	관리 호스트
+nav.ops_remote	원격 호스트 지표
+nav.ops_rules	경고 규칙
+nav.ops_sec	보안 기준 점검
+nav.ops_uptime	가동률 측정
+nav.ops_watch	서비스 감시
+nav.packages	패키지 관리
+nav.page_placeholder	“{0}” 페이지 구현 중…
+nav.pinned_hint	(고정됨, 길게 눌러 해제)
+nav.processes	프로세스 관리
+nav.relay	OpenCode 릴레이
+nav.section.app	앱
+nav.section.monitor	모니터링
+nav.section.notes	노트
+nav.section.server	서버
+nav.section.system	시스템
+nav.section.tools	도구
+nav.security	보안 관리
+nav.services	시스템 서비스
+nav.settings	패널 설정
+nav.slo	SLO 및 사용량
+nav.terminal	Web 터미널
+nav.todos	할 일 목록
+nav.web	웹사이트 / Nginx
+nginx_site_nginx_conf_ng_adcab1b0c3	nginx_site/nginx_conf Nginx 구성 · sshd_config SSH 구성 · 
+nginx_sshd_fstab_配置保存后会自_b9f4e65369	nginx/sshd/fstab 구성은 저장 후 자동으로 검증됩니다
+nginx_站点_0_6bcfddef71	Nginx 사이트 ({0})
+nginx_站点_sites_size_2db3c2b5be	Nginx 사이트 (${sites.size})
+notebox_smtp_与提醒规则_cd81b4ede4	NoteBox SMTP 및 경고 규칙
+notebox_云端笔记_多级归类_回收站_df77794405	NoteBox 클라우드 노트(다단계 분류 · 휴지통 · Markdown · 공유)
+notebox_地址未配置_3d37258011	NoteBox 주소가 구성되지 않았습니다
+notebox_待办事项_支持截止时间与邮件提醒_f64366f1ad	NoteBox 할 일(마감일 및 메일 알림 지원)
+notebox_数据迁移_362725f18e	NoteBox 데이터 마이그레이션
+notebox_服务可达_6a7506d6ac	NoteBox 서비스 연결 가능
+notebox_服务可达_未登录_e023d68cad	NoteBox 서비스 연결 가능(로그인하지 않음)
+notebox_服务地址_默认端口_13345_e0880dfda6	NoteBox 서비스 주소(기본 포트 13345). 변경 후 다시 로그인해야 합니다.
+notebox_登录成功_013138644f	NoteBox 로그인 성공
+notebox_设置_efb5a47b98	NoteBox 설정
+notebox_账号_仅管理员_81b8d4ca26	NoteBox 계정(관리자 전용)
+online_台有近期数据_1fefff8cdc	$online 호스트에 최근 데이터 있음
+opencode_中继_2e021ee797	OpenCode 릴레이
+p95_延迟_57d63f8b46	P95 지연
+p95_延迟_ba65a873bc	p95 지연
+palette.accent_hint	외형 · 현재 {0}
+palette.open_page	페이지 열기 {0}
+palette.pin	“{0}” 고정
+palette.pin_hint	작업 공간 · 사이드바 항목을 길게 눌러도 전환됩니다
+palette.reload_hint	F5 / Ctrl+R · 새로 고침
+palette.theme_hint	외형 · 현재 {0}
+palette.unpin	“{0}” 고정 해제
+password_expire_强制改密_03ed6aea19	PASSWORD EXPIRE(비밀번호 강제 변경)
+pg_自定义格式_0cc41d0ea4	PG 사용자 지정 형식
+postgresql_mysql_sql_42e513fca9	PostgreSQL / MySQL / SQLite / Db2 / Redis / MongoDB의 데이터베이스·테이블 관리, SQL 콘솔, 성능 인사이트 및 백업/복원
+postgresql_自定义格式_fc_更快恢_080c860e81	PostgreSQL 사용자 지정 형식 -Fc(복원 더 빠름)
+postgresql_默认使用_peer_认证_79cef40e30	PostgreSQL(기본적으로 peer 인증 사용: su - postgres)
+rdb_快照_62f218ed40	RDB 스냅샷
+redis_会执行_bgsave_并复制_r_86e2019f6b	· Redis는 BGSAVE를 실행하고 RDB 파일을 복사합니다. 복원은 데이터 디렉터리를 덮어쓰며 적용하려면 Redis를 다시 시작해야 합니다.
+redis_命令控制台_fa42019a53	Redis 명령 콘솔
+redis_维护_d2a01bfbd3	Redis 유지 관리
+reindex_全部库_90545e1eeb	REINDEX 모든 데이터베이스
+reindex_重建索引_256956f94e	REINDEX / 인덱스 다시 빌드
+reindex_重建索引_d81fcbf8d0	REINDEX(인덱스 다시 빌드)
+relay_alert_py_检查_smtp_告_012aaa3373	relay_alert.py 점검, SMTP 경고 채널, 임계값 및 경고 기록

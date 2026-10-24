@@ -1,0 +1,120 @@
+执行计划树_2a66c47766	Árbol del plan de ejecución
+扩展名_如_pgcrypto_83ec8b404a	Nombre de extensión, p. ej. pgcrypto
+扩展安装_3587656bb2	Instalación de extensiones
+扩展监控_wal_bgwriter_in_b526852c31	Monitoreo extendido (WAL / BGWriter / InnoDB / slots de replicación)
+扫描_0_张表_命中_1_张_ddc51ef2c9	{0} tablas escaneadas · {1} coincidencias
+扫描_998c936377	Escanear
+扫描中_7c81ab45e3	Escaneando…
+扫描根目录一级_二级目录及大于_100mb_的文_60e4bd3b99	Escanear los directorios de primer/segundo nivel de la raíz y los archivos mayores de 100MB
+批次_0_1_a517254bd8	 · Lote {0}/{1}
+批量删除_362aedce37	Eliminación masiva
+批量卸载_n_65d9c20918	Desinstalación masiva ($n)
+批量卸载_rem_3ccf4b0014	Desinstalación masiva ($rem)
+批量安装_ins_d21155177e	Instalación masiva ($ins)
+批量操作_eae7c2c8a9	Operaciones masivas
+批量操作结果_c3c60aaa7e	Resultados de operaciones masivas
+批量表操作_9ac7c449b3	Operaciones masivas en tablas
+找出占空间的东西_按项清理并核对实际释放量_可开_0fdb33dd38	Encuentra qué ocupa espacio, limpia elemento por elemento y comprueba el espacio realmente liberado; puedes activar el mantenimiento automático diario
+把_0_从台账移除_cfcfa0347b	¿Retirar "{0}" del inventario?
+把_0_项移入回收站_保留_1_天_可还_34b70d7414	Mover {0} elementos a la papelera (se conservan {1} días, se pueden restaurar).
+把_h_label_从台账移除_3366b95a93	¿Retirar "${h.label}" del inventario?
+把_selected_size_项移入回收_0cf24b0894	Mover ${selected.size} elementos a la papelera (se conservan ${FileStore.trashDays.value} días, se pueden restaurar).
+把仓库_ops_server_部署到面板_se_085f78330b	Despliega el repositorio ops-server/ en el panel en server/ops/ y reinicia tras el montaje en index.js para usarlo:\n
+把告警送到人_webhook_企业微信_c503ab6c52	Envía las alertas a las personas: Webhook / WeCom / DingTalk / Feishu / Telegram / correo, las credenciales se guardan solo en el servidor
+抖动_a60f92b8bb	Jitter
+报文大小分布_响应_eb73297921	Distribución del tamaño de paquetes (respuesta)
+报文大小分布_请求_978ad9741c	Distribución del tamaño de paquetes (solicitud)
+报错退出_e9bcdb3450	Salida con error
+拉起命令_可空_8598bf93c8	Comando de inicio (opcional)
+拒绝_deny_15eaa6f7a5	− Denegar (DENY)
+拥有者_0f0558fe5a	Propietario
+拨测_0_台不可用_faf5bff7d3	{0} destinos de probe no disponibles
+拨测_0c26df31f3	Probe
+拨测_o_probedown_台不可用_6f5279e1a9	${o.probeDown} destinos de probe no disponibles
+拨测与_sla_自定义告警规则_通知渠道_静默与_be90e55995	Probe con SLA, reglas de alerta personalizadas, canales de notificación, silencios y ventanas de mantenimiento.
+拨测任务_aca6ce04f6	Tarea de probe
+拨测任务已保存_c628e8f14a	Tarea de probe guardada
+拨测失败_7b0bb7893f	Probe fallida
+拨测类型_4ed688984c	Tipo de probe
+拨测间隔_秒_7c2e24962c	Intervalo de probe (segundos)
+持续_0_s_冷却_1_s_2_a238875611	Duración {0}s · enfriamiento {1}s · {2}
+持续增长_ab21b96aa8	Crecimiento continuo
+持续多少秒才告警_9624b095e1	Cuántos segundos debe durar antes de alertar
+挂载点_8517da781f	Punto de montaje
+指定指标_efb37dcdc8	Métrica especificada
+指定指标_作用范围_指定指标时_2b528db368	Métrica especificada (alcance = métrica especificada)
+指定源_c1701e5ea0	 · Fuente especificada
+指定规则_e050a72f42	Regla especificada
+指定规则_作用范围_指定规则时_a4bbca73a1	Regla especificada (alcance = regla especificada)
+指标_0_89d6aad554	Métrica: {0}
+指标_1dfc810a7b	Métrica
+指标_opsstate_metriclabe_fef507e4db	Métrica: ${OpsState.metricLabel(it.metric)}
+按_cpu_ed77c666c4	Por CPU
+按_etc_relay_pricing_jso_a1872b6ad6	Por /etc/relay/pricing.json
+按_pid_c594df6b43	Por PID
+按_sch_执行_act_c9ffbfae51	¿Ejecutar $act según $sch?
+按_内存_ee559401b3	Por memoria
+按_用户_fc09815a27	Por usuario
+按一级标题拆分_cffaaceb8e	Dividir por encabezados de primer nivel
+按今日计划执行一次_c9294b2b15	Ejecutar una vez según el plan de hoy
+按分组_008e3a2b0b	Por grupo
+按名称_0ea96767da	Por nombre
+按大小_ee9a3bcc8e	Por tamaño
+按天_6a0d40d657	Por día
+按天用量_4fac34d248	Uso diario
+按小时_3ae9822387	Por hora
+按模型_token_分布图_a371a816cb	Gráfico de distribución de Token por modelo
+按模型_token_统计_日_周_月_并_1820d55c9f	Estadísticas de Token por modelo (día / semana / mes en paralelo)
+按模型_复用率_vs_真实命中率_c4c8c68680	Por modelo: tasa de reutilización vs tasa real de aciertos
+按此速率耗尽_b0a756faa9	Agotado a este ritmo
+按每次探测结果聚合_030b2e6a6a	Agregar por cada resultado de probe
+按版本_f04ae00cab	Por versión
+授予_afc60b6b80	Conceder
+授予_sudo_b17c8ef2b8	Conceder sudo
+授予数据库权限_fa513839dd	Conceder privilegios de base de datos
+授权_3a6e607f0c	Autorizar
+授权库_4d0119c773	Biblioteca autorizada
+授权码_886b52b1db	Código de autorización
+排序_d797283645	Ordenar:
+排序_dc35af8d69	Ordenar
+排序规则_cba9ca5a18	Regla de ordenación
+排队中_4dcbbcfa61	En cola
+排除表_逗号分隔_可选_c3fbff6bed	Excluir tablas (separadas por comas, opcional)
+探活_自动拉起_超过上限停止并告警_每次_042dac10cd	Health check → reinicio automático → detener y alertar al superar el límite; cada acción guarda un historial de ejecución
+探活方式_ccd56454d3	Método de health check
+探活间隔_秒_3b83fe753f	Intervalo de health check (segundos)
+探测_b5ef40a22d	Probe
+探测只打开端口读_banner_不发送任何凭据_a9cc98b513	El sondeo solo abre el puerto para leer el banner; no envía ninguna credencial
+探测地址_556833efb5	Dirección de probe
+探测失败_1e2b42cb65	Probe fallida
+探测完成_c51494c626	Probe completada
+接口端点_a8989ccc29	Punto de acceso API
+推理_0_输出占比_1_0dae9a01a8	Inferencia {0} · proporción de salida {1}
+推理_c9d3b085e2	Inferencia
+推荐_e8fcb9bb63	\n\n--- Recomendado ---\n
+推荐包_d834496b57	Paquetes recomendados
+描述_412f54dc38	Descripción
+提前提醒_分钟_0c4a512c91	Recordatorio anticipado (minutos)
+提示_ab3656a956	Sugerencia
+提醒邮件已发送_含详情_子任务与日历邀请_7359e6549a	Correo de recordatorio enviado (con detalles, subtareas e invitación de calendario)
+插入_022bf3283d	Insertar
+插入文档_6d53393c50	Insertar documento
+搜索_c85d9132a4	Buscar…
+搜索_f04090805c	Buscar
+搜索_pid_用户_命令_f1c406afb9	Buscar PID/usuario/comando…
+搜索事项_a5b34743c2	Buscar elementos…
+搜索变量名_a66a6cba87	Buscar nombre de variable…
+搜索失败_b9786d51c3	Búsqueda fallida
+搜索安装_7bede136f7	Buscar e instalar
+搜索服务名_9646f29b1b	Buscar nombre de servicio…
+搜索笔记_8699c6b13f	Buscar notas…
+搜索结果_0_1_项_bc8aaa1631	Resultados · "{0}" {1} elementos
+搜索结果_0_99e3cf5dae	Resultados (0)
+搜索结果_query_hits_si_3d502bbdbe	Resultados · "$query" ${hits.size} elementos
+搜索结果_total_71fe2c69d1	Resultados ($total)
+搜索范围_全部已启用源_共_0_个源_按名_b786d5dc17	Alcance: todas las fuentes activadas ({0} fuentes), coincidencia por nombre y descripción. Ve a la página "Fuentes de software" para cambiar a espejos locales.
+搜索范围_全部已启用源_共_srclist_2017990f2b	Alcance: todas las fuentes activadas (${srcList.size} fuentes), coincidencia por nombre y descripción. Ve a la página "Fuentes de software" para cambiar a espejos locales.
+搜索软件包_a162c7cf8d	Buscar paquetes
+搜索软件包_名称或描述_如_nginx_ht_320fde8b40	Buscar paquetes: nombre o descripción, p. ej. nginx / htop / python3
+搜索邮箱_8dad475e2f	Buscar correo…
+搜索页面或命令_ctrl_cmd_k_84c6582b79	Buscar páginas o comandos… (Ctrl/Cmd+K)

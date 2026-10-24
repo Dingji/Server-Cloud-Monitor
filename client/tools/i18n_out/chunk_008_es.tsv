@@ -1,0 +1,120 @@
+变化_0713c8939f	Cambios
+变更取自_auditd_文件完整性事件_配置_edc7e5af44	Los cambios provienen de los eventos de integridad de archivos de auditd (configuración / claves / nginx / sshd, etc.); en total, $changeCount.
+变更预览_241ab41868	 · Vista previa de cambios
+变量_b418ca60d4	Variable
+口径说明_53a989d8cc	Definición
+只告警_20b82131f2	Solo alertar
+只读_ffc1d065fb	Solo lectura
+只读_仅查看_可编辑_可修改_管理_可修_7350c52b3d	Solo lectura = solo ver · Editable = se puede modificar · Administrar = modificar, eliminar y gestionar el uso compartido
+只选目录_bc8b48ee0e	Seleccionar solo el directorio
+可上传_rdb_文件名_内容_0e9334cab9	Se pueden subir nombres de archivo .rdb + su contenido.
+可修复_r_checks_count_e4b6314c85	Reparable: {0}
+可升级_546591fd74	Actualizable
+可升级_total_12792da8ef	Actualizable ($total)
+可复用_ec5baa1975	Reutilizable
+可复用_缓存上限_96e0d3a181	Reutilizable (límite de caché)
+可复用上下文_9727f037bf	Contexto reutilizable
+可安全清理_099dfd0be8	Limpieza segura
+可清理的孤立依赖_apt_get_s_auto_25a43a9abb	Dependencias huérfanas que se pueden limpiar (apt-get -s autoremove)
+可用_e91365cf9e	Disponible
+可用性拨测_64f61a3d7a	Sonda de disponibilidad
+可用空间_4981f67ab1	Espacio disponible
+可空_b3563bf06a	Admite null
+可粘贴_mongodump_归档内容或上传后在列_40fb6a2727	Pegue aquí el contenido del archivo mongodump o súbelo y restaúralo desde la lista; pegue el texto aquí y especifique un nombre de archivo.
+可编辑_bff55f2cd9	Editable
+可达_3705c6f323	Alcanzable
+可达性_765d9ffdc9	Alcanzabilidad
+可选_2f3b613ff2	Opcional…
+可选_53e32830a5	Opcional
+可选镜像_67237d63bf	Imagen opcional
+台账主机_acb80f963e	Host de inventario
+台账条目_a9bb9bd8ce	Entrada de inventario
+台账还是空的_登记机器的用途_环境_负责人与备注_4aebfb8210	El inventario sigue vacío: registre el uso, el entorno, el responsable y las notas de cada máquina para que las inspecciones y las alertas tengan un destinatario
+台账里还没有主机_先到_纳管主机_登记_再回来配_cdc9d74097	Aún no hay hosts en el inventario: regístrelos primero en «Hosts gestionados» y vuelva después para configurar las credenciales SSH
+各套餐命中率_rangelabel_cb1ad2971f	Tasa de aciertos por plan $rangeLabel
+合并_保留现有数据_01a4d7c1d8	Fusionar (conservar los datos existentes)
+合并导入_保留现有对象_5693e46162	Importar fusionando (conservar los objetos existentes)
+合规_540bc8b761	Cumplimiento
+合规_r_counts_93f6bd5eb9	Conforme: {0}
+合计_0_03a6ed19a9	Total {0}
+合计_92bcbf71cb	Total
+同主仓库_01a7130455	Igual que el repo principal
+同名文件已存在_19c091cec7	Ya existe un archivo con el mismo nombre
+同时复制数据_d0295acd86	Copiar también los datos
+名称_1be7ae4fc2	Nombre
+名称_值_576e23fba3	Nombre / Valor
+名称_可带模式_99f761c6de	Nombre (puede incluir un patrón)
+后台运行_d8478a3802	Ejecutar en segundo plano
+后天_639e8f00b7	Pasado mañana
+向_pid_pid_args_发送_si_1e664241d5	¿Enviar SIGTERM al PID $pid ($args)?
+否_8bf5c10ad9	No
+含成本估算_c3584df84d	Con estimación de coste
+含数据_6aedaad68f	(con datos)
+含规则_拨测与手动广播_6fd5d428e5	Incluye reglas, sondas y difusiones manuales
+含轮转历史_e8a206c9bc	Incluye el historial de rotación
+启动_0_5c677d444c	Iniciar {0}
+启动_0_服务_16fc9bfc5e	▶ Iniciar el servicio {0}
+启动_ebd26da421	Iniciar
+启动_engine_name_服务_47b4573f31	▶ Iniciar el servicio ${engine.name}
+启动_label_d5cb754f2b	Iniciar $label
+启动_容器_76c73301e8	Iniciar el contenedor
+启动引擎_193b25d8af	Iniciar el motor
+启动服务_f5f2a0dd6f	Iniciar el servicio
+启用_0_并重载_nginx_cec5f2e46f	¿Habilitar {0} y recargar nginx?
+启用_d4e9ca3dd4	Habilitar
+启用_pg_stat_statements_扩展_a1da4a0b69	Habilitar la extensión pg_stat_statements
+启用_r_site_并重载_nginx_6f9eb4ba9b	¿Habilitar ${r.site} y recargar nginx?
+启用中的探测项_06452808ea	Sondas habilitadas
+启用告警_d6b9351330	Habilitar alertas
+启用方式_script_由_relay_ale_ef278b0211	Activación: $script, ejecutado cada 5 minutos por relay-alert.timer.
+启用方法_9260bb76c1	Método de activación
+启用每日摘要_0a9df7843b	Habilitar el resumen diario
+启用网卡_name_b24324d7d4	¿Habilitar la interfaz de red $name?
+启用邮件通知_25c29ea9b4	Habilitar notificaciones por correo
+启用防火墙_32fbb16291	Habilitar el firewall
+告警_5078424f7e	Alerta
+告警中_265d5de4c9	En alerta
+告警中心_ba945698e9	Centro de alertas
+告警事件流_7910b238b1	Flujo de eventos de alertas
+告警历史_c507274d75	Historial de alertas
+告警就会推送到群里而不只是停在面板上_cb3d792064	Las alertas se enviarán al grupo en lugar de quedarse solo en el panel.
+告警已关闭_a1c9fab7d6	Alertas desactivadas
+告警日志_0_a892400684	Registro de alertas ({0})
+告警规则_0_条触发中_86ea51451b	{0} reglas de alerta activas
+告警规则_de497c4e56	Reglas de alerta
+告警规则_o_rulefiring_条触发_3296034214	${o.ruleFiring} reglas de alerta activas
+告警通道_复用_relay_每日报告的_smtp_c02c260a95	Canal de alertas (reutiliza el SMTP del informe diario de relay)
+告警阈值_仪表盘右上角铃铛_c7224212dd	Umbrales de alerta (campana en la esquina superior derecha del panel)
+告警阈值已保存_f6ed6094c3	Umbrales de alerta guardados
+告警防护开启_c43dfbff06	Protección de alertas activada
+周_0_1_2_78c92bdbef	Semana {0} {1}–{2}
+周期_0_天_已消耗_1_4364d28c73	Ciclo de {0} días · {1} % consumido
+周期_8a12b12125	Ciclo
+周期内消耗_cdd79a773a	Consumo del ciclo
+命中_0_bc8f08b9ae	Aciertos {0}
+命中_0_未命中_1_994cc4fd62	Aciertos {0} · fallos {1}
+命中_0_未命中_1_tok_0170ee1dc6	Aciertos {0} / fallos {1} tok · 
+命中_0_未命中_1_tok_覆_e84c124898	Aciertos {0} / fallos {1} tok · cobertura 
+命中_7a130d7fde	Acierto
+命中_上游返回_2xx_真正拿到了模型响应_479b4a776d	· Acierto: el upstream devolvió 2xx y se obtuvo una respuesta real del modelo.
+命中事件_5a9f9753fc	Eventos de aciertos
+命中率趋势_rangelabel_gra_4543952724	Tendencia de la tasa de aciertos $rangeLabel · $gran
+命令_b114b91547	Comando
+命令控制台_3e37a06e5f	Consola de comandos
+命令输出_0_1eb07b8f1f	Salida del comando: {0}
+命令输出_c_evidence_take_1_2639edb6ee	Salida del comando: ${c.evidence.take(160)}
+响应解析失败_0_2b68ffa3e9	Error al analizar la respuesta: {0}
+响应解析失败_text_take_300_e68936f4c8	Error al analizar la respuesta: ${text.take(300)}
+响应需包含关键字_8194b1499c	La respuesta debe contener la palabra clave
+唯一_e805014aa5	Único
+唯一索引_eea282cf7b	Índice único
+四_4f88740b34	Cuatro
+回收_6eda6254dd	Recuperar
+回收站_0_c62b3efd3d	Papelera{0}
+回收站_64ea8751fb	Papelera
+回收站_保留_0_天_38b488832e	Papelera (se conserva {0} días)
+回收站_保留_filestore_trash_9bbe7572c0	Papelera (se conserva ${FileStore.trashDays.value} días)
+回收站已清空_226ab2d716	Papelera vaciada
+回收站是空的_e872522628	La papelera está vacía
+回调_url_8685de50ca	URL de callback
+图片_0_b8121a43e1	[Imagen: {0}]

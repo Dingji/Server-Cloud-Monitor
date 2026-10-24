@@ -1,0 +1,120 @@
+变化_0713c8939f	Changes
+变更取自_auditd_文件完整性事件_配置_edc7e5af44	Changes come from auditd file integrity events (config / keys / nginx / sshd, etc.), $changeCount in total.
+变更预览_241ab41868	 · Change preview
+变量_b418ca60d4	Variable
+口径说明_53a989d8cc	Definition
+只告警_20b82131f2	Alert only
+只读_ffc1d065fb	Read-only
+只读_仅查看_可编辑_可修改_管理_可修_7350c52b3d	Read-only = view only · Editable = can modify · Manage = can modify, delete, and manage sharing
+只选目录_bc8b48ee0e	Select directory only
+可上传_rdb_文件名_内容_0e9334cab9	Can upload .rdb file names + contents.
+可修复_r_checks_count_e4b6314c85	Fixable: {0}
+可升级_546591fd74	Upgradable
+可升级_total_12792da8ef	Upgradable ($total)
+可复用_ec5baa1975	Reusable
+可复用_缓存上限_96e0d3a181	Reusable (cache limit)
+可复用上下文_9727f037bf	Reusable context
+可安全清理_099dfd0be8	Safe to clean
+可清理的孤立依赖_apt_get_s_auto_25a43a9abb	Orphaned dependencies that can be removed (apt-get -s autoremove)
+可用_e91365cf9e	Available
+可用性拨测_64f61a3d7a	Availability probe
+可用空间_4981f67ab1	Available space
+可空_b3563bf06a	Nullable
+可粘贴_mongodump_归档内容或上传后在列_40fb6a2727	Paste mongodump archive content here, or upload and restore it from the list; paste the text here and specify a file name.
+可编辑_bff55f2cd9	Editable
+可达_3705c6f323	Reachable
+可达性_765d9ffdc9	Reachability
+可选_2f3b613ff2	Optional…
+可选_53e32830a5	Optional
+可选镜像_67237d63bf	Optional image
+台账主机_acb80f963e	Inventory host
+台账条目_a9bb9bd8ce	Inventory entry
+台账还是空的_登记机器的用途_环境_负责人与备注_4aebfb8210	The inventory is still empty: record each machine's purpose, environment, owner, and notes, so inspections and alerts have an accountable subject
+台账里还没有主机_先到_纳管主机_登记_再回来配_cdc9d74097	No hosts in the inventory yet: register them under “Managed Hosts” first, then come back to configure SSH credentials
+各套餐命中率_rangelabel_cb1ad2971f	Hit rate by plan $rangeLabel
+合并_保留现有数据_01a4d7c1d8	Merge (keep existing data)
+合并导入_保留现有对象_5693e46162	Merge import (keep existing objects)
+合规_540bc8b761	Compliance
+合规_r_counts_93f6bd5eb9	Compliant: {0}
+合计_0_03a6ed19a9	Total {0}
+合计_92bcbf71cb	Total
+同主仓库_01a7130455	Same as main repo
+同名文件已存在_19c091cec7	A file with the same name already exists
+同时复制数据_d0295acd86	Also copy data
+名称_1be7ae4fc2	Name
+名称_值_576e23fba3	Name / Value
+名称_可带模式_99f761c6de	Name (may include a pattern)
+后台运行_d8478a3802	Run in background
+后天_639e8f00b7	Day after tomorrow
+向_pid_pid_args_发送_si_1e664241d5	Send SIGTERM to PID $pid ($args)?
+否_8bf5c10ad9	No
+含成本估算_c3584df84d	Includes cost estimate
+含数据_6aedaad68f	(includes data)
+含规则_拨测与手动广播_6fd5d428e5	Includes rules, probes, and manual broadcasts
+含轮转历史_e8a206c9bc	Includes rotation history
+启动_0_5c677d444c	Start {0}
+启动_0_服务_16fc9bfc5e	▶ Start {0} service
+启动_ebd26da421	Start
+启动_engine_name_服务_47b4573f31	▶ Start ${engine.name} service
+启动_label_d5cb754f2b	Start $label
+启动_容器_76c73301e8	Start container
+启动引擎_193b25d8af	Start engine
+启动服务_f5f2a0dd6f	Start service
+启用_0_并重载_nginx_cec5f2e46f	Enable {0} and reload nginx?
+启用_d4e9ca3dd4	Enable
+启用_pg_stat_statements_扩展_a1da4a0b69	Enable pg_stat_statements extension
+启用_r_site_并重载_nginx_6f9eb4ba9b	Enable ${r.site} and reload nginx?
+启用中的探测项_06452808ea	Enabled probes
+启用告警_d6b9351330	Enable alerts
+启用方式_script_由_relay_ale_ef278b0211	Enabled via: $script, run every 5 minutes by relay-alert.timer.
+启用方法_9260bb76c1	Enable method
+启用每日摘要_0a9df7843b	Enable daily digest
+启用网卡_name_b24324d7d4	Enable network interface $name?
+启用邮件通知_25c29ea9b4	Enable email notifications
+启用防火墙_32fbb16291	Enable firewall
+告警_5078424f7e	Alert
+告警中_265d5de4c9	Alerting
+告警中心_ba945698e9	Alert center
+告警事件流_7910b238b1	Alert event stream
+告警历史_c507274d75	Alert history
+告警就会推送到群里而不只是停在面板上_cb3d792064	Alerts will be pushed to the group instead of just staying on the panel.
+告警已关闭_a1c9fab7d6	Alerts disabled
+告警日志_0_a892400684	Alert log ({0})
+告警规则_0_条触发中_86ea51451b	{0} alert rules firing
+告警规则_de497c4e56	Alert rules
+告警规则_o_rulefiring_条触发_3296034214	${o.ruleFiring} alert rules firing
+告警通道_复用_relay_每日报告的_smtp_c02c260a95	Alert channel (reuses the SMTP of relay's daily report)
+告警阈值_仪表盘右上角铃铛_c7224212dd	Alert thresholds (bell icon in the top-right of the dashboard)
+告警阈值已保存_f6ed6094c3	Alert thresholds saved
+告警防护开启_c43dfbff06	Alert protection enabled
+周_0_1_2_78c92bdbef	Week {0} {1}–{2}
+周期_0_天_已消耗_1_4364d28c73	{0}-day cycle · {1}% used
+周期_8a12b12125	Cycle
+周期内消耗_cdd79a773a	Used in cycle
+命中_0_bc8f08b9ae	Hits {0}
+命中_0_未命中_1_994cc4fd62	Hits {0} · Misses {1}
+命中_0_未命中_1_tok_0170ee1dc6	Hits {0} / Misses {1} tok · 
+命中_0_未命中_1_tok_覆_e84c124898	Hits {0} / Misses {1} tok · Coverage 
+命中_7a130d7fde	Hit
+命中_上游返回_2xx_真正拿到了模型响应_479b4a776d	· Hit: upstream returned 2xx, a real model response was received.
+命中事件_5a9f9753fc	Hit events
+命中率趋势_rangelabel_gra_4543952724	Hit rate trend $rangeLabel · $gran
+命令_b114b91547	Command
+命令控制台_3e37a06e5f	Command console
+命令输出_0_1eb07b8f1f	Command output: {0}
+命令输出_c_evidence_take_1_2639edb6ee	Command output: ${c.evidence.take(160)}
+响应解析失败_0_2b68ffa3e9	Response parsing failed: {0}
+响应解析失败_text_take_300_e68936f4c8	Response parsing failed: ${text.take(300)}
+响应需包含关键字_8194b1499c	Response must contain keyword
+唯一_e805014aa5	Unique
+唯一索引_eea282cf7b	Unique index
+四_4f88740b34	Four
+回收_6eda6254dd	Reclaim
+回收站_0_c62b3efd3d	Recycle bin{0}
+回收站_64ea8751fb	Recycle bin
+回收站_保留_0_天_38b488832e	Recycle bin (kept {0} days)
+回收站_保留_filestore_trash_9bbe7572c0	Recycle bin (kept ${FileStore.trashDays.value} days)
+回收站已清空_226ab2d716	Recycle bin emptied
+回收站是空的_e872522628	The recycle bin is empty
+回调_url_8685de50ca	Callback URL
+图片_0_b8121a43e1	[Image: {0}]

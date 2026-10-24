@@ -1,0 +1,120 @@
+摘要_46d4c1b4e4	Zusammenfassung
+摘要发送时间_0eccc15130	Sendezeit der Zusammenfassung
+播放_21925350de	Abspielen
+操作_f3ea6d345e	Aktionen
+操作失败_09e424b5e8	Aktion fehlgeschlagen
+操作失败_0_c81f3f901e	Aktion fehlgeschlagen: {0}
+操作完成_66c6340147	Aktion abgeschlossen
+操作成功_3c5be5f2a1	Aktion erfolgreich
+操作日志_f4bc877cd2	Aktionsprotokoll
+操作进行中_a31331bbf2	Aktion läuft
+支持_csv_有_无表头均可_列名支持_标题_截_564b0aa879	Unterstützt CSV (mit/ohne Kopfzeile; Spaltennamen Titel/Fällig/Priorität/Notizen/Status), Klartext-Checklisten (- [x]-Syntax) und JSON-Arrays.
+支持_markdown_纯文本_html_305bf19136	Unterstützt Markdown / Klartext / HTML; HTML wird automatisch in bearbeitbares Markdown umgewandelt. Bei mehreren Überschriften 1. Ordnung wird es automatisch in einzelne Notizen aufgeteilt.
+支持_sql_sql_gz_dum_e07870399d	Unterstützt .sql / .sql.gz / .dump (PostgreSQL-Eigenformat). Text einfügen und dann auf das Sicherungsverzeichnis des Servers hochladen.
+支持_变量_函数体_0b11a90fd3	Unterstützt $-Variablen / Funktionsskörper
+收件人_529414cfe5	Empfänger
+收件人_逗号分隔_7352ac40b2	Empfänger (durch Komma getrennt)
+收尾_7c151dbd71	Fertigstellen
+收起_5d5815647c	Einklappen
+收起完整说明_fedbce873b	Vollständige Beschreibung einklappen
+改值_d6c5664772	Wert ändern
+改地址后点_测试连接_即持久化生效_71864f6613	Nach der Adressänderung „Testverbindung“ klicken, um die Änderung dauerhaft zu speichern
+改密_bb974d3064	Passwort ändern
+改属主_962ff54eef	Besitzer ändern
+改权限_6d524368de	Berechtigungen ändern
+改表名_5932b4950c	Tabelle umbenennen
+放弃编辑_815725bb66	Bearbeitung verwerfen
+数据_54b8a90b3c	Daten
+数据刷新间隔_783b4fd825	Datenaktualisierungsintervall
+数据库_0_38b5c31d37	Datenbank ({0})
+数据库_dbs_size_f98d7bbce7	Datenbank (${dbs.size})
+数据库_f4dbbc63a5	Datenbank
+数据库列表_04a9b8f2c3	Datenbankliste
+数据库列表_0_fe197e98d3	Datenbankliste ({0})
+数据库列表_dbs_size_06771422a0	Datenbankliste (${dbs.size})
+数据库名_8a98ff0618	Datenbankname
+数据库大小_ed9a685d54	Datenbankgröße
+数据库引擎安装_1b953ccc06	Installation der Datenbank-Engine
+数据库引擎总览_8dc625b5ae	Übersicht der Datenbank-Engines
+数据库数量_1c82d51d3e	Anzahl der Datenbanken
+数据库文件路径_名称_fd6bff11f9	Pfad/Name der Datenbankdatei
+数据库管理_9995484fc6	Datenbankverwaltung
+数据库级_6e3f81b153	Datenbankebene
+数据库统计_35f181019a	Datenbankstatistiken
+数据库设置_0_8c7ac8f827	Datenbankeinstellungen - {0}
+数据库设置_database_882d97c702	Datenbankeinstellungen - $database
+数据库连接凭据_6d0ff7df04	Zugangsdaten der Datenbankverbindung
+数据库连接已保存_68d2c61647	Datenbankverbindung gespeichert
+数据来自_nginx_访问日志_含_ups_a5a09ba2e4	· Daten stammen aus relay.db, das aus nginx-Zugriffsprotokollen (inkl. $upstream_status) geschrieben wird; Tarife werden nach route unterschieden: go=OpenCode Go, zen=OpenCode Zen, glm=GLM Coding Plan, mimo=MiMo Token Plan.
+数据来自_nginx_访问日志写入的_relay_1cbea10182	Daten stammen aus relay.db, das aus nginx-Zugriffsprotokollen geschrieben wird; Tarife werden nach route unterschieden: go=OpenCode Go, zen=OpenCode Zen, glm=GLM Coding Plan, mimo=MiMo Token Plan.
+数据每_0_从_proc_实时采集_cf5df3d1ba	 · Daten werden alle {0} in Echtzeit aus /proc erfasst
+数据浏览_5eba898584	Datenbrowser
+数量_b9ae893190	Anzahl
+文件_0_超过可编辑上限_1_请用终端或_bf27cf6d14	Datei {0} überschreitet die Bearbeitungsgrenze {1}; bitte Terminal verwenden oder hochladen und überschreiben
+文件_0_超过预览上限_1_请下载或用_62cd65cbf5	Datei {0} überschreitet die Vorschaugrenze {1}; bitte herunterladen oder im Web-Terminal ansehen.
+文件_49deaf7da2	Datei
+文件_fmt_bytes_p_size_0f2f020b75	Datei ${Fmt.bytes(p.size)} überschreitet die Vorschaugrenze ${Fmt.bytes(p.limit)}; bitte herunterladen oder im Web-Terminal ansehen.
+文件_fmt_bytes_p_size_5711488d59	Datei ${Fmt.bytes(p.size)} überschreitet die Bearbeitungsgrenze ${Fmt.bytes(p.limit)}; bitte Terminal verwenden oder hochladen und überschreiben
+文件内容_粘贴_98b4f4a653	Dateiinhalt (Einfügen)
+文件内条目_b4ce600040	Einträge in der Datei
+文件名_1275f6feb7	Dateiname
+文件回收站_7a008554ce	Datei-Papierkorb
+文件已保存_09f0eaa4ba	Datei gespeichert
+文件已创建_3e2240f609	Datei erstellt
+文件管理_3f2244c98f	Dateiverwaltung
+文件管理器不额外扩权_所有写操作都进面板审计日志_9856778584	Der Dateiverwalter gewährt keine zusätzlichen Rechte. Alle Schreibvorgänge werden im Audit-Protokoll des Panels protokolliert (ops.files.*); Löschungen gehen zuerst in den Papierkorb und sind innerhalb von 30 Tagen wiederherstellbar.
+文件系统_0_0938484ae2	Dateisystem {0}
+文件系统_42949b7f8f	Dateisystem
+文件系统_d_filesystem_0b2cd8781e	Dateisystem ${d.filesystem}
+文件被截断预览_0_在线编辑会丢失内容_建_1d7dde5641	Dateivorschau abgeschnitten ({0}); beim Online-Bearbeiten gehen Inhalte verloren. Zuerst eine Sicherung herunterladen.
+文件被截断预览_fmt_bytes_p_si_580f3f9109	Dateivorschau abgeschnitten (${Fmt.bytes(p.size)}); beim Online-Bearbeiten gehen Inhalte verloren. Zuerst eine Sicherung herunterladen.
+文本文件_0_69e2147621	Textdatei ({0})
+斜体_af5a2c8bff	Kursiv
+断开_28fb7cedb1	Trennen
+断开客户端_ff6093dd26	Client trennen
+断开客户端_pid_77a2046256	Client $pid trennen?
+新会话_db44360cd0	Neue Sitzung
+新值_c4f3da96a2	Neuer Wert
+新名称_b8659855b0	Neuer Name
+新名称_索引或约束名_所有者_8779802d2e	Neuer Name / Index- oder Einschränkungsname / Besitzer
+新告警_ae1159aaec	Neue Warnung
+新增_2cd9e6ce81	Hinzufügen
+新增行_cbc8dab8c3	Zeile hinzufügen
+新密码_d22c9c0085	Neues Passwort
+新密码_至少_8_位_0d551cb025	Neues Passwort (mindestens 8 Zeichen)
+新密码至少_8_位_695025596e	Neues Passwort mit mindestens 8 Zeichen
+新建_0cda8d1c71	Erstellen
+新建会话_3da224c43d	Neue Sitzung
+新建告警规则_4f937923b8	Neue Warnregel
+新建备份_导出_e3160cab07	Neue Sicherung / Export
+新建失败_ae047a3e45	Erstellen fehlgeschlagen:
+新建子归类_fc67a95ee7	Neue Unterategorie
+新建字符串键_cfff5f4c43	Neuer String-Schlüssel
+新建定时任务_root_权限执行_d637db8d7b	Neue geplante Aufgabe (mit root-Rechten ausgeführt)
+新建归类_64cf5b76fb	＋ Neue Kategorie…
+新建归类_e4ffdeb063	Neue Kategorie
+新建拨测_02d832478b	Neue Sonde
+新建拨测任务_cd03f12322	Neue Sondenaufgabe
+新建数据库_42e4ee46d5	Neue Datenbank
+新建文件_d4526eb925	Neue Datei
+新建清单_0f3d4d8665	Neue Checkliste
+新建清单_76f9b5e92e	＋ Neue Checkliste…
+新建渠道_0_05cd02b38f	Neuer Kanal · {0}
+新建渠道_5c08b54484	Neuer Kanal
+新建渠道_typelabel_typek_880e06ee72	Neuer Kanal · ${typeLabel(typeKey)}
+新建用户_30416407e5	Neuer Benutzer
+新建用户需要至少_8_位的密码_59c185c76b	Neue Benutzer erfordern ein Passwort mit mindestens 8 Zeichen
+新建目录_80e05af6a0	Neues Verzeichnis
+新建看护_ae27bee6ea	Neue Beobachtung
+新建看护项_c8df6a2e03	Neuer Beobachtungseintrag
+新建笔记_14fd2fe5ca	Neue Notiz
+新建表_ddl_7ef91fdfef	Neue Tabelle (DDL)
+新建规则_eae3b2e915	Neue Regel
+新建通知渠道_ce4914887a	Neuer Benachrichtigungskanal
+新建集合_5952f4c234	Neue Collection
+新建静默_维护窗口_00c1db257e	Neue Stille / Wartungsfenster
+新建顶层归类_cb49387a03	Neue übergeordnete Kategorie
+新模式名_ae42d0691f	Neuer Schema-Name
+新渠道_fd0cc5a2d3	Neuer Kanal
+新表名_aa730ef230	Neuer Tabellenname
+方式_af90809619	Methode

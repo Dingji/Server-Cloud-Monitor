@@ -1,0 +1,120 @@
+0_6_每6小时_任务写入_e_369a8da904	0 */6 * * * हर 6 घंटे। कार्य /etc/cron.d/cm-<नाम> में लिखा जाता है और root से चलता है।
+0_个文件_81d82139e8	 · {0} फ़ाइलें
+0_将进入回收站_保留_1_天_0a8a244509	«{0}» रिसाइकल बिन में जाएगा और {1} दिनों तक रखा जाएगा।
+0_条展示_命中_1_条_0e114bc461	({0} दिखाए गए / {1} मिले)
+0_表示立即_189b797c4f	0 का मतलब है तुरंत
+10分钟_b82d31194e	10 मिनट
+14_4_表示约_2_天烧完_sre_常用告_681c4dc86d	≥14.4× का मतलब है लगभग 2 दिन में बजट समाप्त (SRE का सामान्य अलर्ट थ्रेशोल्ड)। 4xx क्लाइंट समस्याएँ हैं और बजट में नहीं गिनी जातीं।
+163_邮箱_设置_pop3_smtp_2cd036d08b	163 मेल: सेटिंग्स → POP3/SMTP → सक्षम कर «प्राधिकरण कोड» बनाएँ और नीचे भरें (लॉगिन पासवर्ड नहीं)।
+1_列表_522d9cc510	1. सूची
+1小时_3a9a579a96	1 घंटा
+24_小时发送_8e6d358b2e	24 घंटे में भेजे गए
+24_小时失败_f23fa2b0e3	24 घंटे में विफल
+24_小时拉起次数_8c19db84c7	24 घंटे में पुनरारंभ की संख्या
+24_小时通知_ed50056bf1	24 घंटे में सूचनाएँ
+24小时_45a2727884	24 घंटे
+2_秒_5198950435	2 सेकंड
+30_天_9401eee769	30 दिन
+30_天后自动清除_b6c489a29c	30 दिन बाद स्वतः साफ़
+33m_会话已关闭_be33fffa31	[33m[सत्र बंद]
+402_额度_fbd56d7158	402 कोटा
+403_权限_bd93595602	403 अनुमति
+429_拦截_0_7a460e2aa8	429 अवरुद्ध {0}
+429_拦截_563bec273d	429 अवरुद्ध
+429_次数_9333e8c60f	429 संख्या
+429_限流_5bd5af3cd2	429 दर-सीमित
+499_中断_8a0629ae88	499 बाधित
+4xx_0_499_中断_1_817ee52e07	4xx {0} · 499 बाधित {1}
+4xx_0_5xx_1_未授权_4116249143	4xx {0} · 5xx {1} · अनधिकृत {2}
+4xx_0_无响应_1_cd8a2943ad	4xx {0} · कोई उत्तर नहीं {1}
+4xx_错误_2368d2493d	4xx त्रुटियाँ
+500_毫秒_cc7da43bcf	500 ms
+5xx_无响应_2355276e0d	5xx/कोई उत्तर नहीं
+5xx_错误_6ed859ac67	5xx त्रुटियाँ
+6小时_57937ccefc	6 घंटे
+7_天_e45a81074f	7 दिन
+account_lock_锁定_bbeaf242af	ACCOUNT LOCK (लॉक)
+account_unlock_解锁_b001d58ec0	ACCOUNT UNLOCK (अनलॉक)
+acl_用户_0_b7e2c3ae45	ACL उपयोगकर्ता ({0})
+acl_用户_roles_size_8df0ffb733	ACL उपयोगकर्ता (${roles.size})
+act_服务_a3ebd5a4a1	$act सेवा
+analyze_会真实执行该语句以采集实际行数与_7e2c3ab4f2	ANALYZE वास्तव में वह स्टेटमेंट चलाकर वास्तविक पंक्ति संख्या और समय एकत्र करता है। पुष्टि करें कि यह केवल-पठन क्वेरी है; लिखने वाले स्टेटमेंट SQL कंसोल में चलाएँ।
+analyze_更新统计_ae3c35e60c	ANALYZE (आँकड़े अद्यतन करें)
+api_地址_acd8a50431	API पता
+api_基础地址_走代理时填_5c7aa1a51e	API आधार पता (प्रॉक्सी के साथ भरें)
+app.description	सर्वर मॉनिटरिंग व कॉन्फ़िगरेशन पैनल क्लाइंट
+app_连接的_cloud_monitor_面板_0ee7660770	ऐप जिस Cloud Monitor पैनल से जुड़ता है उसका पता। डिफ़ॉल्ट http://8.153.153.176/panel है; किसी भी तैनात पैनल के पते पर बदला जा सकता है।
+apt_任务进行中_0_6028d2fbd3	apt कार्य चल रहा है: {0}
+apt_缓存_c1fb672ce3	APT कैश
+auditd_未启用_2ca17006e2	auditd सक्षम नहीं
+auditd_记录的敏感文件变更_谁_用什么命令_de2731982f	auditd द्वारा दर्ज संवेदनशील फ़ाइल परिवर्तन: किसने, किस कमांड से, कौन-सी फ़ाइल बदली
+badprov_个供应商配额耗尽_363bea5ae6	$badProv प्रदाता कोटा समाप्त
+banner_能顺带看到对端_openssh_版_6a7382b65e	बैनर से सामने वाले का OpenSSH संस्करण भी दिख जाता है, जो अपग्रेड आवश्यकता जाँचने में सहायक है
+bgsave_会在后台生成_rdb_文件_flu_221d58038d	BGSAVE पृष्ठभूमि में RDB फ़ाइल बनाता है; FLUSHDB/ALL सभी डेटा हटाता है और दोबारा पुष्टि माँगता है।
+bgsave_后台快照_7679d32e01	BGSAVE (पृष्ठभूमि स्नैपशॉट)
+bilibili_视频_7fcd50c628	Bilibili वीडियो
+certbot_安装日志_1bf087319a	certbot इंस्टॉलेशन लॉग
+certbot_已安装_7690d6f09a	certbot इंस्टॉल है
+certbot_未安装_b2dd3df63b	certbot इंस्टॉल नहीं
+chat_id_或_频道名_beb6893b9b	Chat ID या @चैनलनाम
+check_校验_8a646f2a85	CHECK (जाँच)
+common.loading	लोड हो रहा है…
+corecount_核高负载_cores_afc43a96da	$coreCount कोर उच्च लोड · कुल $coresTotal कोर
+cpu_使用率_35b17729e2	CPU उपयोग %
+cpu_使用率_bdf91f384b	CPU उपयोग
+cpu_占用_89f8a08e80	CPU खपत
+cpu_占用_top_52d0789676	CPU खपत टॉप
+cpu_核数_2a5bc46dd3	CPU कोर संख्या
+cron_表达式_6859f82ab2	Cron व्यंजक
+crontab_l_条目_6be8b3d177	crontab -l प्रविष्टियाँ
+csv_内容_粘贴_17c5b7dbff	CSV सामग्री (पेस्ट करें)
+csv_导入结果_3a4d7db0d7	CSV आयात परिणाम
+ctrl_shift_c_v_复制粘贴_会话_7c3872ffae	Ctrl+Shift+C/V से कॉपी/पेस्ट · इस पेज छोड़ने के बाद सत्र 2 मिनट तक बना रहता है (server/shell.js GRACE_MS)· 
+curlabel_按天_12556e7b0c	$curLabel · प्रतिदिन
+curlabel_按天_可复用_vs_8cc7c3562a	$curLabel · प्रतिदिन · पुनः उपयोग vs. नया
+days_天_a6409fc14f	$days दिन
+db2_sql_以实例用户执行_51f6dbcefb	Db2 SQL (इंस्टेंस उपयोगकर्ता से चलाया जाता है)
+db2_授权_grant_revoke_eb50e06ee0	Db2 अनुमतियाँ (GRANT / REVOKE)
+db2_用_grant_revoke_管理权限_209a33078b	Db2 GRANT/REVOKE से अनुमतियाँ प्रबंधित करता है; उपयोगकर्ता को पहले इंस्टेंस पर बनाना होगा (db2 CREATE USER या OS खाता)।
+ddl_定义_可编辑后执行_20bea6e0ac	DDL परिभाषा (चलाने से पहले संपादन योग्य)
+ddl_执行结果_d203cf40d4	DDL निष्पादन परिणाम
+dirty_待写盘_a3b33885f4	Dirty (डिस्क पर लिखना बाकी)
+docker_system_prune_af_ead57cbf4c	docker system prune -af: अप्रयुक्त image/network/रुके हुए container हटाता है
+docker_安装日志_08ccdea4e9	Docker इंस्टॉलेशन लॉग
+docker_容器_4372ba1200	Docker कंटेनर
+docker_引擎_755076c561	Docker इंजन
+docker_清理_795b9faf02	Docker सफ़ाई
+drop_table_删除表_0a38c31f25	DROP TABLE (तालिका हटाएँ)
+du_尚未返回结果_0af775f143	du ने अभी तक परिणाम नहीं लौटाया
+e_name_将进入回收站_保留_f_b07c62be90	«${e.name}» रिसाइकल बिन में जाएगा और ${FileStore.trashDays.value} दिनों तक रखा जाएगा।
+else_dat_3b7177d8b6	\n            else -> dateTime(t)\n        }\n    }\n\n    /** प्रतिशत प्रदर्शन: `99.1%` (सटीकता ≤0.1, अतिरिक्त 0 हटाए गए)। */\n    fun pct(p: Number?, suffix: String = 
+error_log_累计_40739fb64e	error.log कुल
+etc_cron_d_其它任务_1075d72b5f	/etc/cron.d अन्य कार्य
+etc_cron_daily_cron_h_0b91b3ac69	· /etc/cron.daily, cron.hourly स्क्रिप्ट:
+explain_分析_5739bed548	EXPLAIN विश्लेषण
+fail2ban_未启用_dba20ac8ac	fail2ban सक्षम नहीं
+fail2ban_未安装_未运行_006151f653	fail2ban इंस्टॉल नहीं/नहीं चल रहा
+fail2ban_监狱_fd16fed272	fail2ban जेल
+fail2ban_运行中_401151de3a	fail2ban चल रहा है
+fail2ban_防爆破_e5d811ec15	Fail2ban ब्रूट-फ़ोर्स सुरक्षा
+failedcount_个服务失败_4bb48044cc	$failedCount सेवाएँ विफल
+failing_项失败_c0f4c9b479	$failing आइटम विफल
+flushall_清空全部_d122dc5ecd	FLUSHALL (सब खाली करें)
+flushdb_清空当前库_4587c55eaa	FLUSHDB (वर्तमान DB खाली करें)
+gzip_归档_39fcde3a7b	gzip संग्रह
+h_label_采集完成_a374e6c968	{0} संग्रह पूर्ण
+hmac_签名密钥_可空_d93d6e2984	HMAC हस्ताक्षर कुंजी (वैकल्पिक)
+http_方法_b1d337493c	HTTP विधि
+inode_使用_0_小文件过多时会先耗尽_241698504d	inode उपयोग {0}% (बहुत अधिक छोटी फ़ाइलों पर inode पहले समाप्त होते हैं)
+inode_使用_m_inodeusedpc_cd43f1cf53	inode उपयोग ${m.inodeUsedPct}% (बहुत अधिक छोटी फ़ाइलों पर inode पहले समाप्त होते हैं)
+inode_使用率_5279b4b61c	inode उपयोग दर
+ip_或域名_6ebd1799de	IP या डोमेन नाम
+ip_来源_f387b79f3d	IP स्रोत
+journal_apt_轮转日志_093250e13f	journal + APT + रोटेटेड लॉग
+journal_上限_0_1_天_d18e51fc4e	journal सीमा {0} / {1} दिन
+journal_上限_1f54a3217f	journal सीमा
+journal_上限_s_journalsi_1ef09f8f8d	journal सीमा ${s.journalSize} / ${s.journalDays} दिन
+journal_保留天数_e74cafd94c	journal रिटेंशन दिन
+journal_日志_b4bd477c2c	journal लॉग
+json_文档_e422afa510	JSON दस्तावेज़
+label_失败_4c06e7d781	<label> विफल

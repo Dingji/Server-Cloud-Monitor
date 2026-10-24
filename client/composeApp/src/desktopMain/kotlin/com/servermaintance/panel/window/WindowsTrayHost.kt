@@ -16,13 +16,12 @@ import java.awt.event.MouseEvent
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.JMenuItem
+import com.servermaintance.panel.i18n.tr
 import javax.swing.JPopupMenu
 import javax.swing.SwingUtilities
 import javax.swing.UIManager
 
 /** Tray menu labels as Unicode escapes so they stay correct regardless of source file encoding on Windows builds. */
-private const val TRAY_MENU_SHOW = "\u663E\u793A\u4E3B\u7A97\u53E3"
-private const val TRAY_MENU_QUIT = "\u9000\u51FA"
 private const val TRAY_BALLOON_BODY =
     "\u5DF2\u9A7B\u7559\u5230\u7CFB\u7EDF\u6258\u76D8\uFF0C\u540E\u53F0\u5C06\u7EE7\u7EED\u63A5\u6536\u544A\u8B66\u3002"
 
@@ -128,11 +127,11 @@ internal class WindowsTrayHost(
         val font = trayMenuFont()
         val popup = JPopupMenu()
         popup.font = font
-        val show = JMenuItem(TRAY_MENU_SHOW, TrayMenuIcons.showWindowIcon())
+        val show = JMenuItem(tr("tray.show_main"), TrayMenuIcons.showWindowIcon())
         show.font = font
         show.iconTextGap = 8
         show.addActionListener { showMain() }
-        val quit = JMenuItem(TRAY_MENU_QUIT, TrayMenuIcons.quitIcon())
+        val quit = JMenuItem(tr("tray.quit"), TrayMenuIcons.quitIcon())
         quit.font = font
         quit.iconTextGap = 8
         quit.addActionListener { quitFromTray() }

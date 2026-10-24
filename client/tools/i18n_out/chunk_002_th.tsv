@@ -1,0 +1,120 @@
+relay_备份不可用_0e40f7d8f3	ข้อมูลสำรองของ relay ใช้ไม่ได้
+relay_备份结果_0cf7f02f06	ผลการสำรองข้อมูล relay
+relay_每日状态备份_32dee8ba2b	ข้อมูลสำรองสถานะรายวันของ relay
+reorg_重建索引_2b9d2e3b0e	REORG (สร้างดัชนีใหม่)
+reorg_重组表_6195b56608	REORG (จัดเรียงตารางใหม่)
+reorgchk_校验_010830b6a4	REORGCHK (ตรวจสอบ)
+repair_修复_8dd157c84c	REPAIR (ซ่อมแซม)
+restart_值_77d45b4c24	ค่า RESTART
+root_密码登录_df671edd13	เข้าสู่ระบบด้วยรหัสผ่าน root
+root_权限的交互式_shell_经_ssh_724c53e674	เชลล์แบบโต้ตอบด้วยสิทธิ์ root (ผ่าน SSH PTY เทอร์มินัล ANSI ที่เรนเดอร์เอง)
+running_运行中_contain_7d4c0797f6	$running กำลังทำงาน · ${containers.size - running} หยุดแล้ว
+runstats_reorg_针对整库或所选表执_d40a81b4e9	RUNSTATS/REORG ทำงานกับฐานข้อมูลทั้งหมดหรือตารางที่เลือก ตารางขนาดใหญ่อาจใช้เวลานาน
+runstats_全库统计_e9fcb7b8fd	RUNSTATS สถิติทั้งฐานข้อมูล
+runstats_更新统计_a6a6663709	RUNSTATS (อัปเดตสถิติ)
+save_同步快照_afc91773af	SAVE (ซิงก์สแนปช็อต)
+sc_root_cmd_任务名_cm_n_cfc3e33d90	$sc root $cmd\nชื่องาน: cm-$n
+settings.language.changed	อัปเดตภาษาแล้ว
+settings.language.hint	มีผลทันทีหลังเปลี่ยน และจะจำตัวเลือกของคุณไว้ อินเทอร์เฟซภาษาอาหรับจะพลิกเลย์เอาต์โดยอัตโนมัติ
+settings.language.label	ภาษา
+settings.language.title	ภาษาของอินเทอร์เฟซ
+setval_值_938e9aa8cf	ค่า setval
+shell_控制台_6f576115f4	คอนโซล Shell
+sites_enabled_为空_4516b41170	sites-enabled ว่างเปล่า
+slo_与用量_a308fd44ff	SLO และการใช้งาน
+slo_目标已更新为_0_1_天_41ec05d358	อัปเดตเป้าหมาย SLO เป็น {0}% / {1} วันแล้ว
+slo_目标已更新为_t_dy_天_7716799870	อัปเดตเป้าหมาย SLO เป็น $t% / $dy วันแล้ว
+slo_目标应为_0_100_之间的百分数_254085fd3b	เป้าหมาย SLO ต้องเป็นเปอร์เซ็นต์ระหว่าง 0 ถึง 100
+slo_错误预算_47d719e135	งบข้อผิดพลาด SLO
+smtp_主机_9cb2a0f9f3	โฮสต์ SMTP
+smtp_已配置_70f40873a7	ตั้งค่า SMTP แล้ว
+smtp_授权码_273299a5a3	รหัสอนุญาต SMTP
+smtp_服务器_941346a5f4	เซิร์ฟเวอร์ SMTP
+smtp_未配置_先填账号授权码_c97b712442	ยังไม่ได้ตั้งค่า SMTP (กรอกบัญชีและรหัสอนุญาตก่อน)
+smtp_状态_8658366a9a	สถานะ SMTP
+smtp_设置已保存_e5e2238754	บันทึกการตั้งค่า SMTP แล้ว
+smtp_账号_163_邮箱_4bbcd0b1d0	บัญชี SMTP (อีเมล 163)
+sql_控制台_a3458fb2ad	คอนโซล SQL
+sql_文本_gzip_通用_可编辑_48f716760f	ข้อความ SQL + gzip (ทั่วไป แก้ไขได้)
+sqlite_为单文件数据库_不存在则创建新文件_9673986c3b	SQLite เป็นฐานข้อมูลไฟล์เดียว ถ้าไม่มีไฟล์จะสร้างไฟล์ใหม่ ชื่อไฟล์ต้องลงท้ายด้วย .db/.sqlite
+sqlite_搜索目录_49521cf800	ไดเรกทอรีค้นหาของ SQLite
+sqlite_是单文件嵌入式数据库_没有用户_角_0d7e8e26a3	SQLite เป็นฐานข้อมูลแบบฝังไฟล์เดียว ไม่มีแนวคิดผู้ใช้/บทบาท การควบคุมการเข้าถึงขึ้นกับสิทธิ์ไฟล์ของระบบปฏิบัติการ
+sqlite_生成_sql_文本_gzi_f960464be7	· SQLite สร้างข้อความ SQL + gzip ซึ่งกู้คืนไปยังไฟล์ใหม่ได้โดยตรง
+sqlite_语法_支持_tables_sc_41d445ac53	ไวยากรณ์ SQLite (รองรับคำสั่งจุด เช่น .tables/.schema)
+ssh2_可用_efe0e7bbc7	ssh2 พร้อมใช้งาน
+ssh_authorized_keys_授权密钥_3bc82ec886	ssh_authorized_keys คีย์ที่อนุญาต · relay_scripts สคริปต์รีเลย์ · ufw_conf ไฟร์วอลล์ · cron_conf งานตามกำหนดเวลา
+ssh_凭据_0_527cdbdfec	ข้อมูลรับรอง SSH · {0}
+ssh_凭据_h_label_24a0886915	ข้อมูลรับรอง SSH · ${h.label}
+ssh_可达_df28fdb916	เข้าถึง SSH ได้
+ssh_密码认证_f22e3cd826	การยืนยันตัวตน SSH ด้วยรหัสผ่าน
+ssh_授权密钥_authorized_key_4fee36881a	คีย์ที่อนุญาตของ SSH (authorized_keys)
+ssh_暴露面_防火墙_账号与权限_更新_日志与_ea3db6747a	การตรวจแบบอ่านอย่างเดียวของพื้นผิวการเปิดเผย SSH ไฟร์วอลล์ บัญชีและสิทธิ์ การอัปเดต บันทึก และการซิงก์เวลา การแก้ไขจะทำงานหลังการตรวจสอบความปลอดภัยของเซิร์ฟเวอร์แล้ว
+ssh_服务配置_sshd_有效配置_b5a2f5733e	การตั้งค่าบริการ SSH (การตั้งค่าที่มีผลของ sshd)
+ssh_端口_db451b3851	พอร์ต SSH
+ssh_设置已保存_a65c44f49c	บันทึกการตั้งค่า SSH แล้ว
+ssh_连接_用于_web_终端的_pty_b26f43db91	การเชื่อมต่อ SSH (PTY สำหรับเทอร์มินัลเว็บ)
+ssh_通道_dbd1043d39	ช่องทาง SSH
+ssh_配置应用_c35c2ef2bf	ใช้การตั้งค่า SSH
+ssh_防爆破_3e3c79eef0	ป้องกัน SSH จากการงัดรหัสผ่าน
+ssl_证书_let_s_encrypt_332fd65bdb	ใบรับรอง SSL (Let's Encrypt)
+sudo_权限_e03e1e61f9	สิทธิ์ sudo
+swap_控制_12c3f63c98	การควบคุม Swap
+systemd_单元名_c8ea5d11ad	ชื่อหน่วย systemd
+systemd_定时器_0_dc0dc6e637	ตัวจับเวลา Systemd ({0})
+systemd_定时器_f8d95995f8	ตัวจับเวลา Systemd
+systemd_定时器_timers_si_6ade92f31f	ตัวจับเวลา Systemd (${timers.size})
+systemd_定时器由_systemd_管_6244b23917	· ตัวจับเวลา Systemd จัดการโดย systemd และแสดงอย่างเดียว
+systemd_日志总占用_f776a05861	พื้นที่บันทึก systemd ทั้งหมด
+systemd_服务_fe73189369	บริการ systemd
+tcp_主机_c307455515	โฮสต์ TCP
+tcp_端口_468daa15c6	พอร์ต TCP
+tcp_端口探活_731f0297a0	การตรวจสอบสถานะพอร์ต TCP
+title_names_size_个_acb99452ee	$title · ${names.size} แพ็กเกจ
+tls_证书_43af3d4e3c	ใบรับรอง TLS
+tmp_保留_0_天_f32c9b5407	เก็บ /tmp {0} วัน
+tmp_保留_s_tmpdays_天_86426f5281	เก็บ /tmp ${s.tmpDays} วัน
+tmp_保留天数_0d11396618	จำนวนวันเก็บ /tmp
+token_命中率_2bfb8e83db	อัตราการตรงของ Token
+token_总量_3f5fa71b8e	จำนวน Token ทั้งหมด
+token_构成_9af64ae64e	สัดส่วนของ Token
+token_用量归集_81e6ced52c	การรวมยอดการใช้ Token
+token_统计按滚动窗口聚合_数据自_0_f4e9537a97	สถิติ Token ถูกรวมตามหน้าต่างเลื่อน · ข้อมูลตั้งแต่ {0}
+top_会话_3c40651605	เซสชันอันดับต้น
+top_进程_17603f0ba3	โพรเซสอันดับต้น
+truncate_清空数据_2b621f28d2	TRUNCATE (ล้างข้อมูล)
+ttfb_按线路_dd77200ec0	TTFB ตามเส้นทาง
+ua_族_886e5b0cbd	กลุ่ม UA
+ufwrulescount_条规则_4d66159719	$ufwRulesCount กฎ
+user_或_user_group_dab37bbd5c	user หรือ user:group
+vacuum_analyze_全部库_ea157b8710	VACUUM ANALYZE ทุกฐานข้อมูล
+vacuum_full_全部库_7cb397ec45	VACUUM FULL ทุกฐานข้อมูล
+vacuum_full_重写表_6eacd637a2	VACUUM FULL (เขียนตารางใหม่)
+vacuum_回收空间_1fab10fe60	VACUUM (คืนพื้นที่)
+vacuum_重建文件_7a9b0fc30b	VACUUM (สร้างไฟล์ใหม่)
+w_a_个异常找到疑似变更_072ff64ee0	พบ $w / $a ความผิดปกติที่มีการเปลี่ยนแปลงที่น่าสงสัย
+wal_检查点_2010a0cc44	จุดตรวจสอบ WAL
+web_终端_7a3963643f	เทอร์มินัลเว็บ
+where_条件_如_id_10_211cc8803d	เงื่อนไข WHERE เช่น id > 10
+where_条件_必填_d024e40edd	เงื่อนไข WHERE (จำเป็น)
+where_条件_必填_禁止分号_de5b786116	เงื่อนไข WHERE (จำเป็น ห้ามใช้ ;)
+win.client.close_label	เมื่อปิดหน้าต่าง
+win.client.desc_ask	ถามทุกครั้งที่ปิด ทำงานต่อในพื้นหลัง หรือออก
+win.client.desc_quit	ออกจาก Cloud Monitor ทันทีหลังปิด
+win.client.desc_tray	ซ่อนหน้าต่างหลักหลังปิด และยังรับการแจ้งเตือนในถาดต่อไป
+win.client.desc_tray_no_tray	ย่อลงทาสก์บาร์หลังปิด และยังรับการแจ้งเตือนในพื้นหลังต่อไป
+win.client.hint	พฤติกรรมเมื่อกดปุ่มปิดหน้าต่าง การเลือกครั้งแรกในไดอะล็อกปิดจะถูกบันทึกไว้ที่นี่โดยอัตโนมัติด้วย
+win.client.title	ไคลเอนต์ Windows
+win.client.updated_toast	อัปเดตพฤติกรรมการปิดแล้ว
+win.close.ask	ถามทุกครั้ง
+win.close.quit	ออกจากโปรแกรมทันที
+win.close.tray	อยู่ในถาดระบบเมื่อปิด
+win.close.tray_taskbar	ย่อลงทาสก์บาร์เมื่อปิด
+win.dialog.body_taskbar	ออกจากโปรแกรม หรือย่อลงทาสก์บาร์เพื่อรับการแจ้งเตือนเซิร์ฟเวอร์ในพื้นหลังต่อไป
+win.dialog.body_tray	ออกจากโปรแกรม หรืออยู่ในถาดระบบเพื่อรับการแจ้งเตือนเซิร์ฟเวอร์ในพื้นหลังต่อไป
+win.dialog.cancel	ยกเลิก
+win.dialog.minimize	ย่อลงทาสก์บาร์
+win.dialog.quit	ออก
+win.dialog.stay_tray	อยู่ในถาด
+win.dialog.title	ปิด Cloud Monitor
+youtube_视频_70a0be3df0	วิดีโอ YouTube
+一_d274eee8a1	1

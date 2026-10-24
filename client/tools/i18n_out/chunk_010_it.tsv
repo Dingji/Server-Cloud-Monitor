@@ -1,0 +1,120 @@
+存在风险_34748d1f0d	A rischio
+存放位置_182f3cab1b	Posizione di archiviazione
+孤立依赖清理_3088424930	Pulizia dipendenze orfane
+安全升级_只做向上兼容的升级_不卸载其它包_841c2b3607	L'«upgrade sicuro» esegue solo upgrade retrocompatibili e non rimuove altri pacchetti; l'«upgrade completo» può rimuovere pacchetti in conflitto ed è più rischioso: prima dell'esecuzione verrà mostrata un'anteprima delle modifiche.
+安全基线巡检_cb83870cad	Ispezione linea di base sicurezza
+安全更新_d02224fdc8	Aggiornamento di sicurezza
+安全管理_27a60a5c86	Gestione sicurezza
+安装_087db63ab1	Installa
+安装_0_340ee35e2a	⬇ Installa {0}
+安装_0_710b3a3d30	Installa {0}
+安装_certbot_b472f9adf8	Installa certbot
+安装_docker_f131e1cdff	Installa Docker
+安装_engine_name_d4fe147ff5	⬇ Installa ${engine.name}
+安装_fail2ban_38aa818b73	Installa Fail2ban
+安装_label_0399b4e4de	Installa $label
+安装_t_label_36d02c935b	Installa ${t.label}
+安装中_b2c6913616	Installazione in corso…
+安装大小_85c8cf1c58	Dimensione installazione
+安装并启动_d20e3e1fda	Installa e avvia
+安装引擎_e5276cf0a5	＋ Installa motore
+安装扩展_354d80ae67	Installa estensione
+安装约需_1_3_分钟_取决于网络_完成后此页_75a815fda1	L'installazione richiede circa 1-3 minuti (a seconda della rete); questa pagina sarà disponibile automaticamente al termine.
+安装配置_02517d8d8f	Configurazione di installazione
+完成_33246f6a5e	Fine
+完成_e982a7473c	 Fine
+完成进度_722d50c7b4	Avanzamento
+完整_6e6e581133	Completo
+完整_结构_数据_6aebce144a	Completo (struttura + dati)
+完整升级_05b1a3ac5b	Upgrade completo
+完整升级_含移除_3bed74b0f0	Upgrade completo (inclusa rimozione)
+完整升级可能移除与新版本冲突的软件包_请仔细核对_50ce8ea44d	Un upgrade completo può rimuovere pacchetti in conflitto con la nuova versione; verifica attentamente l'anteprima.
+完整备份_json_cbe231e819	Backup completo JSON
+完整性检查_495199337a	Controllo integrità
+完整日志_4a1b1f9673	Registro completo:
+完整说明与依赖列表_0cf5ceed2a	Descrizione completa ed elenco dipendenze
+定时任务_c97ffbda2e	Attività pianificate
+定时器_70cbf60aeb	Timer
+定时维护计划_8560c2fd47	Piano di manutenzione programmata
+定时采集运行中_4b7159cb16	Raccolta pianificata in esecuzione
+实例用户_6be929149e	Utente istanza
+实时_每_2_秒刷新_c4c5d531ed	Tempo reale · aggiorna ogni 2 s
+实时刷新_556a3ffff3	Aggiornamento in tempo reale
+实时活动_最近请求_d2ee85344c	Attività in tempo reale (richieste recenti)
+实时流量_近_60_秒_1fa853d958	Traffico in tempo reale (ultimi 60 s)
+实时磁盘_i_o_193640917c	I/O disco in tempo reale
+实时资源占用_c8bda73ba6	Utilizzo risorse in tempo reale
+实时跟随_8e180d6871	Segui in tempo reale
+实时跟随经_websocket_订阅_最大保留_5bfbd4a38a	Segui in tempo reale tramite abbonamento WebSocket, conservate al massimo ${Fmt.count(MAX_LINES)} righe;
+实时跟随经_websocket_订阅_最大保留_bb1ab8a92b	Segui in tempo reale tramite abbonamento WebSocket, conservate al massimo {0} righe;
+实时连接_2e937edd01	Connessioni in tempo reale
+审计不可用_5ba8cd56a3	Audit non disponibile
+审计日志_7666cd4323	Registro audit
+审计服务_17e6a7950d	Servizio di audit
+审计规则_bc6a3d7a3f	Regole di audit
+客户端4xx_499dc47a60	Client 4xx
+客户端_09afbbcc9b	Client
+客户端_4xx_d966c5f146	Client 4xx
+客户端与会话_fd8ce68403	Client e sessioni
+客户端数_4821cbdb7b	Numero di client
+客户端软件_afcacf7cb8	Software client
+客户端软件构成_aaec3233f0	Composizione software client
+客户端错误_不计入_71aa68fd1c	Errori client (non conteggiati)
+家目录_f273ea575f	Directory home
+容器_d179a3480d	Container
+容器列表_6ee925b478	Elenco container
+容器日志_0_176db5f47c	Log container {0}
+容器日志_2a0f3b0fac	Log container …
+容器日志_id_take_12_faa2c2b1bc	Log container ${id.take(12)}
+容量趋势_近_7_天_d77b3aebd5	Andamento capacità (ultimi 7 giorni)
+密码_c839a8ff17	Password
+密码_授权码_d2c3e3135f	Password / codice di autorizzazione
+密码_无_e55f2504ae	Password (nessuna)
+密码_留空_不改_d56e21cbcb	Password (lascia vuoto = nessuna modifica)
+密码_留空不变_5e4f64d946	Password (invariata se vuota)
+密码_留空保持不变_6d05826ea3	Password (lascia vuoto per mantenerla invariata)
+密码_至少_8_位_692b63ec1c	Password (min. 8 caratteri)
+密码修改成功_f0e65f05ad	Password modificata con successo
+密码已更新_eb5719cf68	Password aggiornata
+密码更新后其它设备的登录将会失效_9b16aec699	Dopo l'aggiornamento della password, l'accesso da altri dispositivi verrà invalidato.
+密码有效期_如_2030_01_01_空_不变_4b3bee9f12	Scadenza password (es. 2030-01-01, vuoto = invariata)
+密码至少需要_8_位_b6a69b6e34	La password deve contenere almeno 8 caratteri
+密钥_0_可用_1_426c7d2a6e	Chiave {0} · disponibili {1}
+密钥_0d1965e139	Chiave
+密钥池_6ab58f884e	Pool di chiavi
+对_0_张表执行_1_004762155e	Eseguire {1} su {0} tabelle?
+对_0_执行_1_0df7a13871	Eseguire {1} su {0}?
+对_selected_size_张表执行_209354c5c6	Eseguire $act su ${selected.size} tabelle?
+对_st_table_执行_label_a6b8052291	Eseguire $label su ${st.table}?
+对_target_执行_action_d5673f5e8f	Eseguire $action su $target?
+对_unit_执行_systemctl_ac_ba3c9e7d90	Eseguire systemctl $act su $unit?
+对外端口_fe3302e0a7	Porta esterna
+对容器_0_执行_docker_restar_c942faf88e	Eseguire docker restart sul container {0}?
+对容器_0_执行_docker_start_a6406fd5d5	Eseguire docker start sul container {0}?
+对容器_0_执行_docker_stop_02eec7a6e4	Eseguire docker stop sul container {0}?
+对容器_id_take_12_执行_do_558a792531	Eseguire docker start sul container ${id.take(12)}?
+对容器_id_take_12_执行_do_724af26fed	Eseguire docker restart sul container ${id.take(12)}?
+对容器_id_take_12_执行_do_c78695043c	Eseguire docker stop sul container ${id.take(12)}?
+对所有支持的挂载点执行_fstrim_优化_ss_82318eb7af	Esegui fstrim su tutti i punti di mount supportati per ottimizzare gli SSD
+对方邮箱_需已注册并验证_a4de8e4a8f	Email del destinatario (deve essere registrata e verificata)
+对端_58e5dbe70d	Endpoint remoto
+对象_539cb3b0a6	Oggetto
+对象数量_7a08198ac2	Numero di oggetti
+对象浏览器_162b30cd08	Esplora oggetti
+导入_csv_eee6da0840	Importa CSV
+导入_csv_到_0_230452d08d	Importa CSV in {0}
+导入_csv_到_st_table_ffcc6cb46a	Importa CSV in ${st.table}
+导入_notebox_导出的_json_备份文_9e7560aff1	Importa un file di backup .json esportato da NoteBox, contenente tutte le note e le attività.
+导入_sql_文件_用于恢复_3313acce03	Importa file SQL (per il ripristino)
+导入_导出_995e254175	Importa / Esporta
+导入中_de56a0bf71	Importazione in corso…
+导入中_f0a7986c54	Importazione
+导入中_请稍候_6259769fcb	Importazione in corso, attendere…
+导入失败_aeec838ca4	Importazione non riuscita:
+导入待办_1a771a17b3	Importa attività
+导入方式_0eac17d654	Metodo di importazione
+导入笔记_ef0dc85571	Importa note
+导出_0_31a404b60a	Esporta {0}
+导出_0_为_sql_压缩包_078b43a5d3	Esportare {0} come archivio SQL?
+导出_188896795f	Esporta
+导出_db_为_sql_压缩包_28584b981a	Esportare $db come archivio SQL?

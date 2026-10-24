@@ -1,0 +1,120 @@
+一次最多_500_个包_请分批选择_6bbae64fda	Höchstens 500 Pakete auf einmal; bitte in Chargen auswählen
+一键处理_37d1c79d89	Ein-Klick-Verarbeitung
+一键安装_docker_docker_io_d4c1d88eaa	Docker (docker.io) per Ein-Klick installieren
+一键清理_c0f4aa2db7	Ein-Klick-Bereinigung
+三_49ddb069d5	Mi
+上一周期_c2b701fd24	Vorheriger Zeitraum
+上一周期_紧邻的同等长度窗口_用于判断趋势在_1a2626a827	Vorheriger Zeitraum = das direkt benachbarte Fenster gleicher Länge, um zu beurteilen, ob der Trend besser oder schlechter wird.
+上一页_b41561d807	Vorherige Seite
+上下文_d9aa9fe0d6	Kontext
+上下文复用率_0c224f2f15	Kontextwiederverwendungsrate
+上下文复用率_label_6df0b75e25	Kontextwiederverwendungsrate ($label)
+上下文复用率_估算_88aa6474a4	Kontextwiederverwendungsrate (geschätzt)
+上下文复用率_估算_编码代理每轮都会把整个_0bfad70f24	· Kontextwiederverwendungsrate (geschätzt): Der Coding-Agent sendet in jeder Runde den gesamten Sitzungskontext erneut; in Runde N sind mindestens 
+上下文复用率_估算_编码代理每轮都会把整个_9f32a68e6c	· Kontextwiederverwendungsrate (geschätzt): Der Coding-Agent sendet in jeder Runde den gesamten Sitzungskontext erneut. Der Anfragetext von Runde N enthält mindestens min(Bytes der vorherigen Runde, Bytes dieser Runde), das in früheren Runden bereits gesendet wurde — das ist die Obergrenze, die das Cache treffen sollte. Die Daten stammen aus session_turns.sent_bytes und hängen nicht vom Anbieter ab.
+上下文总量_8957c21723	Gesamtkontext
+上传_a977650db1	Hochladen
+上传中_usable_size_个文件_79da89118e	Wird hochgeladen… (${usable.size} Dateien)
+上传失败_a6f805694b	Upload fehlgeschlagen
+上传失败_e3f9c342c6	Upload fehlgeschlagen:
+上传失败_e_message_54a69c1dab	Upload fehlgeschlagen: ${e.message}
+上传成功_0_9885cca2ec	Upload erfolgreich {0}
+上报覆盖率_多少比例的事件真的带了缓存字段_a90e61b6ba	· Meldeabdeckung: Welcher Anteil der Ereignisse trägt tatsächlich Cache-Felder. Bei Abdeckung 0 bedeutet „Erfolgsquote 0 %“, dass der Anbieter nichts gemeldet hat — es lässt sich nicht auf null Treffer schließen.
+上报覆盖率_多少比例的事件真的带了缓存字段_d70d902796	· Meldeabdeckung: Welcher Anteil der Ereignisse trägt tatsächlich Cache-Felder. Bei einer Abdeckung von 0 bedeutet „Erfolgsquote 0 %“, dass der Anbieter nichts gemeldet hat; es lässt sich nicht direkt auf null Treffer schließen.
+上次失败_5ab6caa33f	Zuletzt fehlgeschlagen
+上次成功_99cb56c5f4	Zuletzt erfolgreich
+上次执行_434c6bf57e	Letzte Ausführung
+上次结果_8f8eeff3b1	Letztes Ergebnis
+上次自动执行_0_16efce52be	Letzte automatische Ausführung: {0}
+上次自动执行_s_lastrunday_f0c01c5aaf	Letzte automatische Ausführung: ${s.lastRunDay}
+上游_ed38f4eac2	Upstream
+上游地址_330a45ad1e	Upstream-Adresse
+上游处理时间_d40077a964	Upstream-Bearbeitungszeit
+上游状态明细_7ead630c85	Upstream-Statusdetails
+上游状态码_834b18aa72	Upstream-Statuscode
+上游重试_dd1d3e5ff3	Upstream-Wiederholungen
+上级_205300782e	Übergeordnet
+上级归类_974c15f8d9	Übergeordnete Kategorie
+上级清单_9b74e98db5	Übergeordnete Liste
+上行_0_e7ca85b68b	Uplink {0}
+上行_adb863cd70	Uplink
+上行_fmt_bps_tx_ee331b3de7	Uplink ${Fmt.bps(tx)}
+上行_kb_s_aedc7f02cc	Uplink KB/s
+上行重试_9f9056e5e6	Uplink-Wiederholungen
+上限_0_70bdcc315a	Limit {0}
+上限_0_mbps_93f67c2890	 · Limit {0} Mbps
+上限_0_活动_1_190aaf98ec	Limit {0} · Aktiv {1}
+上限_monfmt_fixed_net_6354cb0344	 · Limit ${MonFmt.fixed(netLimit / 1e6, 1)} Mbps
+下一步_ea0ef2ae72	Nächster Schritt
+下一页_67a246a344	Nächste Seite
+下次执行_373074f4ee	Nächste Ausführung
+下行_2cb0afbe5d	Downlink
+下行_kb_s_4c180f6bfe	Downlink KB/s
+下载_2b9d013177	Herunterladen
+下载中_65188d08a2	Wird heruntergeladen…
+下载备份_下载按钮走当前登录会话鉴权_建议定期将_4fe80a03be	Backup herunterladen: Der Download-Button verwendet die Authentifizierung der aktuellen Sitzung. Es wird empfohlen, wichtige Backups regelmäßig zusätzlich in Object Storage oder lokal zu speichern.
+下载失败_e0dab22b1a	Download fehlgeschlagen
+下载软件包_8568baf78c	Pakete herunterladen
+下降中_4eeadab450	Rückläufig
+不变_46b24ed86c	Unverändert
+不可用_beff4a1cd1	Nicht verfügbar
+不可用与恢复事件_18f9f3771e	Ausfall- und Wiederherstellungsereignisse
+不可达_358801edaa	Nicht erreichbar
+不指定_1aad39c63a	Nicht angegeben
+不指定_仅面板告警_a6445c68bd	Nicht angegeben (nur Panel-Warnungen)
+不计入分母_400_401_404_等客户端_a9a408385b	· Nicht im Nenner enthalten: Eigene Client-Fehler wie 400/401/404 und 499-Abbrüche des Clients werden separat aufgeführt, um Probleme auf Nutzerseite nicht dem Tarif anzulasten.
+不通_0537fc8e06	Keine Verbindung
+不通知_8c6daa58db	Nicht benachrichtigen
+不重复_d081b5aa6a	Nicht wiederholen
+两个数字差距越大_说明_本可缓存的上下文正按_b286a17236	· Je größer der Unterschied zwischen den beiden Zahlen, desto stärker wird „kontextbasierter Cache zu Vollpreis abgerechnet".
+两次输入的密码不一致_3e2b222d98	Die beiden eingegebenen Passwörter stimmen nicht überein
+两者差距_16481d1166	Unterschied zwischen beiden
+严重_81ffc6f5a4	Kritisch
+严重告警_0fbe91a69f	Kritische Warnung
+个包_7043df702a	 Pakete
+中_0869071c92	Mittel
+中文_7be2d2d20c	Chinesisch
+中继不可达_007961f659	Relay nicht erreichbar
+中继不可达_0_2d85034a73	Relay nicht erreichbar: {0}
+中继不可达_err_take_40_0b898dcc87	Relay nicht erreichbar: ${err.take(40)}
+中继备份已删除_2f3ade3c12	Relay-Backup gelöscht
+中继采集器上报错误_0_ea1bf3be8f	Relay-Kollektor-Meldefehler: {0}
+中继采集器上报错误_ingesterr_1c8e62e619	Relay-Kollektor-Meldefehler: $ingestErr
+中继采集器不可用_0_d01f86c7fd	Relay-Kollektor nicht verfügbar: {0}
+中继采集器不可用_e768a2ecc1	Relay-Kollektor nicht verfügbar
+中继采集器采集未就绪_可用性受限_527bbf9587	Relay-Kollektor-Erhebung nicht bereit (Verfügbarkeit eingeschränkt)
+主仓库_6ab193cdf9	Haupt-Repository
+主机_2e8a0cf711	Host
+主机_域名_tcp_ping_dns_证书_2724aed620	Host / Domain (TCP, Ping, DNS, Zertifikat)
+主机_运行时间_0e24d2fafa	Host / Uptime
+主机信息_6077af5546	Hostinformationen
+主机名称_823990154f	Hostname
+主机清单_ca9f7969e7	Hostliste
+主机防火墙_ufw_28b14f25fa	Host-Firewall UFW
+主要_0_3f522d9e97	Primär {0}
+主键_0_6fe4d8f8e8	Primärschlüssel: {0}
+主页_25c408b30e	Startseite
+主题_e848ddd482	Theme
+主题色已更新_3214de16ac	Theme-Farbe aktualisiert
+事件_550e328062	Ereignis
+事件记录_babe0c0dfc	Ereignisprotokoll
+事务_d3ade189f6	Transaktion
+二_1d5639f716	Di
+二进制文件_0_不做预览_可下载后用本地编_f52fe7aaa7	Binärdatei ({0}); keine Vorschau — nach dem Download mit einem lokalen Editor öffnen.
+二进制文件_fmt_bytes_p_size_7147944807	Binärdatei (${Fmt.bytes(p.size)}); keine Vorschau — nach dem Download mit einem lokalen Editor öffnen.
+云端笔记_待办清单_084379143a	Cloud Notes · To-do-Liste
+五_8f07f53d63	Fr
+交换_33295d6781	Swap
+交换分区_143116222a	Swap-Partition
+仅_journal_e8ed5febe1	Nur Journal
+仅_单次时间段_生效_baadedcb43	Gilt nur für „Einmal-Zeitfenster“
+仅停止_5d3b3d5a81	Nur stoppen
+仅告警_dd88e195cf	Nur warnen
+仅在检查状态发生变化时发信_同一故障每_6_小时_81be500ffa	Nur bei Änderung des Prüfstatus eine E-Mail senden; derselbe Fehler wird alle 6 Stunden erinnert.
+仅失败_9ecd8b6190	Nur Fehlschläge
+仅慢查询_1_bafa223e9e	Nur langsame Abfragen (1)
+仅所选_d662746763	Nur ausgewählte
+仅搜索源_0_843fdd9250	Nur Suchquelle {0}
+仅搜索源_srcuri_061ac02a45	Nur Suchquelle $srcUri
+仅数据_bb3ec07c5a	Nur Daten
+仅数据_不含建表_deb7198275	Nur Daten (ohne Tabellenerstellung)

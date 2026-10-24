@@ -1,4 +1,5 @@
 package com.servermaintance.panel.pages.ops
+import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,18 +28,18 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun OpsUnsupported() {
     EmptyState(
-        text = "当前服务器未启用运维模块（/api/ops/… 返回 404）。\n" +
-            "把仓库 ops-server/ 部署到面板 server/ops/ 并在 index.js 挂载后重启即可使用：\n" +
-            "拨测与 SLA、自定义告警规则、通知渠道、静默与维护窗口。",
+        text = L["当前服务器未启用运维模块_api_ops_a1afd4f100"] +
+            L["把仓库_ops_server_部署到面板_se_085f78330b"] +
+            L["拨测与_sla_自定义告警规则_通知渠道_静默与_be90e55995"],
         icon = "satellite",
     )
 }
 
-val TASK_TYPES = mapOf(
-    "http" to "HTTP/HTTPS", "ssl" to "TLS 证书", "tcp" to "TCP 端口", "ping" to "ICMP", "dns" to "DNS",
+val TASK_TYPES  get() = mapOf(
+    "http" to "HTTP/HTTPS", "ssl" to L["tls_证书_43af3d4e3c"], "tcp" to L["tcp_端口_468daa15c6"], "ping" to "ICMP", "dns" to "DNS",
 )
 val TASK_TYPE_LABELS = TASK_TYPES.mapValues { it.value }
-val RULE_LEVELS = mapOf("warn" to "警告", "bad" to "严重", "info" to "提示")
+val RULE_LEVELS  get() = mapOf("warn" to L["警告_5521e368d8"], "bad" to L["严重_81ffc6f5a4"], "info" to L["提示_ab3656a956"])
 
 fun taskTarget(t: OpsTask): String = when (t.type) {
     "http" -> t.url
@@ -56,27 +57,27 @@ fun TaskStateBadge(t: OpsTask) {
         else -> Level.Muted
     }
     val text = when (t.state) {
-        "up" -> "在线"
-        "down" -> "不可用"
-        "flapping" -> "抖动"
-        else -> "待探测"
+        "up" -> L["在线_0373ff9231"]
+        "down" -> L["不可用_beff4a1cd1"]
+        "flapping" -> L["抖动_a60f92b8bb"]
+        else -> L["待探测_51805a6f50"]
     }
-    if (!t.enabled) Chip("已停用", tone = Level.Muted)
+    if (!t.enabled) Chip(L["已停用_6c7dcbb73a"], tone = Level.Muted)
     else Chip(text, tone = level)
 }
 
 @Composable
 fun RuleStateBadge(r: OpsRule) {
     if (!r.enabled) {
-        Chip("已停用", tone = Level.Muted)
+        Chip(L["已停用_6c7dcbb73a"], tone = Level.Muted)
         return
     }
     Chip(
         text = when (r.state) {
-            "fired" -> "告警中"
-            "breaching" -> "超阈值（未达持续时长）"
-            "silenced" -> "静默中"
-            else -> "正常"
+            "fired" -> L["告警中_265d5de4c9"]
+            "breaching" -> L["超阈值_未达持续时长_2e2aa99f19"]
+            "silenced" -> L["静默中_35571ad28f"]
+            else -> L["正常_f78d037abc"]
         },
         tone = when (r.state) {
             "fired" -> Level.Bad
@@ -112,15 +113,15 @@ fun channelTarget(c: OpsChannel): String {
             cfg["host"]?.takeIf { it.isNotBlank() }?.let { "$it:${cfg["port"] ?: "465"}" },
         ).joinToString(" · ")
         else -> cfg.entries.joinToString(" ") { "${it.key}=${it.value}" }
-    }.ifBlank { "未配置" }
+    }.ifBlank { L["未配置_63595e95b7"] }
 }
 
 @Composable
 fun ChannelSendState(c: OpsChannel) {
     when {
-        c.lastSend == 0L -> Chip("未发送过", tone = Level.Muted)
-        c.lastOk -> Chip("最近成功", tone = Level.Ok)
-        else -> Chip("最近失败", tone = Level.Bad)
+        c.lastSend == 0L -> Chip(L["未发送过_74a0c48b62"], tone = Level.Muted)
+        c.lastOk -> Chip(L["最近成功_35b15d3f3f"], tone = Level.Ok)
+        else -> Chip(L["最近失败_ec2121fd63"], tone = Level.Bad)
     }
 }
 
@@ -131,9 +132,9 @@ fun InlineIcon(name: String, tint: androidx.compose.ui.graphics.Color = Palette.
 }
 
 /** 服务器没有渠道时，规则/拨测表单里的「不指定」占位。 */
-fun channelOptions(): List<String> = listOf("不指定（仅面板告警）") + OpsState.channels.value.map { it.name }
+fun channelOptions(): List<String> = listOf(L["不指定_仅面板告警_a6445c68bd"]) + OpsState.channels.value.map { it.name }
 
 fun channelIdForOption(option: String?): String? {
-    if (option.isNullOrBlank() || option.startsWith("不指定")) return null
+    if (option.isNullOrBlank() || option.startsWith(L["不指定_1aad39c63a"])) return null
     return OpsState.channels.value.firstOrNull { it.name == option }?.id
 }
