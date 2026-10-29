@@ -49,6 +49,16 @@ import com.servermaintance.panel.ui.Toggle
 
 private val ROUTE_FALLBACK = listOf("go", "zen", "glm", "mimo")
 
+/** 与网页 `tzList` 同一组预设；选不中就走下面的分钟输入。`get()` 是为了跟着语言切换走。 */
+private val TZ_PRESETS get() = listOf(
+    480 to L["utc_08_00_北京_上海_香港_新加坡_8057041faf"],
+    540 to L["utc_09_00_东京_首尔_f4f27cfbce"],
+    420 to L["utc_07_00_曼谷_雅加达_384b10402b"],
+    0 to L["utc_00_00_伦敦_bf6871eb95"],
+    -240 to L["utc_04_00_纽约_03b373a20f"],
+    -480 to L["utc_08_00_洛杉矶_20605b4a22"],
+)
+
 /**
  * 忙时策略页签 —— 对应 web `relay.js` 的 `tabPolicy()`。
  *
@@ -132,16 +142,47 @@ fun RelayPolicyTab() {
             return@PanelCard
         }
 
+        // 忙/闲的判定由服务端就地给出（它调的是 tap 本人那份函数），这里只画出来。
+        // 老版本中继不带 phase，才退回按 window_active_now 显示 —— 仍然不在客户端算窗口。
+        val ph = view.obj("phase")
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            val active = view.bool("window_active_now")
-            Chip(
-                text = if (active) L["现在处于改写时段_634e62ff83"] else L["现在不改写_38d1eb76b9"],
-                tone = if (active) Level.Ok else Level.Muted,
-            )
+            if (ph != null) {
+                val state = ph.str("state")
+                Chip(
+                    text = ph.str("label").ifEmpty {
+                        when (state) {
+                            "busy" -> L["忙时_aca614835e"]
+                            "unknown" -> L["未知_d9c32a4c3d"]
+                            else -> L["闲时_3a52aa95b4"]
+                        }
+                    },
+                    tone = when (state) {
+                        "busy" -> Level.Warn          // 正在改写：琥珀，和网页同一语义
+                        "unknown" -> Level.Muted      // 判不出来就说判不出来，不假装闲
+                        else -> Level.Ok
+                    },
+                )
+            } else {
+                val active = view.bool("window_active_now")
+                Chip(
+                    text = if (active) L["现在处于改写时段_634e62ff83"] else L["现在不改写_38d1eb76b9"],
+                    tone = if (active) Level.Ok else Level.Muted,
+                )
+            }
             val off = view.bool("switch_off")
             Chip(
                 text = if (off) L["已被临时停用_e2f1bbc35c"] else L["策略启用中_6ec06b6ca7"],
                 tone = if (off) Level.Warn else Level.Ok,
+            )
+        }
+        val phReason = ph?.str("reason").orEmpty()
+        if (phReason.isNotEmpty()) {
+            Spacer(Modifier.height(6.dp))
+            val yearGap = ph != null && ph.has("year_data_available") && !ph.bool("year_data_available")
+            Text(
+                text = phReason,
+                color = if (yearGap) Palette.warn else Palette.muted,
+                style = MaterialTheme.typography.bodySmall,
             )
         }
         Spacer(Modifier.height(8.dp))
@@ -200,6 +241,81 @@ fun RelayPolicyTab() {
                 color = Palette.text,
                 style = MaterialTheme.typography.bodySmall,
             )
+        }
+    }
+
+    Spacer(Modifier.height(14.dp))
+
+    /* ---------------- 节假日与调休 ----------------
+       日历由服务端用 tap 同一个 is_workday() 算好下发，只给「和周一到周五不一样」的日子；
+       浏览器自己去抓节假日 CDN 既到不了，也会和真正改写流量的判定各说各话。 */
+    PanelCard(
+        title = L["中国国内节假日与调休_fe0729e131"],
+        cardKey = "relay-policy-calendar",
+        collapsible = false,
+        right = {
+            val yrs = view.obj("calendar_years")
+            if (yrs != null && yrs.has("min")) {
+                Chip(text = "chinese_calendar ${yrs.int("min")}-${yrs.int("max")}", tone = Level.Muted)
+            }
+        },
+    ) {
+        val cal = view.obj("calendar")
+        val note = cal?.str("note").orEmpty()
+        when {
+            cal == null -> Text(
+                text = L["这个中继版本还没有下发节假日日历_b6bacff934"],
+                color = Palette.muted,
+                style = MaterialTheme.typography.bodySmall,
+            )
+            !cal.bool("available") -> Text(
+                text = note.ifEmpty { L["该年没有节假日数据_4de0c82dae"] },
+                color = Palette.warn,
+                style = MaterialTheme.typography.bodySmall,
+            )
+            else -> {
+                val today = view.str("at").take(10)
+                val days = cal.arr("days").mapNotNull { it as? JsonObject }
+                Text(
+                    text = trf("0_年_休假_1_天_调休上班_2_32cac65f0f", cal.int("year"), cal.int("off_count"), cal.int("makeup_count")),
+                    color = Palette.muted,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Spacer(Modifier.height(8.dp))
+                // 接下来的排前面，过去的沉下去：要看的是下一次调休
+                val upcoming = days.filter { it.str("date") >= today }.sortedBy { it.str("date") }
+                val past = days.filter { it.str("date") < today }.sortedByDescending { it.str("date") }
+                (upcoming + past).take(12).forEach { d ->
+                    val dim = d.str("date") < today
+                    val rest = d.str("type") != "makeup"
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = d.str("date"),
+                            modifier = Modifier.weight(1.3f),
+                            color = if (dim) Palette.muted else Palette.text,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        Text(
+                            text = d.str("name"),
+                            modifier = Modifier.weight(1.7f),
+                            color = if (dim) Palette.muted else Palette.text,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        Chip(
+                            text = if (rest) L["休假_e063611c02"] else L["调休上班_63b4228f69"],
+                            tone = if (rest) Level.Ok else Level.Warn,
+                        )
+                    }
+                    Spacer(Modifier.height(4.dp))
+                }
+                if (days.size > 12) {
+                    Text(
+                        text = trf("其余_0_天略_2a5caa33c9", days.size - 12),
+                        color = Palette.muted,
+                        style = MaterialTheme.typography.labelSmall,
+                    )
+                }
+            }
         }
     }
 
@@ -294,6 +410,16 @@ fun RelayPolicyTab() {
             singleLine = true,
         )
         Spacer(Modifier.height(10.dp))
+        val customTz = L["自定义_分钟偏移_fe8a8a7910"]
+        SelectField(
+            value = TZ_PRESETS.firstOrNull { it.first.toString() == offset.trim() }?.second ?: customTz,
+            options = TZ_PRESETS.map { it.second } + customTz,
+            onValueChange = { pick ->
+                TZ_PRESETS.firstOrNull { it.second == pick }?.let { offset = it.first.toString() }
+            },
+            label = L["时区_fb2a23dc16"],
+        )
+        Spacer(Modifier.height(8.dp))
         Field(
             value = offset,
             onValueChange = { offset = it },
