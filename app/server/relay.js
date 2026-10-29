@@ -57,6 +57,8 @@ const TTL = {
   /* policy editor: must not show a stale policy right after a save.
      action() clears the whole cache on any mutation, so this stays short. */
   '/api/busy-hours': 2000,
+  /* device list: a slow-moving table, and the label write clears the cache anyway */
+  '/api/client-origins': 5000,
 };
 const cache = new Map(); // path?query -> { exp, payload }
 

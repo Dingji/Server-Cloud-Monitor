@@ -52,7 +52,7 @@
     quality: ['summary', 'latency', 'ttfb', 'streaming', 'sizes', 'failover', 'errors', 'model-status', 'weekday'],
     hitrate: [],
     tokenhit: [],
-    clients: ['sessions', 'session-memory', 'useragents', 'recent', 'summary'],
+    clients: ['sessions', 'session-memory', 'useragents', 'recent', 'summary', 'client-origins'],
     tokens: [],
     keys: ['providers'],
     policy: ['busy-hours'],
@@ -491,6 +491,7 @@
   function tabClients(box, d) {
     box.innerHTML =
       liveStats([['sess', '会话数(今日)'], ['clients', '客户端数'], ['sessmem', '会话内存视图'], ['uas', '客户端软件']]) +
+      section('来源设备（服务器实际看到的地址 / 客户端网关带来的内网地址 / 人工标签）', '<div id="rl-c-src"></div><div id="rl-c-srcnote" class="muted small" style="margin-top:8px"></div>') +
       '<div class="grid g2">' +
       section('会话分布（按请求数）', '<div id="rl-c-dist"></div>') +
       section('每日会话', '<div id="rl-c-daily"></div>') +
@@ -502,6 +503,25 @@
 
     const R = {};
     ['sess', 'clients', 'sessmem', 'uas'].forEach((k) => { R[k] = live(box, k); });
+
+    /* box 是复用的 #rl-body，所以监听只挂一次，靠 data 属性委托到每次重画的按钮上 */
+    if (!box.__srcBound) {
+      box.__srcBound = true;
+      box.addEventListener('click', (ev) => {
+        const b = ev.target && ev.target.closest && ev.target.closest('[data-labelip]');
+        if (!b) return;
+        const ip = b.getAttribute('data-labelip') || '';
+        const cur = b.getAttribute('data-labelcur') || '';
+        modal.prompt('给这台设备起名', [
+          { name: 'label', label: '名称（留空则清除）', placeholder: cur || '例如：书房那台 Mac', mono: false },
+        ], { okText: '保存' }).then((r) => {
+          if (!r) return;
+          CM.api.post('/relay/action', { name: 'clients/label', payload: { ip: ip, label: String(r.label || '') } })
+            .then(() => { window.toast('设备标签已保存', 'ok'); render(); })
+            .catch((e) => window.toast(e.message, 'err'));
+        });
+      });
+    }
 
     return (nd) => {
       nd = nd || {};
@@ -516,6 +536,25 @@
         _time: String(r.time || '').replace('T', ' ').slice(11, 19), _out: fmt.bytes(r.bytes_out), _in: fmt.bytes(r.bytes_in),
         _stream: r.streaming ? ui.badge('S', 'ok') : '', _sess: fmt.esc(String(r.session || '').slice(0, 20)),
       }));
+
+      /* 来源设备：类型标签是本地化映射，分类本身由 collector 判定（它才看得到真实对端）。
+         MAC 不显示：这台机器上取不到，collector 的 note 里写明了原因。 */
+      const CLS = { public: '公网', private: '私网', 'same-subnet': '同网段(VPC)', 'carrier-nat': '运营商NAT', loopback: '本机回环', 'link-local': '链路本地', other: '未知' };
+      const cs = nd['client-origins'] || {};
+      const srcRows = (cs.clients || []).map((x) => Object.assign({}, x, {
+        _cls: CLS[x.class] || x.class || '-',
+        _last: tm(x.last_ts),
+        _xff: x.xff ? fmt.esc(String(x.xff).split(',').pop().trim()) : '<span class="muted">未提供</span>',
+        _label: x.label ? fmt.esc(x.label) : '<span class="muted">—</span>',
+        _act: '<button class="btn btn-sm" data-labelip="' + fmt.esc(x.ip) + '" data-labelcur="' +
+          fmt.esc(x.label || '') + '">起名</button>',
+      }));
+      slot(box, 'rl-c-src', T([
+        ['_label', '设备'], ['ip', '来源IP', 'mono'], ['_cls', '类型'], ['_xff', '内网地址(XFF)', 'mono small'],
+        ['hits', '请求数', 'num'], ['_last', '最近', 'mono small'], ['_act', '', '', (v) => v],
+      ], srcRows, 'max-height:38vh'), sigOf(cs.clients));
+      const noteEl = box.querySelector('#rl-c-srcnote');
+      if (noteEl && cs.note && noteEl.textContent !== cs.note) noteEl.textContent = cs.note;
 
       setNum(R.sess.v, Number(todayS.sessions || 0));
       setText(R.sess.s, '今日请求 ' + num(todayS.requests));

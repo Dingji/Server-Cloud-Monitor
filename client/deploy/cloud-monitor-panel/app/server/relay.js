@@ -54,6 +54,11 @@ const TTL = {
   '/api/sessions': 5000,
   '/api/session-memory': 10000,
   '/api/useragents': 5000,
+  /* policy editor: must not show a stale policy right after a save.
+     action() clears the whole cache on any mutation, so this stays short. */
+  '/api/busy-hours': 2000,
+  /* device list: a slow-moving table, and the label write clears the cache anyway */
+  '/api/client-origins': 5000,
 };
 const cache = new Map(); // path?query -> { exp, payload }
 
@@ -88,11 +93,7 @@ async function getApi(name, query) {
   if (hit && hit.exp > Date.now()) return hit.payload;
   let r;
   try { r = await raw(key, 'GET'); }
-  catch (e) {
-    const n = String(name || '').replace(/^\/+/, '');
-    if (n === 'ips') return { status: 404, data: { error: 'unknown endpoint' } };
-    return { status: 200, data: { error: 'relay unavailable', available: false, detail: e.message } };
-  }
+  catch (e) { throw Object.assign(new Error('中继统计服务不可达: ' + e.message), { status: 502 }); }
   const payload = { status: r.status, data: parse(r.body) };
   if (r.status === 200) cache.set(key, { exp: Date.now() + (TTL[base] || 5000), payload });
   return payload;
@@ -123,7 +124,7 @@ async function probe() {
     const r = await raw('/api/health', 'GET');
     return { ok: r.status === 200, data: parse(r.body), host: RELAY_HOST, port: RELAY_PORT };
   } catch (e) {
-    return { ok: false, data: {}, error: e.message, host: RELAY_HOST, port: RELAY_PORT };
+    return { ok: false, error: e.message, host: RELAY_HOST, port: RELAY_PORT };
   }
 }
 

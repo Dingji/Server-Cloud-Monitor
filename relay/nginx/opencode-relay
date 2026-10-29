@@ -34,7 +34,7 @@ log_format relay_json escape=json
     '$http_x_relay_model|$upstream_addr|'
     '$upstream_header_time|$upstream_status|$connection_requests|'
     '$http_x_opencode_session|$sent_http_content_type|$server_protocol|'
-    '$http_user_agent';
+    '$http_user_agent|$http_x_forwarded_for';
 
 # GLM Coding Plan (Zhipu BigModel)
 upstream glm_api {
@@ -101,7 +101,7 @@ server {
         proxy_read_timeout 3600s;
         proxy_send_timeout 3600s;
         proxy_buffering off;
-        client_max_body_size 50m;
+        client_max_body_size 1100m;
         gzip on;
         gzip_types text/css application/javascript application/json image/svg+xml text/plain;
         gzip_min_length 1024;

@@ -19,6 +19,24 @@ const PUBLIC_DIR = path.resolve(__dirname, '..', 'public');
 const app = express();
 app.disable('x-powered-by');
 app.set('trust proxy', true);
+/* 设备 Agent 上报的请求体是 gzip 压缩的(省 70% 流量),express.json 不认
+   Content-Encoding,这里先原地解压,再交给常规 JSON 解析。只对带该头的请求生效。 */
+app.use((req, res, next) => {
+  if (!/gzip/i.test(String(req.headers['content-encoding'] || ''))) return next();
+  const chunks = [];
+  req.on('data', (c) => chunks.push(c));
+  req.on('end', () => {
+    try {
+      req.body = JSON.parse(require('zlib').gunzipSync(Buffer.concat(chunks)).toString('utf8'));
+      req._body = true;              /* 让 body-parser 认为已解析,直接跳过 */
+      delete req.headers['content-encoding'];
+      next();
+    } catch (e) {
+      res.status(400).json({ error: 'invalid gzip body' });
+    }
+  });
+  req.on('error', () => res.status(400).json({ error: 'bad request body' }));
+});
 app.use(express.json({ limit: '4mb' }));
 
 /* security headers */
@@ -139,6 +157,23 @@ api.post('/login', (req, res) => {
     logErr('login error:', '-', e.message);
     res.status(e.status || 500).json({ error: e.message || '服务器内部错误' });
   }
+});
+
+/* ============ 内网设备硬件上报(必须在会话认证之前) ============
+   Agent 没有面板会话,靠设备专属 token 认证;放在这里才能绕过 Bearer 中间件。 */
+const devmetrics = require('./devmetrics');
+api.post('/agent/push', (req, res) => { Promise.resolve(devmetrics.pushHandler(req, res)).catch((e) => {
+  logErr('agent push:', e.message);
+  if (!res.headersSent) res.status(500).json({ error: e.message });
+}); });
+/* Agent 源码:新设备免登录拉取(文件不含任何密钥,安装时才带 token) */
+api.get('/agent/agent.py', (req, res) => {
+  try {
+    res.setHeader('Content-Type', 'text/x-python; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="cm-agent.py"');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.end(require('fs').readFileSync(path.resolve(__dirname, '..', 'agent.py')));
+  } catch (e) { res.status(404).json({ error: 'agent 源码不存在' }); }
 });
 
 api.use(auth.middleware);
@@ -340,7 +375,7 @@ const RELAY_GET = [
   'models', 'models-daily', 'tokens', 'model-status', 'health', 'selfheal',
   'latency', 'ttfb', 'streaming', 'sizes', 'status', 'routes', 'methods',
   'endpoints', 'failover', 'errors', 'recent', 'sessions', 'session-memory',
-  'useragents', 'ips',
+  'useragents', 'ips', 'busy-hours', 'client-origins',
 ];
 for (const name of RELAY_GET) {
   api.get('/relay/' + name, wrap(async (req, res) => {
@@ -357,57 +392,69 @@ api.post('/relay/action', audited('relay.action', async (req) => {
   return relay.action(b.name, b.payload);
 }));
 /* ============ optional RelayHub (内网中继监控) integration ============ */
+/* 设备硬件性能:只读/管理接口需会话认证(挂在 auth.middleware 之后),
+   广播接到 hub,Agent 上报即可实时推给所有已登录前端 */
+devmetrics.setBroadcast(hub.broadcast);
+devmetrics.mount(api, wrap, audited);
 const RELAYHUB_CONF = (() => {
   try { return JSON.parse(require('fs').readFileSync('/opt/relayhub/panel/config.json', 'utf8')); } catch (_) { return {}; }
 })();
 const RELAYHUB_KEY = RELAYHUB_CONF.internal_key || '';
-async function relayhubFetch(pathname, init, timeoutMs) {
+async function relayhubFetch(pathname, init) {
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs || 5000);
+  const timer = setTimeout(() => ctrl.abort(), 5000);
   try {
     const r = await fetch('http://127.0.0.1:8100' + pathname, Object.assign({}, init, {
       headers: { 'X-RelayHub-Key': RELAYHUB_KEY, 'Content-Type': 'application/json' },
       signal: ctrl.signal,
     }));
     const data = await r.json().catch(() => ({}));
-    if (!r.ok) {
-      const e = new Error(data.error || ('HTTP ' + r.status));
-      e.status = r.status;
-      e.body = data; /* errors/conflicts/details 原样带回给客户端 */
-      throw e;
-    }
+    if (!r.ok) { const e = new Error(data.error || ('HTTP ' + r.status)); e.status = r.status; throw e; }
     return data;
   } finally { clearTimeout(timer); }
-}
-/* 原样转发（含非 2xx 的完整响应体）：端口池 preview/apply/probe 依赖 400/409 里的
- * errors/conflicts/rollback_pool 字段（客户端 postRetainingBody 直接渲染）。 */
-async function relayhubRes(res, pathname, init, timeoutMs) {
-  try { res.json(await relayhubFetch(pathname, init, timeoutMs)); }
-  catch (e) { res.status(e.status || 500).json(e.body || { error: e.message }); }
 }
 api.get('/relayhub/available', wrap(async (req, res) => {
   try { res.json(await relayhubFetch('/api/health')); } catch (e) { res.json({ ok: false }); }
 }));
 api.get('/relayhub/summary', wrap(async (req, res) => res.json(await relayhubFetch('/api/summary'))));
 api.post('/relayhub/probe-now', audited('relayhub.probe', async () => relayhubFetch('/api/probe-now', { method: 'POST' })));
-/* 端口映射（期望态 + live 注册表）与 frpc 下发命令 */
-api.get('/relayhub/mappings', wrap(async (req, res) => relayhubRes(res, '/api/mappings')));
-api.post('/relayhub/mappings', audited('relayhub.mappings', async (req) =>
-  relayhubFetch('/api/mappings', { method: 'POST', body: JSON.stringify(req.body || {}) })));
-api.get('/relayhub/frpc-config', wrap(async (req, res) => {
-  const name = String((req.query && req.query.name) || '');
-  return relayhubRes(res, '/api/frpc-config?name=' + encodeURIComponent(name));
-}));
-/* 端口池：读状态 / 校验预览 / 应用（改 frps.toml + 重启 frps，最长约 50s）/ 公网自检 */
-api.get('/relayhub/port-pool', wrap(async (req, res) => relayhubRes(res, '/api/port-pool')));
-api.post('/relayhub/port-pool/preview', wrap(async (req, res) =>
-  relayhubRes(res, '/api/port-pool/preview', { method: 'POST', body: JSON.stringify(req.body || {}) }, 15000)));
-api.post('/relayhub/port-pool/apply', wrap(async (req, res) => {
-  audit(req.headers['x-real-ip'] || req.socket.remoteAddress || '?', 'relayhub.pool.apply', {});
-  return relayhubRes(res, '/api/port-pool/apply', { method: 'POST', body: JSON.stringify(req.body || {}) }, 90000);
-}));
-api.post('/relayhub/port-pool/probe', wrap(async (req, res) =>
-  relayhubRes(res, '/api/port-pool/probe', { method: 'POST', body: JSON.stringify(req.body || {}) }, 30000)));
+api.get('/relayhub/mappings', wrap(async (req, res) => res.json(await relayhubFetch('/api/mappings'))));
+api.post('/relayhub/mappings', audited('relayhub.mappings', (req) => relayhubFetch('/api/mappings', { method: 'POST', body: JSON.stringify(req.body || {}) })));
+api.get('/relayhub/frpc-config', wrap(async (req, res) => res.json(await relayhubFetch('/api/frpc-config?name=' + encodeURIComponent(String(req.query.name || ''))))));
+/* 端口池: 状态码与错误明细(errors[])原样透传, 每条路由独立超时(apply 含 ufw+重启 frps) */
+const relayhubRaw = async (pathname, init) => {
+  const { timeout = 15000, ...rest } = init || {};
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeout);
+  try {
+    const r = await fetch('http://127.0.0.1:8100' + pathname, Object.assign({}, rest, {
+      headers: { 'X-RelayHub-Key': RELAYHUB_KEY, 'Content-Type': 'application/json' },
+      signal: ctrl.signal,
+    }));
+    const data = await r.json().catch(() => ({}));
+    return { status: r.status, data };
+  } finally { clearTimeout(timer); }
+};
+const relayhubPool = (pathname, opts) => {
+  const o = opts || {};
+  return wrap(async (req, res) => {
+    if (o.auditName) {
+      const ip = req.headers['x-real-ip'] || req.socket.remoteAddress || '?';
+      audit(ip, o.auditName, Object.assign({}, req.body || {}));
+    }
+    const init = { method: o.method || 'GET', timeout: o.timeout || 15000 };
+    if (init.method === 'POST') init.body = JSON.stringify(req.body || {});
+    const r = await relayhubRaw(pathname, init);
+    res.status(r.status).json(r.data);
+  });
+};
+api.get('/relayhub/port-pool', relayhubPool('/api/port-pool'));
+api.post('/relayhub/port-pool/preview', relayhubPool('/api/port-pool/preview',
+  { method: 'POST', auditName: 'relayhub.pool.preview' }));
+api.post('/relayhub/port-pool/apply', relayhubPool('/api/port-pool/apply',
+  { method: 'POST', timeout: 60000, auditName: 'relayhub.pool.apply' }));
+api.post('/relayhub/port-pool/probe', relayhubPool('/api/port-pool/probe',
+  { method: 'POST', timeout: 30000, auditName: 'relayhub.pool.probe' }));
 
 api.post('/web/action', audited('web.action', (req) => actions.webAction(req.body || {})));
 api.post('/docker/action', audited('docker.action', (req) => actions.dockerAction(req.body || {})));

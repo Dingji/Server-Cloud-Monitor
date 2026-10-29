@@ -49,6 +49,22 @@ nginx 起不来。同理不入库的还有 `/etc/nginx/.htpasswd-relay`（`/stat
 和 `phase`（忙时/闲时及原因）一起下发，网页与客户端只渲染、**不各自再判一遍**。
 临时停用是标记文件 `/var/lib/relay/busy-hours.off`，不动配置本身。
 
+## 客户端来源与设备标签
+
+`nginx/opencode-relay` 的 `relay_json` 第 19 个字段是 `$http_x_forwarded_for`，collector 把它与
+`$remote_addr` 一起折进 `client_src` 侧表（**不动** `requests` 那张热点表：它的 INSERT 写死了 22 列）。
+该字段放在最后一位是有意的——客户端往 XFF 里塞 `|` 只能在末尾追加垃圾，无法移动前 18 个字段。
+
+- `GET /api/client-origins` 返回每个来源的 `ip` / `class` / `xff` / `ua` / `hits` / 首次与最近时间 / `label`。
+- 写标签走 action 通道：`POST /api/clients/label`，body `{"ip":…,"label":…}`（留空即清除）。
+  标签存 `/etc/relay/client-labels.json`——是文件而不是数据库列，这样流量历史被裁剪时设备名不会跟着消失。
+- `class` 由 collector 判定（只有它看得到真实对端），客户端只做本地化显示。
+
+**为什么没有 MAC 列**：本机唯一网卡是阿里云 VPC 地址，`ip neigh` 里所有邻居都解析为 vRouter 的合成
+MAC `ee:ff:ff:ff:ff:ff`，而二层帧根本不跨路由——写进去的只会是假数据。同理没有 TTL/系统指纹：
+客户端 socket 由 nginx 终结，nginx 不暴露 TTL，而 tap 看到的对端永远是 `127.0.0.1`。
+能稳定区分同 NAT 后不同设备的路子只有对客户端 API key 取哈希，那需要改请求链路上的 tap。
+
 ## 还差一步
 
 `install.sh` 目前覆盖面板、`--with-php`、`--with-relayhub`，**还没有 `--with-relay`**：

@@ -499,6 +499,19 @@ CREATE INDEX IF NOT EXISTS ix_day ON requests(day);
 CREATE INDEX IF NOT EXISTS ix_model ON requests(model);
 CREATE INDEX IF NOT EXISTS ix_ts ON requests(ts);
 CREATE INDEX IF NOT EXISTS ix_day_model ON requests(day, model);
+/* Who has been knocking. Separate from `requests` on purpose: the hot insert lists 22
+   columns and must not change shape, and this survives row pruning so a device list
+   does not evaporate when old traffic is trimmed. */
+CREATE TABLE IF NOT EXISTS client_src (
+  ip TEXT PRIMARY KEY,
+  class TEXT,
+  xff TEXT,
+  ua TEXT,
+  first_ts REAL,
+  last_ts REAL,
+  hits INTEGER DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS ix_client_last ON client_src(last_ts);
 """
 
 # Columns added after the first release; migrated in main().
@@ -519,6 +532,118 @@ INSERT_SQL = (
     " rt, urt, ua, uri, ttfb, attempts, upstream_addr, upstream_status, creq, sess, ctype, proto) "
     "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 )
+
+CLIENT_UPSERT_SQL = (
+    "INSERT INTO client_src (ip, class, xff, ua, first_ts, last_ts, hits) VALUES (?,?,?,?,?,?,?)"
+    " ON CONFLICT(ip) DO UPDATE SET"
+    "  last_ts = MAX(client_src.last_ts, excluded.last_ts),"
+    "  first_ts = MIN(client_src.first_ts, excluded.first_ts),"
+    "  hits = client_src.hits + excluded.hits,"
+    "  class = COALESCE(NULLIF(client_src.class,''), excluded.class),"
+    "  xff   = CASE WHEN excluded.xff != '' THEN excluded.xff ELSE client_src.xff END,"
+    "  ua    = CASE WHEN excluded.ua != '' THEN excluded.ua ELSE client_src.ua END"
+)
+
+
+def local_subnet():
+    """The server's own IPv4 network, so 'same VPC subnet' can be told apart from
+    'some other private space'. Best effort; empty when it cannot be determined."""
+    try:
+        import socket as _s
+        ip = _s.gethostbyname(_s.gethostname())
+        return tuple(int(x) for x in ip.split("."))[:3] if ip else ()
+    except Exception:
+        return ()
+
+
+LOCAL_NET = local_subnet()   # e.g. (172, 31, 101) for this box's /24 inside the VPC /20
+
+
+def src_class(ip):
+    """Classify the peer address nginx actually saw.
+
+    MAC is deliberately not attempted: this host's only NIC address is an Aliyun VPC
+    address, the ARP table resolves every neighbour to the vRouter's synthetic
+    ee:ff:ff:ff:ff:ff, and a MAC never crosses a router in the first place -- so any
+    'MAC' column here would be a lie. The internal address, when it exists, arrives as
+    X-Forwarded-For from the client's own gateway and is kept per source IP.
+    """
+    try:
+        o = [int(x) for x in str(ip).split(".")]
+    except ValueError:
+        return "other"
+    if len(o) != 4 or any(x < 0 or x > 255 for x in o):
+        return "other"
+    if o[0] == 127:
+        return "loopback"
+    if o[0] == 169 and o[1] == 254:
+        return "link-local"
+    if o[0] == 100 and 64 <= o[1] <= 127:
+        return "carrier-nat"
+    if o[0] == 10 or o[0] == 192 and o[1] == 168 or o[0] == 172 and 16 <= o[1] <= 31:
+        mine = LOCAL_NET
+        if mine and o[:3] == list(mine):
+            return "same-subnet"
+        return "private"
+    return "public"
+
+
+def xff_from_line(line):
+    """The 19th relay_json field ($http_x_forwarded_for). Older log lines simply have
+    no 19th field, and a client that never passes through a proxy has it empty."""
+    parts = line.rstrip("\n").split("|")
+    if len(parts) < 19:
+        return ""
+    return (parts[18] or "").strip()[:180]
+
+
+def note_client(batch, ts, ip, ua, xff):
+    """Fold one request's origin into the batch accumulator (ip -> row parts)."""
+    if not ip:
+        return
+    e = batch.get(ip)
+    if e is None:
+        batch[ip] = [src_class(ip), (xff or "")[:180], (ua or "").replace('"', "")[:160], ts, ts, 1]
+    else:
+        e[3] = min(e[3], ts)
+        e[4] = max(e[4], ts)
+        e[5] += 1
+        if xff:
+            e[1] = (xff or "")[:180]
+        if ua:
+            e[2] = (ua or "").replace('"', "")[:160]
+
+
+# Human names for source IPs. A file, not a DB column: it must survive the row-pruning
+# that trims traffic history, and it should be copyable between machines.
+CLIENT_LABELS_PATH = os.environ.get("CM_CLIENT_LABELS", "/etc/relay/client-labels.json")
+
+
+def client_labels():
+    raw = read_json_file(CLIENT_LABELS_PATH)
+    return raw if isinstance(raw, dict) else {}
+
+
+def client_label_set(ip, label):
+    ip = str(ip or "").strip()[:64]
+    if not ip:
+        raise ValueError("缺少 ip")
+    d = client_labels()
+    label = str(label or "").strip()[:40]
+    if label:
+        d[ip] = label
+    else:
+        d.pop(ip, None)
+    tmp = CLIENT_LABELS_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(d, f, ensure_ascii=False, indent=2, sort_keys=True)
+        f.write("\n")
+    os.replace(tmp, CLIENT_LABELS_PATH)
+    try:
+        os.chmod(CLIENT_LABELS_PATH, 0o644)
+    except OSError:
+        pass
+    return d
 
 # Shared ingest state for /api/health
 STATE = {"rows": 0, "last_ingest": None, "started": time.time(), "error": None,
@@ -664,6 +789,7 @@ def ingest_loop(stop):
             elif st.st_size < fh.tell():
                 fh.seek(0)  # truncated in place
 
+            clients = {}
             while len(pending) < BATCH:
                 before = fh.tell()
                 line = fh.readline()
@@ -675,12 +801,16 @@ def ingest_loop(stop):
                 row = parse_line(line)
                 if row:
                     pending.append(row)
+                    note_client(clients, row[0], row[5], row[12], xff_from_line(line))
                 else:
                     STATE["lines_skipped"] += 1
 
             pos = fh.tell()
             if pending:
                 conn.executemany(INSERT_SQL, pending)
+                if clients:
+                    conn.executemany(CLIENT_UPSERT_SQL, [
+                        [ip, v[0], v[1], v[2], v[3], v[4], v[5]] for ip, v in clients.items()])
                 conn.commit()
                 STATE["rows"] += len(pending)
                 STATE["last_ingest"] = datetime.now(TZ).isoformat(timespec="seconds")
@@ -1253,6 +1383,17 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(200, {"ok": True, "switch_off": now_off,
                                     "detail": "已临时停用改写，策略文件未改动" if now_off else "已恢复改写"})
 
+        if name == "clients/label":
+            ip = str((payload or {}).get("ip") or "")
+            label = str((payload or {}).get("label") or "")
+            try:
+                d = client_label_set(ip, label)
+            except (ValueError, OSError) as exc:
+                why = "标签写入失败：%s" % exc
+                return self._send(400, {"ok": False, "error": why, "detail": why})
+            return self._send(200, {"ok": True, "labels": d,
+                                    "detail": "已保存设备标签（%s）" % CLIENT_LABELS_PATH})
+
         if name == "quota/refresh":
             return self._send(200, fetch_quota(force=True))
 
@@ -1790,6 +1931,32 @@ class Handler(BaseHTTPRequestHandler):
                 "session": (r["sess"] or "")[:18],
                 "streaming": bool((r["ctype"] or "").startswith("text/event-stream")),
             } for r in rows]})
+
+        if name == "client-origins":
+            labels = client_labels()
+            try:
+                lim = max(1, min(1000, int(num((params.get("limit") or [""])[0], 200) or 200)))
+            except (TypeError, ValueError):
+                lim = 200
+            rows = conn.execute(
+                "SELECT ip, class, xff, ua, first_ts, last_ts, hits FROM client_src"
+                " ORDER BY last_ts DESC LIMIT ?", (lim,)).fetchall()
+            items, by_class = [], {}
+            for r in rows:
+                cls = r["class"] or src_class(r["ip"])
+                by_class[cls] = by_class.get(cls, 0) + (r["hits"] or 0)
+                items.append({"ip": r["ip"], "class": cls, "xff": r["xff"] or "",
+                              "ua": (r["ua"] or "")[:120], "label": labels.get(r["ip"], ""),
+                              "hits": r["hits"] or 0, "first_ts": r["first_ts"],
+                              "last_ts": r["last_ts"]})
+            return self._send(200, {
+                "ok": True, "clients": items, "by_class": by_class,
+                "labels_path": CLIENT_LABELS_PATH,
+                # 说清楚为什么没有 MAC：不是没做，是这台机器上做不出来。
+                "note": "本机唯一网卡是阿里云 VPC 地址，ARP 中所有邻居都解析为 vRouter 的合成 MAC"
+                        " ee:ff:ff:ff:ff:ff，且二层帧不跨路由 —— MAC 无法获得。内网地址仅在客户端"
+                        "自己的网关带上 X-Forwarded-For 时可见。",
+            })
 
         if name == "useragents":
             rows = conn.execute(
