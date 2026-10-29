@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package com.servermaintance.panel.pages.relay
 
 import com.servermaintance.panel.i18n.trf
@@ -5,12 +7,16 @@ import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +32,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
 import com.servermaintance.panel.core.AppState
+import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.core.ToastKind
 import com.servermaintance.panel.core.arr
 import com.servermaintance.panel.core.bool
@@ -145,7 +152,12 @@ fun RelayPolicyTab() {
         // 忙/闲的判定由服务端就地给出（它调的是 tap 本人那份函数），这里只画出来。
         // 老版本中继不带 phase，才退回按 window_active_now 显示 —— 仍然不在客户端算窗口。
         val ph = view.obj("phase")
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        // 徽章组用 FlowRow：手持端一行放不下时折行，而不是把长文案裁掉
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
             if (ph != null) {
                 val state = ph.str("state")
                 Chip(
@@ -186,7 +198,11 @@ fun RelayPolicyTab() {
             )
         }
         Spacer(Modifier.height(8.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
             Chip(
                 text = if (inPath) L["流量经过_tap_1fdad4908e"] else L["tap_已被旁路_da9f9d5110"],
                 tone = if (inPath) Level.Ok else Level.Bad,
@@ -285,21 +301,28 @@ fun RelayPolicyTab() {
                 // 接下来的排前面，过去的沉下去：要看的是下一次调休
                 val upcoming = days.filter { it.str("date") >= today }.sortedBy { it.str("date") }
                 val past = days.filter { it.str("date") < today }.sortedByDescending { it.str("date") }
-                (upcoming + past).take(12).forEach { d ->
+                val ordered = upcoming + past
+                // 手持端要给策略配置留位置，只列最近 4 条；总数在上一行已经给出
+                val show = if (platformHandheld) 4 else 12
+                ordered.take(show).forEach { d ->
                     val dim = d.str("date") < today
                     val rest = d.str("type") != "makeup"
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        // 日期定宽（纯 ASCII，永不折行），名称吃掉剩下的宽度并省略号收尾：
+                        // 360dp 上徽章不会被挤掉，长语种也不会把行高拉成一格一行
                         Text(
                             text = d.str("date"),
-                            modifier = Modifier.weight(1.3f),
+                            modifier = Modifier.width(88.dp),
                             color = if (dim) Palette.muted else Palette.text,
                             style = MaterialTheme.typography.bodySmall,
                         )
                         Text(
                             text = d.str("name"),
-                            modifier = Modifier.weight(1.7f),
+                            modifier = Modifier.weight(1f).padding(end = 8.dp),
                             color = if (dim) Palette.muted else Palette.text,
                             style = MaterialTheme.typography.bodySmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                         Chip(
                             text = if (rest) L["休假_e063611c02"] else L["调休上班_63b4228f69"],
@@ -308,9 +331,9 @@ fun RelayPolicyTab() {
                     }
                     Spacer(Modifier.height(4.dp))
                 }
-                if (days.size > 12) {
+                if (ordered.size > show) {
                     Text(
-                        text = trf("其余_0_天略_2a5caa33c9", days.size - 12),
+                        text = trf("其余_0_天略_2a5caa33c9", ordered.size - show),
                         color = Palette.muted,
                         style = MaterialTheme.typography.labelSmall,
                     )
