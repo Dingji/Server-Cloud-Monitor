@@ -10,7 +10,7 @@
 |---|---|---|
 | API Base | `http://<host>/panel/api`（默认 `http://8.153.153.176/panel/api`；`basePath` 来自 config.json，默认 `/panel`） | `upstream/server/index.js:L17,L496`、`upstream/config.json` |
 | 认证 | 登录后所有请求带 `Authorization: Bearer <token>`；`auth.extract()` 也接受 query `?token=`（用于 WS） | `upstream/server/auth.js:L86-L91` |
-| 登录 | `POST /login {password}` → 200 `{token, expiresAt}`；**密码错误实测返回 HTTP 500 `{"error":"服务器内部错误"}`**（登录处理器未被 `wrap()` 包裹，同步抛错落到全局错误处理器，`index.js:L131-L135` 与 `L501-L504`）；10 分钟内失败 8 次锁 10 分钟，同样表现为 500 | 实测 + `upstream/server/auth.js:L36-L55` |
+| 登录 | `POST /login {password}` → 200 `{token, expiresAt}`；**密码错误 → 401 `{"error":"密码错误"}`，10 分钟内失败 8 次锁 10 分钟 → 429 `{"error":"尝试次数过多，请 10 分钟后再试"}`**（`/login` 已用 try/catch 包住 `auth.login` 并透传 `e.status`/`e.message`；2026-10-26 之前是未包装的同步处理器，同步抛错落到全局错误处理器 `index.js:L528-L531`，一律 500 `{"error":"服务器内部错误"}` —— 安卓端曾因此在锁定期内「密码正确也报服务器内部错误」） | 实测（2026-10-26 打补丁后 401）+ `upstream/server/auth.js:L36-L55` |
 | 登出 | `POST /logout` → `{ok:true}`（token 服务端删除） | `index.js:L152-L155` |
 | 未登录 | 401 `{"error":"未登录或会话过期"}` | `auth.js:L95` |
 | 限流 | 单 IP **每分钟 1800 次**（`auth.js` `API_MAX_PER_WINDOW = 1800`，index.js 注释与错误文案写“240 次”是旧文案）→ 429 `{"error":"请求过于频繁（单 IP 每分钟上限 240 次），请稍后再试"}` | `auth.js:L16-L18,L77-L84`、`index.js:L139-L144` |
@@ -43,7 +43,7 @@
 | 方法 | 路径 | 参数 | 响应顶层结构 | 页面 | 审计 | 错误 |
 |---|---|---|---|---|---|---|
 | GET | `/health` | – | `{ok:bool,name:str,version:str,ts:num}` | shell（连接测试） | – | – |
-| POST | `/login` | body `{password}` | `{token:str,expiresAt:"ISO"}` | shell（登录页） | –（服务端另记 login-ok/login-fail） | 错误密码实测 500 `{"error":"服务器内部错误"}` |
+| POST | `/login` | body `{password}` | `{token:str,expiresAt:"ISO"}` | shell（登录页） | –（服务端另记 login-ok/login-fail） | 密码错误 401 `{"error":"密码错误"}`；锁定 429 `{"error":"尝试次数过多，请 10 分钟后再试"}` |
 | POST | `/logout` | – | `{ok:true}` | shell | logout | 401 |
 | GET | `/me` | – | `{ok:true,info:{hostname,osName,osVersion,kernel,arch,cpuModel,cores,memTotal,bootTimeApprox:null,publicIp,panelMode,nodeVersion,ts},env:{distro,family,pm,systemd,init,webserver,tools:{psql,mysql,docker},paths:{data,logs,backups,dbBackups}},refreshMs,netLimitBps,uptimeStr,panelPid}` | 全局 | – | – |
 | GET | `/config` | – | `{port,bind,basePath,refreshMs,netLimitBps,sloTarget,sloPeriodDays,tokenTtlHours,ssh:{host,port,user,hasPassword,hasKey},db:{postgres:{user,host,port,hasPassword},mysql:{…},db2:{instance,database,user,host,port,hasPassword},redis:{host,port,db,hasPassword},mongo:{host,port,user,authdb,hasPassword},sqlite:{roots}},underSystemd}` | settings | – | – |

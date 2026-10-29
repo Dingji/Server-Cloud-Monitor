@@ -7,6 +7,7 @@
     id: 'network',
     title: '网络管理',
     async mount(root) {
+      if (CM.isWindows()) return this.mountWin(root);
       d = await CM.api.get('/network');
       root.innerHTML = `
       <div class="grid g3" id="n-ifaces"></div>
@@ -185,5 +186,103 @@
       if (auto && auto.isEnabled()) auto.start();
     },
     hide() { if (auto) auto.stop(); },
+
+    /* ============ Windows：适配器 / 监听端口 / 连通性诊断（原 Windows 工具页并入） ============ */
+    async mountWin(root) {
+      const [ad, pf] = await Promise.all([
+        CM.api.get('/windows/net-adapters', 30000).catch(() => ({ adapters: [] })),
+        CM.api.get('/windows/ports', 30000).catch(() => ({ ports: [] })),
+      ]);
+      const adapters = ad.adapters || [];
+      const ports = pf.ports || [];
+      root.innerHTML = `
+        <div class="card mb"><div class="card-title">网络适配器 (${adapters.length})
+          <div class="right"><button type="button" class="btn btn-sm" id="nw-adapter-refresh">${icon('refresh', { size: 12 })} 刷新</button></div>
+        </div>
+        ${ui.table([
+          { k: 'connId', label: '连接名', cls: 'mono small' },
+          { k: 'name', label: '适配器', cls: 'small', render: (v) => '<span class="cmdline-clip" title="' + fmt.esc(v) + '">' + fmt.esc(String(v).slice(0, 44)) + '</span>' },
+          { k: 'status', label: '状态', render: (v, r) => r.connected ? ui.badge(String(v), 'ok') : ui.badge(String(v || '-'), 'gray') },
+          { k: 'ip', label: 'IP 地址', cls: 'mono small' },
+          { k: 'gateway', label: '网关', cls: 'mono small' },
+          { k: 'mac', label: 'MAC', cls: 'mono small' },
+          { k: 'speedMbps', label: '速率', cls: 'num', render: (v) => v > 0 ? (v >= 1000 ? (v / 1000) + ' Gbps' : v + ' Mbps') : '-' },
+          { k: 'dhcp', label: 'DHCP', render: (v) => v ? ui.badge('DHCP', 'info') : ui.badge('静态', 'gray') },
+        ], adapters, { style: 'max-height:34vh' })}
+      </div>
+      <div class="card mb"><div class="card-title">监听端口 (${ports.length})
+        <div class="right">
+          <input class="inp" id="nw-port-q" placeholder="过滤端口 / 进程…" style="width:200px">
+          <button type="button" class="btn btn-sm" id="nw-port-refresh">${icon('refresh', { size: 12 })} 刷新</button>
+        </div>
+      </div>
+      <div id="nw-ports"></div>
+      </div>
+      <div class="grid g2 mb">
+        <div class="card"><div class="card-title">Ping 测试</div>
+          <div class="row">
+            <input class="inp mono" id="nw-ping-host" placeholder="主机名或 IP，如 8.8.8.8" style="flex:1;min-width:160px">
+            <button type="button" class="btn btn-sm btn-primary" id="nw-ping-go">Ping</button>
+          </div>
+        </div>
+        <div class="card"><div class="card-title">TCP 端口连通性</div>
+          <div class="row">
+            <input class="inp mono" id="nw-tcp-host" placeholder="主机" style="flex:1;min-width:120px">
+            <input class="inp mono" id="nw-tcp-port" placeholder="端口" style="width:90px">
+            <button type="button" class="btn btn-sm btn-primary" id="nw-tcp-go">测试</button>
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="card-title">诊断输出</div>
+        <pre class="pre" id="nw-out" style="max-height:36vh">（执行任一诊断后，这里显示结果）</pre>
+      </div>`;
+
+      const paintPorts = (list) => {
+        const el = document.getElementById('nw-ports');
+        if (!el) return;
+        el.innerHTML = ui.table([
+          { k: 'proto', label: '协议', cls: 'mono' },
+          { k: 'local', label: '本地地址', cls: 'mono' },
+          { k: 'state', label: '状态', render: (v) => v === 'LISTENING' ? ui.badge('监听', 'ok') : ui.badge(String(v || '-'), 'gray') },
+          { k: 'pid', label: 'PID', cls: 'mono num' },
+          { k: 'process', label: '进程', cls: 'mono small' },
+        ], list.slice(0, 400), { style: 'max-height:44vh' });
+      };
+      paintPorts(ports);
+      const q = document.getElementById('nw-port-q');
+      if (q) {
+        q.oninput = CM.debounce(() => {
+          const kw = q.value.trim().toLowerCase();
+          paintPorts(kw ? ports.filter((p) => (p.local + ' ' + (p.process || '')).toLowerCase().includes(kw)) : ports);
+        }, 320);
+      }
+      document.getElementById('nw-adapter-refresh').onclick = () => this.mountWin(root);
+      document.getElementById('nw-port-refresh').onclick = () => this.mountWin(root);
+
+      const out = document.getElementById('nw-out');
+      const pingBtn = document.getElementById('nw-ping-go');
+      pingBtn.onclick = async () => {
+        const host = document.getElementById('nw-ping-host').value.trim();
+        if (!host) return window.toast('请输入主机', 'warn');
+        ui.busy(pingBtn, true);
+        out.textContent = 'Pinging ' + host + ' …';
+        try { const r = await CM.api.post('/windows/action', { op: 'ping', host }); out.textContent = r.output || '(无输出)'; }
+        catch (e) { out.textContent = '错误: ' + e.message; }
+        ui.busy(pingBtn, false);
+      };
+      document.getElementById('nw-ping-host').onkeydown = (e) => { if (e.key === 'Enter') pingBtn.click(); };
+      const tcpBtn = document.getElementById('nw-tcp-go');
+      tcpBtn.onclick = async () => {
+        const host = document.getElementById('nw-tcp-host').value.trim();
+        const port = parseInt(document.getElementById('nw-tcp-port').value, 10);
+        if (!host || !port) return window.toast('请输入主机与端口', 'warn');
+        ui.busy(tcpBtn, true);
+        out.textContent = `连接 ${host}:${port} …`;
+        try { const r = await CM.api.post('/windows/action', { op: 'port-test', host, port }); out.textContent = r.output || '(无输出)'; }
+        catch (e) { out.textContent = '错误: ' + e.message; }
+        ui.busy(tcpBtn, false);
+      };
+      document.getElementById('nw-tcp-port').onkeydown = (e) => { if (e.key === 'Enter') tcpBtn.click(); };
+    },
   });
 })();

@@ -1,7 +1,6 @@
 package com.servermaintance.panel
 import com.servermaintance.panel.i18n.L
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.ClipData
@@ -9,9 +8,7 @@ import android.content.ClipboardManager
 import android.net.Uri
 import android.os.Environment
 import android.provider.OpenableColumns
-import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -3,7 +3,8 @@
   'use strict';
   let els = {}, ioTimer = null, auto = null;
 
-  const ACTIONS = [
+  /* Linux 与 Windows 的维护动作一一对应：同名 action id 由服务端按平台分发 */
+  const ACTIONS_LINUX = [
     { id: 'apt-clean', label: '清理 apt 缓存', ic: 'trash', danger: false, desc: '删除 /var/cache/apt/archives 下的已下载安装包' },
     { id: 'apt-autoremove', label: '自动卸载无用包', ic: 'trash', danger: true, desc: '卸载不再被任何软件包依赖的软件包' },
     { id: 'journal-vacuum', label: '裁剪系统日志', ic: 'logs', danger: false, desc: '将 journald 日志体积限制到 200MB' },
@@ -12,6 +13,15 @@
     { id: 'docker-prune', label: 'Docker 清理', ic: 'docker', danger: true, desc: 'docker system prune -af：删除未使用镜像/网络/停止的容器' },
     { id: 'analyze', label: '磁盘占用分析', ic: 'search', danger: false, desc: '扫描根目录一级/二级目录及大于 100MB 的文件' },
   ];
+  const ACTIONS_WIN = [
+    { id: 'apt-clean', label: '清理下载缓存', ic: 'trash', danger: false, desc: '清理 winget 安装包缓存（%TEMP%\\WinGet）与 Windows Update 下载缓存' },
+    { id: 'journal-vacuum', label: '组件存储清理', ic: 'logs', danger: false, desc: 'DISM StartComponentCleanup：清除被取代的旧组件，可释放数 GB（需管理员，耗时数分钟）' },
+    { id: 'fstrim', label: 'SSD TRIM', ic: 'disk', danger: false, desc: '对各固定磁盘执行 Optimize-Volume -ReTrim（仅 SSD 生效，需管理员；HDD 自动跳过）' },
+    { id: 'drop-caches', label: '收缩进程工作集', ic: 'memory', danger: true, desc: '对所有可访问进程调用 EmptyWorkingSet，收缩物理内存占用（Windows 按需自动管理内存，不影响已提交内存）' },
+    { id: 'docker-prune', label: 'Docker 清理', ic: 'docker', danger: true, desc: 'docker system prune -af：删除未使用镜像/网络/停止的容器（需 Docker Desktop）' },
+    { id: 'analyze', label: '磁盘占用分析', ic: 'search', danger: false, desc: '扫描各固定磁盘一级目录占用（Top 20，跳过符号链接）' },
+  ];
+  const ACTIONS = () => (CM.isWindows() ? ACTIONS_WIN : ACTIONS_LINUX);
 
   registerPage({
     id: 'disks',
@@ -79,10 +89,11 @@
       document.getElementById('d-refresh').onclick = () => load().catch((e) => window.toast(e.message, 'err'));
 
       const actBox = document.getElementById('d-actions');
-      actBox.innerHTML = ACTIONS.map((a) => `<button class="btn ${a.danger ? 'btn-danger' : ''}" data-a="${a.id}" title="${fmt.esc(a.desc)}">${icon(a.ic, { size: 14 })}${a.label}</button>`).join('');
+      const ACTIONS_NOW = ACTIONS();
+      actBox.innerHTML = ACTIONS_NOW.map((a) => `<button class="btn ${a.danger ? 'btn-danger' : ''}" data-a="${a.id}" title="${fmt.esc(a.desc)}">${icon(a.ic, { size: 14 })}${a.label}</button>`).join('');
       actBox.querySelectorAll('[data-a]').forEach((b) => {
         b.onclick = async () => {
-          const a = ACTIONS.find((x) => x.id === b.dataset.a);
+          const a = ACTIONS_NOW.find((x) => x.id === b.dataset.a);
           const okc = await modal.confirm(a.label + '？', fmt.esc(a.desc), { danger: a.danger, okText: a.danger ? '我明白风险，执行' : '执行' });
           if (!okc) return;
           ui.busy(b, true);
@@ -101,8 +112,10 @@
         CM._diskIoSub = true;
         CM.hub.on('metrics', (msg) => {
           if (!els.io || !CM.router.current || CM.router.current.id !== 'disks') return;
-          const io = msg.data.diskio;
-          els.io.innerHTML = `<dt>读取速率</dt><dd>${fmt.bps(io.readBps)}</dd><dt>写入速率</dt><dd>${fmt.bps(io.writeBps)}</dd><dt>读取 IOPS</dt><dd>${io.readOps.toFixed(1)}</dd><dt>写入 IOPS</dt><dd>${io.writeOps.toFixed(1)}</dd>`;
+          const io = msg.data && msg.data.diskio ? msg.data.diskio : {};
+          const ro = Number(io.readOps);
+          const wo = Number(io.writeOps);
+          els.io.innerHTML = `<dt>读取速率</dt><dd>${fmt.bps(io.readBps)}</dd><dt>写入速率</dt><dd>${fmt.bps(io.writeBps)}</dd><dt>读取 IOPS</dt><dd>${Number.isFinite(ro) ? ro.toFixed(1) : '-'}</dd><dt>写入 IOPS</dt><dd>${Number.isFinite(wo) ? wo.toFixed(1) : '-'}</dd>`;
         });
       }
 

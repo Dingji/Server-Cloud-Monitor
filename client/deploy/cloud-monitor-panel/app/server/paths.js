@@ -28,11 +28,17 @@ function firstWritable(candidates) {
 function dataRoot() {
   if (process.env.CM_DATA_DIR) return process.env.CM_DATA_DIR;
   if (global.__CM_PATHS && global.__CM_PATHS.dataDir) return global.__CM_PATHS.dataDir;
-  const candidates = [
-    '/var/lib/cloud-panel',
-    '/opt/cloud-panel',
-    path.join(APP_ROOT, 'data'),
-  ];
+  const candidates = process.platform === 'win32'
+    ? [
+      process.env.ProgramData ? path.join(process.env.ProgramData, 'CloudPanel') : null,
+      path.join(process.env.SystemDrive || 'C:', 'ProgramData', 'CloudPanel'),
+      path.join(APP_ROOT, 'data'),
+    ]
+    : [
+      '/var/lib/cloud-panel',
+      '/opt/cloud-panel',
+      path.join(APP_ROOT, 'data'),
+    ];
   return firstWritable(candidates) || path.join(APP_ROOT, 'data');
 }
 

@@ -38,7 +38,7 @@ DUMP_DIR = os.path.join(ROOT, "api-dump")
 TESTS_DIR = os.path.join(ROOT, "tests")
 BASE_URL = os.environ.get("SM_PANEL_URL", "http://8.153.153.176/panel")
 API = BASE_URL.rstrip("/") + "/api"
-PASSWORD = os.environ.get("SM_PANEL_PASSWORD", "Ladridibiciclette!")
+PASSWORD = os.environ["SM_PANEL_PASSWORD"]
 TOKEN_FILE = os.path.join(ROOT, "tools", ".token")
 
 REQ_TIMEOUT = 60          # 单请求超时（部分收集器较慢）
@@ -348,15 +348,16 @@ def main():
     }
 
     # ---------------- 负向认证契约 ----------------
-    # 注意（实测契约）：/login 未包 wrap()，auth.login 抛出的 e.status(401/429) 不会生效，
-    # 密码错误实测返回 HTTP 500 {"error":"服务器内部错误"} —— KMP 登录页必须按
-    # 「非 200 即登录失败 + 展示 error 文本」处理，不能假定 401。
+    # 注意（实测契约，2026-10-26 起）：/login 已用 try/catch 包住 auth.login 并透传
+    # e.status/e.message —— 密码错误 → 401 {"error":"密码错误"}，失败 8 次锁 10 分钟
+    # → 429 {"error":"尝试次数过多，请 10 分钟后再试"}。KMP 登录页仍须按
+    # 「非 200 即登录失败 + 展示 error 文本」处理，不能假定一定是 401。
     negs = [
         ("GET /me 无 Authorization", "GET", "/me", None, None, {401}, "受保护端点缺 token → 401"),
         ("GET /me 伪造 token", "GET", "/me", "0" * 64, None, {401}, "无效 token → 401"),
         ("POST /login 错误密码", "POST", "/login", None,
          {"password": "definitely-wrong-" + str(int(time.time()))}, {401, 500},
-         "实测 500：/login 未包 wrap()，auth.login 的 e.status 不生效，落到全局错误处理器"),
+         "401 密码错误（2026-10-26 起透传 e.status）；未打补丁的老面板仍为 500 服务器内部错误"),
     ]
     for name, method, path, tk, body, expect, note in negs:
         st, data, raw, _ = request(method, path, token=tk, body=body)
@@ -607,10 +608,12 @@ def write_markdown(out):
             a("")
     a("## 关键契约发现（实测确认，Kotlin 侧必须照此实现）")
     a("")
-    a("1. **登录失败不是 401**：`POST /login` 未包 `wrap()`，`auth.login` 抛出的 `e.status`(401/429) 不会生效，"
-      "密码错误实测返回 **HTTP 500** `{\"error\":\"服务器内部错误\"}`（登录失败 8 次锁 10 分钟时同样 500）。"
-      "KMP 登录页必须按「非 200 即登录失败 + 展示 error 文本」处理；401 只会出现在**带 token 的受保护端点**上"
-      "（`{\"error\":\"未登录或会话过期\"}`），用于触发清 token 回登录页。")
+    a("1. **登录失败按「非 200 + error 文本」处理**：`POST /login` 现由 try/catch 透传 `e.status`，"
+      "密码错误 → **HTTP 401** `{\"error\":\"密码错误\"}`，失败 8 次锁 10 分钟 → **HTTP 429** "
+      "`{\"error\":\"尝试次数过多，请 10 分钟后再试\"}`（2026-10-26 之前 `/login` 未包 wrap()，一律 "
+      "500 `{\"error\":\"服务器内部错误\"}`，安卓端曾因此在锁定期内「密码正确也报服务器内部错误」）。"
+      "客户端仍须按「非 200 即登录失败 + 展示 error 文本」实现；带 token 的受保护端点 401 "
+      "`{\"error\":\"未登录或会话过期\"}` 用于触发清 token 回登录页。")
     a("2. **`GET /pkg/job` 无任务时返回字面量 JSON `null`**（4 字节）。Kotlin 侧解析要容忍 `JsonNull`，"
       "不要当成解析失败。")
     a("3. **`GET /relay/ips` → 404** `{\"error\":\"unknown endpoint\"}`：relay 采集端没有该端点，"

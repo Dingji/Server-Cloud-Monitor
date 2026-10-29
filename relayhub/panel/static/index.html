@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<title>RelayHub · 内网中继中心</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M9 22V10l7 6 7-6v12' stroke='%23fff' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="static/style.css?v=3">
+<script src="static/echarts.min.js?v=2"></script>
+</head>
+<body>
+
+<!-- 背景装饰 -->
+<div class="bg-decor" aria-hidden="true">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<!-- ============ 登录视图 ============ -->
+<div id="login-view" class="login-wrap hidden">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 32 32" width="52" height="52"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#lg)"/><path d="M9 22V10l7 6 7-6v12" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h1>RelayHub</h1>
+    <p class="login-sub">内网中继中心 · 管理面板</p>
+    <form id="login-form" autocomplete="off">
+      <div class="field">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <input type="password" id="login-password" placeholder="管理密码" autofocus>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="login-btn">进入面板</button>
+      <p class="login-err" id="login-err"></p>
+    </form>
+    <p class="login-foot">基于 frp 的高性能内网穿透中继</p>
+  </div>
+</div>
+
+<!-- ============ 主应用 ============ -->
+<div id="app" class="app hidden">
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" width="34" height="34"><defs><linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#bg2)"/><path d="M9 22V10l7 6 7-6v12" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div>
+        <div class="brand-name">RelayHub</div>
+        <div class="brand-sub">内网中继中心</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#/overview" data-page="overview" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>概览</span>
+      </a>
+      <a href="#/relay" data-page="relay" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2.5"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.9 19.1a10 10 0 0 1 0-14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></svg>
+        <span>中继管理</span>
+      </a>
+      <a href="#/devices" data-page="devices" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="8" rx="2"/><rect x="5" y="16" width="13" height="4" rx="1.5"/><path d="M7 8h.01M11 8h.01"/></svg>
+        <span>设备管理</span>
+        <em class="nav-badge" id="nav-device-count">0</em>
+      </a>
+      <a href="#/proxies" data-page="proxies" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>
+        <span>代理列表</span>
+        <em class="nav-badge" id="nav-proxy-count">0</em>
+      </a>
+      <a href="#/guide" data-page="guide" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 17v.01M12 13.5c0-1.5 2-1.8 2-3.5a2 2 0 1 0-4 0"/></svg>
+        <span>接入指南</span>
+      </a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="relay-endpoint" id="endpoint-box" title="中继服务器地址">
+        <span class="dot dot-ok"></span>
+        <span id="endpoint-text">—</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="logout-btn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        退出登录
+      </button>
+    </div>
+  </aside>
+
+  <!-- 主区域 -->
+  <main class="main">
+    <header class="topbar">
+      <h2 id="page-title">概览</h2>
+      <div class="topbar-right">
+        <span class="conn-pill" id="conn-pill"><span class="dot"></span><span id="conn-text">连接中…</span></span>
+        <span class="clock" id="clock"></span>
+      </div>
+    </header>
+
+    <!-- 概览 -->
+    <section class="page" id="page-overview">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon ic-indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="8" rx="2"/><rect x="5" y="16" width="13" height="4" rx="1.5"/><path d="M7 8h.01M11 8h.01"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-num" id="stat-devices">–</div>
+            <div class="stat-label">在线设备 <em id="stat-devices-sub" class="stat-sub"></em></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon ic-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-num" id="stat-proxies">–</div>
+            <div class="stat-label">运行代理 <em id="stat-proxies-sub" class="stat-sub"></em></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon ic-emerald"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20V10M18 20V4M6 20v-4"/><path d="M3 20h18"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-num" id="stat-bw">–</div>
+            <div class="stat-label">实时带宽 <em id="stat-bw-sub" class="stat-sub">↑ 上行 / ↓ 下行</em></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon ic-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
+          <div class="stat-info">
+            <div class="stat-num" id="stat-total">–</div>
+            <div class="stat-label">累计中继流量</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-row">
+        <div class="card card-lg">
+          <div class="card-head">
+            <h3>流量速率</h3>
+            <div class="legend">
+              <span><i class="lg-dot lg-in"></i>入站(设备→公网)</span>
+              <span><i class="lg-dot lg-out"></i>出站(公网→设备)</span>
+            </div>
+          </div>
+          <div id="chart-traffic" class="chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>活动连接数</h3></div>
+          <div id="chart-conns" class="chart"></div>
+        </div>
+      </div>
+
+      <div class="panel-row">
+        <div class="card">
+          <div class="card-head"><h3>中继服务器状态</h3><span class="tag" id="frps-version">frp –</span></div>
+          <div class="gauge-grid" id="gauge-grid">
+            <div class="gauge-item">
+              <div class="ring" id="ring-cpu"><span>–</span></div>
+              <div class="gauge-label">CPU</div>
+            </div>
+            <div class="gauge-item">
+              <div class="ring" id="ring-mem"><span>–</span></div>
+              <div class="gauge-label">内存 <em id="mem-total"></em></div>
+            </div>
+            <div class="gauge-item">
+              <div class="ring" id="ring-disk"><span>–</span></div>
+              <div class="gauge-label">磁盘 /</div>
+            </div>
+            <div class="gauge-item gauge-kv">
+              <div><span class="k">系统负载</span><span class="v" id="kv-load">–</span></div>
+              <div><span class="k">运行时长</span><span class="v" id="kv-uptime">–</span></div>
+              <div><span class="k">网卡速率</span><span class="v" id="kv-net">–</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>最近活跃代理</h3><a href="#/proxies" class="link-more">查看全部 →</a></div>
+          <div class="mini-table" id="recent-proxies"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 中继管理 -->
+    <section class="page hidden" id="page-relay">
+      <div class="ra-toprow">
+        <div class="ra-chip" id="ra-chip-devices"><span class="ra-chip-num">–</span><span class="ra-chip-label">从机设备</span></div>
+        <div class="ra-chip" id="ra-chip-reach"><span class="ra-chip-num">–</span><span class="ra-chip-label">隧道可达</span></div>
+        <div class="ra-chip"><span class="ra-chip-num" id="ra-chip-in">–</span><span class="ra-chip-label">总入站速率</span></div>
+        <div class="ra-chip"><span class="ra-chip-num" id="ra-chip-out">–</span><span class="ra-chip-label">总出站速率</span></div>
+        <div class="ra-health" id="ra-health"></div>
+        <button class="btn btn-primary btn-sm" id="ra-probe-btn" style="margin-left:auto">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+          立即探测
+        </button>
+      </div>
+      <div class="ra-layout" id="ra-layout">
+        <aside class="ra-devlist" id="ra-devlist"></aside>
+        <div class="ra-detail" id="ra-detail"></div>
+      </div>
+    </section>
+
+    <!-- 设备管理 -->
+    <section class="page hidden" id="page-devices">
+      <div class="page-actions">
+        <p class="page-desc">每台内网 Linux 设备运行一个 relay-client(frpc)实例,自动注册为独立设备。</p>
+        <a class="btn btn-primary" href="#/guide">+ 接入新设备</a>
+      </div>
+      <div class="device-grid" id="device-grid"></div>
+    </section>
+
+    <!-- 代理列表 -->
+    <section class="page hidden" id="page-proxies">
+      <div class="card">
+        <div class="card-head">
+          <h3>全部代理通道</h3>
+          <div class="legend">
+            <span><i class="lg-dot" style="background:var(--ok)"></i>在线</span>
+            <span><i class="lg-dot" style="background:var(--muted)"></i>离线</span>
+            <span><i class="lg-dot" style="background:var(--warn)"></i>异常</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table" id="proxy-table">
+            <thead>
+              <tr><th>代理</th><th>设备</th><th>类型</th><th>公网入口</th><th>状态</th><th class="ta-r">今日流量 ↓/↑</th><th class="ta-r">连接</th><th>最近活动</th><th></th></tr>
+            </thead>
+            <tbody id="proxy-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 接入指南 -->
+    <section class="page hidden" id="page-guide">
+      <div class="guide-grid">
+        <div class="card guide-card">
+          <div class="step-badge">1</div>
+          <h3>一键安装(推荐)</h3>
+          <p class="muted">在任意内网 Linux 设备(树莓派/NAS/服务器)上以 root 执行,自动完成安装、注册与开机自启:</p>
+          <div class="code-block">
+            <code id="cmd-install">加载中…</code>
+            <button class="copy-btn" data-copy-target="cmd-install">复制</button>
+          </div>
+          <ul class="args-doc muted">
+            <li><code>--name 设备名</code> 必填,仅小写字母、数字和 <code>-</code></li>
+            <li><code>--ssh-port</code> 可选,SSH 映射的公网端口,缺省自动分配</li>
+            <li><code>--map 本地端口:公网端口</code> 可重复,映射任意额外服务</li>
+            <li><code>--uninstall</code> 卸载客户端</li>
+          </ul>
+        </div>
+        <div class="card guide-card">
+          <div class="step-badge">2</div>
+          <h3>连接测试</h3>
+          <p class="muted">安装完成后,在任何公网环境即可 SSH 到内网设备:</p>
+          <div class="code-block">
+            <code id="cmd-ssh">加载中…</code>
+            <button class="copy-btn" data-copy-target="cmd-ssh">复制</button>
+          </div>
+          <p class="muted" style="margin-top:14px">面板会为每台设备自动分配 <b id="guide-port-range">端口池</b> 段的公网端口,请确保云安全组放行该段及中继端口 <b id="guide-bind-port">7000</b>。</p>
+        </div>
+        <div class="card guide-card">
+          <div class="step-badge">3</div>
+          <h3>手动配置(高级)</h3>
+          <p class="muted">不使用脚本时,写 <code>/etc/frp/frpc.toml</code>:</p>
+          <pre class="code-block code-pre" id="manual-config">加载中…</pre>
+          <button class="copy-btn copy-standalone" data-copy-target="manual-config">复制配置</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+<script src="static/app.js?v=5"></script>
+</body>
+</html>

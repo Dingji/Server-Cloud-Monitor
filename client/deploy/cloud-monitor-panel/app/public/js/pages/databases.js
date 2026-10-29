@@ -3,15 +3,16 @@
   'use strict';
 
   const ENGINE_LABEL = {
-    postgres: 'PostgreSQL', mysql: 'MySQL / MariaDB', sqlite: 'SQLite', db2: 'IBM Db2',
+    postgres: 'PostgreSQL', mysql: 'MySQL / MariaDB', sqlserver: 'SQL Server', sqlite: 'SQLite', db2: 'IBM Db2',
     redis: 'Redis', mongo: 'MongoDB',
   };
-  const ENGINE_KIND = { postgres: 'sql', mysql: 'sql', sqlite: 'sql', db2: 'sql', redis: 'kv', mongo: 'doc' };
-  const ENGINE_ORDER = ['postgres', 'mysql', 'sqlite', 'db2', 'redis', 'mongo'];
+  const ENGINE_KIND = { postgres: 'sql', mysql: 'sql', sqlserver: 'sql', sqlite: 'sql', db2: 'sql', redis: 'kv', mongo: 'doc' };
+  const ENGINE_ORDER = ['postgres', 'mysql', 'sqlserver', 'sqlite', 'db2', 'redis', 'mongo'];
   /* 一键安装目标：apt 引擎直接装包；mongo/db2 由后端添加官方源后安装 */
   const INSTALL_TARGETS = [
     { engine: 'postgres', label: 'PostgreSQL', hint: 'apt install postgresql' },
     { engine: 'mysql', label: 'MySQL / MariaDB', hint: 'apt install mysql-server' },
+    { engine: 'sqlserver', label: 'SQL Server', hint: 'winget install Microsoft.SQLServer.Express 或 choco install sql-server-express' },
     { engine: 'sqlite', label: 'SQLite', hint: 'apt install sqlite3' },
     { engine: 'redis', label: 'Redis', hint: 'apt install redis-server' },
     { engine: 'mongo', label: 'MongoDB', hint: '添加 MongoDB 官方源并安装 mongodb-org' },
@@ -32,9 +33,14 @@
     ['统计：慢查询', "SELECT pid, now()-query_start AS duration, left(query,120) FROM pg_stat_activity WHERE state='active' AND query_start IS NOT NULL ORDER BY duration DESC;"],
   ];
 
+  const OBJ_KIND_LABEL = {
+    table: '表', view: '视图', matview: '物化视图', foreign: '外部表', partitioned: '分区表',
+    function: '函数', procedure: '存储过程',
+  };
+
   const S = {
     engines: [], engine: null, tab: 'overview',
-    database: null, table: null,
+    database: null, table: null, tableKind: null,
     page: 0, pageSize: 50, orderBy: '', orderDir: 'asc', where: '',
     schema: null, tableView: 'data',
     kvKey: null, kvPattern: '*', kvDb: '0',
@@ -51,6 +57,37 @@
     isSql = ENGINE_KIND[e] === 'sql';
   }
   const kindOf = (e) => ENGINE_KIND[e] || 'sql';
+
+  function asArray(v) {
+    if (Array.isArray(v)) return v;
+    if (v && Array.isArray(v.rows)) return v.rows;
+    return null;
+  }
+
+  function normalizeTableSchema(sch) {
+    if (Array.isArray(sch)) {
+      const columns = sch.map((c, i) => ({
+        name: c.name || c.column_name || c.COLUMN_NAME || '',
+        type: c.type || c.data_type || c.DATA_TYPE || '',
+        nullable: c.nullable ?? c.is_nullable ?? 'YES',
+        default: c.default ?? c.column_default ?? '',
+        pos: c.pos ?? c.ordinal_position ?? i + 1,
+        pk: !!(c.pk || String(c.COLUMN_KEY || '').includes('PRI')),
+        extra: c.extra || '',
+      }));
+      return {
+        columns,
+        indexes: [],
+        primaryKey: columns.filter((c) => c.pk).map((c) => c.name),
+        ddl: '',
+      };
+    }
+    if (!sch || typeof sch !== 'object') return { columns: [], indexes: [], primaryKey: [], ddl: '' };
+    sch.columns = sch.columns || [];
+    sch.indexes = sch.indexes || [];
+    sch.primaryKey = sch.primaryKey || [];
+    return sch;
+  }
 
   /* merge collector detection with /db/engines into a single installed list */
   function buildEngineList(fromCollector, fromExtra) {
@@ -69,8 +106,12 @@
   /* re-read both engine sources (collector + extra) and refresh S.engines */
   async function refreshEngines() {
     let d = {}, ex = { engines: [] };
-    try { d = await CM.api.get('/databases', 10000); } catch (_) {}
-    try { ex = await CM.api.get('/db/engines', 10000); } catch (_) {}
+    const [dRes, exRes] = await Promise.allSettled([
+      CM.api.get('/databases', 10000),
+      CM.api.get('/db/engines', 10000),
+    ]);
+    if (dRes.status === 'fulfilled') d = dRes.value;
+    if (exRes.status === 'fulfilled') ex = exRes.value;
     S.host = d;
     S.engineHints = ex.engines || [];
     S.engines = buildEngineList(d.engines || [], ex.engines || []);
@@ -87,8 +128,12 @@
       ROOT = root;
       root.innerHTML = `<div class="card">${ui.skeleton(6)}</div>`;
       let d = {}, ex = { engines: [] };
-      try { d = await CM.api.get('/databases', 10000); } catch (e) { /* 采集失败不致命 */ }
-      try { ex = await CM.api.get('/db/engines', 10000); } catch (_) {}
+      const [dRes, exRes] = await Promise.allSettled([
+        CM.api.get('/databases', 10000),
+        CM.api.get('/db/engines', 10000),
+      ]);
+      if (dRes.status === 'fulfilled') d = dRes.value;
+      if (exRes.status === 'fulfilled') ex = exRes.value;
       S.host = d;
       S.engineHints = ex.engines || [];
       S.engines = buildEngineList(d.engines || [], ex.engines || []);
@@ -156,6 +201,7 @@
         </div>
       </div>
       <div class="range-btns" id="db-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
+      <div id="db-pg-conn-slot"></div>
       <div id="db-tab"></div>`;
 
     const eb = document.getElementById('db-engines');
@@ -214,6 +260,15 @@
       ui.busy(document.getElementById('db-refresh'), false);
       renderShell(ROOT); renderTab();
     };
+    refreshPgConnSlot();
+  }
+
+  async function refreshPgConnSlot() {
+    const slot = document.getElementById('db-pg-conn-slot');
+    if (!slot) return;
+    if (!hasPostgresEngine()) { slot.innerHTML = ''; return; }
+    slot.innerHTML = await pgConnCardHtml();
+    bindPgConnSave();
   }
 
   /* dialog listing every engine with install / status */
@@ -309,7 +364,7 @@
           ${notInstalled ? `<button class="btn btn-primary" id="db-fix-install">${icon('download', { size: 12 })} 安装 ${fmt.esc(label)}</button>` : ''}
           <button class="btn" id="db-fix-refresh">${icon('refresh', { size: 12 })} 重新加载</button>
         </div>
-        <div class="muted small mt">${unit ? `服务单元 <code>${fmt.esc(unit)}</code> · 安装/启动都是显式操作，默认不会自动启动。` : '该引擎无 systemd 服务（文件型数据库），安装后即可直接使用。'}</div>
+        <div class="muted small mt">${unit ? (CM.isWindows() ? `Windows 服务 <code>${fmt.esc(unit)}</code> · 需在「服务」或此处显式启动。` : `服务单元 <code>${fmt.esc(unit)}</code> · 安装/启动都是显式操作，默认不会自动启动。`) : (CM.isWindows() ? '该引擎无 Windows 服务（如 SQLite），安装客户端后即可使用。' : '该引擎无 systemd 服务（文件型数据库），安装后即可直接使用。')}</div>
       </div>`;
       const reload = async () => { CM.api.invalidate('/databases'); CM.api.invalidate('/db/'); await refreshEngines(); renderShell(ROOT); renderTab(); };
       const sb = document.getElementById('db-fix-start');
@@ -323,6 +378,81 @@
 
   const esc = (v) => v === null || v === undefined ? '<span class="muted">NULL</span>' : fmt.esc(String(v));
   const num = (v) => Number(v || 0).toLocaleString('zh-CN');
+
+  function hasPostgresEngine() {
+    if (CM.isWindows() || isPg) return true;
+    return S.engines.some((e) => e.id === 'postgres')
+      || (S.engineHints || []).some((e) => e.id === 'postgres' && e.installed)
+      || (S.host && S.host.engines || []).some((e) => e.id === 'postgres');
+  }
+
+  async function pgConnCardHtml() {
+    if (!hasPostgresEngine() && !isPg) return '';
+    let pg = { user: 'postgres', host: 'localhost', port: '5432', hasPassword: false };
+    try {
+      const c = await CM.api.get('/config');
+      pg = Object.assign(pg, c.db?.postgres || {});
+    } catch (_) {}
+    const winHint = CM.isWindows()
+      ? 'Windows 需填写 TCP 连接信息（本机一般为 localhost:5432），保存后刷新库列表。'
+      : '留空主机则使用本地 socket；也可填写 TCP。';
+    return `<div class="card mb" id="db-pg-conn">
+      <div class="card-title">PostgreSQL 连接配置
+        <div class="right" style="display:flex;gap:8px">
+          <button class="btn btn-sm" id="db-pg-test" type="button">测试连接</button>
+          <button class="btn btn-sm btn-primary" id="db-pg-save" type="button">保存并刷新</button>
+        </div>
+      </div>
+      <div class="row">
+        <label class="fld">用户<input class="inp mono" id="db-pg-user" value="${fmt.esc(pg.user || 'postgres')}" style="width:120px"></label>
+        <label class="fld">主机<input class="inp mono" id="db-pg-host" value="${fmt.esc(pg.host || 'localhost')}" placeholder="localhost" style="width:150px"></label>
+        <label class="fld">端口<input class="inp mono" id="db-pg-port" value="${fmt.esc(pg.port || '5432')}" placeholder="5432" style="width:90px"></label>
+        <label class="fld">密码<input type="password" class="inp" id="db-pg-pw" placeholder="${pg.hasPassword ? '已设置(留空不变)' : '数据库密码'}" style="width:160px"></label>
+      </div>
+      <div class="muted small mt">${fmt.esc(winHint)}</div>
+    </div>`;
+  }
+
+  function pgConnFormBody() {
+    const body = {
+      postgres: {
+        user: document.getElementById('db-pg-user').value.trim(),
+        host: document.getElementById('db-pg-host').value.trim(),
+        port: document.getElementById('db-pg-port').value.trim(),
+        password: document.getElementById('db-pg-pw').value,
+      },
+    };
+    if (!body.postgres.password) delete body.postgres.password;
+    return body;
+  }
+
+  function bindPgConnSave() {
+    const btn = document.getElementById('db-pg-save');
+    const testBtn = document.getElementById('db-pg-test');
+    if (testBtn) {
+      testBtn.onclick = async () => {
+        ui.busy(testBtn, true);
+        try {
+          const r = await CM.api.post('/db/connection-test', pgConnFormBody());
+          const ver = r.version && r.version.version ? String(r.version.version).slice(0, 80) : '';
+          window.toast(ver ? `连接成功：${ver}` : (r.output || '连接成功'), 'ok', 6000);
+        } catch (e) { window.toast(e.message, 'err', 8000); }
+        ui.busy(testBtn, false);
+      };
+    }
+    if (!btn) return;
+    btn.onclick = async () => {
+      const body = { db: { postgres: pgConnFormBody().postgres } };
+      try {
+        await CM.api.post('/config', body);
+        window.toast('PostgreSQL 连接已保存', 'ok');
+        const pw = document.getElementById('db-pg-pw');
+        if (pw) pw.value = '';
+        CM.api.invalidate('/db/');
+        await renderTab();
+      } catch (e) { window.toast(e.message, 'err'); }
+    };
+  }
 
   /* ================= 1) overview ================= */
   async function tabOverview(box) {
@@ -440,11 +570,22 @@
         ui.busy(b, false);
       };
     });
+    bindPgConnSave();
   }
 
   /* ================= 2) databases ================= */
   async function tabDatabases(box) {
-    const dbs = await CM.api.get('/db/databases?engine=' + S.engine, 10000);
+    let dbs = [];
+    try {
+      dbs = await CM.api.get('/db/databases?engine=' + S.engine, 10000);
+      if (!Array.isArray(dbs)) dbs = [];
+    } catch (e) {
+      box.innerHTML = `<div class="card"><div class="card-title">无法连接 ${fmt.esc(ENGINE_LABEL[S.engine] || S.engine)}</div>
+        <p class="muted small">${fmt.esc(String(e.message || e).split('\n')[0])}</p>
+        <button class="btn btn-sm mt" id="db-list-refresh">重试</button></div>`;
+      document.getElementById('db-list-refresh').onclick = () => renderTab();
+      return;
+    }
     box.innerHTML = `
       <div class="card">
         <div class="card-title">新建数据库
@@ -527,12 +668,14 @@
       if (a.startsWith('修改所有者')) return runAction('/db/database/alter', { engine: 'postgres', database, action: 'owner', params: { owner: r.value } }).catch(() => {});
       return runAction('/db/database/alter', { engine: 'postgres', database, action: 'connlimit', params: { value: r.value } }).catch(() => {});
     });
+    bindPgConnSave();
   }
 
   /* ================= 3) tables & data ================= */
   async function tabTables(box) {
     if (!S.database) {
-      const dbs = await CM.api.get('/db/databases?engine=' + S.engine, 10000);
+      const dbsRaw = await CM.api.get('/db/databases?engine=' + S.engine, 10000);
+      const dbs = asArray(dbsRaw) || [];
       box.innerHTML = `<div class="card">
         <div class="card-title">选择数据库</div>
         <div class="row">${dbs.map((d) => `<button class="btn" data-pick="${fmt.esc(d.name)}">${fmt.esc(d.name)} <span class="muted small">${fmt.esc(d.size)}</span></button>`).join('')}</div>
@@ -541,9 +684,13 @@
       return;
     }
 
-    const tables = await CM.api.get(`/db/tables?engine=${S.engine}&database=${encodeURIComponent(S.database)}`);
+    const tablesRaw = await CM.api.get(`/db/tables?engine=${S.engine}&database=${encodeURIComponent(S.database)}`);
+    const tables = asArray(tablesRaw);
+    if (!tables) throw new Error((tablesRaw && tablesRaw.error) || '无法加载表列表');
 
     if (!S.table) {
+      const kindFilters = ['', 'table', 'view', 'matview', 'function', 'procedure'];
+      let kindFilter = '';
       box.innerHTML = `
       <div class="card" style="padding:12px 14px">
         <div class="row between">
@@ -552,21 +699,48 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-title">表 / 视图 <div class="right"><input class="inp" id="tb-q" placeholder="搜索…" style="width:180px"></div></div>
+        <div class="card-title">对象列表
+          <div class="right row" style="gap:8px;flex-wrap:wrap">
+            <div class="range-btns" id="tb-kind-filters"></div>
+            <input class="inp" id="tb-q" placeholder="搜索…" style="width:180px">
+          </div>
+        </div>
         <div id="tb-list"></div>
       </div>`;
+      const renderKindBtns = () => {
+        document.getElementById('tb-kind-filters').innerHTML = kindFilters.map((k) => {
+          const label = k ? (OBJ_KIND_LABEL[k] || k) : '全部';
+          return `<button type="button" class="btn btn-sm ${kindFilter === k ? 'active btn-primary' : ''}" data-kf="${fmt.esc(k)}">${label}</button>`;
+        }).join('');
+        document.querySelectorAll('[data-kf]').forEach((b) => {
+          b.onclick = () => { kindFilter = b.dataset.kf; renderKindBtns(); draw(document.getElementById('tb-q').value); };
+        });
+      };
       const draw = (q) => {
-        const rows = q ? tables.filter((t) => (t.name + t.schema).toLowerCase().includes(q.toLowerCase())) : tables;
+        let rows = tables;
+        if (kindFilter) rows = rows.filter((t) => (t.kind || 'table') === kindFilter);
+        if (q) rows = rows.filter((t) => ((t.name || '') + (t.schema || '') + (t.args || '')).toLowerCase().includes(q.toLowerCase()));
         document.getElementById('tb-list').innerHTML = ui.table([
           { k: 'schema', label: 'Schema', cls: 'mono' },
           { k: 'name', label: '名称', cls: 'mono' },
-          { k: 'kind', label: '类型', render: (v) => ui.badge(v, v === 'table' ? 'info' : 'purple') },
+          { k: 'kind', label: '类型', render: (v) => ui.badge(OBJ_KIND_LABEL[v] || v, v === 'table' ? 'info' : (v === 'view' || v === 'matview') ? 'purple' : 'gray') },
+          { k: 'args', label: '参数', cls: 'mono wrap', render: (v) => v ? fmt.esc(String(v).slice(0, 80)) : '<span class="muted">-</span>' },
           { k: 'rows', label: '行数', cls: 'num', render: (v) => v == null ? '-' : Number(v).toLocaleString() },
-          { k: 'size', label: '大小', cls: 'num' },
-          { k: 'name', label: '操作', render: (v, r) => `<button class="btn btn-sm btn-primary" data-open="${fmt.esc(r.schema + '.' + r.name)}">打开</button>` },
+          { k: 'size', label: '大小', cls: 'num', render: (v) => v == null ? '-' : fmt.esc(String(v)) },
+          { k: 'name', label: '操作', render: (v, r) => `<button class="btn btn-sm btn-primary" data-open="${fmt.esc(r.schema + '.' + r.name)}" data-kind="${fmt.esc(r.kind || 'table')}">打开</button>` },
         ], rows, { style: 'max-height:56vh' });
-        document.querySelectorAll('[data-open]').forEach((b) => b.onclick = () => { S.table = b.dataset.open; S.schema = null; S.page = 0; S.orderBy = ''; S.where = ''; S.tableView = 'data'; renderTab(); });
+        document.querySelectorAll('[data-open]').forEach((b) => b.onclick = () => {
+          S.table = b.dataset.open;
+          S.tableKind = b.dataset.kind || 'table';
+          S.schema = null;
+          S.page = 0;
+          S.orderBy = '';
+          S.where = '';
+          S.tableView = (S.tableKind === 'function' || S.tableKind === 'procedure') ? 'ddl' : 'data';
+          renderTab();
+        });
       };
+      renderKindBtns();
       draw('');
       document.getElementById('tb-q').oninput = (e) => draw(e.target.value);
       document.getElementById('tb-switch').onclick = () => { S.database = null; renderTab(); };
@@ -578,29 +752,66 @@
     }
 
     /* table detail */
-    const sch = await CM.api.get(`/db/table/schema?engine=${S.engine}&database=${encodeURIComponent(S.database)}&table=${encodeURIComponent(S.table)}`);
-    S.schema = sch;
+    const kindQ = (S.tableKind === 'function' || S.tableKind === 'procedure') ? `&kind=${encodeURIComponent(S.tableKind)}` : '';
+    const schRaw = await CM.api.get(`/db/table/schema?engine=${S.engine}&database=${encodeURIComponent(S.database)}&table=${encodeURIComponent(S.table)}${kindQ}`);
+    if (schRaw && schRaw.objectKind) {
+      S.schema = schRaw;
+      S.tableKind = schRaw.objectKind;
+    } else {
+      S.schema = normalizeTableSchema(schRaw);
+    }
+    const sch = S.schema;
+    const isRoutine = S.tableKind === 'function' || S.tableKind === 'procedure';
+    const tabs = isRoutine
+      ? [['ddl:DDL 定义', 'ddl'], ['console:执行 / DML', 'console']]
+      : [['data:数据', 'data'], ['structure:结构', 'structure'], ['ddl:DDL', 'ddl']];
     box.innerHTML = `
       <div class="card" style="padding:12px 14px">
         <div class="row between">
           <div class="row">
-            <button class="btn btn-sm" id="td-back">${icon('chevronLeft', { size: 13 })} 返回表列表</button>
+            <button class="btn btn-sm" id="td-back">${icon('chevronLeft', { size: 13 })} 返回列表</button>
             <b class="mono">${fmt.esc(S.database)}.${fmt.esc(S.table)}</b>
-            <span class="chip">${sch.columns.length} 列</span><span class="chip">${sch.indexes.length} 索引</span>
+            <span class="chip">${fmt.esc(OBJ_KIND_LABEL[S.tableKind] || S.tableKind || '对象')}</span>
+            ${!isRoutine ? `<span class="chip">${(sch.columns || []).length} 列</span><span class="chip">${(sch.indexes || []).length} 索引</span>` : ''}
           </div>
           <div class="row range-btns">
-            ${['data:数据', 'structure:结构', 'ddl:DDL'].map(([k, l]) => `<button class="btn btn-sm ${S.tableView === k ? 'active btn-primary' : ''}" data-tv="${k}">${l}</button>`).join('')}
+            ${tabs.map(([label, k]) => `<button class="btn btn-sm ${S.tableView === k ? 'active btn-primary' : ''}" data-tv="${k}">${label.split(':')[1] || label}</button>`).join('')}
           </div>
         </div>
       </div>
       <div id="td-body"></div>`;
 
-    document.getElementById('td-back').onclick = () => { S.table = null; renderTab(); };
+    document.getElementById('td-back').onclick = () => { S.table = null; S.tableKind = null; renderTab(); };
     box.querySelectorAll('[data-tv]').forEach((b) => b.onclick = () => { S.tableView = b.dataset.tv; renderTab(); });
 
-    if (S.tableView === 'structure') renderStructure();
+    if (isRoutine && S.tableView === 'console') renderRoutineConsole();
+    else if (S.tableView === 'structure') renderStructure();
     else if (S.tableView === 'ddl') renderDdl();
-    else await renderData();
+    else if (!isRoutine) await renderData();
+    else renderDdl();
+  }
+
+  function renderRoutineConsole() {
+    const sch = S.schema || {};
+    const sig = sch.signature || S.table;
+    const isProc = S.tableKind === 'procedure';
+    const sample = isProc ? `CALL ${sig};` : `SELECT ${sig};`;
+    document.getElementById('td-body').innerHTML = `
+      <div class="card">
+        <div class="card-title">执行 ${fmt.esc(OBJ_KIND_LABEL[S.tableKind] || S.tableKind)}
+          <div class="right"><button class="btn btn-sm btn-primary" id="rt-run">执行</button></div>
+        </div>
+        <textarea class="inp mono" id="rt-sql" style="width:100%;min-height:120px">${fmt.esc(sample)}</textarea>
+        <div class="muted small mt">修改后执行；复杂逻辑也可在「SQL 控制台」页运行。</div>
+        <pre class="pre mt" id="rt-out" style="max-height:40vh"></pre>
+      </div>`;
+    document.getElementById('rt-run').onclick = async () => {
+      const sql = document.getElementById('rt-sql').value;
+      try {
+        const r = await CM.api.post('/db/console', { engine: S.engine, database: S.database, sql });
+        document.getElementById('rt-out').textContent = r.output || JSON.stringify(r.rows || r, null, 2);
+      } catch (e) { document.getElementById('rt-out').textContent = e.message; }
+    };
   }
 
   function renderStructure() {
@@ -738,6 +949,29 @@
   }
 
   function renderDdl() {
+    const sch = S.schema || {};
+    if ((S.tableKind === 'function' || S.tableKind === 'procedure') && sch.ddl) {
+      document.getElementById('td-body').innerHTML = `
+        <div class="card">
+          <div class="card-title">DDL 定义
+            <div class="right">
+              <button class="btn btn-sm" id="ddl-copy">复制</button>
+              <button class="btn btn-sm btn-primary" id="ddl-run">在控制台执行</button>
+            </div>
+          </div>
+          <textarea class="inp mono" id="ddl-text" style="width:100%;min-height:320px">${fmt.esc(sch.ddl)}</textarea>
+          <div class="muted small mt">可使用 CREATE OR REPLACE 修改定义后点「在控制台执行」。</div>
+        </div>`;
+      document.getElementById('ddl-copy').onclick = async () => {
+        try { await navigator.clipboard.writeText(document.getElementById('ddl-text').value); window.toast('已复制', 'ok'); } catch (_) {}
+      };
+      document.getElementById('ddl-run').onclick = async () => {
+        const sql = document.getElementById('ddl-text').value;
+        try { const r = await runAction('/db/console', { engine: S.engine, database: S.database, sql }, { toast: false }); modal.output('执行结果', r.output); }
+        catch (_) {}
+      };
+      return;
+    }
     document.getElementById('td-body').innerHTML = `
       <div class="card">
         <div class="card-title">DDL 定义（可编辑后执行）
@@ -821,7 +1055,8 @@
         </div>
       </div>`;
 
-    const cols = d.columns.length ? d.columns : S.schema.columns.map((c) => c.name);
+    const colList = Array.isArray(d.columns) ? d.columns : (S.schema.columns || []).map((c) => c.name);
+    const cols = colList.length ? colList : (S.schema.columns || []).map((c) => c.name);
     const tableCols = cols.map((c) => ({
       k: c, label: c, cls: 'mono', render: (v) => {
         if (v === null || v === undefined) return '<span class="muted">NULL</span>';
@@ -1482,23 +1717,29 @@
   }
   /* ================= 7) insights ================= */
   function renderSections(host, sections) {
-    host.innerHTML = sections.map((s) => `
+    const list = Array.isArray(sections) ? sections : [];
+    host.innerHTML = list.map((s) => {
+      const rows = Array.isArray(s.rows) ? s.rows : [];
+      const columns = Array.isArray(s.columns) ? s.columns : (rows[0] ? Object.keys(rows[0]) : []);
+      return `
       <div class="card">
-        <div class="card-title">${fmt.esc(s.title)}
-          <div class="right">${s.rows.length ? `<span class="chip">${s.rows.length} 行</span>` : ''}${s.note ? `<span class="muted small">${fmt.esc(s.note)}</span>` : ''}</div>
+        <div class="card-title">${fmt.esc(s.title || '')}
+          <div class="right">${rows.length ? `<span class="chip">${rows.length} 行</span>` : ''}${s.note ? `<span class="muted small">${fmt.esc(s.note)}</span>` : ''}</div>
         </div>
         ${s.error ? `<div class="mb">${ui.badge('不可用', 'gray')} <span class="muted small">${fmt.esc(s.error)}</span></div>`
-          : (s.rows.length
-            ? ui.table(s.columns.map((c) => ({
+          : (rows.length
+            ? ui.table(columns.map((c) => ({
               k: c, label: c, cls: 'mono',
               render: (v) => v === null || v === undefined ? '<span class="muted">NULL</span>' : fmt.esc(String(v).slice(0, 120)),
-            })), s.rows, { style: 'max-height:38vh' })
+            })), rows, { style: 'max-height:38vh' })
             : '<div class="muted small">无数据</div>')}
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
   async function tabInsights(box) {
-    const dbs = await CM.api.get('/db/databases?engine=' + S.engine, 10000).catch(() => []);
+    const dbsRaw = await CM.api.get('/db/databases?engine=' + S.engine, 10000).catch(() => []);
+    const dbs = asArray(dbsRaw) || [];
     const usable = dbs.filter((d) => !d.is_template);
     const cur = S.database && usable.find((d) => d.name === S.database) ? S.database : (usable[0] || {}).name;
     box.innerHTML = `
@@ -1541,11 +1782,11 @@
         };
       } else {
         stHost.innerHTML = `<div class="card">
-          <div class="card-title">慢查询 / 热点语句 <span class="chip">${st.rows.length} 条</span></div>
-          ${ui.table((st.columns || []).map((c) => ({ k: c, label: c, cls: 'mono', render: (v) => v === null ? '<span class="muted">NULL</span>' : fmt.esc(String(v).slice(0, 140)) })), st.rows, { style: 'max-height:36vh' })}
+          <div class="card-title">慢查询 / 热点语句 <span class="chip">${(st.rows || []).length} 条</span></div>
+          ${ui.table((st.columns || []).map((c) => ({ k: c, label: c, cls: 'mono', render: (v) => v === null ? '<span class="muted">NULL</span>' : fmt.esc(String(v).slice(0, 140)) })), st.rows || [], { style: 'max-height:36vh' })}
         </div>`;
       }
-      renderSections(sectionsHost, ins.sections);
+      renderSections(sectionsHost, ins.sections || []);
     };
     document.getElementById('in-refresh').onclick = load;
     document.getElementById('in-db').onchange = load;
@@ -1554,7 +1795,8 @@
 
   /* ================= 8) objects ================= */
   async function tabObjects(box) {
-    const dbs = await CM.api.get('/db/databases?engine=' + S.engine, 10000).catch(() => []);
+    const dbsRaw = await CM.api.get('/db/databases?engine=' + S.engine, 10000).catch(() => []);
+    const dbs = asArray(dbsRaw) || [];
     const usable = dbs.filter((d) => !d.is_template);
     const cur = S.database && usable.find((d) => d.name === S.database) ? S.database : (usable[0] || {}).name;
     box.innerHTML = `
@@ -1604,7 +1846,7 @@
           runAction('/db/schema/manage', { engine: S.engine, database, action: 'drop', name: b.dataset.scdrop }, { reload: () => load() }).catch(() => {});
         }));
       }
-      renderSections(host, d.sections);
+      renderSections(host, d.sections || []);
     };
     const addSchema = document.getElementById('ob-schema-add');
     if (addSchema) addSchema.onclick = () => {
@@ -1810,7 +2052,7 @@
           <input class="inp mono" id="adv-pl-sch" value="0 4 * * *" style="width:150px">
           <button class="btn btn-sm btn-primary" id="adv-pl-run">创建计划</button>
         </div>
-        <div class="muted small">写入系统定时任务（<code>/etc/cron.d/cm-dbmaint-*</code>）。示例：<code>0 4 * * *</code> 每天 4 点 · <code>0 4 * * 0</code> 每周日 4 点。可在「定时任务」页查看/删除。</div>
+        <div class="muted small">${CM.isWindows() ? '写入 Windows 任务计划程序（<code>cm-dbmaint-*</code>）。' : '写入系统定时任务（<code>/etc/cron.d/cm-dbmaint-*</code>）。'}示例：<code>0 4 * * *</code> 每天 4 点 · <code>0 4 * * 0</code> 每周日 4 点。可在「定时任务」页查看/删除。</div>
       </div>`;
       box.querySelector('#adv-pl-run').onclick = async (e) => {
         const action = box.querySelector('#adv-pl-act').value;

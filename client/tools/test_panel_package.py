@@ -26,7 +26,7 @@ PKG = os.path.join(REPO, "deploy", "cloud-monitor-panel")
 
 HOST = os.environ.get("SM_HOST", "8.153.153.176")
 USER = os.environ.get("SM_USER", "root")
-PASS = os.environ.get("SM_PASS", "Ladridibiciclette!")
+PASS = os.environ["SM_PASS"]
 
 PREFIX = "/opt/cm-pack-test"
 DATA = "/var/lib/cm-pack-test"

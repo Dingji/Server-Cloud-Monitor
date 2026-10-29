@@ -56,8 +56,33 @@ kotlin {
         }
     }
 
+    // 真机 arm64 + Apple 芯片模拟器；framework 给 Xcode 壳的「Compile Kotlin Framework」
+    // 阶段（embedAndSignAppleFrameworkForXcode）消费。
+    // 不加 iosX64（Intel 模拟器）：Compose Multiplatform 1.12.2 未发布 iosx64 变体，
+    // 加上会让 kmpPartiallyResolvedDependenciesChecker 对 runtime/foundation/ui 全部报
+    // "Unresolved platforms: [iosX64]"。
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
+        target.binaries.framework {
+            baseName = "ComposeApp"
+            // 静态：与 JetBrains compose-multiplatform 官方 examples（nav_cupcake）一致，
+            // 链接走 OTHER_LDFLAGS 的 -framework ComposeApp，Xcode 不需要 Embed Frameworks 阶段。
+            isStatic = true
+        }
+    }
+
     sourceSets {
         val desktopMain by getting
+
+        // 实测：`val iosMain by getting` 在 Windows 上抛
+        // "KotlinSourceSet with name 'iosMain' not found" —— 默认层级模板的共享源集不是
+        // 在 iosArm64() 那一步同步建出来的，脚本求值时点还取不到（任务本身倒是会建）。
+        // 改惰性匹配后：Mac 上 iosMain 一出现就挂上 Darwin，Windows 上取不到也只是空转，
+        // 同一份脚本三种主机都能配置成功。
+        matching { it.name == "iosMain" }.configureEach {
+            dependencies {
+                implementation(libs.ktor.client.darwin)
+            }
+        }
 
         commonMain.dependencies {
             implementation(compose.runtime)

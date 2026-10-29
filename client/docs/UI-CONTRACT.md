@@ -33,6 +33,21 @@ fun PanelCard(
 @Composable
 fun GridLayout(columns: Int, spacing: Dp = 12.dp, content: @Composable () -> Unit)
 
+/**
+ * 自适应行：桌面同一行按权重分栏，手持端（platformHandheld）叠成单列。
+ * 子项宽度必须用 SpanScope.span / spanFixed，别直接写 Modifier.weight / Modifier.width。
+ */
+@Composable
+fun AdaptiveRow(
+    modifier: Modifier = Modifier,
+    spacing: Dp = 8.dp,
+    stacked: Boolean = platformHandheld,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    content: @Composable SpanScope.() -> Unit,
+)
+// SpanScope.span(w)    桌面 = 行内 weight(w)；手持端 = fillMaxWidth()
+// SpanScope.spanFixed(dp) 桌面 = width(dp)；手持端 = fillMaxWidth()
+
 /** 卡片内分区小标题。 */
 @Composable
 fun SectionTitle(text: String, modifier: Modifier = Modifier)

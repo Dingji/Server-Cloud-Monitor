@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -30,7 +31,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -57,6 +57,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.SolidColor
@@ -205,6 +206,19 @@ fun PageScaffold(
     }
 }
 
+/**
+ * 插槽专用横向滚动 —— 只给 [PanelCard] 的 `right` 与 [PageScaffold] 的 `actions` 用。
+ *
+ * 手持端外壳已经把这两块插槽整段包进 `Row(Modifier.horizontalScroll())`（窄屏溢出统一由外层滚动），
+ * 插槽里再叠一层会让内层滚动容器收到 `maxWidth = Constraints.Infinity`，Compose 直接抛
+ * `IllegalStateException: Horizontally scrollable component was measured with an infinity maximum
+ * width constraints`，点进页面即闪退；桌面端外壳不包滚动，仍由插槽自己承担溢出。
+ * 卡片**正文**里的横向滚动不受此限（正文始终拿到有界宽度），照常用 `horizontalScroll`。
+ */
+@Composable
+fun Modifier.slotHorizontalScroll(): Modifier =
+    if (platformHandheld) this else horizontalScroll(rememberScrollState())
+
 private const val COLLAPSE_STORE_KEY = "cm_collapsed_cards_v1"
 
 private fun readCollapsed(): Set<String> =
@@ -219,6 +233,9 @@ private fun writeCollapsed(key: String, collapsed: Boolean) {
 /**
  * 卡片，标题可点击折叠，折叠状态按 [cardKey] 持久化（复刻面板的 .card.collapsed）。
  * [PageScope.id] 非空时存储键 = `页面id|cardKey`（与 web 的 page|title 一致）。
+ *
+ * 手持端（Android）会把 `right` 插槽整段包进横向滚动里 —— 插槽内部请用 [slotHorizontalScroll]，
+ * 不要再直接写 `Modifier.horizontalScroll(...)`，否则两层滚动嵌套会因内层拿到 Infinity 宽度而闪退。
  */
 @Composable
 fun PanelCard(
@@ -273,6 +290,7 @@ fun PanelCard(
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier.weight(1f),
                             )
+                            if (collapsible) CollapseChevron(collapsed)
                         }
                         Row(
                             Modifier
@@ -309,6 +327,10 @@ fun PanelCard(
                             Spacer(Modifier.width(10.dp))
                             Row(verticalAlignment = Alignment.CenterVertically, content = right)
                         }
+                        if (collapsible) {
+                            Spacer(Modifier.width(8.dp))
+                            CollapseChevron(collapsed)
+                        }
                     }
                 }
                 if (!collapsed) {
@@ -318,6 +340,63 @@ fun PanelCard(
             }
         }
     }
+}
+
+/**
+ * 折叠状态指示。没有它，折叠后的卡片和「内容为空的坏卡片」长得一模一样
+ * （26 个页面共用 PanelCard；relayhub 页原先那张整页只有标题的卡片就是这样被当成渲染故障的）。
+ */
+@Composable
+private fun CollapseChevron(collapsed: Boolean) {
+    PanelIcon(
+        if (collapsed) "chevronRight" else "chevronDown",
+        size = 14.dp,
+        color = Palette.muted,
+        stroke = 2.0f,
+    )
+}
+
+/**
+ * 自适应行：桌面同一行按权重分栏，手持端叠成单列。
+ *
+ * 手机上把 3~5 个字段塞进一个 `Row`，`weight(1f)` 分到的只剩几十 dp，
+ * 搜索框会缩成竖排的高塔、「索引更新于 …」会一字一行竖到卡片外面。
+ * 这类行统一走 [AdaptiveRow] + [SpanScope.span]，别在子项里直接写 `Modifier.weight`。
+ *
+ * [stacked] 默认只看 [platformHandheld]；窄桌面窗口要一起叠时，
+ * 在 `BoxWithConstraints` 里传 `HandheldLayout.contentStacked(maxWidth)`。
+ */
+@Composable
+fun AdaptiveRow(
+    modifier: Modifier = Modifier,
+    spacing: Dp = 8.dp,
+    stacked: Boolean = platformHandheld,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    content: @Composable SpanScope.() -> Unit,
+) {
+    if (stacked) {
+        Column(
+            Modifier.fillMaxWidth().then(modifier),
+            verticalArrangement = Arrangement.spacedBy(spacing),
+        ) { with(SpanScope(null)) { content() } }
+    } else {
+        Row(
+            Modifier.fillMaxWidth().then(modifier),
+            horizontalArrangement = Arrangement.spacedBy(spacing),
+            verticalAlignment = verticalAlignment,
+        ) { with(SpanScope(this)) { content() } }
+    }
+}
+
+/** [AdaptiveRow] 的子项作用域。 */
+class SpanScope internal constructor(private val row: RowScope?) {
+    /** 桌面 = 行内按 [weight] 分栏；手持端（已叠成单列）= 占满整行。 */
+    fun Modifier.span(weight: Float = 1f): Modifier =
+        if (row != null) with(row) { Modifier.weight(weight) } else Modifier.fillMaxWidth()
+
+    /** 桌面 = 固定 [desktopWidth]（与原来写死 `width()` 一模一样）；手持端 = 占满整行。 */
+    fun Modifier.spanFixed(desktopWidth: Dp): Modifier =
+        if (row != null) Modifier.width(desktopWidth) else Modifier.fillMaxWidth()
 }
 
 /**
@@ -1146,7 +1225,8 @@ fun <T> DataTable(
             if (columns.isEmpty()) {
                 EmptyState(emptyText, Modifier.fillMaxWidth().padding(28.dp))
             } else if (handheld) {
-                Column(Modifier.fillMaxWidth().horizontalScroll(hScroll)) {
+                Box(Modifier.fillMaxWidth()) {
+                    Column(Modifier.fillMaxWidth().horizontalScroll(hScroll)) {
                     Row(Modifier.width(tableW).background(Palette.tableHeader)) {
                         columns.forEachIndexed { i, c ->
                             Box(
@@ -1190,6 +1270,18 @@ fun <T> DataTable(
                                 Box(Modifier.width(tableW).height(1.dp).background(Palette.tableDivider))
                             }
                         }
+                    }
+                }
+                    // 手持端表格右侧渐隐：列被裁掉时给出「还能横滑」的线索（桌面不需要）
+                    if (hScroll.value < hScroll.maxValue) {
+                        Box(
+                            Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(20.dp)
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(Palette.tableSurface.copy(alpha = 0f), Palette.tableSurface),
+                                    ),
+                                ),
+                        )
                     }
                 }
             } else {

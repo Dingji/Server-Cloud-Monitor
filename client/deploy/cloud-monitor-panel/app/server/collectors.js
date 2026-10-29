@@ -4,6 +4,10 @@
  * Core metrics come from /proc (no subprocess per tick); heavier details are
  * collected on demand and cached briefly.
  */
+if (process.platform === 'win32') {
+  module.exports = require('./collectors-win');
+  return;
+}
 const { getAgent } = require('./agent');
 const { parseInt10, toFloat, logErr } = require('./util');
 

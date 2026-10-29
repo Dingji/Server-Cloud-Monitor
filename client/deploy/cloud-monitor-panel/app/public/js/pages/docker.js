@@ -15,15 +15,20 @@
         root.innerHTML = `<div class="card" style="text-align:center;padding:64px">
           <div style="color:var(--muted);display:flex;justify-content:center;margin-bottom:14px">${icon('docker', { size: 42, stroke: 1.2 })}</div>
           <div class="muted mb">服务器未安装 Docker 容器引擎。</div>
-            <button class="btn btn-primary" id="dk-install">一键安装 Docker (docker.io)</button>
+            <button class="btn btn-primary" id="dk-install">${CM.isWindows() ? '安装 Docker Desktop (winget)' : '一键安装 Docker (docker.io)'}</button>
           <div class="muted small mt">安装约需 1-3 分钟（取决于网络），完成后此页面自动可用。</div>
         </div>`;
         document.getElementById('dk-install').onclick = async () => {
-          const okc = await modal.confirm('安装 Docker', '将执行 <code>apt-get install -y docker.io</code>，约 1-3 分钟。', { okText: '开始安装' });
+          const isWin = CM.isWindows();
+          const okc = await modal.confirm('安装 Docker', isWin ? '将尝试 <code>winget install Docker.DockerDesktop</code>，约 3-10 分钟。' : '将执行 <code>apt-get install -y docker.io</code>，约 1-3 分钟。', { okText: '开始安装' });
           if (!okc) return;
           const btn = document.getElementById('dk-install');
           ui.busy(btn, true);
-          try { const r = await runAction('/pkg/install', { pkg: 'docker.io' }, { showOutput: true, title: 'Docker 安装日志' }); location.reload(); }
+          try {
+            if (isWin) await runAction('/pkg/install', { pkg: 'Docker.DockerDesktop' }, { showOutput: true, title: 'Docker 安装日志' });
+            else await runAction('/pkg/install', { pkg: 'docker.io' }, { showOutput: true, title: 'Docker 安装日志' });
+            location.reload();
+          }
           catch (_) { ui.busy(btn, false); }
         };
         return;

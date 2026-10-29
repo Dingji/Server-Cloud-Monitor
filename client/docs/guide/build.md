@@ -1,7 +1,14 @@
 # 构建与运行
 
-本页给出双平台构建的完整步骤、工具链版本表与常见故障排查。
+本页给出三平台（Android / Desktop / iOS）构建的完整步骤、工具链版本表与常见故障排查。
 面向维护者；用户视角的快速开始见仓库根目录 [`README.md`](../../README.md)。
+
+> **iOS 只能在 macOS 上打包，但 Kotlin 侧的类型检查可以在本机（Windows）跑。**
+> 加开关 `-Pkotlin.native.enableKlibsCrossCompilation=true` 后，
+> `:composeApp:compileKotlinIosArm64` 会真的执行并产出
+> `composeApp/build/classes/kotlin/iosArm64/main/klib`——expect/actual 匹配、
+> UIKit/Foundation 每个调用的签名都会在这里被检查。封装见 **`tests/ios-gate.ps1`**。
+> 链接 framework、Xcode 打包、真机行为仍必须在 Mac 上做（见 3.1 末尾清单）。
 
 ---
 
@@ -18,6 +25,7 @@
 | Compose Multiplatform | **1.12.2** | 同上 |
 | Ktor | **3.6.0** | 同上 |
 | kotlinx-serialization / coroutines / datetime | 1.11.0 / 1.11.0 / 0.8.0 | 同上 |
+| Xcode | 15+（iOS 15 部署目标） | **仅 macOS**；`iosApp/` 壳工程 + Kotlin/Native Apple 工具链 |
 
 应用坐标：`applicationId = com.servermaintance.panel`，`versionName = 1.0.0`，`versionCode = 1`，
 `minSdk = 26`、`targetSdk = 37`、`compileSdk = 37`，JVM target **17**。
@@ -68,6 +76,32 @@
 
 首次构建需下载依赖，耗时取决于网络；之后增量编译很快（已开 `org.gradle.caching`、`org.gradle.parallel`）。
 
+### 3.1 iOS（只能在 macOS 上执行）
+
+`composeApp` 声明了 `iosArm64()` 与 `iosSimulatorArm64()`，产出 `isStatic = true` 的
+framework（`baseName = "ComposeApp"`，Swift 侧 `import ComposeApp`，链接走
+`OTHER_LDFLAGS = -framework ComposeApp`，不需要 Embed Frameworks 阶段）。
+**没有声明 `iosX64()`**：Compose Multiplatform 1.12.2 不发布 `iosx64` 变体，
+加上会让 `kmpPartiallyResolvedDependenciesChecker` 对 runtime/foundation/ui 报
+`Unresolved platforms: [iosX64]`。
+
+前置：JDK 17+（`./gradlew` 需要 JVM），命令行工具指向 Xcode（`xcode-select -s ...`）。
+`build.ps1` 是 Windows 专用包装器（探测 JBR / `ANDROID_HOME`），Mac 上直接用 wrapper。
+
+```bash
+./gradlew :composeApp:compileKotlinIosArm64          # 只编译 iosMain + commonMain
+./gradlew :composeApp:linkDebugFrameworkIosArm64     # 产出 ComposeApp.framework（能发现链接问题）
+xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp \
+  -sdk iphonesimulator -configuration Debug build    # 整包（含 Swift 壳 + 资源）
+```
+
+Xcode 工程里有一步 Shell Script 阶段 `cd "$SRCROOT/.."` + `./gradlew :composeApp:embedAndSignAppleFrameworkForXcode`，
+必须排在 Compile Sources **之前**，且 `ENABLE_USER_SCRIPT_SANDBOXING = NO`（否则沙箱会挡掉 Gradle 调用）。
+
+i18n：18 个语言包靠 Xcode 的**文件夹引用**（蓝色，`lastKnownFileType = folder`）指向
+`composeApp/src/commonMain/resources/i18n`，落点 `<App>.app/i18n/<tag>.json`；
+`iosMain/BundledText.ios.kt` 只按这个位置读。改成黄色分组会读不到，表现为全部文案退化成 key。
+
 ---
 
 ## 4. 产物路径
@@ -80,6 +114,8 @@
 | Windows MSI | `composeApp\build\compose\binaries\main\msi\CloudMonitor-1.0.0.msi` |
 | Linux DEB | `composeApp\build\compose\binaries\main\deb\cloudmonitor_1.0.0-1_amd64.deb` |
 | macOS DMG | `composeApp\build\compose\binaries\main\dmg\CloudMonitor-1.0.0.dmg` |
+| iOS framework（Xcode 消费） | `composeApp/build/xcode-frameworks/<CONFIGURATION>/<SDK_NAME>/ComposeApp.framework`（由 `embedAndSignAppleFrameworkForXcode` 产出，仅 Mac） |
+| iOS 调试 IPA / .app | Xcode DerivedData；命令行构建落 `build/ios_app/`（仅 Mac，路径随 Xcode 版本变化） |
 
 桌面分发配置在 `composeApp/build.gradle.kts` 的 `compose.desktop.application.nativeDistributions`：
 `packageName = CloudMonitor`、`packageVersion = 1.0.0`、`targetFormats(Dmg, Msi, Deb)`、
@@ -116,6 +152,31 @@ android.suppressUnsupportedCompileSdk=37
 
 其它相关配置：`org.gradle.jvmargs=-Xmx4096m`、`org.gradle.configuration-cache=false`
 （当前 AGP/KMP 组合下先关掉，避免与并行编译争用叠加）。
+
+### 5.1 构建告警基线：源码 0 warning
+
+`compileKotlinDesktop` / `compileTestKotlinDesktop` / `compileDebugKotlinAndroid` /
+`compileDebugUnitTestKotlinAndroid` / `compileKotlinIos{Arm64,SimulatorArm64}`
+全量 `--rerun-tasks` 之后，**源码侧告警为 0**。当前唯一还会打印的 `w:` 行来自插件本身：
+
+```
+w: The 'org.jetbrains.kotlin.multiplatform' plugin deprecated compatibility with Android Gradle plugin: 'com.android.application'
+```
+
+- 它是 KGP 对「KMP + com.android.application」这一组合的版本策略提示，不是任何 .kt 的问题。
+- 唯一的开关 `kotlin.mpp.androidGradlePluginCompatibility.nowarn` **本身已废弃**，
+  加上后会再多一条 `w: Deprecated Gradle Property ... Used`，反而更吵，所以不设。
+- 真正消掉它要迁到 `com.android.kotlin.multiplatform.library`（与 §5 的 AGP 10 迁移是同一件事）。
+
+复现核对（PowerShell）：
+
+```powershell
+pwsh tests\gate.ps1 -Task ":composeApp:compileKotlinDesktop --rerun-tasks" -Out tests\warn.log
+Select-String -Path tests\warn.log -Pattern '^w: '   # 只应剩上面那一条
+```
+
+未使用 import 不会由 CLI 报出（只有 IDE 检查会），用 `python tools\unused_imports.py composeApp/src`
+扫；加 `--fix` 直接删除，删完必须回到 §2 的四端门禁重编一遍确认没删错。
 
 ---
 
@@ -162,6 +223,24 @@ $env:JAVA_HOME = "$env:LOCALAPPDATA\Programs\Android Studio\jbr"
   `docs/status/RISKS.md`）。
 - 该服务器 **SSH 只允许公钥登录**（禁用密码），与面板访问密码是两回事。
 
+### 6.7 Windows 上跑 iOS 任务的两种表现
+
+实测（Kotlin 2.4.21 + KGP，Windows 主机）：
+
+- **不加开关**：`compileKotlinIosArm64` 任务**是存在的**，但会在配置阶段抛
+  `The target (iosArm64) is incompatible with (windows)` → `BUILD FAILED`。
+  它**不是**「静默跳过」，别把 `exit 0` 当成检查过了。
+- **加 `-Pkotlin.native.enableKlibsCrossCompilation=true`**：klib 编译真的跑，
+  产出 `composeApp/build/classes/kotlin/iosArm64/main/klib`，iOS 侧 Kotlin 错误当场报出来。
+  本机首次运行会下载 `kotlin-native-prebuilt-windows-*`（约 135 MB，落在 `~/.konan`，
+  **含 `klib/platform/ios_arm64` 全套平台库**，所以不是无效下载）。
+  → 日常就用 `pwsh tests\ios-gate.ps1`。
+- `sourceSets { val iosMain by getting }` 在 Windows 上会抛
+  `KotlinSourceSet with name 'iosMain' not found`：默认层级模板的共享源集是在 target
+  注册之后才建出来的，脚本求值时点还没有。本工程改用惰性形式
+  `matching { it.name == "iosMain" }.configureEach { dependencies { … } }`，
+  Mac / Windows 都能配置成功。
+
 ---
 
 ## 7. 构建完成后的验证清单
@@ -171,3 +250,8 @@ $env:JAVA_HOME = "$env:LOCALAPPDATA\Programs\Android Studio\jbr"
 3. `.\build.ps1 :composeApp:packageDistributionForCurrentOS` → 生成当前 OS 的安装包
 4. 桌面端启动后：登录页能填地址并「测试连接」→ 进入主框架 → 侧栏 20 页可达
 5. 真实服务器冒烟注意限流（见 6.6）
+6. iOS（仅 Mac）：`./gradlew :composeApp:linkDebugFrameworkIosArm64` 通过 →
+   `xcodebuild … -sdk iphonesimulator build` 通过 → 模拟器上重点回归
+   **登录 / `/ws` 与 `/term` 是否稳定不断连**（iOS 换成了 Darwin 引擎，见
+   `docs/guide/architecture.md` 平台差异表）、**18 语界面不是裸 key**（i18n 文件夹引用）、
+   备份导出能在「文件」App 里看到（`UIFileSharingEnabled`）

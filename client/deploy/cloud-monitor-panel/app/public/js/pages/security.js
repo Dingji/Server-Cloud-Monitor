@@ -6,6 +6,8 @@
     id: 'security',
     title: '安全管理',
     async mount(root) {
+      const isWin = CM.isWindows();
+      if (isWin) return this.mountWin(root);
       const [d, rl] = await Promise.all([
         CM.api.get('/security'),
         CM.api.get('/relayops/ratelimit').catch(() => null),
@@ -14,11 +16,12 @@
       const ufwOn = d.ufw.active;
 
       root.innerHTML = `
+      ${isWin ? '<div class="card mb"><div class="muted small">Windows：使用 <b>高级防火墙 (netsh)</b> 与本地安全策略；OpenSSH 为可选功能。下方 Linux 专用区块在 Windows 上仅作说明。</div></div>' : ''}
       <div class="grid g4" id="s-cards"></div>
 
       <div class="grid g2">
         <div class="card">
-          <div class="card-title">SSH 服务配置 (sshd 有效配置)
+          <div class="card-title">${isWin ? 'OpenSSH 服务（可选）' : 'SSH 服务配置 (sshd 有效配置)'}
             <div class="right"><button class="btn btn-sm btn-primary" id="s-sshd-apply">${icon('save', { size: 13 })} 应用并重载 SSH</button></div>
           </div>
           <div class="grid g2" style="gap:10px">
@@ -37,7 +40,7 @@
               <select class="inp" id="s-emptypw">${['no', 'yes'].map((o) => `<option ${s.permitemptypasswords === o ? 'selected' : ''}>${o}</option>`).join('')}</select>
             </label>
           </div>
-          <div class="muted small mt">修改会写入 <code>/etc/ssh/sshd_config.d/99-cloud-monitor.conf</code>，先执行 <code>sshd -t</code> 校验，失败自动放弃。建议先配好密钥再关闭密码认证。</div>
+          <div class="muted small mt">${isWin ? 'Windows 不通过面板改写 sshd_config；请在「设置 → 应用 → 可选功能」安装 OpenSSH 服务器后使用组策略或配置文件。' : '修改会写入 <code>/etc/ssh/sshd_config.d/99-cloud-monitor.conf</code>，先执行 <code>sshd -t</code> 校验，失败自动放弃。建议先配好密钥再关闭密码认证。'}</div>
         </div>
 
         <div class="card">
@@ -160,9 +163,11 @@
       </div>`;
 
       /* posture cards */
-      const openPorts = d.ufw.rules ? null : null;
+      const fwRules = (d.ufw && Array.isArray(d.ufw.rules)) ? d.ufw.rules : [];
+      const fwLabel = isWin ? 'Windows 防火墙' : '主机防火墙 UFW';
+      const fwSub = isWin ? (d.ufw && d.ufw.raw ? fmt.esc(String(d.ufw.raw).slice(0, 48)) : 'netsh advfirewall') : `${fwRules.length} 条规则`;
       document.getElementById('s-cards').innerHTML = `
-        <div class="card stat"><div class="stat-label">主机防火墙 UFW</div><div class="stat-value" style="font-size:22px;color:${ufwOn ? '#4ade80' : '#facc15'}">${ufwOn ? '已启用' : '未启用'}</div><div class="stat-sub">${d.ufw.rules.length} 条规则</div></div>
+        <div class="card stat"><div class="stat-label">${fwLabel}</div><div class="stat-value" style="font-size:22px;color:${ufwOn ? '#4ade80' : '#facc15'}">${ufwOn ? '已启用' : '未启用'}</div><div class="stat-sub">${fwSub}</div></div>
         <div class="card stat"><div class="stat-label">Root 密码登录</div><div class="stat-value" style="font-size:22px;color:${s.permitrootlogin === 'yes' ? '#f87171' : '#4ade80'}">${fmt.esc(s.permitrootlogin || '?')}</div><div class="stat-sub">PermitRootLogin</div></div>
         <div class="card stat"><div class="stat-label">SSH 密码认证</div><div class="stat-value" style="font-size:22px;color:${s.passwordauthentication === 'yes' ? '#facc15' : '#4ade80'}">${fmt.esc(s.passwordauthentication || '?')}</div><div class="stat-sub">PasswordAuthentication</div></div>
         <div class="card stat"><div class="stat-label">Fail2ban</div><div class="stat-value" style="font-size:22px;color:${d.fail2ban.active ? '#4ade80' : '#f87171'}">${d.fail2ban.active ? '防护中' : '未防护'}</div><div class="stat-sub">SSH 防爆破</div></div>`;
@@ -230,7 +235,13 @@
         runAction('/security/action', { action: 'fail2ban-unban', params: { ip } }).catch(() => {});
       };
 
-      /* user management */
+      /* user management (Linux only) */
+      if (isWin) {
+        const sk = document.getElementById('sk-list');
+        if (sk) sk.innerHTML = '<div class="muted small">Windows 上请通过「可选功能 → OpenSSH 服务器」或本地用户管理配置登录与密钥。</div>';
+        const uc = document.getElementById('u-create');
+        if (uc) { uc.disabled = true; uc.title = 'Windows 面板不支持 Linux 用户管理'; }
+      } else {
       document.getElementById('u-create').onclick = async () => {
         const name = document.getElementById('u-name').value.trim();
         const password = document.getElementById('u-pw').value;
@@ -290,6 +301,127 @@
         try { await runAction('/user', { action: 'sshkey-add', params: { key } }); document.getElementById('sk-key').value = ''; loadKeys(); }
         catch (_) {}
       };
+      }
+    },
+
+    /* ============ Windows：防火墙 / 本地用户 / 组 / 登录会话（原 Windows 工具页并入） ============ */
+    async mountWin(root) {
+      const esc = fmt.esc;
+      const act = (op, extra) => CM.api.post('/windows/action', Object.assign({ op }, extra || {}));
+      const [fw, us, gr, se] = await Promise.all([
+        CM.api.get('/windows/firewall', 120000).catch(() => ({ rules: [] })),
+        CM.api.get('/windows/users', 60000).catch(() => ({ users: [] })),
+        CM.api.get('/windows/groups', 90000).catch(() => ({ groups: [] })),
+        CM.api.get('/windows/sessions', 60000).catch(() => ({ sessions: [] })),
+      ]);
+      const rules = (fw.rules || []).slice(0, 80);
+      root.innerHTML = `
+        <div class="card mb">
+          <div class="card-title">${icon('firewall', { size: 13 })} 防火墙
+            <div class="right">
+              <button type="button" class="btn btn-sm btn-ok" id="s-fw-on">全部启用</button>
+              <button type="button" class="btn btn-sm btn-danger" id="s-fw-off">全部禁用</button>
+            </div>
+          </div>
+          <pre class="pre small" style="max-height:90px">${esc(fw.profiles?.raw || fw.profiles || '')}</pre>
+          <div class="row mt">
+            <input class="inp mono" id="s-fw-spec" placeholder="8080/tcp 或 53/udp" style="width:200px">
+            <button type="button" class="btn btn-sm btn-ok" id="s-fw-allow">允许</button>
+            <button type="button" class="btn btn-sm btn-danger" id="s-fw-deny">阻止</button>
+          </div>
+          <div class="mt">${ui.table([
+            { k: 'name', label: '规则名称' },
+            { k: 'enabled', label: '启用', render: (v) => /true|yes|是|启用/i.test(String(v)) ? ui.badge('是', 'ok') : ui.badge(String(v || '-'), 'gray') },
+            { k: 'action', label: '动作', render: (v) => /allow|允许/i.test(String(v)) ? ui.badge('允许', 'ok') : /block|阻止|deny/i.test(String(v)) ? ui.badge('阻止', 'bad') : esc(v || '-') },
+            { k: 'direction', label: '方向' },
+            { k: 'protocol', label: '协议' },
+            { k: 'localPort', label: '端口', cls: 'mono' },
+          ], rules, { style: 'max-height:32vh' })}</div>
+        </div>
+        <div class="card mb">
+          <div class="card-title">${icon('users', { size: 13 })} 本地用户 (${(us.users || []).length})
+            <div class="right"><button type="button" class="btn btn-sm btn-primary" id="s-user-add">${icon('plus', { size: 12 })} 新建用户</button></div>
+          </div>
+          ${ui.table([
+            { k: 'name', label: '用户名', cls: 'mono' },
+            { k: 'disabled', label: '状态', render: (v) => v ? ui.badge('已禁用', 'gray') : ui.badge('启用', 'ok') },
+            { k: 'name', label: '操作', render: (v, r) => `<div class="row" style="gap:4px;flex-wrap:nowrap">
+              <button class="btn btn-sm" data-uact="${r.disabled ? 'enable' : 'disable'}" data-uname="${esc(v)}">${r.disabled ? '启用' : '禁用'}</button>
+              <button class="btn btn-sm" data-uact="setpass" data-uname="${esc(v)}">改密</button>
+              <button class="btn btn-sm btn-danger" data-uact="delete" data-uname="${esc(v)}">删除</button>
+            </div>` },
+          ], us.users || [], { style: 'max-height:36vh' })}
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <div class="card-title">${icon('shield', { size: 13 })} 本地组 (${(gr.groups || []).length})</div>
+            ${(gr.groups || []).map((g) => `<details class="mb" style="border-left:2px solid var(--border2);padding-left:8px">
+              <summary class="small" style="cursor:pointer"><b class="mono">${esc(g.name)}</b> <span class="muted small">${g.memberCount} 名成员</span></summary>
+              <div class="muted small mt">${esc((g.members || []).join('、') || '(空)')}</div>
+            </details>`).join('') || '<div class="muted small">无数据</div>'}
+          </div>
+          <div class="card">
+            <div class="card-title">${icon('monitor', { size: 13 })} 登录会话 (${(se.sessions || []).length})</div>
+            ${ui.table([
+              { k: 'name', label: '会话', cls: 'mono small' },
+              { k: 'user', label: '用户', cls: 'mono small' },
+              { k: 'id', label: 'ID', cls: 'num' },
+              { k: 'state', label: '状态', render: (v) => /active/i.test(String(v)) ? ui.badge('活动', 'ok') : ui.badge(String(v || '-'), 'gray') },
+              { k: 'id', label: '', render: (v) => `<button class="btn btn-sm btn-danger" data-logoff="${v}">注销</button>` },
+            ], se.sessions || [], { style: 'max-height:36vh' })}
+          </div>
+        </div>`;
+
+      const rerender = () => this.mountWin(root);
+      document.getElementById('s-fw-on').onclick = async () => {
+        if (!await modal.confirm('启用防火墙', '启用所有配置文件上的 Windows 防火墙？')) return;
+        try { await act('firewall-toggle', { enable: true }); window.toast('已启用', 'ok'); rerender(); } catch (e) { window.toast(e.message, 'err'); }
+      };
+      document.getElementById('s-fw-off').onclick = async () => {
+        if (!await modal.confirm('禁用防火墙', '禁用防火墙会降低安全性，确认？', { danger: true })) return;
+        try { await act('firewall-toggle', { enable: false }); window.toast('已禁用', 'ok'); rerender(); } catch (e) { window.toast(e.message, 'err'); }
+      };
+      const portAct = async (deny) => {
+        const spec = document.getElementById('s-fw-spec').value.trim();
+        if (!spec) return window.toast('请输入端口', 'warn');
+        try { await act('firewall-port', { spec, deny }); window.toast('规则已添加', 'ok'); rerender(); } catch (e) { window.toast(e.message, 'err'); }
+      };
+      document.getElementById('s-fw-allow').onclick = () => portAct(false);
+      document.getElementById('s-fw-deny').onclick = () => portAct(true);
+
+      const userAct = async (action, name, password) => {
+        try {
+          const r = await act('user-manage', Object.assign({ action, name }, password ? { password } : {}));
+          window.toast(r.output || '操作成功', 'ok');
+          rerender();
+        } catch (e) { window.toast(e.message, 'err', 7000); }
+      };
+      root.querySelectorAll('[data-uact]').forEach((btn) => {
+        btn.onclick = async () => {
+          const action = btn.dataset.uact, name = btn.dataset.uname;
+          if (action === 'enable') { if (await modal.confirm('启用账户', `启用账户 <b class="mono">${esc(name)}</b>？`)) userAct('enable', name); }
+          else if (action === 'disable') { if (await modal.confirm('禁用账户', `禁用账户 <b class="mono">${esc(name)}</b>？当前登录会话不受影响。`, { danger: true })) userAct('disable', name); }
+          else if (action === 'delete') { if (await modal.confirm('删除账户', `删除账户 <b class="mono">${esc(name)}</b>？该操作不可撤销。`, { danger: true })) userAct('delete', name); }
+          else if (action === 'setpass') {
+            const r = await modal.prompt('设置新密码 — ' + name, [{ name: 'password', label: '新密码（至少 6 位）' }], { okText: '修改' });
+            if (r && r.password) userAct('setpass', name, r.password);
+          }
+        };
+      });
+      document.getElementById('s-user-add').onclick = async () => {
+        const r = await modal.prompt('新建本地用户', [
+          { name: 'name', label: '用户名' },
+          { name: 'password', label: '初始密码（至少 6 位）' },
+        ], { okText: '创建' });
+        if (r && r.name && r.password) userAct('create', r.name.trim(), r.password);
+      };
+      root.querySelectorAll('[data-logoff]').forEach((btn) => {
+        btn.onclick = async () => {
+          if (!await modal.confirm('注销会话', `注销登录会话 <b>${esc(btn.dataset.logoff)}</b>？该会话上未保存的工作会丢失。`, { danger: true })) return;
+          try { await act('session-logoff', { id: parseInt(btn.dataset.logoff, 10) }); window.toast('已注销', 'ok'); rerender(); }
+          catch (e) { window.toast(e.message, 'err'); }
+        };
+      });
     },
   });
 })();

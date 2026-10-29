@@ -23,7 +23,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -41,6 +40,7 @@ import com.servermaintance.panel.core.long
 import com.servermaintance.panel.core.num
 import com.servermaintance.panel.core.obj
 import com.servermaintance.panel.core.str
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.AutoRefresh
 import com.servermaintance.panel.ui.DataTable
 import com.servermaintance.panel.ui.Field
@@ -421,34 +421,34 @@ fun HealthAlertsPage() {
         PanelCard(title = L["告警阈值_仪表盘右上角铃铛_c7224212dd"], cardKey = "ha-threshold") {
             Toggle(checked = cfgEnabled, onCheckedChange = { cfgEnabled = it }, label = L["启用告警_d6b9351330"])
             Spacer(Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+            AdaptiveRow(spacing = 12.dp) {
                 Field(
                     value = cfgCpu,
                     onValueChange = { cfgCpu = it.filter(Char::isDigit) },
                     label = L["cpu_45ab473ccb"],
                     mono = true,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.span(1f),
                 )
                 Field(
                     value = cfgMem,
                     onValueChange = { cfgMem = it.filter(Char::isDigit) },
                     label = L["内存_ba57ca4da5"],
                     mono = true,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.span(1f),
                 )
                 Field(
                     value = cfgDisk,
                     onValueChange = { cfgDisk = it.filter(Char::isDigit) },
                     label = L["磁盘_874593fffd"],
                     mono = true,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.span(1f),
                 )
                 Field(
                     value = cfgCd,
                     onValueChange = { cfgCd = it.filter(Char::isDigit) },
                     label = L["冷却_分钟_c84b0ae919"],
                     mono = true,
-                    modifier = Modifier.weight(1.2f),
+                    modifier = Modifier.span(1.2f),
                 )
             }
             Spacer(Modifier.height(10.dp))

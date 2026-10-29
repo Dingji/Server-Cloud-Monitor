@@ -29,7 +29,7 @@ async function run(cmd, opts) {
   const a = getAgent();
   if (a && typeof a.run === 'function') {
     try {
-      const r = await a.run(cmd, { timeout: o.timeout || 15000 });
+      const r = await a.run(cmd, Object.assign({ timeout: 15000 }, o));
       return {
         code: r.code === undefined ? (r.timedOut ? -1 : 0) : r.code,
         stdout: String(r.stdout || ''), stderr: String(r.stderr || ''), timedOut: !!r.timedOut,
@@ -53,8 +53,14 @@ async function run(cmd, opts) {
 const binCache = new Map();
 async function hasBin(name) {
   if (binCache.has(name)) return binCache.get(name);
-  const r = await run(`command -v ${S.shq(name)} >/dev/null 2>&1 && echo YES || echo NO`, { timeout: 8000 });
-  const yes = /YES/.test(r.stdout);
+  let yes;
+  if (process.platform === 'win32') {
+    const r = await run(`where ${name} 2>nul`, { timeout: 8000 });
+    yes = String(r.stdout || '').trim().length > 0;
+  } else {
+    const r = await run(`command -v ${S.shq(name)} >/dev/null 2>&1 && echo YES || echo NO`, { timeout: 8000 });
+    yes = /YES/.test(r.stdout);
+  }
   binCache.set(name, yes);
   return yes;
 }

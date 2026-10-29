@@ -1,5 +1,4 @@
 package com.servermaintance.panel.pages
-import com.servermaintance.panel.i18n.L
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
@@ -75,6 +74,7 @@ import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelIcon
+import kotlin.math.PI
 import kotlin.math.sin
 
 /* ==================================================================== *
@@ -126,7 +126,7 @@ internal fun Modifier.nbFloat(amplitude: Dp = 4.dp, durationMs: Int = 3000): Mod
     val tr = rememberInfiniteTransition(label = "nbFloat")
     val t by tr.animateFloat(
         initialValue = 0f,
-        targetValue = (2f * Math.PI).toFloat(),
+        targetValue = (2f * PI).toFloat(),
         animationSpec = infiniteRepeatable(tween(durationMs, easing = LinearEasing)),
         label = "nbFloatT",
     )

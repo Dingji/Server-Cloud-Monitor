@@ -1,4 +1,8 @@
 'use strict';
+if (process.platform === 'win32') {
+  module.exports = require('./pkgmgr-win');
+  return;
+}
 /*
  * Package manager (APT/dpkg) — search / detail / install / remove / upgrade.
  *

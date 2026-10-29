@@ -49,12 +49,15 @@
       };
 
       const render = () => {
+        const isWin = CM.isWindows();
+        const relayMissing = isWin && slo && !slo.calls;
         const q = (usg && usg.quota) || {};
         const fc = (usg && usg.forecast) || {};
         const priced = !!(usg && usg.pricing && usg.pricing.present);
         const totalCost = (usg && usg.byModel || []).reduce((a, b) => a + (b.cost || 0), 0);
 
         root.innerHTML = `
+        ${relayMissing ? '<div class="card mb"><div class="muted small">本机未部署 OpenCode Relay（8787），SLO/用量数据为零。Windows 上可在「审计日志」查看面板 JSONL 操作记录；部署 relay 后本页将显示真实指标。</div></div>' : ''}
         <div class="grid g4 mb">
           <div class="card stat"><div class="stat-label">成功率</div>
             <div class="stat-value" style="color:${slo.successRate >= 99 ? 'var(--ok,#10b981)' : slo.successRate >= 95 ? '#facc15' : '#f87171'}">${slo.successRate}%</div>
@@ -152,7 +155,7 @@
               }).join('<br>')
               : '<span class="muted">该时段前无变更记录</span>',
           })), { style: 'max-height:340px' })}
-          <div class="muted small mt">变更取自 auditd 文件完整性事件（配置 / 密钥 / nginx / sshd 等），共 ${corr.changeCount} 条。这是<b>相关性提示</b>而非因果结论，用于缩小排查范围。</div>
+          <div class="muted small mt">${isWin ? '变更取自面板审计 JSONL（配置 / 数据库 / 备份等），共 ' + corr.changeCount + ' 条。' : '变更取自 auditd 文件完整性事件（配置 / 密钥 / nginx / sshd 等），共 ' + corr.changeCount + ' 条。'}这是<b>相关性提示</b>而非因果结论，用于缩小排查范围。</div>
         </div>` : ''}
 
         <div class="card mb">
@@ -236,7 +239,7 @@
             { k: 'secs', label: '耗时', cls: 'num', render: (v) => fmtSec(v) },
             { k: 'cost', label: '估算成本', cls: 'num', render: (v, r) => (r.priced ? (usg.pricing.currency === 'USD' ? '$' : '') + v : '<span class="muted">未定价</span>') },
           ], usg.byModel, { style: 'max-height:360px' })}
-          ${priced ? '' : '<div class="muted small mt">单价表：<code>/etc/relay/pricing.json</code>，支持 <code>mimo-*</code> 通配；含 <code>-free</code> 的模型按 0 计。</div>'}
+          ${priced ? '' : '<div class="muted small mt">' + (isWin ? 'Relay 未配置单价表；部署 relay 后使用其 pricing.json。' : '单价表：<code>/etc/relay/pricing.json</code>，支持 <code>mimo-*</code> 通配；含 <code>-free</code> 的模型按 0 计。') + '</div>'}
         </div>
 
         <div class="card">

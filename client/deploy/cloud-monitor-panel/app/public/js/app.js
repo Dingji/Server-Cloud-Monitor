@@ -56,6 +56,7 @@
    * entry only when available, so a stock Linux install shows a clean menu. */
   const OPTIONAL_NAV = [
     { id: 'relay', after: 'dashboard', label: 'OpenCode 中继', icon: 'satellite', probe: '/relay/available' },
+    { id: 'relayhub', after: 'relay', label: '内网中继监控', icon: 'wlan', probe: '/relayhub/available' },
   ];
   async function detectOptionalNav() {
     for (const o of OPTIONAL_NAV) {
@@ -72,12 +73,13 @@
 
   /* ---------- lazy page modules ---------- */
   /* bump on each deploy so browsers pick up new page code immediately */
-  CM.BUILD = '20261016-06';
+  CM.BUILD = '20261026-0900';
   CM.lazyPages = {
     dashboard: 'js/pages/dashboard.js',
     healthalerts: 'js/pages/healthalerts.js',
     slo: 'js/pages/slo.js',
     relay: 'js/pages/relay.js',
+    relayhub: 'js/pages/relayhub.js',
     processes: 'js/pages/processes.js',
     disks: 'js/pages/disks.js',
     memory: 'js/pages/memory.js',
@@ -92,6 +94,7 @@
     backups: 'js/pages/backups.js',
     logs: 'js/pages/logs.js',
     audit: 'js/pages/audit.js',
+    wintools: 'js/pages/win-tools.js',
     terminal: 'js/pages/terminal.js',
     settings: 'js/pages/settings.js',
   };
@@ -226,9 +229,18 @@
 
   /* ---------- boot ---------- */
   async function boot() {
+    CM.token = (CM.token || '').trim();
+    if (!CM.token) {
+      CM.ready = false;
+      CM.showLogin();
+      return;
+    }
     try {
       CM.me = await CM.api.get('/me');
-    } catch (_) { return; }
+    } catch (_) {
+      CM.ready = false;
+      return;
+    }
 
     /* index.html 结构异常时直接提示，避免后续代码抛一串 null */
     const missing = ['app', 'nav', 'view', 'page-title', 'brand-host', 'conn-dot', 'conn-text', 'alert-menu', 'alert-bell']
@@ -239,6 +251,20 @@
     }
 
     document.getElementById('brand-host').textContent = CM.me.info.hostname;
+    if (CM.isWindows()) {
+      /* Windows 面板不展示 Linux 向页面：健康告警、SLO 与用量 */
+      CM.hiddenPages = new Set(['healthalerts', 'slo']);
+      const remove = (id) => { const i = NAV.findIndex((n) => n.id === id); if (i >= 0) NAV.splice(i, 1); };
+      remove('healthalerts');
+      remove('slo');
+      const w = NAV.find((n) => n.id === 'web');
+      if (w) w.label = '网站 / IIS';
+      const pk = NAV.find((n) => n.id === 'packages');
+      if (pk) pk.label = '应用 (winget)';
+      const toolsSep = NAV.findIndex((n) => n.sep === '工具');
+      if (toolsSep >= 0 && !NAV.some((n) => n.id === 'wintools'))
+        NAV.splice(toolsSep + 1, 0, { id: 'wintools', label: 'Windows 工具', icon: 'gear' });
+    }
     CM.hideLogin();
     buildNav();
     detectOptionalNav();   /* 异步补齐可选模块（探测失败则保持隐藏，不阻塞启动） */
@@ -285,5 +311,8 @@
     if (CM.token) boot();
     else CM.showLogin();
   });
-  window.addEventListener('cm-login', () => { if (!CM.ready) boot(); });
+  window.addEventListener('cm-login', () => {
+    CM.token = (CM.token || '').trim();
+    if (!CM.ready) boot();
+  });
 })();

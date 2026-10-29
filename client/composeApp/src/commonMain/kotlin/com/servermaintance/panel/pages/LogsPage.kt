@@ -6,7 +6,6 @@ import com.servermaintance.panel.i18n.tr
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,11 +49,9 @@ import com.servermaintance.panel.ui.PrimaryBtn
 import com.servermaintance.panel.ui.SearchField
 import com.servermaintance.panel.ui.Toggle
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 /* =====================================================================
@@ -201,11 +198,7 @@ fun LogsPage() {
             }
 
             /* 第 1 行：源 + 单元 + 跟随/滚动/过滤 */
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            com.servermaintance.panel.ui.AdaptiveRow(spacing = 10.dp) {
                 com.servermaintance.panel.ui.SelectField(
                     value = sourceId,
                     options = allSources.map { it.id },
@@ -213,14 +206,14 @@ fun LogsPage() {
                         scope.launch { loadTail(v) }
                         sourceId = v
                     },
-                    modifier = Modifier.weight(1.2f),
+                    modifier = Modifier.span(1.2f),
                 )
                 Field(
                     value = unitText,
                     onValueChange = { unitText = it },
                     hint = L["或_systemd_单元_nginx_serv_14c65e1864"],
                     mono = true,
-                    modifier = Modifier.weight(1.4f),
+                    modifier = Modifier.span(1.4f),
                 )
                 GhostBtn(
                     text = L["加载单元日志_faba070327"],

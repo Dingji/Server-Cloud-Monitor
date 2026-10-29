@@ -48,6 +48,10 @@
 
 # 列出全部任务
 .\build.ps1 tasks --all
+
+# iOS：在本机（Windows）做 klib 级类型检查 —— 不链接、不出包，但能提前抓到
+# expect/actual 不匹配与 UIKit 调用写错（详见 docs/guide/build.md 3.1）
+pwsh tests\ios-gate.ps1
 ```
 
 **产物路径**（构建成功后生成）：
@@ -58,6 +62,7 @@
 | Windows 安装包 | `composeApp\build\compose\binaries\main\msi\CloudMonitor-1.0.0.msi` |
 | Linux 安装包 | `composeApp\build\compose\binaries\main\deb\cloudmonitor_1.0.0-1_amd64.deb` |
 | macOS 安装包 | `composeApp\build\compose\binaries\main\dmg\CloudMonitor-1.0.0.dmg` |
+| iOS framework / App | **仅 macOS**：Xcode 打开 `iosApp\iosApp.xcodeproj` 运行（`import ComposeApp`） |
 
 > `build.ps1` 会自动设好 `JAVA_HOME`（Android Studio 自带 JBR 25）与 `ANDROID_HOME`；
 > `.toolchain/` 不存在时会自动回退到仓库里的 `gradlew.bat`。
@@ -203,7 +208,10 @@ ServerMaintance/
 │   │   ├── screens/          # 外壳：登录、Root、Toast/Modal 宿主
 │   │   └── pages/            # 页面（含 relay/、term/、db/ 子模块与 NoteXxx 笔记页）
 │   ├── androidMain/          # Android actual（Platform.android.kt、MainActivity）
-│   └── desktopMain/          # Desktop actual（Platform.desktop.kt、Main.kt）
+│   ├── desktopMain/          # Desktop actual（Platform.desktop.kt、Main.kt）
+│   └── iosMain/              # iOS actual（Platform.ios.kt、Api.ios.kt=Darwin、MainViewController.kt）
+├── iosApp/                   # iOS 壳工程（Xcode + Swift；只能在 macOS 上打包）
+│   └── iosApp.xcodeproj      # 「Compile Kotlin Framework」阶段调 embedAndSignAppleFrameworkForXcode
 ├── ops-server/               # 面板内运维模块源码（九模块）→ 部署为 /opt/cloud-monitor/server/ops/
 ├── deploy/cloud-monitor-panel/  # 整机离线安装包（app + vendor + install/uninstall/deploy-remote）
 ├── upstream/                 # 只读参考：面板原版 JS 前后端
@@ -228,7 +236,7 @@ ServerMaintance/
 
 | 文档 | 内容 |
 |---|---|
-| [`docs/guide/build.md`](docs/guide/build.md) | 双平台构建步骤、工具链版本、故障排查 |
+| [`docs/guide/build.md`](docs/guide/build.md) | 三平台构建步骤（iOS 仅 macOS）、工具链版本、故障排查 |
 | [`docs/guide/architecture.md`](docs/guide/architecture.md) | 分层架构、写入边界、原生约束 |
 | [`docs/guide/features.md`](docs/guide/features.md) | 功能 → Kotlin 实现位置对照表 |
 | [`docs/BRIEF.md`](docs/BRIEF.md) | 项目目标、服务器访问、协作规则 |

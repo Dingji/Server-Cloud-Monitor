@@ -2,7 +2,6 @@ package com.servermaintance.panel.pages
 import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,10 +20,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.servermaintance.panel.core.AppState
@@ -49,12 +45,12 @@ import com.servermaintance.panel.ui.Modal
 import com.servermaintance.panel.ui.PageScaffold
 import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelCard
-import com.servermaintance.panel.ui.PctBar
 import com.servermaintance.panel.ui.PrimaryBtn
 import com.servermaintance.panel.ui.StatTile
 import com.servermaintance.panel.ui.TableCol
 import com.servermaintance.panel.ui.TableText
 import com.servermaintance.panel.ui.Toggle
+import com.servermaintance.panel.ui.slotHorizontalScroll
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
@@ -182,7 +178,7 @@ fun MemoryPage() {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                        modifier = Modifier.slotHorizontalScroll(),
                     ) {
                         Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
                         Text(

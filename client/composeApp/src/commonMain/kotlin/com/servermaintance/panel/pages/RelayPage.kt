@@ -37,7 +37,6 @@ import com.servermaintance.panel.pages.relay.RelayTabRow
 import com.servermaintance.panel.pages.relay.RelayTokenHitTab
 import com.servermaintance.panel.pages.relay.RelayTokensTab
 import com.servermaintance.panel.pages.relay.RelayTrafficTab
-import com.servermaintance.panel.pages.relay.Muted
 import com.servermaintance.panel.ui.GhostBtn
 import com.servermaintance.panel.ui.PageScaffold
 import com.servermaintance.panel.ui.Palette

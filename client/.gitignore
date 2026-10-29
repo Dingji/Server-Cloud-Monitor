@@ -33,6 +33,20 @@ ops-server/node_modules/
 .DS_Store
 Thumbs.db
 
+# ---- Xcode / iOS 壳工程 ----
+# .xcodeproj 本身要入库（手写工程文件），但派生数据与用户态设置不入库。
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+.build/
+.swiftpm/
+Pods/
+Podfile.lock
+*.ipa
+*.dSYM.zip
+*.dSYM
+
 # ---- Kotlin / Compose ----
 .kotlin/
 captures/

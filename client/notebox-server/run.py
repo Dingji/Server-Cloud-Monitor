@@ -11,6 +11,6 @@ if __name__ == "__main__":
     from waitress import serve
 
     host = os.environ.get("NB_HOST", "0.0.0.0")
-    port = int(os.environ.get("NB_PORT", "13345"))
+    port = int(os.environ.get("NB_PORT", "12246"))
     print(f"NoteBox listening on http://{host}:{port}")
     serve(app, host=host, port=port, threads=8, ident="NoteBox")

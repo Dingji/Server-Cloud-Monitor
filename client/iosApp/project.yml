@@ -1,0 +1,74 @@
+# iOS 壳工程的等价描述，用于在 Xcode 打不开手写 project.pbxproj 时重新生成：
+#   brew install xcodegen
+#   cd iosApp && xcodegen generate
+#
+# 生成物 iosApp.xcodeproj 已在仓库里（手写版）；如果改用 XcodeGen 流程，
+# 就把生成目录加进 .gitignore，改由 CI/本机生成，否则每次 generate 都会重排
+# 全部 24 位对象 ID，diff 噪音极大。
+#
+# 这份 yml 与手写 pbxproj 表达同一件事：
+#   - SwiftUI 壳（iOSApp.swift + ContentView.swift）
+#   - 「Compile Kotlin Framework」阶段在 Compile Sources 之前跑 Gradle
+#   - ENABLE_USER_SCRIPT_SANDBOXING = NO（沙箱会挡掉 Gradle 读写 ~/.gradle 与 build/）
+#   - i18n 用 type: folder（蓝色文件夹引用）指向 commonMain/resources/i18n
+name: iosApp
+options:
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "15.0"
+
+settings:
+  base:
+    # 必须 NO：XcodeGen 预设是 YES。该阶段要跑 Gradle，会读写 ~/.gradle 与
+    # composeApp/build/，被沙箱挡住时报 "User Script Sandboxing Enabled"。
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    CODE_SIGN_STYLE: Automatic
+    TARGETED_DEVICE_FAMILY: "1,2"
+    # 静态 framework：链接走 OTHER_LDFLAGS，不需要 Embed Frameworks 阶段。
+    FRAMEWORK_SEARCH_PATHS:
+      - $(inherited)
+      - $(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)
+    OTHER_LDFLAGS:
+      - $(inherited)
+      - -framework
+      - ComposeApp
+
+targets:
+  iosApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: iosApp
+      # 文件夹引用：整目录原样拷进 <App>.app/i18n，Xcode 不展平、不编译。
+      # iosMain/BundledText.ios.kt 就是按 resourcePath + "/i18n/<tag>.json" 读的。
+      - path: ../composeApp/src/commonMain/resources/i18n
+        name: i18n
+        type: folder
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.servermaintance.panel
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        INFOPLIST_FILE: iosApp/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        SWIFT_VERSION: "5.0"
+    preBuildScripts:
+      - name: "Compile Kotlin Framework"
+        # false = 不声明 input/outputPaths，每次都真的调 Gradle
+        basedOnDependencyAnalysis: false
+        script: |
+          if [ "YES" = "$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED" ]; then
+            echo "Skipping Gradle build task invocation"
+            exit 0
+          fi
+          cd "$SRCROOT/.."
+          ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
+
+schemes:
+  iosApp:
+    build:
+      targets:
+        iosApp: all
+    run:
+      config: Debug
+    test:
+      config: Debug

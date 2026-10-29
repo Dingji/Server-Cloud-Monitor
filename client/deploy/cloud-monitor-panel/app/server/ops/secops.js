@@ -1,4 +1,8 @@
 'use strict';
+if (process.platform === 'win32') {
+  module.exports = require('./secops-win');
+  return;
+}
 /*
  * Security baseline audit (安全基线巡检) — the "体检 + 一键加固" feature of
  * commercial panels (宝塔安全、1Panel 节点检测). Read-only checks parse real

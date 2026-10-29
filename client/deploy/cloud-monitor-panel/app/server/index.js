@@ -128,10 +128,17 @@ const api = express.Router();
 
 api.get('/health', (req, res) => res.json({ ok: true, name: 'cloud-monitor', version: '1.0.0', ts: Date.now() }));
 
+/* /login 必须自己接住 auth.login 的异常：401(密码错误)/429(锁定 10 分钟) 要原样
+   透传状态与文案。此前是同步处理器直抛 → 落到全局 error handler → 一律 500
+   {"error":"服务器内部错误"}，客户端无法区分「密码不对」和「连续错 8 次被锁」。 */
 api.post('/login', (req, res) => {
   const ip = req.headers['x-real-ip'] || req.socket.remoteAddress || '?';
-  const out = auth.login(ip, (req.body || {}).password);
-  res.json(out);
+  try {
+    res.json(auth.login(ip, (req.body || {}).password));
+  } catch (e) {
+    logErr('login error:', '-', e.message);
+    res.status(e.status || 500).json({ error: e.message || '服务器内部错误' });
+  }
 });
 
 api.use(auth.middleware);
@@ -349,6 +356,59 @@ api.post('/relay/action', audited('relay.action', async (req) => {
   const b = req.body || {};
   return relay.action(b.name, b.payload);
 }));
+/* ============ optional RelayHub (内网中继监控) integration ============ */
+const RELAYHUB_CONF = (() => {
+  try { return JSON.parse(require('fs').readFileSync('/opt/relayhub/panel/config.json', 'utf8')); } catch (_) { return {}; }
+})();
+const RELAYHUB_KEY = RELAYHUB_CONF.internal_key || '';
+async function relayhubFetch(pathname, init, timeoutMs) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs || 5000);
+  try {
+    const r = await fetch('http://127.0.0.1:8100' + pathname, Object.assign({}, init, {
+      headers: { 'X-RelayHub-Key': RELAYHUB_KEY, 'Content-Type': 'application/json' },
+      signal: ctrl.signal,
+    }));
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      const e = new Error(data.error || ('HTTP ' + r.status));
+      e.status = r.status;
+      e.body = data; /* errors/conflicts/details 原样带回给客户端 */
+      throw e;
+    }
+    return data;
+  } finally { clearTimeout(timer); }
+}
+/* 原样转发（含非 2xx 的完整响应体）：端口池 preview/apply/probe 依赖 400/409 里的
+ * errors/conflicts/rollback_pool 字段（客户端 postRetainingBody 直接渲染）。 */
+async function relayhubRes(res, pathname, init, timeoutMs) {
+  try { res.json(await relayhubFetch(pathname, init, timeoutMs)); }
+  catch (e) { res.status(e.status || 500).json(e.body || { error: e.message }); }
+}
+api.get('/relayhub/available', wrap(async (req, res) => {
+  try { res.json(await relayhubFetch('/api/health')); } catch (e) { res.json({ ok: false }); }
+}));
+api.get('/relayhub/summary', wrap(async (req, res) => res.json(await relayhubFetch('/api/summary'))));
+api.post('/relayhub/probe-now', audited('relayhub.probe', async () => relayhubFetch('/api/probe-now', { method: 'POST' })));
+/* 端口映射（期望态 + live 注册表）与 frpc 下发命令 */
+api.get('/relayhub/mappings', wrap(async (req, res) => relayhubRes(res, '/api/mappings')));
+api.post('/relayhub/mappings', audited('relayhub.mappings', async (req) =>
+  relayhubFetch('/api/mappings', { method: 'POST', body: JSON.stringify(req.body || {}) })));
+api.get('/relayhub/frpc-config', wrap(async (req, res) => {
+  const name = String((req.query && req.query.name) || '');
+  return relayhubRes(res, '/api/frpc-config?name=' + encodeURIComponent(name));
+}));
+/* 端口池：读状态 / 校验预览 / 应用（改 frps.toml + 重启 frps，最长约 50s）/ 公网自检 */
+api.get('/relayhub/port-pool', wrap(async (req, res) => relayhubRes(res, '/api/port-pool')));
+api.post('/relayhub/port-pool/preview', wrap(async (req, res) =>
+  relayhubRes(res, '/api/port-pool/preview', { method: 'POST', body: JSON.stringify(req.body || {}) }, 15000)));
+api.post('/relayhub/port-pool/apply', wrap(async (req, res) => {
+  audit(req.headers['x-real-ip'] || req.socket.remoteAddress || '?', 'relayhub.pool.apply', {});
+  return relayhubRes(res, '/api/port-pool/apply', { method: 'POST', body: JSON.stringify(req.body || {}) }, 90000);
+}));
+api.post('/relayhub/port-pool/probe', wrap(async (req, res) =>
+  relayhubRes(res, '/api/port-pool/probe', { method: 'POST', body: JSON.stringify(req.body || {}) }, 30000)));
+
 api.post('/web/action', audited('web.action', (req) => actions.webAction(req.body || {})));
 api.post('/docker/action', audited('docker.action', (req) => actions.dockerAction(req.body || {})));
 api.post('/cron/action', audited('cron.action', (req) => actions.cronAction(req.body || {})));

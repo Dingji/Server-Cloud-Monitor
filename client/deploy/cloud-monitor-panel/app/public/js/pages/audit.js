@@ -8,9 +8,10 @@
   registerPage({
     id: 'audit',
     title: '审计日志',
-    desc: 'auditd 记录的敏感文件变更：谁、用什么命令、改了哪个文件',
+    desc: '敏感操作与配置变更审计',
 
     async mount(root) {
+      const isWin = CM.isWindows();
       root.innerHTML = `<div class="card">${ui.skeleton(6)}</div>`;
 
       let first;
@@ -21,7 +22,9 @@
         root.innerHTML = `<div class="card">
           <div class="card-title">${icon('shieldAlert', { size: 14 })} 审计不可用</div>
           <div class="muted small" style="line-height:2">${fmt.esc(first.reason || '')}<br>
-          启用：<code>apt-get install auditd</code> 并加载 <code>/etc/audit/rules.d/90-relay.rules</code>，随后 <code>augenrules --load</code>。</div>
+          ${isWin
+            ? 'Windows 面板将管理操作写入 <code>ProgramData\\CloudPanel\\audit\\panel-audit.jsonl</code>。若仍不可用，请检查面板数据目录权限。'
+            : '启用：<code>apt-get install auditd</code> 并加载 <code>/etc/audit/rules.d/90-relay.rules</code>，随后 <code>augenrules --load</code>。'}</div>
         </div>`;
         return;
       }
@@ -31,9 +34,9 @@
       root.innerHTML = `
       <div class="grid g4 mb">
         <div class="card stat"><div class="stat-label">命中事件</div><div class="stat-value" id="au-total">${first.total}</div><div class="stat-sub">当前筛选</div></div>
-        <div class="card stat"><div class="stat-label">审计规则</div><div class="stat-value">${first.rules.length}</div><div class="stat-sub">auditctl -l</div></div>
+        <div class="card stat"><div class="stat-label">${isWin ? '记录键' : '审计规则'}</div><div class="stat-value">${first.rules.length}</div><div class="stat-sub">${isWin ? '面板操作分类' : 'auditctl -l'}</div></div>
         <div class="card stat"><div class="stat-label">日志体积</div><div class="stat-value" style="font-size:17px;padding-top:6px">${fmt.esc((first.storage || '—').split(/\s+/)[0])}</div><div class="stat-sub">${fmt.esc(first.logFile)}</div></div>
-        <div class="card stat"><div class="stat-label">审计服务</div><div class="stat-value" style="font-size:17px;padding-top:6px">${ui.badge('运行中', 'ok')}</div><div class="stat-sub">auditd</div></div>
+        <div class="card stat"><div class="stat-label">${isWin ? '审计来源' : '审计服务'}</div><div class="stat-value" style="font-size:17px;padding-top:6px">${ui.badge('运行中', 'ok')}</div><div class="stat-sub">${isWin ? '面板 JSONL' : 'auditd'}</div></div>
       </div>
 
       <div class="card mb">

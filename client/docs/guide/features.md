@@ -54,6 +54,7 @@
 | C | healthalerts 健康告警 | ⏳ | `pages/HealthAlertsPage.kt` |
 | D | slo SLO 与用量 | ⏳ | `pages/SloPage.kt` |
 | **E** | **relay OpenCode 中继** | **✅ 见下节** | `pages/RelayPage.kt` + `pages/relay/**` |
+| **E+** | **relayhub 内网中继监控**（可选模块） | **✅ 见 E+ 节** | `pages/RelayHubPage.kt` + `nav/Nav.kt`（`probe=/relayhub/available`） |
 | F | processes 进程管理 | ⏳ | `pages/ProcessesPage.kt` |
 | G | disks 磁盘管理 | ⏳ | `pages/DisksPage.kt` |
 | H | memory 内存管理 | ⏳ | `pages/MemoryPage.kt` |
@@ -113,6 +114,42 @@
    （Token 构成 5 段固定色、命中率卡片 99/95 阈值；配额与密钥三档已用契约 `PctBar`）；
 3. `pages/relay/RelayCommon.kt` **`relayTable(RCol)`** —— `RCol → TableCol` 薄封装，
    内部即 `DataTable`/`TableCol`；热力图 `WeekHeat` 同样基于 `DataTable`。
+
+---
+
+## E+. relayhub 内网中继监控 ✅（服务器新模块，2026-10-26 集成；2026-10-27 随服务器扩映射/端口池）
+
+远端服务器新增 RelayHub（frp 内网穿透）：`relayhub-panel`（127.0.0.1:8100，Flask/Python）+ `relayhub-frps`；
+面板 `server/index.js` 代理出 `/relayhub/{available,summary,probe-now,mappings,frpc-config,port-pool,port-pool/preview,port-pool/apply,port-pool/probe}`，网页新增懒加载页
+`public/js/pages/relayhub.js` 与可选项 `OPTIONAL_NAV`（`probe = /relayhub/available`）。
+KMP 侧字段与面板 1:1；**2026-10-27 排版重做**（面板那张页在 ~2000px 窗口里太散：顶区 4 张浮动磁贴
++ 一条孤立徽章行、288dp 左栏只装一台设备、6 张整宽卡竖叠、两张同主键表来回对照）——
+卡片数 6→4，字段一个不减，见 E+17。
+
+| # | 功能点 | 状态 | 实现位置 |
+|---|---|---|---|
+| E+1 | 可选导航探测（探测失败隐藏入口；停在该页自动回落仪表盘） | ✅ | `nav/Nav.kt` `NavEntry.probe` + `visibleNav(availableProbes)` + `NavProbes`；`screens/Root.kt` 双端点探测 |
+| E+2 | 顶区总量指标 ×4（从机设备 / 隧道可达 / 总入站 / 总出站）+ 健康徽章 frps·TCP7000·nginx80 | ✅ | `RelayHubPage.kt` `RhOverviewBar()`：一张卡内 `GridLayout(4)` + `RhMetricCell()`（去卡版磁贴，避免卡中卡）+ 分隔线 + `Chip` |
+| E+3 | 设备栏：小标题行「从机设备 · 在线 x/y」+ 头像(名字前 2 字) / 状态点 / 可达 x·y / ↓↑速率 / 迷你趋势，点选切换 | ✅ | `DeviceRail()`(250dp，限高 460 内滚) + `RhDeviceCard()` + `ui/Sparkline`；单机或窄屏不立栏，详情铺满 |
+| E+4 | 详情头卡（在线·异常·离线徽章 / 接入 WebSocket 端口 / 上线时间 / 平均探测）+ 设备四项指标 | ✅ | `rhPills()` + `GridLayout(4)` + `RhMetricCell()`；卡片标题即设备名，正文不再重复一遍设备名 |
+| E+5 | 近 10 分钟设备实时速率双线图（入站 / 出站） | ✅ | `ui/MultiLineChart`（新增可选 `chartHeight`，本页 168dp / 手持端 150dp） |
+| E+6 | 隧道一览（探测侧）：隧道 / 公网入口 / 服务验证 / 延迟着色 / 历史竖条（失败=满高红条） | ✅ | `DataTable` + `rhHistBars()` + `rhMsColor()` |
+| E+7 | 隧道一览（代理侧）：今日流量↓↑ / 连接 / 最近上线（相对时间）；类型与状态折进隧道名副行 | ✅ | 同一张 `DataTable` + `Fmt.relativeTime(rhEpochMs(...))`；面板这两张表主键都是 `dev.proxies`，这里并成一张按隧道的表 |
+| E+8 | 「立即探测」`POST /relayhub/probe-now`（审计名 `relayhub.probe`）+ toast 后回读 | ✅ | `probeNow()` |
+| E+9 | 降级：frps 控制面不可达警示条、连续 3 次失败「中继服务暂时不可达」、无设备引导文案 | ✅ | `WarnBanner()` + `fails` 计数 + 空态 |
+| E+10 | **500 ms** 轮询（服务器 `REFRESH_MS = 500`，2026-10-27 同步）+ 多屏幕适配 | ✅ | `AutoRefresh(RH_REFRESH_MS = 500)`（其循环串行、间隔下限 500ms，等价面板的 `if (busy) return`）；`HandheldLayout.contentStacked` 叠单列、`GridLayout` 手持端降 1 列、`DataTable` 手持端横滚 |
+| E+11 | 0.5s 采样带来的渲染成本：`hist` 已是 **1210 点**，需降采样 / 截断 | ✅ | `rhChartSeries()`（首尾保留 + 中间按桶取**均值**，≤240 点。取峰值会把「0.5s 采样 × 1s 速率窗」的方波上轨钉死，看起来像链路在两个速率间抖动；按桶平均才是带宽真值且保持曲线下面积≈总字节，代价是 0.5s 级瞬时尖峰被抹平）、迷你趋势 `takeLast(22)`（对齐面板 `slice(-22)`）、历史竖条 `RH_PROBE_BARS = 12`（对齐 `PROBE_HIST_MAX`） |
+| E+12 | **端口映射编辑器**（每台设备）：本地端口/公网端口/协议/备注可编辑，代理名留空则自动 `port-<本地端口>`；`GET /relayhub/mappings` → `POST /relayhub/mappings`（审计 `relayhub.mappings`）→ `GET /relayhub/frpc-config?name=` 生成下发命令 + 复制 | ✅ | `pages/RhPortMapCard.kt`（草稿 `remember(device)`，500ms 轮询不重建该卡；未保存时拒绝生成命令；现网已注册行来自 `live[device]`） |
+| E+13 | **端口池配置卡**（全局、可折叠）：端口段增删改、排除端口、分配策略(顺序/随机/最少使用)、每客户端上限、同步 ufw；`port-pool` 读状态 → `preview` 校验并给 diff → `apply` 应用（含 `↺ 回滚到应用前`、备份清单）→ `probe` 公网自检云安全组 | ✅ | `pages/RhPortPoolCard.kt`；徽章 `rhFrpsMatch()` 判 frps.toml 是否与生效段一致；`preview` 本地校验不过就不发请求；`Modal.confirm` 承担面板的 `confirm()` |
+| E+14 | 端口池三个写接口失败时也要看到 `errors`/`conflicts`（面板为此绕过 `CM.api` 直接 fetch） | ✅ | `PanelApi.postRetainingBody()` → `ApiReply(status, body)`：非 2xx 不抛异常、只带状态码与完整 JSON；401 仍抛 `isAuth` 让会话照常失效 |
+| E+15 | i18n | ✅ | `nav.relayhub` + `relayhub.*` 共 **157 键**（含本次新增 `relayhub.map.*` 35 键、`relayhub.pool.*` 73 键）；zh/en 手工，其余 16 语同批填充，`commonMain`/`desktopMain` 镜像与占位符由 `tools/i18n_verify.py` 对账（各语言 `placeholder-issues` 与本次改动前逐项相同，未新增） |
+| E+16 | 写接口的提交形状（端口池 apply 会真的改写生产 frps.toml 并重启 frps） | ✅ | `desktopTest/…/RhPortPoolTest.kt` 9 例：期望值逐条取自真机响应，钉住 `rhPoolPayload` 的数值面额/钳位/白名单、`rhPoolSig` 的「算不算改动」、`rhFrpsMatch` 徽章判定、映射行过滤与自动代理名重算 |
+| E+17 | **页面排版重做**（2026-10-27）：字段仍与面板对齐，观感按 KMP 端重排 | ✅ | `RhOverviewBar()`(顶区一卡：4 指标 + 分隔线 + 3 徽章) / `RhMetricCell()`(去卡版磁贴) / `DeviceRail()`(250dp + 标题行，单机不立栏) / 头卡去掉重复设备名 / 两张同主键表并成「隧道一览」 / 图表降到 168dp |
+| E+18 | 重排时顺带修掉的两个共享 UI 缺陷（`ui/` 只增未改签名） | ✅ | `PanelCard` 补折叠箭头（`CollapseChevron`，此前折叠态与空卡片长得一模一样）；`MultiLineChart` 增可选 `chartHeight`（原先高度写死 200/168dp，调用方无法收紧） |
+
+**待产品确认的译文（不做主观看齐）**：ru 的 `{0}` 无法承载 1 / 2-4 / 5+ 三档复数变格（现统一用复数属格，端口数为 1 或 2-4 时会读错，除非引入 ICU 复数）；lo/th 的「端口池 / 公网自检 / 无监听」属小语种术语空缺，翻译者明确标为存疑（lo `ກອງພອດ`、th `ตรวจจากสาธารณะ`、并保留英文 `listen`）；ja「公网」与既有 `公衆IP` 用词不一致，本次按日本 UI 惯例用了 `公開ポート`。
+
+
 
 ---
 

@@ -20,6 +20,7 @@
     { id: 'databases', label: '数据库', icon: 'database' },
     { id: 'docker', label: 'Docker 容器', icon: 'docker' },
     { id: 'web', label: '网站 / Nginx', icon: 'browser' },
+    { id: 'php', label: 'PHP 站点', icon: 'code' },
     { id: 'cron', label: '定时任务', icon: 'clock' },
     { id: 'backups', label: '备份中心', icon: 'archive' },
     { id: 'logs', label: '日志中心', icon: 'logs' },
@@ -56,6 +57,7 @@
    * entry only when available, so a stock Linux install shows a clean menu. */
   const OPTIONAL_NAV = [
     { id: 'relay', after: 'dashboard', label: 'OpenCode 中继', icon: 'satellite', probe: '/relay/available' },
+    { id: 'relayhub', after: 'relay', label: '内网中继监控', icon: 'wlan', probe: '/relayhub/available' },
   ];
   async function detectOptionalNav() {
     for (const o of OPTIONAL_NAV) {
@@ -72,12 +74,13 @@
 
   /* ---------- lazy page modules ---------- */
   /* bump on each deploy so browsers pick up new page code immediately */
-  CM.BUILD = '20261016-06';
+  CM.BUILD = "20261028-0939";
   CM.lazyPages = {
     dashboard: 'js/pages/dashboard.js',
     healthalerts: 'js/pages/healthalerts.js',
     slo: 'js/pages/slo.js',
     relay: 'js/pages/relay.js',
+    relayhub: 'js/pages/relayhub.js',
     processes: 'js/pages/processes.js',
     disks: 'js/pages/disks.js',
     memory: 'js/pages/memory.js',
@@ -88,6 +91,7 @@
     databases: 'js/pages/databases.js',
     docker: 'js/pages/docker.js',
     web: 'js/pages/web.js',
+    php: 'js/pages/php.js',
     cron: 'js/pages/cron.js',
     backups: 'js/pages/backups.js',
     logs: 'js/pages/logs.js',

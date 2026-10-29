@@ -6,7 +6,7 @@ import paramiko
 HOST = os.environ.get("SM_HOST", "8.153.153.176")
 PORT = int(os.environ.get("SM_PORT", "22"))
 USER = os.environ.get("SM_USER", "root")
-PASS = os.environ.get("SM_PASS", "Ladridibiciclette!")
+PASS = os.environ["SM_PASS"]
 KEY = os.environ.get("SM_KEY", os.path.expanduser("~/.ssh/oc_relay_ed25519"))
 
 def run(cmd, timeout=180):

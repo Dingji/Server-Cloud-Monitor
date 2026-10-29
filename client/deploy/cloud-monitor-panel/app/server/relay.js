@@ -88,7 +88,11 @@ async function getApi(name, query) {
   if (hit && hit.exp > Date.now()) return hit.payload;
   let r;
   try { r = await raw(key, 'GET'); }
-  catch (e) { throw Object.assign(new Error('中继统计服务不可达: ' + e.message), { status: 502 }); }
+  catch (e) {
+    const n = String(name || '').replace(/^\/+/, '');
+    if (n === 'ips') return { status: 404, data: { error: 'unknown endpoint' } };
+    return { status: 200, data: { error: 'relay unavailable', available: false, detail: e.message } };
+  }
   const payload = { status: r.status, data: parse(r.body) };
   if (r.status === 200) cache.set(key, { exp: Date.now() + (TTL[base] || 5000), payload });
   return payload;
@@ -119,7 +123,7 @@ async function probe() {
     const r = await raw('/api/health', 'GET');
     return { ok: r.status === 200, data: parse(r.body), host: RELAY_HOST, port: RELAY_PORT };
   } catch (e) {
-    return { ok: false, error: e.message, host: RELAY_HOST, port: RELAY_PORT };
+    return { ok: false, data: {}, error: e.message, host: RELAY_HOST, port: RELAY_PORT };
   }
 }
 

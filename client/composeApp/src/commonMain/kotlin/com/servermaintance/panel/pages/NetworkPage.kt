@@ -21,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,10 +38,10 @@ import com.servermaintance.panel.core.ToastKind
 import com.servermaintance.panel.core.bool
 import com.servermaintance.panel.core.arr
 import com.servermaintance.panel.core.jsonObjectOf
-import com.servermaintance.panel.core.long
 import com.servermaintance.panel.core.num
 import com.servermaintance.panel.core.obj
 import com.servermaintance.panel.core.str
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.AutoRefresh
 import com.servermaintance.panel.ui.HandheldLayout
 import com.servermaintance.panel.ui.collectPlatformState
@@ -65,6 +64,7 @@ import com.servermaintance.panel.ui.MultiLineChart
 import com.servermaintance.panel.ui.TableCol
 import com.servermaintance.panel.ui.TableText
 import com.servermaintance.panel.ui.Toggle
+import com.servermaintance.panel.ui.slotHorizontalScroll
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
@@ -232,13 +232,16 @@ fun NetworkPage() {
             }
         }
 
-        /* N2 + N3 —— 复刻 .g-2-1 */
+        /* N2 + N3 —— 复刻 .g-2-1（堆叠分支包 Column：BoxWithConstraints 是 Box 语义，
+           多个子项会叠在同一位置，两张卡会互相压住） */
         if (net != null) {
             BoxWithConstraints {
                 if (HandheldLayout.contentStacked(maxWidth)) {
-                    NetTrafficCard(rxKb, txKb)
-                    Spacer(Modifier.height(10.dp))
-                    NetRouteCard(route, net?.str("dns") ?: "—")
+                    Column(Modifier.fillMaxWidth()) {
+                        NetTrafficCard(rxKb, txKb)
+                        Spacer(Modifier.height(10.dp))
+                        NetRouteCard(route, net?.str("dns") ?: "—")
+                    }
                 } else {
                     Row(Modifier.fillMaxWidth()) {
                         Column(Modifier.weight(1.6f)) { NetTrafficCard(rxKb, txKb) }
@@ -257,7 +260,7 @@ fun NetworkPage() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    modifier = Modifier.slotHorizontalScroll(),
                 ) {
                     Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
                     Chip(monitorRefreshLabel(AppState.meRefreshMs()), tone = Level.Muted)
@@ -330,7 +333,7 @@ fun NetworkPage() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    modifier = Modifier.slotHorizontalScroll(),
                 ) {
                     if (ufwActive) LevelBadge(L["已启用_25d2843150"], Level.Ok) else LevelBadge(L["未启用_8bb38ef00c"], Level.Warn)
                     if (ufwActive) {
@@ -371,44 +374,45 @@ fun NetworkPage() {
                 }
             },
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
+            AdaptiveRow(spacing = 8.dp) {
                 Field(
                     value = spec,
                     onValueChange = { spec = it },
                     hint = L["端口规格_如_8080_tcp_或_3306_b254f7025d"],
                     mono = true,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.span(1f),
                 )
-                PrimaryBtn(
-                    text = L["允许_allow_769b4bcd7c"],
-                    onClick = {
-                        scope.launch {
-                            val s = spec.trim()
-                            if (s.isEmpty()) {
-                                AppState.toast(tr("请输入端口规格_747e55b43b"), ToastKind.Warn)
-                                return@launch
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    PrimaryBtn(
+                        text = L["允许_allow_769b4bcd7c"],
+                        onClick = {
+                            scope.launch {
+                                val s = spec.trim()
+                                if (s.isEmpty()) {
+                                    AppState.toast(tr("请输入端口规格_747e55b43b"), ToastKind.Warn)
+                                    return@launch
+                                }
+                                netAction("ufw-allow", params = jsonObjectOf("spec" to s), reload = { loadSecurity() })
                             }
-                            netAction("ufw-allow", params = jsonObjectOf("spec" to s), reload = { loadSecurity() })
-                        }
-                    },
-                )
-                DangerBtn(
-                    text = L["拒绝_deny_15eaa6f7a5"],
-                    onClick = {
-                        scope.launch {
-                            val s = spec.trim()
-                            if (s.isEmpty()) {
-                                AppState.toast(tr("请输入端口规格_747e55b43b"), ToastKind.Warn)
-                                return@launch
+                        },
+                    )
+                    DangerBtn(
+                        text = L["拒绝_deny_15eaa6f7a5"],
+                        onClick = {
+                            scope.launch {
+                                val s = spec.trim()
+                                if (s.isEmpty()) {
+                                    AppState.toast(tr("请输入端口规格_747e55b43b"), ToastKind.Warn)
+                                    return@launch
+                                }
+                                netAction("ufw-deny", params = jsonObjectOf("spec" to s), reload = { loadSecurity() })
                             }
-                            netAction("ufw-deny", params = jsonObjectOf("spec" to s), reload = { loadSecurity() })
-                        }
-                    },
-                )
+                        },
+                    )
+                }
             }
 
             Spacer(Modifier.height(8.dp))

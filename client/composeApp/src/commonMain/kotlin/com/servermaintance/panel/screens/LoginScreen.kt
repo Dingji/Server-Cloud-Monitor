@@ -6,7 +6,6 @@ import com.servermaintance.panel.i18n.tr
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +26,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
@@ -433,7 +432,9 @@ fun LoginScreen() {
 
 /* ------------------------------------------------------------------ */
 
-/** 登录卡里的等宽输入框（复刻 `.login-card input`：#0b1017 底、聚焦强调色边框）。 */
+/** 登录卡里的等宽输入框（复刻 `.login-card input`：#0b1017 底、聚焦强调色边框）。
+ *  密码框右侧带「显示/隐藏」眼睛按钮（安卓端点按遮罩输入极易打错，而面板
+ *  连续错 8 次就锁 10 分钟 —— 可见性切换从源头减少误输）。 */
 @Composable
 private fun LoginField(
     value: String,
@@ -445,7 +446,9 @@ private fun LoginField(
     onEnter: (() -> Unit)? = null,
 ) {
     var focused by remember { mutableStateOf(false) }
+    var revealed by remember { mutableStateOf(false) }
     val border = if (focused) AccentState.current.primary else Palette.border2
+    val masked = password && !revealed
 
     BasicTextField(
         value = value,
@@ -458,9 +461,13 @@ private fun LoginField(
             fontFamily = FontFamily.Monospace,
         ),
         cursorBrush = SolidColor(AccentState.current.primary),
-        visualTransformation = if (password) PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation = if (masked) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
-            keyboardType = if (password) KeyboardType.Password else KeyboardType.Uri,
+            keyboardType = when {
+                masked -> KeyboardType.Password
+                password -> KeyboardType.Text   // 已显示明文：给普通键盘（可选中/复制）
+                else -> KeyboardType.Uri        // 地址框保持 URL 键盘
+            },
             imeAction = ImeAction.Go,
         ),
         keyboardActions = KeyboardActions(onGo = { onEnter?.invoke() }),
@@ -468,23 +475,41 @@ private fun LoginField(
             .fillMaxWidth()
             .onFocusChanged { focused = it.isFocused },
         decorationBox = { inner ->
-            Box(
+            Row(
                 Modifier
                     .fillMaxWidth()
                     .background(Palette.input, RoundedCornerShape(3.dp))
                     .border(1.dp, border, RoundedCornerShape(3.dp))
                     .padding(horizontal = 12.dp, vertical = 10.dp),
-                contentAlignment = Alignment.CenterStart,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (value.isEmpty()) {
-                    Text(
-                        text = placeholder,
-                        color = Palette.muted,
-                        fontSize = 13.sp,
-                        fontFamily = FontFamily.Monospace,
-                    )
+                Box(Modifier.weight(1f)) {
+                    if (value.isEmpty()) {
+                        Text(
+                            text = placeholder,
+                            color = Palette.muted,
+                            fontSize = 13.sp,
+                            fontFamily = FontFamily.Monospace,
+                        )
+                    }
+                    inner()
                 }
-                inner()
+                if (password) {
+                    Spacer(Modifier.size(8.dp))
+                    Box(
+                        Modifier
+                            .size(24.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .clickable(enabled = enabled) { revealed = !revealed },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        PanelIcon(
+                            if (revealed) "eyeOff" else "eye",
+                            size = 17.dp,
+                            color = if (revealed) AccentState.current.primary else Palette.muted,
+                        )
+                    }
+                }
             }
         },
     )

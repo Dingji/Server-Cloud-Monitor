@@ -46,6 +46,12 @@ class ShellSession extends EventEmitter {
 
   async start() {
     if (this.killed) return;
+    if (process.platform === 'win32') {
+      const ok = await this._startSsh();
+      if (ok || this.killed) return;
+      this._startWindowsShell();
+      return;
+    }
     /* 1) ssh pty */
     const ok = await this._startSsh();
     if (ok || this.killed) return;
@@ -121,6 +127,20 @@ class ShellSession extends EventEmitter {
         }
       }, 700);
     });
+  }
+
+  _startWindowsShell() {
+    const child = cp.spawn('powershell.exe', ['-NoLogo', '-NoProfile'], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: process.env,
+      windowsHide: true,
+    });
+    child.on('error', (e) => { this._emitData(`\r\n\x1b[31m无法启动 PowerShell: ${e.message}\x1b[0m\r\n`); this._setStatus('closed', e.message); });
+    child.stdout.on('data', (d) => this._emitData(d));
+    child.stderr.on('data', (d) => this._emitData(d));
+    child.on('exit', () => this._onDown('powershell exited'));
+    this.kind = 'local-plain'; this.alive = true; this.child = child;
+    this._setStatus('connected', '本地 PowerShell');
   }
 
   _startLocalPlain() {

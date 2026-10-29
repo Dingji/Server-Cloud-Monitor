@@ -1,4 +1,8 @@
 'use strict';
+if (process.platform === 'win32') {
+  module.exports = require('./svc-win');
+  return;
+}
 /*
  * Service control that works on systemd and on non-systemd init
  * (OpenRC / SysV / plain containers where systemctl may be absent).

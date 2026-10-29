@@ -19,7 +19,10 @@
       try { sum = await CM.api.get('/pkg/summary', 30000); }
       catch (e) { root.innerHTML = `<div class="card"><div class="muted">${esc(e.message)}</div></div>`; return; }
 
-      const TABS = [['search', '搜索安装'], ['installed', '已安装'], ['upgradable', '可升级'], ['recommended', '常用推荐'], ['maintain', '维护操作'], ['sources', '软件源']];
+      const isWin = CM.isWindows();
+      const TABS = isWin
+        ? [['search', '搜索安装'], ['installed', '已安装'], ['upgradable', '可升级'], ['recommended', '常用推荐'], ['maintain', '维护操作']]
+        : [['search', '搜索安装'], ['installed', '已安装'], ['upgradable', '可升级'], ['recommended', '常用推荐'], ['maintain', '维护操作'], ['sources', '软件源']];
       /* sel: 批量勾选集合，key=包名 value=是否已安装（决定批量动作是安装还是卸载） */
       const S = { tab: 'search', busy: false, q: '', page: 0, iq: '', section: '', sort: 'name', dir: 'asc', srcUri: '', srcCache: null, sel: new Map() };
 
@@ -46,9 +49,9 @@
         root.querySelector('#pk-stats').innerHTML = `
           <div class="card stat"><div class="stat-label">已安装</div><div class="stat-value">${sum.installed_active}</div><div class="stat-sub">共 ${sum.installed_total} 条记录</div></div>
           <div class="card stat"><div class="stat-label">可升级</div><div class="stat-value" style="color:${sum.upgradable ? 'var(--warn)' : 'var(--ok)'}">${sum.upgradable}</div><div class="stat-sub">${sum.upgradable ? '建议尽快更新' : '已是最新'}</div></div>
-          <div class="card stat"><div class="stat-label">版本锁定</div><div class="stat-value">${sum.held}</div><div class="stat-sub">apt-mark hold</div></div>
-          <div class="card stat"><div class="stat-label">根分区可用</div><div class="stat-value">${esc(sum.disk.avail || '-')}</div><div class="stat-sub">缓存 ${esc(sum.apt_cache_size || '?')}</div></div>`;
-        root.querySelector('#pk-idx').textContent = sum.lock.busy ? 'apt 任务进行中：' + sum.lock.label : '索引更新于 ' + idx;
+          <div class="card stat"><div class="stat-label">版本锁定</div><div class="stat-value">${sum.held}</div><div class="stat-sub">${isWin ? 'winget pin' : 'apt-mark hold'}</div></div>
+          <div class="card stat"><div class="stat-label">${isWin ? '系统盘可用' : '根分区可用'}</div><div class="stat-value">${esc(sum.disk.avail || '-')}</div><div class="stat-sub">${isWin ? '包管理器 winget' : '缓存 ' + esc(sum.apt_cache_size || '?')}</div></div>`;
+        root.querySelector('#pk-idx').textContent = sum.lock.busy ? ((isWin ? 'winget 任务：' : 'apt 任务进行中：') + sum.lock.label) : ((isWin ? 'winget 源 · ' : '索引更新于 ') + idx);
       };
       renderStats();
 
@@ -73,14 +76,13 @@
         let retry = null;
         try {
           /* CM.pkg.run：POST /pkg/job 启动任务 → 弹出进度窗（进度条/阶段/实时日志）
-             → 轮询到完成；受保护包的拦截错误在这里照常抛出，走下方强制分支 */
+             → 结束后在同一窗口显示明确的成功/失败横幅；受保护包的拦截错误照常抛出 */
           const r = await CM.pkg.run({
             action, names: names || [], force: !!opts.force,
             title: count > 1 ? `${title} · ${count} 个包` : title,
           });
           const secs = r.result ? r.result.seconds : r.seconds;
-          window.toast(title + ' 完成' + (secs != null ? '（' + secs + 's）' : ''), 'ok', 4000);
-          modal.output(title + ' 结果', r.output || '');
+          window.toast(title + ' 成功' + (secs != null ? '（' + secs + 's）' : '') + '，详情见任务窗口', 'ok', 4500);
         } catch (e) {
           /* 受保护包：首次被服务端拦截后，允许用户显式强制 */
           if (/受保护/.test(String(e.message)) && !opts.force) {
@@ -89,9 +91,9 @@
                <div class="small">服务端已阻止该操作。继续执行可能<b style="color:#f87171">导致系统无法启动、SSH 断开或面板失效</b>。</div>`,
               { danger: true, okText: '我已知晓风险，强制执行' });
             if (okc) retry = { action, names, opts: Object.assign({}, opts, { force: true }) };
-          } else {
+          } else if (!e.handledInModal) {
+            /* 任务窗已展示失败横幅的场景不再重复弹窗 */
             window.toast(String(e.message).split('\n')[0], 'err', 8000);
-            if (e.job) modal.output(title + ' 失败', String(e.message), { error: true });
           }
         } finally {
           S.busy = false;
@@ -198,6 +200,7 @@
         try { d = await CM.api.get('/pkg/detail?name=' + encodeURIComponent(name), 40000); }
         catch (e) { return window.toast(e.message, 'err'); }
         S.detail = d;
+        const deps = d.depends || [], recs = d.recommends || [], rdeps = d.reverse_deps || [];
         const prot = d.protected === 'critical' ? ui.badge('系统关键组件', 'bad') : d.protected === 'protected' ? ui.badge('面板依赖', 'warn') : '';
         detailHost.innerHTML = `<div class="card mb">
           <div class="card-title">${icon('package', { size: 14 })} ${esc(d.name)} ${prot}
@@ -212,19 +215,19 @@
               <dl class="kv">
                 <dt>版本</dt><dd class="mono">${esc(d.version || '-')}</dd>
                 <dt>候选</dt><dd class="mono">${esc(d.candidate || '-')}${d.pinned ? ui.badge('已固定', 'info') : ''}</dd>
-                <dt>已装版本</dt><dd class="mono">${d.installed ? esc(d.installed_version) + (d.upgradable ? ' <span style="color:var(--warn)">有新版本</span>' : '') : '<span class="muted">未安装</span>'}</dd>
+                <dt>已装版本</dt><dd class="mono">${d.installed ? esc(d.installed_version || '?') + (d.upgradable ? ' <span style="color:var(--warn)">有新版本</span>' : '') : '<span class="muted">未安装</span>'}</dd>
                 <dt>分组</dt><dd>${esc(d.section || '-')}</dd>
-                <dt>安装大小</dt><dd>${esc(d.size)}${d.file_count ? ' · ' + d.file_count + ' 个文件' : ''}</dd>
+                <dt>安装大小</dt><dd>${esc(d.size || '-')}${d.file_count ? ' · ' + d.file_count + ' 个文件' : ''}</dd>
                 <dt>主页</dt><dd class="wrap">${d.homepage ? esc(d.homepage) : '-'}</dd>
               </dl>
             </div>
             <div>
               <div class="muted small mb">摘要</div>
               <div class="small" style="line-height:1.7">${esc(d.summary || '-')}</div>
-              <div class="muted small mt mb">依赖 ${d.depends.length} · 推荐依赖 ${d.recommends.length} · 反向依赖 ${d.reverse_deps.length}</div>
-              ${d.reverse_deps.length ? `<div class="muted small mb">被依赖：${esc(d.reverse_deps.slice(0, 10).join(', '))}${d.reverse_deps.length > 10 ? ' …' : ''}</div>` : ''}
-              <details><summary class="muted small" style="cursor:pointer">完整说明与依赖列表</summary>
-                <pre class="pre mt" style="max-height:280px">${esc((d.description || '') + '\n\n--- 依赖 ---\n' + (d.depends.join('\n') || '-') + '\n\n--- 推荐 ---\n' + (d.recommends.slice(0, 30).join('\n') || '-'))}</pre>
+              ${deps.length || recs.length || rdeps.length ? `<div class="muted small mt mb">依赖 ${deps.length} · 推荐依赖 ${recs.length} · 反向依赖 ${rdeps.length}</div>
+              ${rdeps.length ? `<div class="muted small mb">被依赖：${esc(rdeps.slice(0, 10).join(', '))}${rdeps.length > 10 ? ' …' : ''}</div>` : ''}` : ''}
+              <details><summary class="muted small" style="cursor:pointer">完整信息（包管理器原始输出）</summary>
+                <pre class="pre mt" style="max-height:280px">${esc(d.raw || d.description || '(无输出)')}</pre>
               </details>
             </div>
           </div>
@@ -298,7 +301,9 @@
         const info = body.querySelector('#pk-srcinfo');
         const paintInfo = () => {
           if (!S.srcUri) {
-            info.innerHTML = `搜索范围：<b>全部已启用源</b>（共 ${(so.list || []).length} 个源），按名称与描述匹配。到「软件源」页可切换国内镜像。`;
+            info.innerHTML = isWin
+              ? `通过 <b>winget</b> 搜索 winget/msstore 源中的应用，按名称匹配。安装与升级过程在任务窗口实时显示。`
+              : `搜索范围：<b>全部已启用源</b>（共 ${(so.list || []).length} 个源），按名称与描述匹配。到「软件源」页可切换国内镜像。`;
           } else {
             const one = (so.list || []).find((x) => x.uri === S.srcUri) || {};
             info.innerHTML = `仅搜索源 <b class="mono">${esc(S.srcUri)}</b>${one.suites && one.suites.length ? '（' + esc(one.suites.join(' ')) + '）' : ''} 的软件包。若结果为空，请到「软件源」页更新该源索引。`;
@@ -571,6 +576,40 @@
         const holds = (sum.hold_list || []).join('、');
         /* 日志目录由服务端下发，前端不硬编码路径 */
         const logDir = (CM.me && CM.me.env && CM.me.env.paths && CM.me.env.paths.logs) || '服务端日志目录';
+        if (isWin) {
+          body.innerHTML = `
+            <div class="grid g2">
+              <div class="card"><div class="card-title">${icon('refresh', { size: 13 })} 源索引更新</div>
+                <div class="muted small mb">刷新 winget 源（winget-msstore 等）的包目录，安装/升级前建议先执行。</div>
+                <button class="btn btn-sm btn-primary" id="pm-update">更新源索引</button>
+              </div>
+              <div class="card"><div class="card-title">${icon('trash', { size: 13 })} 清理安装包缓存</div>
+                <div class="muted small mb">删除 winget 下载到临时目录（%TEMP%\\WinGet）的安装包，释放磁盘空间。不影响已安装的软件。</div>
+                <button class="btn btn-sm" id="pm-clean">清理 winget 缓存</button>
+              </div>
+              <div class="card"><div class="card-title">${icon('download', { size: 13 })} Windows 更新</div>
+                <div class="muted small mb">触发系统 Windows Update 扫描（UsoClient）。系统级更新（驱动/累积更新）请在「设置 → Windows 更新」中查看与安装。</div>
+                <button class="btn btn-sm" id="pm-wu">触发更新扫描</button>
+              </div>
+              <div class="card"><div class="card-title">包管理器</div>
+                <div class="muted small" style="line-height:1.9">
+                  当前使用 <b class="mono">${esc(sum.pm || 'winget')}</b>。<br>
+                  · winget 没有版本锁定（hold）与孤立依赖（autoremove）概念；<br>
+                  · 应用安装日志在服务器 <code>${esc(logDir)}</code>；<br>
+                  · 推荐安装清单见「常用推荐」页签。
+                </div>
+              </div>
+            </div>`;
+          bind('#pm-update', 'onclick', () => doAct('update', []));
+          bind('#pm-clean', 'onclick', () => doAct('clean', []));
+          bind('#pm-wu', 'onclick', async () => {
+            try {
+              const r = await CM.api.post('/windows/action', { op: 'wu-scan' });
+              window.toast(r.output || '已触发 Windows 更新扫描', 'ok');
+            } catch (e) { window.toast(e.message, 'err'); }
+          });
+          return;
+        }
         body.innerHTML = `
           <div class="grid g2">
             <div class="card"><div class="card-title">${icon('refresh', { size: 13 })} 软件源索引</div>

@@ -9,8 +9,16 @@
     ready: false,
   };
 
+  CM.BUILD = '20261025-27';
+
   CM.base = location.pathname.replace(/\/public\/.*$/, '') || '';
   CM.apiBase = CM.base + '/api';
+
+  CM.isWindows = function () {
+    if (CM.me && CM.me.env && CM.me.env.family === 'windows') return true;
+    const pm = CM.me && CM.me.info && String(CM.me.info.panelMode || '');
+    return /windows/i.test(pm);
+  };
 
   /* ---------- formatting ---------- */
   const fmt = window.fmt = {
@@ -129,7 +137,7 @@
     const pw = document.getElementById('login-password').value;
     const errEl = document.getElementById('login-error');
     errEl.textContent = '';
-    if (!pw) { errEl.textContent = '请输入密码'; return; }
+    /* 未配置面板密码时允许空密码登录 */
     try {
       const r = await api.request('POST', '/login', { password: pw });
       CM.token = r.token;
@@ -449,6 +457,7 @@
             <div class="job-bar"><div data-r="fill" style="width:0%"></div></div>
           </div>
           <div class="job-steps" data-r="steps"></div>
+          <div class="job-result" data-r="result" style="display:none"></div>
           <div class="job-meta">
             <b data-r="phase">排队中</b>
             <span data-r="detail" class="muted"></span>
@@ -472,13 +481,48 @@
       document.body.appendChild(pill);
 
       const q = (k) => mask.querySelector(`[data-r="${k}"]`);
-      let hidden = false, fails = 0;
+      let hidden = false, fails = 0, finished = false;
 
       const showMask = () => { hidden = false; mask.style.display = ''; if (!mask.isConnected) rootEl.appendChild(mask); pill.style.display = 'none'; };
       const hideMask = () => { if (hidden) return; hidden = true; mask.style.display = 'none'; pill.style.display = ''; };
+      const finishUi = (v) => {
+        finished = true;
+        const ok = v.state === 'done';
+        const stateEl = q('state');
+        stateEl.textContent = ok ? '成功' : '失败';
+        stateEl.className = 'badge ' + (ok ? 'ok' : 'bad');
+        const pct = ok ? 100 : Math.max(0, Math.min(100, v.percent || 0));
+        q('pct').textContent = ok ? '✓' : '✗';
+        q('fill').style.width = pct + '%';
+        q('fill').style.background = ok ? 'linear-gradient(90deg,#22c55e,#4ade80)' : 'linear-gradient(90deg,#ef4444,#f87171)';
+        q('phase').textContent = ok ? '已完成' : '执行失败';
+        const banner = q('result');
+        banner.style.display = '';
+        const secs = v.seconds != null ? `用时 ${v.seconds}s` : '';
+        const exit = v.exit_code != null ? ` · 退出码 ${v.exit_code}` : '';
+        if (ok) {
+          banner.className = 'job-result ok';
+          banner.innerHTML = `${icon('check', { size: 15 })} <b>操作成功</b><span class="muted">${fmt.esc(secs + exit)}</span>
+            <span class="muted small">日志见下方，关闭后可到「可升级」页签复查结果。</span>`;
+          const btn = q('bg'); if (btn) btn.style.display = 'none';
+          const done = mask.querySelector('[data-a=done]');
+          if (done) { done.disabled = false; done.textContent = '关闭'; }
+        } else {
+          banner.className = 'job-result bad';
+          const firstErr = String(v.error || v.output || '任务失败').split('\n').filter(Boolean).slice(-4).join('\n');
+          banner.innerHTML = `${icon('warning', { size: 15 })} <b>操作失败</b><span class="muted">${fmt.esc(secs + exit)}</span>
+            <pre class="pre" style="max-height:120px;margin-top:8px">${fmt.esc(firstErr || '（无错误输出）')}</pre>`;
+          const btn = q('bg'); if (btn) btn.style.display = 'none';
+          const done = mask.querySelector('[data-a=done]');
+          if (done) { done.disabled = false; done.textContent = '关闭'; }
+        }
+      };
       pill.onclick = showMask;
       mask.querySelector('[data-a=bg]').onclick = hideMask;
-      mask.addEventListener('click', (e) => { if (e.target === mask) hideMask(); });
+      const doneBtn = mask.querySelector('[data-a=done]');
+      const closeAll = () => { mask.remove(); teardown(); };
+      doneBtn.onclick = closeAll;
+      mask.addEventListener('click', (e) => { if (e.target === mask) { if (finished) closeAll(); else hideMask(); } });
 
       const renderSteps = (v) => {
         const host = q('steps');
@@ -531,20 +575,19 @@
             throw err;
           }
           paint(v);
-          if (v.state === 'done') {
-            mask.remove(); teardown();
-            return v;
-          }
-          if (v.state === 'failed') {
-            mask.remove(); teardown();
+          if (v.state === 'done' || v.state === 'failed') {
+            /* 结果横幅留在窗口里，直到用户点「关闭」——升级到底成没成功一目了然 */
+            finishUi(v);
+            if (v.state === 'done') return v;
             const err = new Error(v.error || '任务执行失败');
             err.job = v;
+            err.handledInModal = true;
             throw err;
           }
           await sleepMs(650);
         }
       } catch (e) {
-        mask.remove(); teardown();
+        if (!finished) { mask.remove(); teardown(); }
         throw e;
       }
     },
@@ -609,12 +652,14 @@
 
     async navigate(id) {
       if (!id) id = 'dashboard';
+      if (CM.hiddenPages && CM.hiddenPages.has(id)) id = 'dashboard';
       if (!CM.pages.find((p) => p.id === id) && !(CM.lazyPages && CM.lazyPages[id])) id = 'dashboard';
       if (location.hash !== '#/' + id) { location.hash = '#/' + id; return; } // triggers hashchange
       this.activate(id);
     },
 
     async activate(id) {
+      if (CM.hiddenPages && CM.hiddenPages.has(id)) id = 'dashboard';
       if (!CM.pages.find((p) => p.id === id)) {
         try { await CM.loadPageModule(id); } catch (e) { console.error(e); return; }
       }

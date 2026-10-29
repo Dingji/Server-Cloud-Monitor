@@ -8,9 +8,10 @@
     id: 'services',
     title: '系统服务',
     async mount(root) {
+      const svcTitle = CM.isWindows() ? 'Windows 服务' : 'systemd 服务';
       root.innerHTML = `
       <div class="card">
-        <div class="card-title">systemd 服务
+        <div class="card-title">${svcTitle}
           <div class="right">
             <span id="sv-counts" class="row" style="gap:6px"></span>
             <input class="inp" id="sv-q" placeholder="搜索服务名…" style="width:200px">

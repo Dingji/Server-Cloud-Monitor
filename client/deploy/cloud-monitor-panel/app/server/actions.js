@@ -1,4 +1,8 @@
 'use strict';
+if (process.platform === 'win32') {
+  module.exports = require('./actions-win');
+  return;
+}
 /*
  * Actions: every mutating operation, validated & audited.
  * Each handler returns { ok, output } or throws.

@@ -2,11 +2,12 @@
 
 This repository ships the **Cloud Monitor** stack end to end:
 
-1. **Panel server** (repository root) — Node/Express under `/opt/cloud-monitor`, API and browser UI at `/panel/`, plus nine ops extensions (uptime checks, alert rules, notification channels, managed hosts, file browser, security baseline scans, disk cleanup, service watchdog, remote metrics).
-2. **NoteBox** (`notebox/`) — Flask + SQLite notes and todos on port **13345** by default: Python service, browser UI (`notebox/app/notebox/static/`), and API used by the native client’s Notes section.
-3. **Native client** (`client/`) — Kotlin Multiplatform + Compose Multiplatform for **Android** and **desktop**. Implements the panel UI and NoteBox UI against the HTTP APIs above (no WebView for the panel shell).
+1. **Panel server** (repository root) — Node/Express under `/opt/cloud-monitor`, API and browser UI at `/panel/`, plus ten ops extensions (uptime checks, alert rules, notification channels, managed hosts, file browser, security baseline scans, disk cleanup, service watchdog, remote metrics, **PHP site hosting**) and the **device hardware-metrics agent** collector.
+2. **RelayHub** (`relayhub/`) — optional intranet-tunnel service: `frps` plus a stdlib-only Python panel on `127.0.0.1:8100`, exposed at `/relayhub/`. The main panel proxies it and its nav item self-hides when it is absent.
+3. **NoteBox** (`notebox/`) — Flask + SQLite notes and todos on port **13345** by default: Python service, browser UI (`notebox/app/notebox/static/`), and API used by the native client’s Notes section.
+4. **Native client** (`client/`) — Kotlin Multiplatform + Compose Multiplatform for **Android**, **desktop** and **iOS**. Implements the panel UI and NoteBox UI against the HTTP APIs above (no WebView for the panel shell).
 
-Typical deployment: Ubuntu; panel on `127.0.0.1:9000` behind nginx at `/panel`; NoteBox on `0.0.0.0:13345` (restrict in firewall); clients configured at runtime.
+Typical deployment: Ubuntu; panel on `127.0.0.1:9000` behind nginx at `/panel`; RelayHub on `127.0.0.1:8100` behind nginx at `/relayhub/` with `frps` on `7000`; NoteBox on `0.0.0.0:13345` (restrict in firewall); clients configured at runtime.
 
 Repository: <https://github.com/Dingji/Server-Cloud-Monitor>
 
@@ -18,7 +19,13 @@ Repository: <https://github.com/Dingji/Server-Cloud-Monitor>
 Server-Cloud-Monitor/
 ├── install.sh, uninstall.sh, deploy-remote.sh   # panel install (repo root)
 ├── app/, vendor/                                 # panel code + offline node_modules
+│   └── agent.py                                  # device agent served to intranet hosts
 ├── MANIFEST.*                                    # panel sync fingerprint
+├── tools/repo_verify.js                          # bundle self-check (syntax/requires/nav)
+├── relayhub/
+│   ├── deploy.sh                                 # frps + panel + systemd + port pool
+│   ├── relayhub-nginx.py                         # managed nginx blocks (check|apply|remove)
+│   └── panel/                                    # app.py (stdlib), static UI, device install.sh
 ├── notebox/
 │   ├── install.sh, uninstall.sh                  # NoteBox install
 │   ├── app/                                      # Flask app → /opt/notebox/app
@@ -34,8 +41,10 @@ Server-Cloud-Monitor/
 
 | Path | Role |
 |------|------|
-| `app/server/` | Panel Express app, collectors, `ops/` |
-| `app/public/` | Panel browser UI |
+| `app/server/` | Panel Express app, collectors, `ops/`, `ops/php/`, `devmetrics.js` |
+| `app/public/` | Panel browser UI, one lazy-loaded file per nav page |
+| `app/agent.py` | Push-based device agent (`POST /agent/push`), served pre-auth for curl install |
+| `relayhub/panel/app.py` | frps supervision + tunnel mappings API on `127.0.0.1:8100` |
 | `notebox/app/` | NoteBox WSGI app and static web UI |
 | `notebox/app/notebox/db.py` | SQLite schema, settings, `NB_DATA_DIR` |
 | `client/composeApp/.../core/NoteBox.kt` | NoteBox HTTP client (session cookie) |
@@ -47,16 +56,21 @@ Server-Cloud-Monitor/
 
 ### What you get
 
-- **Included:** application code, static UI, vendored `node_modules`, install/uninstall scripts, systemd and nginx helpers.
+- **Included:** application code, static UI, vendored `node_modules`, install/uninstall scripts, systemd and nginx helpers, the device agent (`app/agent.py`), and the optional RelayHub service source under `relayhub/`.
 - **Excluded** (per-host secrets or state — never copied from a live box):
 
 | Item | Reason |
 |------|--------|
 | `config.json` | Login scrypt hash, SSH passwords, DB credentials |
+| `devices.json` | Device-agent registry and per-device tokens; created on first `/devices/register` |
 | `keys/pty_key` | Terminal host key; `install.sh` runs `ssh-keygen` on the target |
 | `backups/`, `logs/`, `tmp/` | Host-specific data |
 | `runtime/` | Optional toolchain copy on some hosts; not required to run |
 | `/var/lib/cloud-panel/` | Metrics DB, backups, ops state (tasks, rules, channels, hosts, trash) |
+| `/var/lib/relay/devmetrics.db` | Tiered device-metric time series (500 ms → 5 min), created by `devmetrics.js` |
+| `relayhub/panel/config.json` | frps token, dashboard password, session secret, `internal_key` |
+| `relayhub/panel/mappings.json`, `port_usage.json` | Tunnel state on the relay box |
+| `relayhub/frps`, `relayhub/downloads/*.tar.gz` | ~20 MB binaries; fetched per-architecture at deploy time |
 
 A new install has empty ops configuration unless you restore `/var/lib/cloud-panel/ops` from another host (see [Migrating ops state](#migrating-ops-state)).
 
@@ -121,9 +135,82 @@ bash install.sh --prefix /opt/cm-second --data-dir /var/lib/cm-second \
 | `--nginx-standalone PORT` | — | Dedicated server block when :80 is taken |
 | `--direct` | — | Bind all interfaces, skip nginx |
 | `--no-systemd` / `--no-start` / `--no-smoke` | — | Skip unit / start / smoke test |
+| `--with-php` | — | Also install the **PHP site** runtime stack (php-fpm, MariaDB, certbot, Composer) |
+| `--php-base DIR` | `/srv/php` | Site root the PHP module manages (`CM_PHP_BASE`) |
+| `--with-relayhub` | — | Also deploy **RelayHub** (`frps` + relay panel) and wire its nginx routes |
+| `--relayhub-dir DIR` | `/opt/relayhub` | RelayHub install directory |
+| `--relayhub-port N` | `8100` | RelayHub panel backend port (proxied by the main panel) |
+| `--relayhub-pool A-B` | `6000-6999` | Public port pool handed to `frps.allowPorts` and ufw |
+| `--no-relayhub-ufw` | — | Deploy RelayHub without touching the firewall |
 | `--dry-run` | — | Print plan only |
 
 nginx `auto` mode writes `/etc/nginx/snippets/cloud-monitor-location.conf` and prints an `include` line; it does not edit existing vhosts. On an empty nginx host, `--nginx-standalone 8091` is usually simpler.
+
+### Feature stacks
+
+Two panel features need host-level software the panel itself does not ship. Both are opt-in flags, so a plain `install.sh` never changes more of the machine than asked.
+
+**PHP sites** (`app/server/ops/php/`, nav *PHP 站点*) — per-site php-fpm pool + nginx server block + atomic `releases/current` deploy + optional MariaDB database + certbot HTTPS. `--with-php` detects the distribution's `php*-fpm` version, installs the required extensions as one transaction and the optional ones individually (a missing extension must not abort the stack), then writes conservative MariaDB (`64M` buffer pool, `performance_schema=OFF`) and PHP ini drop-ins.
+
+- The module only *orchestrates*: without php-fpm/MariaDB it still mounts, and endpoints that shell out fail with the command output in the UI.
+- `cloud-monitor.service` runs with `PrivateTmp=true`, so archives uploaded from the host's `/tmp` are invisible to the panel — use `/srv/php/uploads`, which the module creates.
+- Pool files understand `;` comments only, and `php-fpm -t` takes `-y <file>`; delete a site's pool and reload before `userdel`, or the user leaks.
+
+**Device hardware metrics** (`app/server/devmetrics.js`, rendered on the *内网中继监控* page) — intranet devices (Raspberry Pi, NAS) sit behind NAT, so the panel never dials them: `agent.py` pushes samples to `POST /agent/push`, which is mounted *before* session auth and guarded by a per-device token. The panel keeps a tiered SQLite series (500 ms/6 h → 5 s/48 h → 30 s/30 d → 5 min/90 d) under `/var/lib/relay/devmetrics.db`, broadcasts live over the existing `/ws` hub, and raises thresholds through the same alert bell as ops rules.
+
+- `GET /agent/agent.py` serves the agent source pre-auth so `curl` on a fresh device works; the same file is mirrored to `public/cm-agent.py`.
+- The install one-liner is generated by `GET /api/devices/install`.
+
+### RelayHub (`relayhub/`)
+
+Optional intranet-tunnel service the panel's *内网中继监控* page proxies to. Two units:
+
+| Unit | Runs | Listens |
+|------|------|---------|
+| `relayhub-frps.service` | `/opt/relayhub/frps -c /opt/relayhub/frps.toml` | `0.0.0.0:7000` (WebSocket via nginx), dashboard `127.0.0.1:7500` |
+| `relayhub-panel.service` | `python3 app.py` in `/opt/relayhub/panel` | `127.0.0.1:8100` |
+
+`app.py` is standard-library only — no pip install, no virtualenv. It bootstraps its own `config.json` (admin password, salted hash, session secret) on first run.
+
+Deploy it as part of the panel install:
+
+```bash
+bash install.sh --nginx-standalone 8091 --with-relayhub
+```
+
+or by hand on a box that already has `/opt/relayhub`:
+
+```bash
+cp -a relayhub/. /opt/relayhub/
+RELAYHUB_SKIP_NGINX=1 bash /opt/relayhub/deploy.sh --port-range 6000-6999
+```
+
+`deploy.sh` picks or downloads the matching `frp_<ver>_linux_<arch>.tar.gz`, writes `frps.toml` with a fresh token and `allowPorts` derived from the port pool, installs both units, and (unless told to skip) injects managed `/relayhub/` blocks into an existing nginx vhost. `relayhub-nginx.py check|apply|remove` re-applies or removes those blocks later.
+
+How it connects to the panel:
+
+- The panel reads `/opt/relayhub/panel/config.json` → `internal_key` and sends it as `X-RelayHub-Key` on every `/relayhub/*` proxy call, so the relay API stays loopback-only.
+- `install.sh --with-relayhub` generates `internal_key` if absent and writes `/etc/nginx/snippets/relayhub-location.conf` (panel at `/relayhub/`, plus the `/~!frp` WebSocket location that carries `frpc` logins over port 80).
+- Without RelayHub, `GET /api/relayhub/available` returns `{"ok":false}` and the nav entry is not added — no dead page.
+
+Devices join with the client installer the panel serves:
+
+```bash
+curl -fsSL http://<server>/relayhub/install.sh | bash -s -- --name pi-office --token <token from the RelayHub panel>
+```
+
+Security-group note: `7000` (or the WebSocket path) and every port in the public pool must be opened in the cloud console, not only in ufw.
+
+Removing it again is manual (`uninstall.sh` does not own this service):
+
+```bash
+# if deploy.sh injected the managed blocks into an existing vhost:
+python3 /opt/relayhub/relayhub-nginx.py remove
+# if install.sh wrote the snippet instead, just drop the include and the file
+systemctl disable --now relayhub-panel relayhub-frps
+rm -f /etc/systemd/system/relayhub-{panel,frps}.service /etc/nginx/snippets/relayhub-location.conf
+systemctl daemon-reload && systemctl reload nginx && rm -rf /opt/relayhub /var/log/relayhub
+```
 
 ### After the panel is running
 
@@ -177,17 +264,27 @@ Treat archives containing `ops/notify_channels.json` or `ops/remote_creds.json` 
 | WebSocket / terminal | nginx `Upgrade` / `$connection_upgrade` |
 | HTTP 429 | Rate limit |
 | `apt` pages fail | Not Debian-family or `apt` missing |
+| PHP site endpoints error | `systemctl status php*-fpm mariadb`; panel-side orchestration only — see [Feature stacks](#feature-stacks) |
+| Uploaded archive "not found" | `PrivateTmp=true`; stage it under `/srv/php/uploads`, not host `/tmp` |
+| Device tiles stay empty | No agent has pushed yet; `curl http://127.0.0.1:9000/panel/api/agent/agent.py` should return the script |
+| Device stops updating | `devices.json` token mismatch; rotate with `POST /api/devices/rotate` and re-run the installer one-liner |
+| 内网中继 nav item missing | `GET /api/relayhub/available` returns `{"ok":false}`; start `relayhub-panel` or drop `--with-relayhub` |
+| `/relayhub/*` returns 401 | `internal_key` in `/opt/relayhub/panel/config.json` differs from what the panel loaded; restart `cloud-monitor` |
 
 ### Refreshing the server bundle in git
 
-From a machine with SSH read access to the reference host, in the separate **ServerMaintance** dev tree:
+The bundle is a mirror of a running host, so the refresh is scripted rather than hand-copied. From the **ServerMaintance** dev tree with SSH read access to the reference host (`SM_HOST`, `SM_KEY` override the defaults; nothing is written back to the host):
 
 ```bash
-python tools/build_panel_package.py
-# sync deploy/cloud-monitor-panel/ into this repo root (app/, vendor/, manifests), then commit
+python tools/server_pull.py                    # panel server/ + public/ + agent.py -> upstream/live-<STAMP>/
+STAMP=live-$(date +%Y%m%d) python tools/relayhub_pull.py   # relayhub code, no binaries or secrets
+python tools/panel_diff.py                     # only-live / only-repo / changed, LF-insensitive
+python tools/sync_to_repo.py --plan            # what would be written into the repo
+python tools/sync_to_repo.py                   # byte-exact copy into app/, relayhub/, client/
+node tools/repo_verify.js .                    # gate: syntax, requires, nav ids, ops mounts
 ```
 
-See `MANIFEST.env.txt` and `MANIFEST.remote-md5.txt`.
+`sync_to_repo.py` copies with `shutil` so the panel's UTF-8 Chinese strings are never re-encoded, and `repo_verify.js` fails on a nav id without a page file or a `require()` that no vendor package satisfies. Line endings are pinned by `.gitattributes`; `MANIFEST.remote-md5.txt` records the fingerprint of the host the bundle came from.
 
 ---
 
@@ -229,6 +326,30 @@ curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:13345/
 ```
 
 Open firewall if clients reach the host directly, e.g. `ufw allow 13345/tcp`.
+
+> **Read this before opening 13345.** `notebox/install.sh` binds `0.0.0.0:13345` and the
+> service has no reverse proxy in front of it, so an open firewall port means the
+> *entire* note store is reachable from the internet with only one thing protecting it:
+> the admin password.
+>
+> On a brand-new database, `_seed_users_and_owners()` creates the first admin from
+> `NB_PASS`. If `NB_PASS` is unset, a random password is generated and **printed to the
+> journal once** — read it with `journalctl -u notebox | grep 'initial admin password'`
+> and change it immediately. There is no default value in this repository, and there must
+> never be one again: a credential that ships in a public repo is not a secret, it is an
+> instruction manual.
+>
+> Worth checking on any host you inherited:
+>
+> ```bash
+> ss -ltnp | grep 13345                  # is it on 0.0.0.0, or loopback only?
+> ufw status numbered | grep 13345       # is it allowed from Anywhere?
+> grep -rn 'environ.get("[A-Z_]*PASS' /opt/notebox/app   # any hardcoded default left?
+> ```
+>
+> Prefer loopback + nginx: run NoteBox with `--host 127.0.0.1`, delete the `13345/tcp`
+> rule, and publish it as a `location /notes/ { proxy_pass http://127.0.0.1:13345; }`
+> block behind TLS.
 
 ### First-time setup
 
@@ -286,11 +407,11 @@ The client reimplements the panel’s feature set with **Compose Multiplatform**
 
 | Section | Pages |
 |---------|--------|
-| Monitoring | Dashboard, health alerts, SLO & usage, uptime checks, alert rules, notification channels, OpenCode relay (shown only when the collector is detected) |
+| Monitoring | Dashboard, health alerts, SLO & usage, uptime checks, alert rules, notification channels, OpenCode relay and RelayHub / intranet device metrics (each shown only when its probe succeeds) |
 | Server | Processes, disks, memory, network, security, services, packages, file manager, managed hosts, security baseline, disk governance, service watchdog, remote host metrics |
-| Applications | Databases, Docker, web/nginx, cron, backups, logs, audit |
+| Applications | Databases, Docker, web/nginx, PHP sites, cron, backups, logs, audit |
 | Notes (NoteBox) | Notes, todos, import/export, mail notifications, NoteBox settings, user admin |
-| Tools | Web terminal |
+| Tools | Web terminal, Windows host tools (shown on Windows hosts) |
 | System | Panel settings |
 
 NoteBox screens call the service in [`notebox/`](#notebox-notebox) (default `http://<host>:13345`). Configure URL and email/password on first use in the Notes section; session is stored separately from the panel token (`notebox_*` keys). See [NoteBox clients](notebox/client/README.md).
@@ -432,24 +553,49 @@ First build downloads dependencies from Maven Central and Google Maven; allow ne
 ┌─────────────────┐   /panel/api, /panel/ws     ┌─────────────────────────┐
 │  KMP client     │ ──────────────────────────► │ nginx → cloud-monitor   │
 │  + browser      │                             │ (127.0.0.1:9000)        │
-└────────┬────────┘                             └─────────────────────────┘
-         │  :13345 /api/ + session cookie
-         ▼
-┌─────────────────┐
-│ notebox.service │  Flask + SQLite (/opt/notebox/data)
-│  web UI at /    │
-└─────────────────┘
+└────────┬────────┘                             └───────┬─────────────────┘
+         │  :13345 /api/ + session cookie               │ /relayhub/* + X-RelayHub-Key
+         ▼                                             ▼
+┌─────────────────┐                       ┌───────────────────────────────┐
+│ notebox.service │                       │ relayhub-panel (127.0.0.1:8100)│
+│  web UI at /    │                       │  └ relayhub-frps (0.0.0.0:7000)│
+└─────────────────┘                       └───────────────▲───────────────┘
+                                                          │ frpc (websocket)
+   intranet devices ── POST /panel/api/agent/push ────────┘   (behind NAT: push, never polled)
 ```
 
-Typical order: `install.sh` (panel) at repo root → `notebox/install.sh` → nginx/TLS and firewall for `/panel` and port 13345 → build or install KMP client → set panel URL and NoteBox URL → change default panel password and create NoteBox users.
+Typical order: `install.sh` (panel, add `--with-php` / `--with-relayhub` as needed) at repo root → `notebox/install.sh` → nginx/TLS and firewall for `/panel`, `/relayhub/`, port 13345 and the frp port pool → build or install KMP client → set panel URL and NoteBox URL → change default panel password and create NoteBox users.
 
 ---
 
 ## Verification notes
 
-Isolated panel package tests (separate prefix/port, production untouched) are run from the ServerMaintance tree: `python tools/test_panel_package.py`. Last recorded run: 61 application files md5-matched the reference host; install smoke covered login, ops endpoints, static assets, and WebSocket handshake.
+The panel bundle is checked without a Linux host, because "does it come up from a fresh checkout" is a repo property, not a host property:
 
-Items not fully automated on every run: first-time NodeSource install on a blank VM, nginx `--nginx-standalone` reload on a host that already owns `:80`, and first systemd enable on a machine with no prior unit.
+```bash
+node tools/repo_verify.js .                     # 70 .js files parse; every require() resolves
+                                                # against vendor/ or a sibling file; 22 nav ids
+                                                # ↔ 22 lazy page files; 10 ops modules mounted
+tar -xzf vendor/node_modules.tar.gz -C builddir && cp -a app/. builddir
+cd builddir && CM_PORT=9111 node server/index.js
+```
+
+Last recorded run (2026-10-29, Node 24 on a non-Linux workstation, so host collectors return nulls by design):
+
+| Endpoint | Result |
+|----------|--------|
+| `POST /panel/api/login` | token issued |
+| `GET /panel/api/ops/overview` | `{"ok":true}` — all ten ops extensions mounted |
+| `GET /panel/api/devices` | `{"ok":true,"devices":[],"alerts":{…}}` — `devmetrics.js` mounts, SQLite tier store created |
+| `GET /panel/api/php/sites` | `[]` — PHP extension mounts (execution endpoints need php-fpm on the host) |
+| `GET /panel/api/relayhub/available` | `{"ok":false}` — degrades, nav item stays hidden |
+| `GET /panel/api/agent/agent.py` | 25 133 bytes, served before auth |
+| `GET /panel/public/js/pages/{php,relayhub}.js` | 64 828 / 97 427 bytes |
+| `node server/page_test.js` (with `CM_APP_DIR`) | runtime render of slo / healthalerts / audit |
+
+`MANIFEST.remote-md5.txt` is the md5 fingerprint of the reference host the bundle was copied from; diff a target against it with `python tools/panel_diff.py`.
+
+Not covered by any of the above, and still needing a real Ubuntu host: first-time NodeSource install on a blank VM, nginx `--nginx-standalone` reload on a host that already owns `:80`, `--with-php` (needs apt), `--with-relayhub` (needs frp download + ufw), and PHP site creation end to end.
 
 ---
 

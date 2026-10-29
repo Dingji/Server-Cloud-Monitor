@@ -7,6 +7,8 @@
     id: 'settings',
     title: '面板设置',
     async mount(root) {
+      const isWin = CM.isWindows();
+      if (isWin && CM.me && CM.me.env && CM.me.env.paths && CM.me.env.paths.data) curDir = CM.me.env.paths.data;
       const c = await CM.api.get('/config');
       /* 兼容旧后端：任一新引擎配置缺失时补空对象，避免模板报错 */
       c.db = c.db || {};
@@ -56,7 +58,7 @@
           <dl class="kv mb">
             <dt>监听地址</dt><dd>${fmt.esc(c.bind)}:${c.port}</dd>
             <dt>访问路径</dt><dd>${fmt.esc(c.basePath)}/</dd>
-            <dt>运行模式</dt><dd>${c.underSystemd ? 'systemd 服务' : '手动进程'}</dd>
+            <dt>运行模式</dt><dd>${isWin ? 'Windows 服务 (CloudMonitorDotNet)' : (c.underSystemd ? 'systemd 服务' : '手动进程')}</dd>
           </dl>
           <div class="row">
             <button class="btn btn-danger" id="st-restart">重启面板服务</button>
@@ -73,7 +75,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">SSH 连接（用于 Web 终端的 PTY）</div>
+        <div class="card-title">${isWin ? '远程 SSH（可选，本机终端默认 PowerShell）' : 'SSH 连接（用于 Web 终端的 PTY）'}</div>
         <div class="row mb">
           <label class="fld">主机<input class="inp mono" id="st-ssh-host" value="${fmt.esc(c.ssh.host)}" style="width:180px"></label>
           <label class="fld">端口<input class="inp mono" id="st-ssh-port" value="${c.ssh.port}" style="width:90px"></label>
@@ -81,22 +83,22 @@
           <label class="fld">密码（留空保持不变）<input type="password" class="inp" id="st-ssh-pw" style="width:180px"></label>
           <button class="btn btn-primary" id="st-ssh-apply" style="align-self:flex-end">保存</button>
         </div>
-        <div class="muted small">终端优先使用密钥认证（<code>keys/pty_key</code>），密码为备用。修改后新终端会话生效。</div>
+        <div class="muted small">${isWin ? 'Windows 上 Web 终端默认在本机启动 PowerShell；此处 SSH 仅在你改为远程 Shell 时使用。' : '终端优先使用密钥认证（<code>keys/pty_key</code>），密码为备用。修改后新终端会话生效。'}</div>
       </div>
 
       <div class="grid g2">
         <div class="card">
-          <div class="card-title">PostgreSQL 连接（默认使用 peer 认证 su - postgres）</div>
+          <div class="card-title">PostgreSQL 连接${isWin ? '（TCP / 本地实例）' : '（默认使用 peer 认证 su - postgres）'}</div>
           <div class="row">
             <label class="fld">用户<input class="inp mono" id="st-pg-user" value="${fmt.esc(c.db.postgres.user)}" style="width:130px"></label>
-            <label class="fld">TCP 主机<input class="inp mono" id="st-pg-host" value="${fmt.esc(c.db.postgres.host)}" placeholder="留空=本地 socket" style="width:160px"></label>
+            <label class="fld">TCP 主机<input class="inp mono" id="st-pg-host" value="${fmt.esc(c.db.postgres.host)}" placeholder="${isWin ? 'localhost' : '留空=本地 socket'}" style="width:160px"></label>
             <label class="fld">端口<input class="inp mono" id="st-pg-port" value="${fmt.esc(c.db.postgres.port)}" placeholder="5432" style="width:90px"></label>
             <label class="fld">密码<input type="password" class="inp" id="st-pg-pw" placeholder="${c.db.postgres.hasPassword ? '已设置(留空不变)' : '无'}" style="width:150px"></label>
           </div>
-          <div class="muted small mt">留空主机则走本地 socket + peer 认证（Ubuntu 默认，无需密码）。</div>
+          <div class="muted small mt">${isWin ? '填写主机、端口与密码以连接本机或远程 PostgreSQL（需已安装 psql 客户端）。' : '留空主机则走本地 socket + peer 认证（Ubuntu 默认，无需密码）。'}</div>
         </div>
         <div class="card">
-          <div class="card-title">MySQL / MariaDB 连接（默认 root + socket）</div>
+          <div class="card-title">MySQL / MariaDB 连接${isWin ? '（TCP）' : '（默认 root + socket）'}</div>
           <div class="row">
             <label class="fld">用户<input class="inp mono" id="st-my-user" value="${fmt.esc(c.db.mysql.user)}" style="width:130px"></label>
             <label class="fld">TCP 主机<input class="inp mono" id="st-my-host" value="${fmt.esc(c.db.mysql.host)}" placeholder="留空=本地 socket" style="width:160px"></label>
@@ -142,18 +144,18 @@
         <div class="card">
           <div class="card-title">SQLite 搜索目录</div>
           <div class="row">
-            <label class="fld" style="flex:1">允许搜索的根目录（冒号分隔）<input class="inp mono" id="st-sq-roots" value="${fmt.esc(c.db.sqlite.roots)}" placeholder="/opt:/srv:/root:/home" style="width:100%"></label>
+            <label class="fld" style="flex:1">允许搜索的根目录（${isWin ? '分号' : '冒号'}分隔）<input class="inp mono" id="st-sq-roots" value="${fmt.esc(c.db.sqlite.roots)}" placeholder="${isWin ? 'C:\\\\ProgramData\\\\CloudPanel;C:\\\\CloudMonitorDotNet' : '/opt:/srv:/root:/home'}" style="width:100%"></label>
           </div>
           <div class="muted small mt">面板只会在此目录范围内列出/打开 .db、.sqlite 文件（防止误开系统文件），新增目录后立即生效。</div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">配置文件编辑器 <span class="muted small">（/etc、/var/www、/opt、/srv、/root）</span></div>
+        <div class="card-title">配置文件编辑器 <span class="muted small">${isWin ? '（ProgramData\\\\CloudPanel、CloudMonitorDotNet、inetpub）' : '（/etc、/var/www、/opt、/srv、/root）'}</span></div>
         <div class="row mb">
           <input class="inp mono" id="fe-dir" value="${fmt.esc(curDir)}" style="width:340px">
           <button class="btn" id="fe-browse">${icon('folder', { size: 13 })} 浏览</button>
-          <span class="muted small">nginx/sshd/fstab 配置保存后会自动校验</span>
+          <span class="muted small">${isWin ? '仅允许面板数据目录及安装目录内的文件' : 'nginx/sshd/fstab 配置保存后会自动校验'}</span>
         </div>
         <div id="fe-list" class="mb"></div>
         <div class="row mb"><span class="mono small" id="fe-path" style="flex:1">未选择文件</span><button class="btn btn-primary btn-sm" id="fe-save" disabled>保存文件</button></div>
@@ -163,7 +165,7 @@
 
       <div class="card">
         <div class="card-title">关于</div>
-        <div class="muted small">Cloud Monitor v1.0.0 · Node ${fmt.esc(processVersion())} · 数据每 ${CM.refreshLabel(c.refreshMs)} 从 /proc 实时采集 · 所有管理操作均写入审计日志 (logs/audit.log)</div>
+        <div class="muted small">Cloud Monitor v1.0.0 · ${isWin ? '.NET ' + fmt.esc(processVersion()) : 'Node ' + fmt.esc(processVersion())} · 数据每 ${CM.refreshLabel(c.refreshMs)} ${isWin ? '从 WMI/性能计数器采集' : '从 /proc 实时采集'} · 审计：${isWin ? 'ProgramData\\\\CloudPanel\\\\audit\\\\panel-audit.jsonl' : 'logs/audit.log'}</div>
       </div>`;
 
       function processVersion() { return (CM.me && CM.me.info && CM.me.info.nodeVersion) || ''; }

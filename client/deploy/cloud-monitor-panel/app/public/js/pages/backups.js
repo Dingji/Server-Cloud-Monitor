@@ -1,7 +1,9 @@
 /* Backups page */
 (function () {
   'use strict';
-  const SOURCES = ['/etc', '/root', '/var/www', '/srv'];
+  const SOURCES = (CM.me && CM.me.env && CM.me.env.family === 'windows')
+    ? ['C:\\ProgramData\\CloudPanel', 'C:\\CloudMonitorDotNet', 'C:\\inetpub', 'C:\\ProgramData']
+    : ['/etc', '/root', '/var/www', '/srv'];
 
   registerPage({
     id: 'backups',
@@ -87,7 +89,7 @@
           <div class="card stat"><div class="stat-label">备份份数</div><div class="stat-value">${rr.items.length}</div><div class="stat-sub">保留 ${rr.retention} 份</div></div>
           <div class="card stat"><div class="stat-label">占用</div><div class="stat-value">${fmt.bytes(total)}</div><div class="stat-sub" style="font-family:var(--mono)">${fmt.esc(rr.dir)}</div></div>
           <div class="card stat"><div class="stat-label">上次结果</div><div class="stat-value" style="font-size:16px;padding-top:8px">${st ? (st.ok ? ui.badge('成功', 'ok') : ui.badge('失败', 'bad')) : '<span class="muted">—</span>'}</div><div class="stat-sub">${st ? fmt.esc(String(st.ts || '').replace('T', ' ').slice(0, 19)) : '无记录'}</div></div>
-          <div class="card stat"><div class="stat-label">远端推送</div><div class="stat-value" style="font-size:15px;padding-top:8px;word-break:break-all">${rr.remote ? ui.badge('已配置', 'ok') : ui.badge('仅本地', 'gray')}</div><div class="stat-sub">${rr.remote ? fmt.esc(rr.remote) : '在 /etc/relay/backup.env 配置'}</div></div>
+          <div class="card stat"><div class="stat-label">远端推送</div><div class="stat-value" style="font-size:15px;padding-top:8px;word-break:break-all">${rr.remote ? ui.badge('已配置', 'ok') : ui.badge('仅本地', 'gray')}</div><div class="stat-sub">${rr.remote ? fmt.esc(rr.remote) : (CM.isWindows() ? 'Windows 面板仅本地备份' : '在 /etc/relay/backup.env 配置')}</div></div>
         </div>
         ${ui.table([
           { k: 'name', label: '文件名', cls: 'mono wrap' },
@@ -97,7 +99,7 @@
             <a class="btn btn-sm" href="${CM.apiBase}/relayops/backup/download?name=${encodeURIComponent(v)}&token=${encodeURIComponent(CM.token)}">下载</a>
             <button class="btn btn-sm btn-danger" data-rdel="${fmt.esc(v)}">删除</button></span>` },
         ], rr.items)}
-        <div class="muted small mt">由 <code>/opt/relay/backup_relay.sh</code> 生成，<code>relay-backup.timer</code> 每日 03:30 执行。</div>`;
+        <div class="muted small mt">${CM.isWindows() ? 'Relay 备份需 Linux relay 节点；本机 Windows 面板不运行 relay 定时备份。' : '由 <code>/opt/relay/backup_relay.sh</code> 生成，<code>relay-backup.timer</code> 每日 03:30 执行。'}</div>`;
 
         body.querySelectorAll('[data-rdel]').forEach((b) => {
           b.onclick = async () => {

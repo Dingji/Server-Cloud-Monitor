@@ -203,6 +203,8 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .tbl tbody tr:hover td { background: #131a23; }
 .tbl td.mono, .tbl .mono { font-family: var(--mono); font-size: 12px; }
 .tbl td.wrap { white-space: normal; word-break: break-all; }
+.tbl td.proc-cmdline { max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+.tbl td.proc-cmdline .cmdline-clip { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tbl .num { text-align: right; font-family: var(--mono); }
 
 /* ---------- badges ---------- */
@@ -314,7 +316,9 @@ pre.pre.tall { max-height: 60vh; }
 .term-wrap { display: flex; flex-direction: column; height: calc(100vh - 148px); background: #070b10; border: 1px solid var(--border); border-radius: var(--radius); padding: 7px; }
 .term-bar { display: flex; align-items: center; gap: 10px; padding: 3px 6px 9px; font-size: 11.5px; color: var(--muted); flex-wrap: wrap; font-family: var(--mono); }
 .term-host { flex: 1; }
-#term-container { flex: 1; min-height: 0; }
+#term-container { flex: 1; min-height: 0; outline: none; }
+.term-bar .term-shell-pick { display: inline-flex; align-items: center; gap: 6px; margin-left: 8px; }
+.term-bar .term-shell-pick select { max-width: 160px; }
 
 /* ---------- charts ---------- */
 .chart-box { position: relative; height: 200px; }
@@ -726,3 +730,35 @@ input[type=checkbox] { accent-color: var(--accent); width: 14px; height: 14px; c
   .job-pct { font-size: 21px; min-width: 62px; }
   .job-log { height: 200px; }
 }
+
+/* ============================================================
+   job result banner: 任务结束后的成功/失败横幅（留在窗口内）
+   ============================================================ */
+.job-result {
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  padding: 10px 12px; border-radius: var(--radius); margin: 2px 0 11px;
+  font-size: 12.5px; border: 1px solid; align-items: flex-start;
+}
+.job-result > svg { flex: 0 0 auto; margin-top: 1px; }
+.job-result.ok { background: rgba(34, 197, 94, .09); border-color: rgba(34, 197, 94, .38); color: #86efac; }
+.job-result.ok b { color: #4ade80; letter-spacing: .5px; }
+.job-result.bad { background: rgba(239, 68, 68, .07); border-color: rgba(239, 68, 68, .4); color: #fca5a5; }
+.job-result.bad b { color: #f87171; letter-spacing: .5px; }
+.job-result .pre { width: 100%; margin-top: 4px; }
+
+/* ---------- win-tools 页签：窄屏横向滚动而不换行挤压 ---------- */
+.wt-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 3px; scrollbar-width: thin; }
+.wt-tabs .btn { flex: 0 0 auto; }
+.wt-tabs::-webkit-scrollbar { height: 6px; }
+
+/* ============================================================
+   列表美化: 斑马纹 / 对齐 / 徽标行高 / 空态
+   ============================================================ */
+.tbl tbody tr:nth-child(even) td { background: rgba(255, 255, 255, .014); }
+.tbl tbody tr:hover td { background: #141b24; }
+.tbl td { vertical-align: middle; }
+.tbl td .badge { vertical-align: middle; }
+.tbl td small, .tbl td .small { color: var(--muted); }
+.table-wrap { scroll-margin: 8px; }
+.table-wrap::-webkit-scrollbar-thumb { border-color: #0d1219; }
+.tbl td:empty::after { content: "·"; color: #3a4654; }

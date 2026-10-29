@@ -26,6 +26,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
@@ -293,6 +294,44 @@ class PanelApi(private val config: () -> ServerConfig) {
             token = token,
             expiresAt = (o["expiresAt"] as? kotlinx.serialization.json.JsonPrimitive)?.safeContent().orEmpty(),
         )
+    }
+
+    /**
+     * 失败回执也保留完整 JSON 的 POST。
+     *
+     * 端口池的 apply/preview 在 400/409 时才把 `errors`/`conflicts`/`rollback_pool`
+     * 放在响应体里（面板 relayhub.js 为此特意绕过 `CM.api` 直接用 fetch），走 [post]
+     * 会被压成一句 "HTTP 409"，用户看不到到底哪里冲突。401 仍然抛出，让
+     * AppState 照常把会话踢回登录页。
+     */
+    suspend fun postRetainingBody(path: String, body: JsonElement = JsonObject(emptyMap())): ApiReply {
+        val r: HttpResponse = try {
+            http.post(urlOf(path)) {
+                auth()
+                header(HttpHeaders.ContentType, ContentType.Application.Json)
+                setBody(body)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
+        }
+        val status = r.status.value
+        val text = try {
+            r.bodyAsText()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            ""
+        }
+        if (status == 401) throw parseError(path, status, text)
+        val parsed = runCatching { Json.parseToJsonElement(text) }.getOrNull() as? JsonObject
+        return ApiReply(status, parsed ?: JsonObject(emptyMap()))
+    }
+
+    /** [postRetainingBody] 的回执：状态码 + 已解析的响应体（解析失败时为空对象）。 */
+    class ApiReply(val status: Int, val body: JsonObject) {
+        val ok: Boolean get() = status in 200..299
     }
 
     suspend fun logout() { runCatching { post("/logout") } }

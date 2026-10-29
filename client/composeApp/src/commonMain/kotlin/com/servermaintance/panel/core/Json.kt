@@ -8,8 +8,6 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 
 /** Shared JSON handling: panel responses are dynamic, so we work on JsonElement. */
@@ -87,7 +85,7 @@ fun jsonObjectOf(vararg pairs: Pair<String, Any?>): JsonObject = buildJsonObject
             is String -> put(k, JsonPrimitive(v))
             is Boolean -> put(k, JsonPrimitive(v))
             is Int -> put(k, JsonPrimitive(v))
-            is Long -> put(k, JsonPrimitive(v.toDouble()))
+            is Long -> put(k, JsonPrimitive(v))
             is Double -> put(k, JsonPrimitive(v))
             is Float -> put(k, JsonPrimitive(v.toDouble()))
             is JsonElement -> put(k, v)
@@ -104,7 +102,7 @@ fun List<Pair<String, Any?>>.toJsonObject(): JsonObject = buildJsonObject {
             is String -> put(k, JsonPrimitive(v))
             is Boolean -> put(k, JsonPrimitive(v))
             is Int -> put(k, JsonPrimitive(v))
-            is Long -> put(k, JsonPrimitive(v.toDouble()))
+            is Long -> put(k, JsonPrimitive(v))
             is Double -> put(k, JsonPrimitive(v))
             is JsonElement -> put(k, v)
             else -> put(k, JsonPrimitive(v.toString()))

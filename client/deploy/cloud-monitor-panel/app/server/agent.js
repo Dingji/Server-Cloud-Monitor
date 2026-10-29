@@ -264,15 +264,69 @@ class SshAgent {
   }
 }
 
+/* ---------------- Windows local agent ---------------- */
+class WinLocalAgent {
+  constructor() { this.mode = 'local'; }
+  readFiles(paths) {
+    return new Promise((resolve) => {
+      const out = {};
+      let pending = paths.length;
+      if (!pending) return resolve(out);
+      for (const p of paths) {
+        fs.readFile(p, 'utf8', (err, data) => {
+          out[p] = err ? null : data;
+          if (--pending === 0) resolve(out);
+        });
+      }
+    });
+  }
+  writeFile(p, content) {
+    return new Promise((resolve, reject) => {
+      fs.mkdirSync(path.dirname(p), { recursive: true });
+      fs.writeFile(p, content, { mode: 0o600 }, (err) => err ? reject(err) : resolve());
+    });
+  }
+  readFileBuffer(p) {
+    return new Promise((resolve, reject) => fs.readFile(p, (err, b) => err ? reject(err) : resolve(b)));
+  }
+  run(cmd, opts = {}) {
+    const timeout = opts.timeout || 15000;
+    const maxBuffer = opts.maxBuffer || 16 * 1024 * 1024;
+    const usePs = opts.powershell || opts.ps || /^(\$|Get-|Set-|Write-|Import-|foreach|ForEach-Object)/m.test(String(cmd).trim());
+    if (usePs) {
+      const { runPowerShell } = require('./hostplatform');
+      return runPowerShell(cmd, { timeout, maxBuffer });
+    }
+    return new Promise((resolve) => {
+      cp.exec(cmd, { shell: true, timeout, maxBuffer, windowsHide: true }, (err, stdout, stderr) => {
+        if (err && err.killed) {
+          return resolve({ code: -1, stdout: String(stdout || ''), stderr: (String(stderr || '') + `\n[timeout after ${timeout}ms]`).trim(), timedOut: true });
+        }
+        resolve({ code: err && typeof err.code === 'number' ? err.code : (err ? 1 : 0), stdout: String(stdout || ''), stderr: String(stderr || ''), timedOut: false });
+      });
+    });
+  }
+  runStream(cmd, opts = {}) {
+    const onLine = typeof opts.onLine === 'function' ? opts.onLine : () => {};
+    return this.run(cmd, opts).then((r) => {
+      for (const line of (r.stdout + '\n' + r.stderr).split(/\r?\n/)) {
+        if (line) { try { onLine(line, false); } catch (_) {} }
+      }
+      return r;
+    });
+  }
+}
+
 let agent = null;
 function getAgent() {
   if (agent) return agent;
-  const cfg = config.get();
   const want = process.env.CM_MODE || 'auto';
-  const useLocal = want === 'local' || (want === 'auto' && os.platform() === 'linux');
-  agent = useLocal ? new LocalAgent() : new SshAgent();
-  log(`agent mode: ${agent.mode}`);
+  const plat = os.platform();
+  const useLocal = want === 'local' || (want === 'auto' && (plat === 'linux' || plat === 'win32'));
+  if (useLocal && plat === 'win32') agent = new WinLocalAgent();
+  else agent = useLocal ? new LocalAgent() : new SshAgent();
+  log(`agent mode: ${agent.mode}${plat === 'win32' ? ' (windows)' : ''}`);
   return agent;
 }
 
-module.exports = { getAgent, LocalAgent, SshAgent };
+module.exports = { getAgent, LocalAgent, SshAgent, WinLocalAgent };

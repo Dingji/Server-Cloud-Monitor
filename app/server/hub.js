@@ -312,4 +312,4 @@ function shutdown() {
   try { if (wss) wss.close(); } catch (_) {}
 }
 
-module.exports = { init, shutdown, listSources, applyRefresh, getHistory, getAlerts, fireAlert };
+module.exports = { init, shutdown, listSources, applyRefresh, getHistory, getAlerts, fireAlert, broadcast };

@@ -38,14 +38,12 @@ import androidx.compose.ui.unit.dp
 import com.servermaintance.panel.core.Actions
 import com.servermaintance.panel.core.AppState
 import com.servermaintance.panel.core.ToastKind
-import com.servermaintance.panel.core.arr
 import com.servermaintance.panel.core.jsonObjectOf
 import com.servermaintance.panel.core.key
 import com.servermaintance.panel.core.safeContent
 import com.servermaintance.panel.core.str
 import com.servermaintance.panel.ui.AutoRefresh
 import com.servermaintance.panel.ui.DataTable
-import com.servermaintance.panel.ui.DangerBtn
 import com.servermaintance.panel.ui.ErrorState
 import com.servermaintance.panel.ui.GhostBtn
 import com.servermaintance.panel.ui.GridLayout
@@ -426,7 +424,7 @@ private fun RelayCell(c: RCol, row: JsonObject) {
     val missing = el == null || el is JsonNull
     val text = when {
         missing -> "—"
-        c.fmt != null -> c.fmt!!.invoke(el)
+        c.fmt != null -> c.fmt(el)
         c.raw -> (el as? JsonPrimitive)?.safeContent() ?: ""
         else -> defaultCellText(el, c.num)
     }

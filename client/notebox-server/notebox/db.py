@@ -26,7 +26,7 @@ DEFAULT_SETTINGS = {
     "digest_enabled": "1",
     "digest_time": "08:30",
     "digest_tz": "Asia/Shanghai",
-    "base_url": "http://8.153.153.176:13345",
+    "base_url": "http://127.0.0.1:9000/panel/notebox",
 }
 
 SCHEMA = """
@@ -161,6 +161,23 @@ def hash_password(pw: str, salt: str | None = None) -> str:
     return f"pbkdf2-sha256${salt}${digest}"
 
 
+def nb_seed_password() -> str:
+    """Initial admin password for a brand-new database.
+
+    NB_PASS wins when the operator sets it; otherwise a random password is
+    generated and printed once so it can be read back from the journal. There is
+    deliberately no shipped default: any value in a public repository is public.
+    """
+    pw = os.environ.get("NB_PASS")
+    if pw:
+        return pw
+    alpha = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    pw = "".join(secrets.choice(alpha) for _ in range(20))
+    print("NoteBox: generated initial admin password (print this now, it is not "
+          "stored in plaintext): " + pw, flush=True)
+    return pw
+
+
 def verify_password(pw: str, stored: str) -> bool:
     try:
         _scheme, salt, digest = (stored or "").split("$")
@@ -223,7 +240,7 @@ def _seed_users_and_owners() -> None:
     if scalar("SELECT COUNT(*) FROM users") == 0:
         email = get_setting("username") or "admin"
         pw_hash = get_setting("password") or hash_password(
-            os.environ.get("NB_PASS", "Ladridibiciclette!")
+            nb_seed_password()
         )
         execute(
             "INSERT INTO users(email,password,role,active,created_at) VALUES(?,?, 'admin', 1, ?)",

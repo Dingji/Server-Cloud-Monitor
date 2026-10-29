@@ -3,7 +3,6 @@ import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.i18n.tr
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,10 +17,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -38,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.servermaintance.panel.AppInfo
 import com.servermaintance.panel.ClientSettingsSection
@@ -57,17 +53,16 @@ import com.servermaintance.panel.core.obj
 import com.servermaintance.panel.core.str
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.Accents
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.ColorTheme
 import com.servermaintance.panel.ui.ThemeState
 import com.servermaintance.panel.core.Actions
-import com.servermaintance.panel.ui.CheckRow
 import com.servermaintance.panel.ui.DataTable
 import com.servermaintance.panel.ui.DangerBtn
 import com.servermaintance.panel.ui.EmptyState
 import com.servermaintance.panel.ui.ErrorState
 import com.servermaintance.panel.ui.Field
 import com.servermaintance.panel.ui.GhostBtn
-import com.servermaintance.panel.ui.GridLayout
 import com.servermaintance.panel.ui.Level
 import com.servermaintance.panel.ui.LevelBadge
 import com.servermaintance.panel.ui.LoadingState
@@ -77,14 +72,10 @@ import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelCard
 import com.servermaintance.panel.ui.PanelIcon
 import com.servermaintance.panel.ui.PrimaryBtn
-import com.servermaintance.panel.ui.SearchField
-import com.servermaintance.panel.ui.SectionTitle
 import com.servermaintance.panel.ui.SelectField
-import com.servermaintance.panel.ui.StatTile
 import com.servermaintance.panel.ui.TableCol
 import com.servermaintance.panel.ui.Toggle
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 /* =====================================================================
@@ -197,17 +188,13 @@ private fun ServerConnectionCard() {
             style = MaterialTheme.typography.bodySmall,
         )
         Spacer(Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        AdaptiveRow(spacing = 10.dp) {
             Field(
                 value = url,
                 onValueChange = { url = it; result = null },
                 hint = L["settings.panel_url.hint"],
                 mono = true,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.span(1f),
             )
             GhostBtn(
                 text = if (testing) L["测试中_49562bf14c"] else L["login.test_connection"],
@@ -288,16 +275,12 @@ private fun AlertThresholdsCard(al: JsonObject?, onSaved: () -> Unit) {
     val scope = rememberCoroutineScope()
 
     PanelCard(title = L["告警阈值_仪表盘右上角铃铛_c7224212dd"]) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        AdaptiveRow(spacing = 12.dp) {
             Toggle(checked = enabled, onCheckedChange = { enabled = it }, label = L["启用告警_d6b9351330"])
-            Field(value = cpu, onValueChange = { cpu = it }, label = L["cpu_45ab473ccb"], modifier = Modifier.weight(1f))
-            Field(value = mem, onValueChange = { mem = it }, label = L["内存_ba57ca4da5"], modifier = Modifier.weight(1f))
-            Field(value = disk, onValueChange = { disk = it }, label = L["磁盘_874593fffd"], modifier = Modifier.weight(1f))
-            Field(value = cd, onValueChange = { cd = it }, label = L["冷却_分钟_c84b0ae919"], modifier = Modifier.weight(1.2f))
+            Field(value = cpu, onValueChange = { cpu = it }, label = L["cpu_45ab473ccb"], modifier = Modifier.span(1f))
+            Field(value = mem, onValueChange = { mem = it }, label = L["内存_ba57ca4da5"], modifier = Modifier.span(1f))
+            Field(value = disk, onValueChange = { disk = it }, label = L["磁盘_874593fffd"], modifier = Modifier.span(1f))
+            Field(value = cd, onValueChange = { cd = it }, label = L["冷却_分钟_c84b0ae919"], modifier = Modifier.span(1.2f))
             PrimaryBtn(
                 text = L["保存阈值_1a6c3945df"],
                 onClick = {
@@ -443,11 +426,7 @@ private fun PanelParamsCard(c: JsonObject) {
     val scope = rememberCoroutineScope()
 
     PanelCard(title = L["面板参数_af5afd63d4"]) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        AdaptiveRow(spacing = 12.dp) {
             SelectField(
                 value = refreshLabel(refreshMs.toIntOrNull() ?: 2000),
                 options = REFRESH_CHOICES.map { refreshLabel(it) },
@@ -464,13 +443,13 @@ private fun PanelParamsCard(c: JsonObject) {
                     }
                 },
                 label = L["数据刷新间隔_783b4fd825"],
-                modifier = Modifier.weight(1.4f),
+                modifier = Modifier.span(1.4f),
             )
             Field(
                 value = netMbps,
                 onValueChange = { netMbps = it },
                 label = L["出口带宽上限_mbps_0_不限_333a869c1c"],
-                modifier = Modifier.weight(1.4f),
+                modifier = Modifier.span(1.4f),
             )
             PrimaryBtn(
                 text = L["应用带宽_15d87c726e"],
@@ -553,13 +532,9 @@ private fun PasswordCard() {
     val scope = rememberCoroutineScope()
 
     PanelCard(title = L["修改面板密码_17fc433ccc"]) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Field(value = oldPw, onValueChange = { oldPw = it }, password = true, label = L["当前密码_33abf70fd5"], modifier = Modifier.weight(1f))
-            Field(value = newPw, onValueChange = { newPw = it }, password = true, label = L["新密码_至少_8_位_0d551cb025"], modifier = Modifier.weight(1f))
+        AdaptiveRow(spacing = 10.dp) {
+            Field(value = oldPw, onValueChange = { oldPw = it }, password = true, label = L["当前密码_33abf70fd5"], modifier = Modifier.span(1f))
+            Field(value = newPw, onValueChange = { newPw = it }, password = true, label = L["新密码_至少_8_位_0d551cb025"], modifier = Modifier.span(1f))
             PrimaryBtn(
                 text = L["更新密码_2f3ed4c7a4"],
                 onClick = {
@@ -603,20 +578,16 @@ private fun SshCard(c: JsonObject) {
     val scope = rememberCoroutineScope()
 
     PanelCard(title = L["ssh_连接_用于_web_终端的_pty_b26f43db91"]) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Field(value = host, onValueChange = { host = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.weight(1.2f))
-            Field(value = port, onValueChange = { port = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.weight(0.6f))
-            Field(value = user, onValueChange = { user = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.weight(0.8f))
+        AdaptiveRow(spacing = 10.dp) {
+            Field(value = host, onValueChange = { host = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.span(1.2f))
+            Field(value = port, onValueChange = { port = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.span(0.6f))
+            Field(value = user, onValueChange = { user = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.span(0.8f))
             Field(
                 value = pw,
                 onValueChange = { pw = it },
                 password = true,
                 label = L["密码_留空保持不变_6d05826ea3"],
-                modifier = Modifier.weight(1.4f),
+                modifier = Modifier.span(1.4f),
             )
             PrimaryBtn(
                 text = L["保存_fadf24dbc5"],
@@ -692,51 +663,51 @@ private fun DbCredsCard(c: JsonObject) {
     PanelCard(title = L["数据库连接凭据_6d0ff7df04"], right = { PanelIcon("database", size = 14.dp) }) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(L["postgresql_默认使用_peer_认证_79cef40e30"], color = Palette.text, style = MaterialTheme.typography.labelMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(pgUser, { pgUser = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.weight(1f))
-                Field(pgHost, { pgHost = it }, label = L["tcp_主机_c307455515"], hint = L["留空_本地_socket_06d40d9475"], mono = true, modifier = Modifier.weight(1.4f))
-                Field(pgPort, { pgPort = it }, label = L["端口_6cbb7335b5"], hint = "5432", mono = true, modifier = Modifier.weight(0.7f))
+            AdaptiveRow(spacing = 10.dp) {
+                Field(pgUser, { pgUser = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.span(1f))
+                Field(pgHost, { pgHost = it }, label = L["tcp_主机_c307455515"], hint = L["留空_本地_socket_06d40d9475"], mono = true, modifier = Modifier.span(1.4f))
+                Field(pgPort, { pgPort = it }, label = L["端口_6cbb7335b5"], hint = "5432", mono = true, modifier = Modifier.span(0.7f))
                 Field(pgPw, { pgPw = it }, password = true,
                     label = if (pg.bool("hasPassword")) L["密码_留空不变_5e4f64d946"] else L["密码_无_e55f2504ae"],
-                    modifier = Modifier.weight(1.2f))
+                    modifier = Modifier.span(1.2f))
             }
 
             Text(L["mysql_mariadb_默认_root_707ba8cdb6"], color = Palette.text, style = MaterialTheme.typography.labelMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(myUser, { myUser = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.weight(1f))
-                Field(myHost, { myHost = it }, label = L["tcp_主机_c307455515"], hint = L["留空_本地_socket_06d40d9475"], mono = true, modifier = Modifier.weight(1.4f))
-                Field(myPort, { myPort = it }, label = L["端口_6cbb7335b5"], hint = "3306", mono = true, modifier = Modifier.weight(0.7f))
+            AdaptiveRow(spacing = 10.dp) {
+                Field(myUser, { myUser = it }, label = L["用户_9ba763ea34"], mono = true, modifier = Modifier.span(1f))
+                Field(myHost, { myHost = it }, label = L["tcp_主机_c307455515"], hint = L["留空_本地_socket_06d40d9475"], mono = true, modifier = Modifier.span(1.4f))
+                Field(myPort, { myPort = it }, label = L["端口_6cbb7335b5"], hint = "3306", mono = true, modifier = Modifier.span(0.7f))
                 Field(myPw, { myPw = it }, password = true,
                     label = if (my.bool("hasPassword")) L["密码_留空不变_5e4f64d946"] else L["密码_无_e55f2504ae"],
-                    modifier = Modifier.weight(1.2f))
+                    modifier = Modifier.span(1.2f))
             }
 
             Text(L["ibm_db2_0d09be87e3"], color = Palette.text, style = MaterialTheme.typography.labelMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(db2Inst, { db2Inst = it }, label = L["实例用户_6be929149e"], mono = true, modifier = Modifier.weight(1.2f))
-                Field(dbName, { dbName = it }, label = L["数据库_f4dbbc63a5"], hint = "SAMPLE", mono = true, modifier = Modifier.weight(1.2f))
-                Field(db2Port, { db2Port = it }, label = L["端口_6cbb7335b5"], hint = "50000", mono = true, modifier = Modifier.weight(0.7f))
+            AdaptiveRow(spacing = 10.dp) {
+                Field(db2Inst, { db2Inst = it }, label = L["实例用户_6be929149e"], mono = true, modifier = Modifier.span(1.2f))
+                Field(dbName, { dbName = it }, label = L["数据库_f4dbbc63a5"], hint = "SAMPLE", mono = true, modifier = Modifier.span(1.2f))
+                Field(db2Port, { db2Port = it }, label = L["端口_6cbb7335b5"], hint = "50000", mono = true, modifier = Modifier.span(0.7f))
             }
 
             Text("Redis", color = Palette.text, style = MaterialTheme.typography.labelMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(rdHost, { rdHost = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.weight(1.4f))
-                Field(rdPort, { rdPort = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.weight(0.7f))
-                Field(rdDb, { rdDb = it }, label = L["默认库_8e2aece25f"], mono = true, modifier = Modifier.weight(0.7f))
+            AdaptiveRow(spacing = 10.dp) {
+                Field(rdHost, { rdHost = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.span(1.4f))
+                Field(rdPort, { rdPort = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.span(0.7f))
+                Field(rdDb, { rdDb = it }, label = L["默认库_8e2aece25f"], mono = true, modifier = Modifier.span(0.7f))
                 Field(rdPw, { rdPw = it }, password = true,
                     label = if (rd.bool("hasPassword")) L["密码_留空不变_5e4f64d946"] else L["密码_无_e55f2504ae"],
-                    modifier = Modifier.weight(1.2f))
+                    modifier = Modifier.span(1.2f))
             }
 
             Text("MongoDB", color = Palette.text, style = MaterialTheme.typography.labelMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Field(moHost, { moHost = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.weight(1.4f))
-                Field(moPort, { moPort = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.weight(0.7f))
-                Field(moUser, { moUser = it }, label = L["用户_9ba763ea34"], hint = L["留空_不认证_dc56430dda"], mono = true, modifier = Modifier.weight(1.1f))
-                Field(moAuth, { moAuth = it }, label = L["认证库_e00e7c38bb"], mono = true, modifier = Modifier.weight(1f))
+            AdaptiveRow(spacing = 10.dp) {
+                Field(moHost, { moHost = it }, label = L["主机_2e8a0cf711"], mono = true, modifier = Modifier.span(1.4f))
+                Field(moPort, { moPort = it }, label = L["端口_6cbb7335b5"], mono = true, modifier = Modifier.span(0.7f))
+                Field(moUser, { moUser = it }, label = L["用户_9ba763ea34"], hint = L["留空_不认证_dc56430dda"], mono = true, modifier = Modifier.span(1.1f))
+                Field(moAuth, { moAuth = it }, label = L["认证库_e00e7c38bb"], mono = true, modifier = Modifier.span(1f))
                 Field(moPw, { moPw = it }, password = true,
                     label = if (mo.bool("hasPassword")) L["密码_留空不变_5e4f64d946"] else L["密码_无_e55f2504ae"],
-                    modifier = Modifier.weight(1.2f))
+                    modifier = Modifier.span(1.2f))
             }
 
             Text(L["sqlite_搜索目录_49521cf800"], color = Palette.text, style = MaterialTheme.typography.labelMedium)
@@ -857,12 +828,8 @@ private fun FileEditorCard() {
                 style = MaterialTheme.typography.bodySmall)
         },
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Field(value = dir, onValueChange = { dir = it }, mono = true, modifier = Modifier.weight(2f))
+        AdaptiveRow(spacing = 10.dp) {
+            Field(value = dir, onValueChange = { dir = it }, mono = true, modifier = Modifier.span(2f))
             GhostBtn(text = L["浏览_ef23ea67b0"], onClick = { scope.launch { browse(dir) } })
             Text(
                 text = L["nginx_sshd_fstab_配置保存后会自_b9f4e65369"],
@@ -915,17 +882,13 @@ private fun FileEditorCard() {
         }
 
         Spacer(Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        AdaptiveRow(spacing = 10.dp) {
             Text(
                 text = curPath ?: L["未选择文件_dbb4430dc0"],
                 color = if (curPath == null) Palette.muted else Palette.text,
                 fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.span(1f),
             )
             if (curInfo.isNotBlank()) Text(curInfo, color = Palette.muted, style = MaterialTheme.typography.bodySmall)
             PrimaryBtn(

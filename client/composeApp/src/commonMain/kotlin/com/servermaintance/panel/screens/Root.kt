@@ -41,7 +41,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -98,9 +97,9 @@ import com.servermaintance.panel.nav.PageContent
 import com.servermaintance.panel.nav.PageId
 import com.servermaintance.panel.nav.Workspace
 import com.servermaintance.panel.i18n.L
-import com.servermaintance.panel.nav.entryOf
 import com.servermaintance.panel.nav.labelText
 import com.servermaintance.panel.nav.groupedNav
+import com.servermaintance.panel.nav.NavProbes
 import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.HandheldLayout
@@ -110,7 +109,6 @@ import com.servermaintance.panel.ui.ModalHost
 import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelIcon
 import com.servermaintance.panel.ui.WindowCaptionButtons
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
@@ -139,12 +137,16 @@ fun Root() {
     val recent by Workspace.recent.collectAsState()
     var workspaceRestored by remember { mutableStateOf(false) }
     var relayAvailable by remember { mutableStateOf(false) }
+    var relayHubAvailable by remember { mutableStateOf(false) }
     var drawerOpen by remember { mutableStateOf(false) }
     var bellOpen by remember { mutableStateOf(false) }
 
     /* NoteBox 角色：非 admin 隐藏 用户管理/邮件通知（服务端 admin_required 再兜底 403） */
     val nbRole by NoteBoxState.role.collectAsState()
     val nbIsAdmin = nbRole == "admin"
+
+    /* 服务器平台：Windows(.NET) / Linux 面板 → 导航与页面分化（me 变化时自动重组） */
+    val isWinServer = me?.obj("env")?.str("family") == "windows"
 
     val scope = rememberCoroutineScope()
 
@@ -158,14 +160,26 @@ fun Root() {
         if (workspaceRestored) Workspace.visit(current)
     }
 
-    /* 可选导航探测（复刻 app.js detectOptionalNav：/relay/available → ok 才显示 relay） */
+    /* 可选导航探测（复刻 app.js detectOptionalNav：探测 ok 才显示 relay / relayhub） */
     LaunchedEffect(Unit) {
         relayAvailable = try {
-            val r = AppState.api.get("/relay/available", 15000)
+            val r = AppState.api.get(NavProbes.RELAY, 15000)
             (r as? JsonObject)?.bool("ok") == true
         } catch (_: Exception) {
             false
         }
+        relayHubAvailable = try {
+            val r = AppState.api.get(NavProbes.RELAYHUB, 15000)
+            (r as? JsonObject)?.bool("ok") == true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /* 已探测成功的可选模块端点集合（侧栏 / 命令面板共用） */
+    val availableProbes = buildSet {
+        if (relayAvailable) add(NavProbes.RELAY)
+        if (relayHubAvailable) add(NavProbes.RELAYHUB)
     }
 
     /* 实时新告警 → toast（AppState 已负责入列 + 未读计数，这里只补浮层提示） */
@@ -179,15 +193,24 @@ fun Root() {
         }
     }
 
-    /* relay 导航被隐藏时若正停在 relay 页，回落仪表盘（同 CM.router.navigate 的兜底） */
-    LaunchedEffect(relayAvailable) {
+    /* relay / relayhub 探测失败时正停在该页则回落仪表盘（同 CM.router.navigate 的兜底） */
+    LaunchedEffect(relayAvailable, relayHubAvailable) {
         if (!relayAvailable && current == PageId.Relay) Navigator.go(PageId.Dashboard)
+        if (!relayHubAvailable && current == PageId.RelayHub) Navigator.go(PageId.Dashboard)
     }
 
     /* 非 admin 停在管理员页时回落笔记首页 */
     LaunchedEffect(nbIsAdmin) {
         if (!nbIsAdmin && (current == PageId.NoteUsers || current == PageId.NoteMail)) {
             Navigator.go(PageId.Notes)
+        }
+    }
+
+    /* 平台不匹配时回落仪表盘（Windows 面板没有 Linux 专属页，反之亦然） */
+    LaunchedEffect(isWinServer) {
+        val entry = NAV.firstOrNull { it.id == current }
+        if (entry != null && ((isWinServer && entry.linuxOnly) || (!isWinServer && entry.windowsOnly))) {
+            Navigator.go(PageId.Dashboard)
         }
     }
 
@@ -198,7 +221,7 @@ fun Root() {
         }
     }
 
-    CommandPaletteHost(relayAvailable, nbIsAdmin) {
+    CommandPaletteHost(availableProbes, nbIsAdmin, isWinServer) {
     BoxWithConstraints(Modifier.fillMaxSize().background(Palette.bg)) {
         val screenW = maxWidth
         val compact = HandheldLayout.shellCompact(screenW)
@@ -213,8 +236,9 @@ fun Root() {
             Row(Modifier.fillMaxSize()) {
                 Sidebar(
                     current = current,
-                    relayAvailable = relayAvailable,
+                    probes = availableProbes,
                     isAdmin = nbIsAdmin,
+                    isWindows = isWinServer,
                     rail = rail,
                     conn = conn,
                     hostname = me?.obj("info")?.str("hostname").orEmpty().ifEmpty { "—" },
@@ -274,8 +298,9 @@ fun Root() {
             val offset by animateDpAsState(if (drawerOpen) 0.dp else -sidebarW, label = "drawer")
             Sidebar(
                 current = current,
-                relayAvailable = relayAvailable,
+                probes = availableProbes,
                 isAdmin = nbIsAdmin,
+                isWindows = isWinServer,
                 rail = false,
                 conn = conn,
                 hostname = me?.obj("info")?.str("hostname").orEmpty().ifEmpty { "—" },
@@ -334,8 +359,9 @@ private fun PageHost(current: PageId, refresh: Int) {
 @Composable
 private fun Sidebar(
     current: PageId,
-    relayAvailable: Boolean,
+    probes: Set<String>,
     isAdmin: Boolean,
+    isWindows: Boolean = false,
     rail: Boolean,
     conn: HubState,
     hostname: String,
@@ -394,7 +420,7 @@ private fun Sidebar(
             Column(
                 Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(vertical = 8.dp),
             ) {
-                val visible = NAV.filter { (!it.optional || relayAvailable) && (!it.adminOnly || isAdmin) }
+                val visible = NAV.filter { (it.probe == null || it.probe in probes) && (!it.adminOnly || isAdmin) }
                 val pinnedEntries = pinned.mapNotNull { id -> visible.firstOrNull { it.id == id } }
                 val recentEntries = recent.filterNot { it in pinned || it == current }
                     .mapNotNull { id -> visible.firstOrNull { it.id == id } }
@@ -434,7 +460,7 @@ private fun Sidebar(
                             .height(1.dp).background(Palette.border),
                     )
                 }
-                groupedNav(relayAvailable, isAdmin).forEach { (sectionKey, items) ->
+                groupedNav(probes, isAdmin, isWindows).forEach { (sectionKey, items) ->
                     if (!rail) NavSectionLabel(L[sectionKey])
                     items.forEach { e ->
                         NavItem(

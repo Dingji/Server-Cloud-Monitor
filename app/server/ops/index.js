@@ -16,6 +16,7 @@ const secops = require('./secops');
 const disk = require('./disk');
 const remote = require('./remote');
 const watchdog = require('./watchdog');
+const php = require('./php');
 
 function mount(api, deps) {
   const wrap = (deps && deps.wrap) || ((fn) => async (req, res) => {
@@ -32,6 +33,7 @@ function mount(api, deps) {
   disk.register(api, wrap, audited);
   remote.register(api, wrap, audited);
   watchdog.register(api, wrap, audited);
+  php.register(api, wrap);
 
   api.get('/ops/overview', wrap(async (req, res) => res.json({
     ok: true,

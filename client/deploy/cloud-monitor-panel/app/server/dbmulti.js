@@ -1186,11 +1186,16 @@ async function redisInfo() {
   return { sections: Object.entries(parsed).map(([name, value]) => ({ title: name, columns: ['value'], rows: [{ value }] })) };
 }
 async function redisConfigList() {
-  const r = await redisCmd(undefined, 'CONFIG GET *');
-  const lines = String(r.stdout).split('\n').filter((x) => x !== '');
-  const rows = [];
-  for (let i = 0; i < lines.length; i += 2) rows.push({ name: lines[i], value: lines[i + 1] });
-  return ok('', { rows });
+  if (!(await binExists('redis-cli'))) return ok('', { rows: [] });
+  try {
+    const r = await redisCmd(undefined, 'CONFIG GET *');
+    const lines = String(r.stdout).split('\n').filter((x) => x !== '');
+    const rows = [];
+    for (let i = 0; i < lines.length; i += 2) rows.push({ name: lines[i], value: lines[i + 1] });
+    return ok('', { rows });
+  } catch (_) {
+    return ok('', { rows: [] });
+  }
 }
 async function redisConfigSet({ name, value }) {
   if (!name) bad('缺少配置项');

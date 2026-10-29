@@ -78,7 +78,7 @@ import com.servermaintance.panel.ui.StatTile
 import com.servermaintance.panel.ui.TableCol
 import com.servermaintance.panel.ui.LineChart
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.JsonObject
@@ -158,7 +158,7 @@ internal object MonFmt {
     private fun p2(v: Int): String = v.toString().padStart(2, '0')
 
     private fun local(epochMs: Long): kotlinx.datetime.LocalDateTime =
-        kotlinx.datetime.Instant.fromEpochMilliseconds(epochMs)
+        Instant.fromEpochMilliseconds(epochMs)
             .toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
 
     /** HH:mm —— 历史趋势标签（面板 histLabel）。 */
@@ -614,21 +614,25 @@ fun DashboardPage() {
             }
         }
 
-        /* ---- A5..A11 —— 复刻 .g-2-1（左 1.6 : 右 1），窄屏自动堆叠 ---- */
+        /* ---- A5..A11 —— 复刻 .g-2-1（左 1.6 : 右 1），窄屏自动堆叠 ----
+           堆叠分支必须再包一层 Column：BoxWithConstraints 是 Box 语义，
+           多个子项会叠在同一位置（左列被右列盖住）。 */
         BoxWithConstraints {
             if (HandheldLayout.contentStacked(maxWidth)) {
-                DashLeft(histRange, onRange, histPts, histError, cpuSeries, memSeries, swapSeries, rxSeries, txSeries)
-                Spacer(Modifier.height(10.dp))
-                DashRight(
-                    mounts, topRows, uptimeText,
-                    if (procsObj != null) "${procsObj.int("running")} / ${procsObj.int("total")}" else "—",
-                    loadAvgText,
-                    trf(
-                        "0_0_读_fmt_bps_b7eb78a0b5",
-                        Fmt.bps(ioObj?.num("readBps") ?: 0.0),
-                        Fmt.bps(ioObj?.num("writeBps") ?: 0.0),
-                    ),
-                )
+                Column(Modifier.fillMaxWidth()) {
+                    DashLeft(histRange, onRange, histPts, histError, cpuSeries, memSeries, swapSeries, rxSeries, txSeries)
+                    Spacer(Modifier.height(10.dp))
+                    DashRight(
+                        mounts, topRows, uptimeText,
+                        if (procsObj != null) "${procsObj.int("running")} / ${procsObj.int("total")}" else "—",
+                        loadAvgText,
+                        trf(
+                            "0_0_读_fmt_bps_b7eb78a0b5",
+                            Fmt.bps(ioObj?.num("readBps") ?: 0.0),
+                            Fmt.bps(ioObj?.num("writeBps") ?: 0.0),
+                        ),
+                    )
+                }
             } else {
                 Row(Modifier.fillMaxWidth()) {
                     Column(Modifier.weight(1.6f)) {
@@ -671,7 +675,7 @@ private fun DashLeft(
 ) {
     /* A5 历史趋势 */
     val note = when {
-        histError != null -> histError!!
+        histError != null -> histError
         histPts.isEmpty() -> L["无采样点_920b2e00a7"]
         else -> trf("0_个点_实时滚动中_01b91b1d0c", histPts.size)
     }

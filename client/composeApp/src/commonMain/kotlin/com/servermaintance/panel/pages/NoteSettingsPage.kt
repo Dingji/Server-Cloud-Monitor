@@ -31,14 +31,15 @@ import com.servermaintance.panel.core.NoteBoxStore
 import com.servermaintance.panel.core.ToastKind
 import com.servermaintance.panel.core.long
 import com.servermaintance.panel.core.str
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.DangerBtn
 import com.servermaintance.panel.ui.Field
 import com.servermaintance.panel.ui.PageScaffold
 import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelCard
 import com.servermaintance.panel.ui.PrimaryBtn
-import com.servermaintance.panel.ui.CheckRow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
@@ -75,12 +76,9 @@ private fun SettingsInner() {
         desc = L["账号与服务器连接_91b559cbe1"],
         actions = { NoteUserChip() },
     ) {
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
+        AdaptiveRow(spacing = 12.dp, verticalAlignment = Alignment.Top) {
             /* 左：改密码 + 连接配置 */
-            Column(Modifier.weight(1f)) {
+            Column(Modifier.span(1f)) {
                 PanelCard(title = L["修改登录密码_321d9d86f6"], collapsible = false) {
                     Field(oldPw, { oldPw = it }, Modifier.fillMaxWidth(), label = L["原密码_2bd80322a5"], password = true, singleLine = true)
                     Spacer(Modifier.size(8.dp))
@@ -154,7 +152,7 @@ private fun SettingsInner() {
             }
 
             /* 右：服务器信息 */
-            Column(Modifier.weight(1f)) {
+            Column(Modifier.span(1f)) {
                 PanelCard(title = L["服务器信息_d2e0457697"], collapsible = false) {
                     if (stats == null) {
                         Text(L["common.loading"], color = Palette.muted, fontSize = 12.sp)

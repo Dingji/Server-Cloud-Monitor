@@ -37,10 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.servermaintance.panel.platformClipboard
-import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.Palette
-import com.servermaintance.panel.ui.PanelIcon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
