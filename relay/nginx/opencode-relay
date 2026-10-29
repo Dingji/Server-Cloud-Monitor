@@ -1,0 +1,266 @@
+# OpenCode relay (Go + Zen) + stats dashboard
+# Client sends the relay token as either:
+#   Authorization: Bearer <RELAY_TOKEN>   (OpenAI-compatible / responses routes)
+#   x-api-key: <RELAY_TOKEN>              (Anthropic-compatible / messages route)
+# The relay replaces it with the official OpenCode key and forwards to:
+#   /v1/*      -> https://opencode.ai/zen/go/v1/*      (OpenCode Go)
+#   /zen/v1/*  -> https://opencode.ai/zen/v1/*          (OpenCode Zen)
+
+# Upstream DNS: resolved at runtime (nginx >= 1.27.3 "resolve"), ipv6 disabled
+# because this host has no IPv6 route.
+    resolver 223.5.5.5 119.29.29.29 ipv6=off valid=300s;
+resolver_timeout 5s;
+
+upstream opencode_zen {
+    zone opencode_zen 64k;
+    server opencode.ai:443 resolve max_fails=3 fail_timeout=5s;
+    keepalive 128;                  # reuse TLS/TCP connections to the upstream
+    keepalive_requests 100000;
+    keepalive_timeout 300s;
+    keepalive_time 10m;             # recycle before upstream idle-close races
+}
+
+# Empty value => keep the upstream connection alive (HTTP/1.1 keep-alive)
+map $http_upgrade $relay_connection {
+    default upgrade;
+    ''      '';
+}
+
+# Pipe-delimited access log consumed by /opt/relay/collector.py.
+# Client-supplied X-Relay-Model carries the model id (set per model in the client config).
+log_format relay_json escape=json
+    '$time_iso8601|$remote_addr|$status|$request_length|$bytes_sent|'
+    '$request_time|$upstream_response_time|$request_method|$uri|'
+    '$http_x_relay_model|$upstream_addr|'
+    '$upstream_header_time|$upstream_status|$connection_requests|'
+    '$http_x_opencode_session|$sent_http_content_type|$server_protocol|'
+    '$http_user_agent';
+
+# GLM Coding Plan (Zhipu BigModel)
+upstream glm_api {
+    zone glm_api 64k;
+    server open.bigmodel.cn:443 resolve max_fails=3 fail_timeout=5s;
+    keepalive 32;
+    keepalive_requests 10000;
+    keepalive_timeout 120s;
+    keepalive_time 5m;
+}
+
+# MiMo Token Plan (CN)
+upstream mimo_plan {
+    zone mimo_plan 64k;
+    server token-plan-cn.xiaomimimo.com:443 resolve max_fails=3 fail_timeout=5s;
+    keepalive 32;
+    keepalive_requests 10000;
+    keepalive_timeout 120s;
+    keepalive_time 5m;
+}
+
+server {
+    listen 80 default_server so_keepalive=30:10:3;
+    listen [::]:80 default_server so_keepalive=30:10:3;
+    server_name _;
+    server_tokens off;
+
+    access_log /var/log/nginx/opencode-relay.access.log relay_json;
+    error_log  /var/log/nginx/opencode-relay.error.log;
+
+    # ── connection / timeout hardening ──────────────────────────────
+    client_header_timeout 60s;
+    client_body_timeout 600s;        # large uploads over slow links
+    send_timeout 3600s;              # never RST a slow client mid-stream
+    keepalive_timeout 75s;           # below typical NAT idle timeouts
+    keepalive_requests 10000;
+    reset_timedout_connection off;   # close with FIN instead of RST
+    tcp_nodelay on;
+
+    # LLM payloads can be large (base64 media)
+    client_max_body_size 100m;
+
+    # ---- rate limiting (anti-CC) : 全局兜底，覆盖所有 location ----
+    limit_conn conn_api 256;
+    limit_req  zone=req_api burst=400 nodelay;
+    client_body_buffer_size 2m;      # keep typical LLM payloads in memory
+
+    include /etc/relay/relay.env;
+
+    # OpenCode Go
+                                                                                                                    # ==== Cloud Monitor panel (managed block, do not edit by hand) ====
+    location = /panel { return 301 /panel/; }
+    location /panel/ {
+        limit_conn conn_panel 30;
+        limit_req  zone=req_panel burst=40 nodelay;
+        proxy_pass http://127.0.0.1:9000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $relay_connection;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+        proxy_buffering off;
+        client_max_body_size 50m;
+        gzip on;
+        gzip_types text/css application/javascript application/json image/svg+xml text/plain;
+        gzip_min_length 1024;
+        gzip_comp_level 5;
+        gzip_vary on;
+    }
+    # ==== end Cloud Monitor panel ====
+
+    location /v1/ {
+        include /etc/relay/relay-auth.conf;
+        include /etc/relay/upstream-auth.conf;
+        include /etc/relay/upstream-session.conf;
+        # Every configured key is out of quota: answer with a clear JSON error
+        # instead of forwarding a request the upstream would only refuse.
+        if ($relay_exhausted = 1) {
+            return 503 '{"error":{"type":"relay_all_keys_exhausted","code":"no_quota","message":"All OpenCode keys have exhausted their quota (5-hour / weekly / monthly). Add another key in the relay dashboard, or retry after a window resets."}}';
+        }
+        default_type application/json;
+        # Either the usage tap or the direct upstream; see set_target.py.
+        include /etc/relay/upstream-target-go.conf;
+    }
+
+    # OpenCode Zen
+    location /zen/v1/ {
+        include /etc/relay/relay-auth.conf;
+        include /etc/relay/upstream-auth.conf;
+        include /etc/relay/upstream-session.conf;
+        # Every configured key is out of quota: answer with a clear JSON error
+        # instead of forwarding a request the upstream would only refuse.
+        if ($relay_exhausted = 1) {
+            return 503 '{"error":{"type":"relay_all_keys_exhausted","code":"no_quota","message":"All OpenCode keys have exhausted their quota (5-hour / weekly / monthly). Add another key in the relay dashboard, or retry after a window resets."}}';
+        }
+        default_type application/json;
+        # Either the usage tap or the direct upstream; see set_target.py.
+        include /etc/relay/upstream-target-zen.conf;
+    }
+
+    # ── GLM Coding Plan ───────────────────────────────────────────────────
+    # OpenAI protocol:  /glm/v1/chat/completions -> open.bigmodel.cn/api/coding/paas/v4/...
+    location /glm/v1/ {
+        include /etc/relay/relay-auth.conf;
+        include /etc/relay/glm-auth.conf;
+        if ($glm_exhausted = 1) {
+            return 503 '{"error":{"type":"relay_glm_all_keys_exhausted","code":"no_quota","message":"All GLM Coding Plan keys have exhausted their quota (5-hour / weekly). Add another key in the relay dashboard, or retry after a window resets."}}';
+        }
+        default_type application/json;
+        include /etc/relay/upstream-target-glm-openai.conf;
+    }
+
+    # Anthropic protocol (Claude Code style): /glm/anthropic/v1/messages -> open.bigmodel.cn/api/anthropic/v1/messages
+    location /glm/anthropic/ {
+        include /etc/relay/relay-auth.conf;
+        include /etc/relay/glm-auth.conf;
+        if ($glm_exhausted = 1) {
+            return 503 '{"error":{"type":"relay_glm_all_keys_exhausted","code":"no_quota","message":"All GLM Coding Plan keys have exhausted their quota (5-hour / weekly). Add another key in the relay dashboard, or retry after a window resets."}}';
+        }
+        default_type application/json;
+        include /etc/relay/upstream-target-glm-anthropic.conf;
+    }
+
+    # ── MiMo Token Plan (CN) ──────────────────────────────────────────────
+    # OpenAI protocol: /mimo/v1/chat/completions -> token-plan-cn.xiaomimimo.com/v1/...
+    location /mimo/v1/ {
+        include /etc/relay/relay-auth.conf;
+        include /etc/relay/mimo-auth.conf;
+        if ($mimo_exhausted = 1) {
+            return 503 '{"error":{"type":"relay_mimo_all_keys_exhausted","code":"no_quota","message":"All MiMo Token Plan keys are exhausted. Add another key in the relay dashboard, or retry later."}}';
+        }
+        default_type application/json;
+        include /etc/relay/upstream-target-mimo.conf;
+    }
+
+    # Model availability report (used by the daily client sync job), token protected
+    location = /models-status.json {
+        if ($http_authorization != "Bearer $relay_token") {
+            return 401;
+        }
+        alias /var/lib/relay/public/models-status.json;
+        default_type application/json;
+        add_header Cache-Control "no-store";
+    }
+
+    location = /models-catalog.json {
+        # relay-token only: the canonical model list every client config is generated from
+        if ($http_authorization != "Bearer $relay_token") {
+            return 401;
+        }
+        alias /var/lib/relay/public/models-catalog.json;
+        default_type application/json;
+        add_header Cache-Control "no-store";
+    }
+
+    # Stats dashboard (HTTP basic auth)
+    location = /stats {
+        return 301 /stats/;
+    }
+
+    location /stats/ {
+        limit_conn conn_panel 15;
+        limit_req  zone=req_stats burst=20 nodelay;
+        auth_basic "OpenCode Relay";
+        auth_basic_user_file /etc/nginx/.htpasswd-relay;
+        proxy_pass http://127.0.0.1:8787/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Connection "";
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 60s;
+        proxy_next_upstream error timeout;
+    }
+
+
+    # ── bare protocol paths (clients whose baseURL lacks /v1) ─────────────
+    # /chat/completions, /messages, /models, /responses -> same upstream as /v1/
+    location ~ ^/(chat/completions|messages|models|responses)$ {
+        include /etc/relay/relay-auth.conf;
+        include /etc/relay/upstream-auth.conf;
+        include /etc/relay/upstream-session.conf;
+        if ($relay_exhausted = 1) {
+            return 503 '{"error":{"type":"relay_all_keys_exhausted","code":"no_quota","message":"All OpenCode keys have exhausted their quota. Add another key in the relay dashboard, or retry after a window resets."}}';
+        }
+        default_type application/json;
+        include /etc/relay/upstream-target-go-bare.conf;
+    }
+
+
+    # ==== RelayHub panel (managed block, do not edit by hand) ====
+    location = /relayhub { return 301 /relayhub/; }
+    location /relayhub/ {
+        limit_conn conn_panel 30;
+        limit_req  zone=req_panel burst=40 nodelay;
+        proxy_pass http://127.0.0.1:8100/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        client_max_body_size 20m;
+        gzip on;
+        gzip_types text/css application/javascript application/json image/svg+xml;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+    }
+    # ==== end RelayHub panel ====
+
+    # ==== RelayHub ws (managed block, do not edit by hand) ====
+    # frpc(transport=websocket) 使用专用路径 /~!frp,经 80 端口接入本机 frps
+    location = /~!frp {
+        proxy_pass http://127.0.0.1:7000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+        proxy_buffering off;
+    }
+    # ==== end RelayHub ws ====
+
+    location / {
+        default_type application/json;
+        return 404 '{"error":"not found"}';
+    }}

@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily model catalog refresh (list-only, no model calls)
+
+[Timer]
+OnCalendar=*-*-* 08:20:00
+AccuracySec=30s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

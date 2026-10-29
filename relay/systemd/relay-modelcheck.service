@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily OpenCode model availability probe
+After=network-online.target nginx.service relay-stats.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/relay/modelcheck.py
+StandardOutput=append:/var/log/relay-modelcheck.log
+StandardError=append:/var/log/relay-modelcheck.log

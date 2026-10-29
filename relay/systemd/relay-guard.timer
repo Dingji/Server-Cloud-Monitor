@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the OpenCode relay self-healing guard every 2 minutes
+
+[Timer]
+OnBootSec=120
+OnUnitActiveSec=120
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target

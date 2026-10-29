@@ -1,0 +1,10 @@
+[Unit]
+Description=Run a backup restore drill once a day
+
+[Timer]
+OnCalendar=*-*-* 04:20:00
+Persistent=true
+RandomizedDelaySec=10min
+
+[Install]
+WantedBy=timers.target

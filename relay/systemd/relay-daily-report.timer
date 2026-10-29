@@ -1,0 +1,11 @@
+[Unit]
+Description=Send the OpenCode relay daily report at 00:05
+
+[Timer]
+OnCalendar=*-*-* 00:05:00
+Persistent=true
+AccuracySec=1min
+Unit=relay-daily-report.service
+
+[Install]
+WantedBy=timers.target

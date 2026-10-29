@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenCode relay self-healing guard (integrity + streaming canaries)
+After=network-online.target nginx.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/relay/relay_guard.py
+Nice=5

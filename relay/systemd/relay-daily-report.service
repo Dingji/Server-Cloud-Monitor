@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenCode relay daily report email
+Documentation=file:///opt/relay/daily_report.py
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/relay/daily_report.py
+Nice=10
+IOSchedulingClass=idle
+# The report is a read-only consumer of the relay database.
+ProtectSystem=full
+PrivateTmp=true

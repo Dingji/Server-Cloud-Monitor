@@ -1,0 +1,8 @@
+[Unit]
+Description=OpenCode relay health check + email alert
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/relay/relay_alert.py
+Nice=10

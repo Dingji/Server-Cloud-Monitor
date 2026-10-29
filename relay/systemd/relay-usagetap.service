@@ -1,0 +1,19 @@
+[Unit]
+Description=OpenCode relay token-usage tap (inline usage recorder)
+Documentation=file:///opt/relay/usagetap.py
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/relay/usagetap.py
+Restart=always
+RestartSec=1
+StandardOutput=append:/var/log/relay-usagetap.log
+StandardError=append:/var/log/relay-usagetap.log
+# it reads /etc/relay/upstream-auth.conf (0600) and writes the relay database
+User=root
+Nice=-5
+
+[Install]
+WantedBy=multi-user.target
