@@ -76,6 +76,50 @@ A new install has empty ops configuration unless you restore `/var/lib/cloud-pan
 
 `ssh2` optional native `.node` addons are stripped from the vendor tarball; SSH works via the JS implementation. Run `npm rebuild ssh2` on the target if you want native builds.
 
+### Panel feature inventory
+
+Everything below is counted from the routes that exist in this bundle, not from a roadmap.
+
+**Browser UI** (`app/public/`, one lazily-loaded file per sidebar entry) — twenty permanent pages:
+仪表盘 · 健康告警 · SLO 与用量 · 进程管理 · 磁盘管理 · 内存管理 · 网络管理 · 安全管理 · 系统服务 · 软件包管理 · 数据库 · Docker 容器 · 网站 / Nginx · **PHP 站点** · 定时任务 · 备份中心 · 日志中心 · 审计日志 · Web 终端 · 面板设置.
+
+Two entries are added only when their probe answers, so a host that lacks the backing service never shows a dead page:
+
+| Page | Probe | Requires |
+|------|-------|----------|
+| OpenCode 中继 | `GET /api/relay/available` | the OpenCode relay on `127.0.0.1:8787` — a separate project, not bundled here |
+| 内网中继监控 | `GET /api/relayhub/available` | [RelayHub](#relayhub-relayhub): tunnels **and** the device hardware charts |
+
+**Ops extensions** (`app/server/ops/`) expose REST under `/api/ops/…` and **have no browser page** — `app/public/` reaches `/ops/*` only from `php.js`. The native client is what renders them, each as its own sidebar entry. The whole layer mounts through one guarded line in `server/index.js`:
+
+```js
+try { require('./ops').mount(api, { wrap, audited }); } catch (e) { /* panel still boots */ }
+```
+
+so a missing dependency degrades one module instead of aborting the boot. That is also why `install.sh` probes each module after startup rather than trusting a green service.
+
+| Module | Routes | Covers |
+|--------|-------:|--------|
+| `uptime.js` | 8 | http / tcp / ping / dns probes, task scheduling, 24 h SLA rollup |
+| `alerting.js` | 9 | threshold rules, event log, silences, rule dry-run |
+| `notify.js` | 6 | channels: dingtalk / feishu / wecom / telegram / mail / webhook; delivery log, connectivity test |
+| `hosts.js` | 4 | managed-host inventory, reachability check |
+| `files.js` | 23 | tree, list, search, preview, stat, usage, upload/download, write, touch, mkdir, copy, move, rename, chmod/chown, archive/extract, delete → trash → restore/empty |
+| `secops.js` | 5 | security baseline checks, report, trend, remediation |
+| `disk.js` | 11 | big files, top directories, log events/history, truncate, scheduled cleanup |
+| `remote.js` | 5 | SSH collection from other hosts, credential vault, history |
+| `watchdog.js` | 6 | service supervision with auto-restart and budget reset |
+
+**Added in this sync**, with where each one is actually rendered:
+
+| Feature | Backend | Browser page | Native page |
+|---------|---------|--------------|-------------|
+| PHP site hosting | `ops/php/` — 49 routes grouped under `overview`, `site`/`sites`, `deploy`/`rollback`/`releases`, `env`/`ext`/`ini`/`fpm`/`opcache`/`phpinfo`, `db`, `ssl`, `logs`/`stats`, `jobs`, `upload`, `webhook` | `js/pages/php.js` | `pages/PhpSitesPage.kt` |
+| Device hardware metrics | `devmetrics.js` — 10 routes + pre-auth `POST /agent/push` and `GET /agent/agent.py` | charts inside `js/pages/relayhub.js` | `pages/RelayHubPage.kt` |
+| RelayHub tunnels | 10 proxied `/relayhub/*` routes (`summary`, `mappings`, `port-pool`, `frpc-config`, `probe-now`) | `js/pages/relayhub.js` | `RelayHubPage.kt`, `RhPortPoolCard.kt`, `RhPortMapCard.kt` |
+
+Native-client-only surfaces: the nine ops modules above, `WinToolsPage.kt` (Windows hosts) and the NoteBox section.
+
 ### Server requirements
 
 | | |
