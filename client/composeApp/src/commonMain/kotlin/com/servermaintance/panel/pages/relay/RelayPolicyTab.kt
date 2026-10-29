@@ -379,7 +379,7 @@ fun RelayPolicyTab() {
         Spacer(Modifier.height(12.dp))
 
         AdaptiveRow(spacing = 12.dp) {
-            Column(Modifier.fillMaxWidth()) {
+            Column(Modifier.span()) {
                 SectionTitle(L["作用线路_c0a1e6127a"])
                 SelectField(
                     value = route,
@@ -388,7 +388,7 @@ fun RelayPolicyTab() {
                     label = L["只有这条线路的请求会被改写_2c072857c1"],
                 )
             }
-            Column(Modifier.fillMaxWidth()) {
+            Column(Modifier.span()) {
                 SectionTitle(L["目标模型_改写成_0700669f93"])
                 SelectField(
                     value = target,
@@ -450,7 +450,7 @@ fun RelayPolicyTab() {
         }
         rows.forEachIndexed { i, pair ->
             AdaptiveRow(spacing = 8.dp, verticalAlignment = Alignment.Bottom) {
-                Column(Modifier.fillMaxWidth()) {
+                Column(Modifier.span()) {
                     Field(
                         value = pair.first,
                         onValueChange = { v -> rows = rows.mapIndexed { j, x -> if (j == i) v to x.second else x } },
@@ -459,7 +459,7 @@ fun RelayPolicyTab() {
                         singleLine = true,
                     )
                 }
-                Column(Modifier.fillMaxWidth()) {
+                Column(Modifier.span()) {
                     Field(
                         value = pair.second,
                         onValueChange = { v -> rows = rows.mapIndexed { j, x -> if (j == i) x.first to v else x } },
@@ -468,7 +468,8 @@ fun RelayPolicyTab() {
                         singleLine = true,
                     )
                 }
-                Column(Modifier.fillMaxWidth()) {
+                // 删除按钮不该和输入框平分宽度：桌面定宽，手持端叠成整行
+                Column(Modifier.spanFixed(112.dp)) {
                     GhostBtn(
                         text = L["删除_3755f56f2f"],
                         icon = "trash",
