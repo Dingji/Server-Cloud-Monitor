@@ -2,7 +2,10 @@ package com.servermaintance.panel.core
 import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.i18n.trf
 
+import com.servermaintance.panel.platformExporter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -16,6 +19,14 @@ import kotlinx.serialization.json.JsonPrimitive
  */
 
 data class FileCrumb(val label: String, val path: String)
+
+/** 下载结果：error 非空是失败，cancelled 是用户在选择器里取消（不该报错误弹窗）。 */
+data class DownloadOutcome(
+    val error: String? = null,
+    val path: String? = null,
+    val bytes: Long = 0L,
+    val cancelled: Boolean = false,
+)
 
 data class FileEntry(
     val name: String,
@@ -233,26 +244,59 @@ object FileStore {
     suspend fun chown(paths: List<String>, owner: String, recursive: Boolean): String? =
         call("/ops/files/chown", jsonObjectOf("paths" to paths.toJsonArray(), "owner" to owner, "recursive" to recursive)) { refresh() }
 
-    suspend fun upload(name: String, bytes: ByteArray, overwrite: Boolean = false): String? = try {
-        busy.value = true
-        api.postRaw("/ops/files/upload?dir=${urlEncode(dir.value)}&name=${urlEncode(name)}" +
-            (if (overwrite) "&overwrite=1" else ""), bytes)
-        lastError.value = null
-        refresh()
-        null
-    } catch (e: ApiException) {
-        if (e.code == 404) unsupported.value = true else lastError.value = e.message
-        e.message ?: L["上传失败_a6f805694b"]
-    } catch (e: Exception) {
-        e.message ?: L["上传失败_a6f805694b"]
-    } finally { busy.value = false }
+    suspend fun upload(name: String, bytes: ByteArray, overwrite: Boolean = false): String? {
+        val t = Transfers.start(Transfer.Kind.Upload, name, bytes.size.toLong())
+        return try {
+            busy.value = true
+            api.postRaw(
+                "/ops/files/upload?dir=${urlEncode(dir.value)}&name=${urlEncode(name)}" +
+                    (if (overwrite) "&overwrite=1" else ""), bytes,
+            ) { sent, total ->
+                if (total > 0L) t.total = total
+                Transfers.progress(t, sent)
+            }
+            lastError.value = null
+            Transfers.succeed(t, dir.value.trimEnd('/') + "/" + name)
+            refresh()
+            null
+        } catch (e: ApiException) {
+            Transfers.fail(t, e.message)
+            if (e.code == 404) unsupported.value = true else lastError.value = e.message
+            e.message ?: L["上传失败_a6f805694b"]
+        } catch (e: Exception) {
+            Transfers.fail(t, e.message)
+            e.message ?: L["上传失败_a6f805694b"]
+        } finally {
+            busy.value = false
+        }
+    }
 
-    suspend fun download(path: String): Pair<ByteArray?, String?> = try {
-        api.download("/ops/files/download?path=${urlEncode(path)}") to null
-    } catch (e: ApiException) {
-        null to (e.message ?: L["下载失败_e0dab22b1a"])
-    } catch (e: Exception) {
-        null to (e.message ?: L["下载失败_e0dab22b1a"])
+    /**
+     * 流式下载：先弹系统「另存为」让用户挑地方，再分块写盘。
+     * 旧实现是 bodyAsBytes 一次读进内存 —— 86MB 的包在手机上就是这么失败的。
+     */
+    suspend fun downloadTo(path: String, name: String): DownloadOutcome {
+        val handle = withContext(Dispatchers.Main) {
+            runCatching { platformExporter.beginSave(name) }
+                .onFailure { lastError.value = it.message }
+                .getOrNull()
+        } ?: return DownloadOutcome(cancelled = true)
+        val t = Transfers.start(Transfer.Kind.Download, name, 0L)
+        return try {
+            val written = api.downloadTo(
+                "/ops/files/download?path=${urlEncode(path)}", handle,
+            ) { sent, total ->
+                if (total > 0L) t.total = total
+                Transfers.progress(t, sent)
+            }
+            Transfers.succeed(t, handle.displayPath)
+            DownloadOutcome(path = handle.displayPath, bytes = written)
+        } catch (e: Exception) {
+            // 半途失败就删掉截断文件：留一个看着像成功的坏文件比不下载更糟
+            runCatching { handle.discard() }
+            Transfers.fail(t, e.message)
+            DownloadOutcome(error = e.message ?: L["下载失败_e0dab22b1a"])
+        }
     }
 
     suspend fun search(q: String, depth: Int = 4) {

@@ -12,7 +12,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
 import java.io.File
 
 private fun context(): Context? = AppContextHolder.app as? Context
@@ -46,6 +48,53 @@ private class AndroidExporter : FileExporter {
         out.writeBytes(bytes)
         out.absolutePath
     }.getOrNull()
+
+    /* SAF「另存为」：用户自己挑位置，文件落在公共目录里、别的 App 也看得见；
+       返回的是可分块写的句柄，不把整个文件先读进内存。 */
+    override suspend fun beginSave(name: String): SaveHandle? {
+        val ctx = context() ?: return null
+        val safe = name.replace(Regex("[^A-Za-z0-9._-]"), "_")
+        val uri = suspendCancellableCoroutine<Uri?> { cont ->
+            val l = AndroidSaveBridge.launcher
+            if (l == null) { cont.resume(null); return@suspendCancellableCoroutine }
+            AndroidSaveBridge.pending = { u -> if (cont.isActive) cont.resume(u) }
+            runCatching { l.launch(safe) }.onFailure {
+                AndroidSaveBridge.pending = null
+                if (cont.isActive) cont.resume(null)
+            }
+        } ?: return null
+        return runCatching {
+            val out = ctx.contentResolver.openOutputStream(uri, "wt") ?: return null
+            val shown = runCatching {
+                ctx.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
+                    ?.use { c -> if (c.moveToFirst()) c.getString(0) else null }
+            }.getOrNull() ?: safe
+            object : SaveHandle {
+                override val displayPath: String get() = shown
+                override fun write(chunk: ByteArray) { out.write(chunk) }
+                override fun close() { runCatching { out.flush() }; runCatching { out.close() } }
+                override fun discard() {
+                    runCatching { out.close() }
+                    /* SAF 文档要用 resolver 删；删不掉时至少不假装成功 */
+                    runCatching { ctx.contentResolver.delete(uri, null) }
+                }
+            }
+        }.getOrNull()
+    }
+}
+
+/** SAF「另存为」桥：CreateDocument 合约的 input 是建议文件名（String），不是 MIME 数组。 */
+object AndroidSaveBridge {
+    internal var launcher: ActivityResultLauncher<String>? = null
+    internal var pending: ((Uri?) -> Unit)? = null
+
+    fun register(l: ActivityResultLauncher<String>) { launcher = l }
+
+    fun onResult(uri: Uri?) {
+        val cb = pending
+        pending = null
+        cb?.invoke(uri)
+    }
 }
 
 private class AndroidClip : Clip {

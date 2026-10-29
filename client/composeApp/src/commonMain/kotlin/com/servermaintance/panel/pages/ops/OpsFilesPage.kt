@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +37,8 @@ import com.servermaintance.panel.core.AppState
 import com.servermaintance.panel.core.FileEntry
 import com.servermaintance.panel.core.FileStore
 import com.servermaintance.panel.core.Fmt
+import com.servermaintance.panel.core.Transfer
+import com.servermaintance.panel.core.Transfers
 import com.servermaintance.panel.core.SearchHit
 import com.servermaintance.panel.core.ToastKind
 import com.servermaintance.panel.core.TrashItem
@@ -150,6 +154,10 @@ fun OpsFilesPage() {
             OpsUnsupported()
             return@PageScaffold
         }
+        /* 传输队列放在目录读取状态之前：正在下载大文件时列表可能正在刷新，
+           进度条不能被 loading 分支挡掉 */
+        TransfersCard()
+
         val l = listing
         if (l == null) {
             LoadingState(L["读取目录_5bfbf3e6d6"])
@@ -465,13 +473,15 @@ fun OpsFilesPage() {
                                     }, icon = "edit")
                                     GhostBtn(text = L["下载_2b9d013177"], onClick = {
                                         scope.launch {
-                                            val (bytes, err) = FileStore.download(e.path)
-                                            if (err != null) {
-                                                AppState.toast(err, ToastKind.Err, ms = 7000)
-                                                return@launch
+                                            val out = FileStore.downloadTo(e.path, e.name)
+                                            when {
+                                                out.cancelled -> AppState.toast(tr("已取消保存_1f0e8fda6a"), ToastKind.Ok)
+                                                out.error != null -> AppState.toast(out.error!!, ToastKind.Err, ms = 7000)
+                                                else -> AppState.toast(
+                                                    trf("已保存到_0_1_06aa73d49a", out.path ?: "", Fmt.bytes(out.bytes)),
+                                                    ToastKind.Ok, ms = 6000,
+                                                )
                                             }
-                                            val saved = platformExporter.saveFile(e.name, bytes ?: ByteArray(0))
-                                            AppState.toast(if (saved == null) tr("已取消保存_1f0e8fda6a") else tr("已保存_saved_36d870566a"), ToastKind.Ok)
                                         }
                                     }, icon = "download")
                                     if (e.name.endsWith(".tar.gz") || e.name.endsWith(".tgz") || e.name.endsWith(".zip")) {
@@ -513,6 +523,61 @@ fun OpsFilesPage() {
                 color = Palette.muted,
                 fontSize = 11.5.sp,
             )
+        }
+    }
+}
+
+/**
+ * 传输队列。进度来自 Ktor 的 onDownload/onUpload（报的是真正进出 socket 的字节），
+ * 不是客户端按块自己累加——后者在压缩与分块下会偏。
+ * 未知总长时不画假进度条，只报已传字节。
+ */
+@Composable
+private fun TransfersCard() {
+    val items = Transfers.items
+    if (items.isEmpty()) return
+    PanelCard(
+        title = L["传输_14b6b3a266"],
+        cardKey = "files-transfers",
+        collapsible = false,
+        right = {
+            if (items.any { it.finished }) {
+                GhostBtn(text = L["清除已完成_de4ca16286"], icon = "close", onClick = { Transfers.clearFinished() })
+            }
+        },
+    ) {
+        items.forEach { t ->
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = t.name,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Palette.text,
+                )
+                Text(
+                    text = Fmt.bytes(t.sent) +
+                        (if (t.total > 0L) " / " + Fmt.bytes(t.total) else L["大小未知_4cdd9c30fc"]) +
+                        " · " + (if (t.kind == Transfer.Kind.Download) L["下载_2b9d013177"] else L["上传_a977650db1"]),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Palette.muted,
+                )
+            }
+            Spacer(Modifier.height(4.dp))
+            when {
+                t.error != null -> Text(
+                    text = t.error!!, color = Palette.bad, style = MaterialTheme.typography.labelSmall,
+                )
+                t.done -> Text(
+                    text = trf("已完成_0_b30b29b63b", t.path ?: ""),
+                    color = Palette.ok,
+                    style = MaterialTheme.typography.labelSmall,
+                )
+                else -> LinearProgressIndicator(
+                    progress = { t.fraction },
+                    modifier = Modifier.fillMaxWidth().height(5.dp),
+                )
+            }
+            Spacer(Modifier.height(10.dp))
         }
     }
 }

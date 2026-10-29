@@ -1,4 +1,5 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.SaveHandle
 import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
 
@@ -10,13 +11,18 @@ import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.HttpTimeoutConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.onDownload
+import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.prepareGet
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsBytes
+import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
+import io.ktor.utils.io.readAvailable
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -209,12 +215,13 @@ class PanelApi(private val config: () -> ServerConfig) {
     }
 
     /** Raw-body POST used by `/db/upload` (up to 500 MB SQL dumps). */
-    suspend fun postRaw(path: String, bytes: ByteArray): JsonElement {
+    suspend fun postRaw(path: String, bytes: ByteArray, onProgress: (Long, Long) -> Unit = { _, _ -> }): JsonElement {
         val r: HttpResponse = try {
             http.post(urlOf(path)) {
                 auth()
                 header(HttpHeaders.ContentType, ContentType.Any)
                 setBody(bytes)
+                onUpload { sent, total -> onProgress(sent, total ?: -1L) }
             }
         } catch (e: CancellationException) {
             throw e
@@ -248,6 +255,48 @@ class PanelApi(private val config: () -> ServerConfig) {
             throw parseError(path, r.status.value, txt)
         }
         return r.bodyAsBytes()
+    }
+
+    /**
+     * 流式下载进调用方给的可写句柄：不再把整个文件读进内存
+     * （`download()` 的 bodyAsBytes 就是 86MB 的包在手机上失败的原因）。
+     * 进度取自 Ktor 的 onDownload，报的是真正写进 socket 的字节；
+     * 服务端没给 Content-Length 时 total 为 -1，界面显示「大小未知」而不是假进度。
+     */
+    suspend fun downloadTo(path: String, sink: SaveHandle, onProgress: (Long, Long) -> Unit): Long {
+        var written = 0L
+        try {
+            http.prepareGet(urlOf(path)) {
+                auth()
+                onDownload { sent, total -> onProgress(sent, total ?: -1L) }
+            }.execute { r ->
+                if (!r.status.isSuccess()) {
+                    val txt = runCatching { r.bodyAsText() }.getOrDefault("")
+                    throw parseError(path, r.status.value, txt)
+                }
+                val ch = r.bodyAsChannel()
+                val buf = ByteArray(64 * 1024)
+                while (true) {
+                    /* readAvailable 内部会挂起等下一段数据，EOF 返回 -1：
+                       不需要自己忙等，也不需要 awaitContent */
+                    val n = ch.readAvailable(buf)
+                    if (n < 0) break
+                    written += n
+                    sink.write(buf.copyOf(n))
+                }
+            }
+        } catch (e: CancellationException) {
+            runCatching { sink.close() }
+            throw e
+        } catch (e: ApiException) {
+            runCatching { sink.close() }
+            throw e
+        } catch (e: Exception) {
+            runCatching { sink.close() }
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
+        }
+        runCatching { sink.close() }
+        return written
     }
 
     /** Reachability probe used when the user edits the server address. */

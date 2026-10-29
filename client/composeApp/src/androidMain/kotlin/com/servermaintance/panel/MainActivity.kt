@@ -33,6 +33,14 @@ class MainActivity : ComponentActivity() {
         }
         AndroidPickerBridge.registerMulti(multiLauncher)
 
+        // SAF「另存为」：CreateDocument 的 input 是建议文件名（String）。
+        val saveLauncher = registerForActivityResult(
+            androidx.activity.result.contract.ActivityResultContracts.CreateDocument(
+                "application/octet-stream",
+            ),
+        ) { uri: Uri? -> AndroidSaveBridge.onResult(uri) }
+        AndroidSaveBridge.register(saveLauncher)
+
         setContent {
             // 保留 edge-to-edge 沉浸色，同时为状态栏/导航栏留出可点击区域（避免遮住系统菜单）
             Box(

@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import platform.Foundation.NSData
 import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileHandle
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSMutableData
 import platform.Foundation.NSURL
@@ -74,6 +75,30 @@ private class IosExporter : FileExporter {
         val out = "$dir/$safe"
         val url = NSURL.fileURLWithPath(out)
         if (bytes.toNSData().writeToURL(url, atomically = true)) out else null
+    }.getOrNull()
+
+    /* iOS 这里刻意不做「另存为」选择器：真正的导出要走 UIDocumentPickerViewController
+       (forExporting:)，而它在本机无法编译验证（ios 目标需要 macOS）。所以沿用 saveFile
+       的落点——写进 App 的 Documents 目录，壳工程开了 UIFileSharingEnabled，
+       文件在「文件」App 里看得见。差别如实写在这里，不假装和桌面/安卓等价。 */
+    override suspend fun beginSave(name: String): SaveHandle? = runCatching {
+        val dir = documentsDir() ?: return@runCatching null
+        val safe = name.replace(Regex("[^A-Za-z0-9._-]"), "_")
+        val out = "$dir/$safe"
+        NSFileManager.defaultManager.createFileAtPath(out, contents = null, attributes = null)
+        val h = NSFileHandle.fileHandleForWritingAtPath(out) ?: return@runCatching null
+        object : SaveHandle {
+            override val displayPath: String get() = out
+
+            @OptIn(BetaInteropApi::class)
+            override fun write(chunk: ByteArray) { h.writeData(chunk.toNSData()) }
+            override fun close() { runCatching { h.closeFile() } }
+            override fun discard() {
+                runCatching { h.closeFile() }
+                // K/N 把 ObjC 的 error: 出参导入成抛异常，所以这里没有 error 参数
+                runCatching { NSFileManager.defaultManager.removeItemAtPath(out) }
+            }
+        }
     }.getOrNull()
 }
 

@@ -1,13 +1,19 @@
 package com.servermaintance.panel
+import com.servermaintance.panel.i18n.L
 
 import java.io.File
+import java.io.FileOutputStream
 import java.awt.Desktop
+import java.awt.FileDialog
+import java.awt.Frame
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.util.prefs.Preferences
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import com.servermaintance.panel.i18n.trf
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private class PrefsStore : KeyValueStore {
     private val prefs = Preferences.userNodeForPackage(PrefsStore::class.java)
@@ -40,6 +46,34 @@ private class DesktopExporter : FileExporter {
         out.writeBytes(bytes)
         out.absolutePath
     }.getOrNull()
+
+    /* 系统「另存为」→ 可分块写的句柄。AWT 弹不出来时退到默认下载目录，
+       而不是让整次下载失败：用户要的是拿到文件。 */
+    override suspend fun beginSave(name: String): SaveHandle? = withContext(Dispatchers.IO) {
+        runCatching {
+            val safe = name.replace(Regex("[^A-Za-z0-9._-]"), "_")
+            val picked = runCatching {
+                val dlg = FileDialog(null as Frame?, L["另存为_a86b5bd5da"], FileDialog.SAVE)
+                dlg.file = safe
+                dlg.directory = homeDownloads().absolutePath
+                dlg.isVisible = true
+                val dir = dlg.directory ?: return@runCatching null
+                File(dir, (dlg.file ?: safe))
+            }.getOrNull()
+            val target = picked ?: File(homeDownloads(), safe)
+            if (!target.parentFile!!.exists()) target.parentFile!!.mkdirs()
+            val out = FileOutputStream(target)
+            object : SaveHandle {
+                override val displayPath: String get() = target.absolutePath
+                override fun write(chunk: ByteArray) { out.write(chunk) }
+                override fun close() { runCatching { out.flush() }; runCatching { out.close() } }
+                override fun discard() {
+                    runCatching { out.close() }
+                    runCatching { target.delete() }
+                }
+            }
+        }.getOrNull()
+    }
 }
 
 private class DesktopClip : Clip {
