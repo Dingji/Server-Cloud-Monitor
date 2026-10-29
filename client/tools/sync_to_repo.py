@@ -43,6 +43,13 @@ CLIENT_EXCLUDE_SUFFIX = (".log", ".apk", ".aab", ".msi", ".deb", ".dmg", ".p12",
                          ".pfx", ".jks", ".keystore", ".pem", ".key", ".token",
                          ".tar.gz", ".pyc", ".dSYM", ".before-i18n", ".orig", ".rej")
 CLIENT_EXCLUDE_PREFIX = ("build-",)
+# Repo copies that are deliberately ahead of the live snapshot. The snapshot is a
+# mirror of the production host; these files were fixed for *fresh* hosts and the
+# running box still carries the old version, so copying the snapshot over them
+# silently reverts the fix (it did, to relayhub/deploy.sh).
+PROTECT = {
+    "relayhub/deploy.sh",     # RELAYHUB_SKIP_NGINX / per-arch frp fetch / nginx rollback
+}
 # panel-web/ ops-server/ live code is mirrored under app/ already; the workspace
 # copies stay in client/ as the editing source of truth (as in previous syncs).
 
@@ -65,10 +72,14 @@ def md5(path):
     return h.hexdigest()
 
 
-def plan_copy(pairs, dst_root):
+def plan_copy(pairs, dst_root, label=""):
     """pairs = iterable of (src, rel); classify each against dst_root."""
     out = []
     for src, rel in pairs:
+        repo_rel = "%s/%s" % (label, rel) if label else rel
+        if repo_rel in PROTECT:
+            print("          skipped (protected, repo copy is ahead): %s" % repo_rel)
+            continue
         dst = os.path.join(dst_root, *rel.split("/"))
         if not os.path.exists(dst):
             out.append((src, dst, "new"))
@@ -120,9 +131,12 @@ def main():
     args = ap.parse_args()
 
     jobs = [
-        ("app", os.path.join(REPO, "app"), plan_copy(walk_app(LIVE), os.path.join(REPO, "app"))),
-        ("relayhub", os.path.join(REPO, "relayhub"), plan_copy(walk_relayhub(LIVE), os.path.join(REPO, "relayhub"))),
-        ("client", os.path.join(REPO, "client"), plan_copy(walk_client(WS), os.path.join(REPO, "client"))),
+        ("app", os.path.join(REPO, "app"),
+         plan_copy(walk_app(LIVE), os.path.join(REPO, "app"), "app")),
+        ("relayhub", os.path.join(REPO, "relayhub"),
+         plan_copy(walk_relayhub(LIVE), os.path.join(REPO, "relayhub"), "relayhub")),
+        ("client", os.path.join(REPO, "client"),
+         plan_copy(walk_client(WS), os.path.join(REPO, "client"), "client")),
     ]
 
     grand = {"new": 0, "changed": 0, "same": 0}

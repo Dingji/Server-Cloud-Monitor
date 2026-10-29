@@ -54,6 +54,9 @@ const TTL = {
   '/api/sessions': 5000,
   '/api/session-memory': 10000,
   '/api/useragents': 5000,
+  /* policy editor: must not show a stale policy right after a save.
+     action() clears the whole cache on any mutation, so this stays short. */
+  '/api/busy-hours': 2000,
 };
 const cache = new Map(); // path?query -> { exp, payload }
 

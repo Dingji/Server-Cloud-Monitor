@@ -160,7 +160,6 @@ def hash_password(pw: str, salt: str | None = None) -> str:
     digest = hashlib.pbkdf2_hmac("sha256", pw.encode("utf-8"), bytes.fromhex(salt), 200_000).hex()
     return f"pbkdf2-sha256${salt}${digest}"
 
-
 def nb_seed_password() -> str:
     """Initial admin password for a brand-new database.
 

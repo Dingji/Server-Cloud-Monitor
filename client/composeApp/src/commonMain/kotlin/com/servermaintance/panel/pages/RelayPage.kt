@@ -32,6 +32,7 @@ import com.servermaintance.panel.pages.relay.RelayClientsTab
 import com.servermaintance.panel.pages.relay.RelayHitrateTab
 import com.servermaintance.panel.pages.relay.RelayKeysTab
 import com.servermaintance.panel.pages.relay.RelayOverviewTab
+import com.servermaintance.panel.pages.relay.RelayPolicyTab
 import com.servermaintance.panel.pages.relay.RelayQualityTab
 import com.servermaintance.panel.pages.relay.RelayTabRow
 import com.servermaintance.panel.pages.relay.RelayTokenHitTab
@@ -43,7 +44,7 @@ import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelIcon
 
 /**
- * OpenCode 中继 —— relay.js 的 8 个页签 1:1 复刻。
+ * OpenCode 中继 —— relay.js 的页签（8 个统计页签 + 忙时策略配置）。
  *
  * 页头显示当前页签的刷新节奏（命中率类 2 秒实时，其余 10 秒）；手持端提供
  * 「旧版面板」外链。`GET /relay/available` 探测失败时以非阻断横幅提示
@@ -58,6 +59,7 @@ private val RELAY_TABS  get() = listOf(
     "clients" to L["客户端与会话_fd8ce68403"],
     "tokens" to "Token",
     "keys" to L["密钥池_6ab58f884e"],
+    "policy" to L["忙时策略_b8602746fc"],
 )
 
 private val LIVE_FAST get() = L["实时_每_2_秒刷新_c4c5d531ed"]
@@ -131,6 +133,7 @@ fun RelayPage() {
             "clients" -> RelayClientsTab()
             "tokens" -> RelayTokensTab()
             "keys" -> RelayKeysTab()
+            "policy" -> RelayPolicyTab()
             else -> RelayOverviewTab()
         }
     }

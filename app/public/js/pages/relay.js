@@ -9,6 +9,7 @@
     ['overview', '概览'], ['traffic', '流量分析'], ['quality', '质量分析'],
     ['hitrate', '套餐命中率'], ['tokenhit', 'Token 命中率'],
     ['clients', '客户端与会话'], ['tokens', 'Token'], ['keys', '密钥池'],
+    ['policy', '忙时策略'],
   ];
   const REFRESH_MS = 10000;
   /* 命中率类页签走实时刷新：主定时器按 1 秒滴答，各页签按自己的节奏拉取 */
@@ -55,6 +56,7 @@
     clients: ['sessions', 'session-memory', 'useragents', 'recent', 'summary'],
     tokens: [],
     keys: ['providers'],
+    policy: ['busy-hours'],
   };
 
   async function load(names) {
@@ -95,6 +97,7 @@
       else if (S.tab === 'clients') S.upd[S.tab] = tabClients(box, d);
       else if (S.tab === 'tokens') S.upd[S.tab] = tabTokens(box, d);
       else if (S.tab === 'keys') S.upd[S.tab] = await tabKeys(box, d);
+      else if (S.tab === 'policy') S.upd[S.tab] = tabPolicy(box, d);
       /* 首次填充：用刚拉到的数据执行一次原地更新 */
       if (S.upd[S.tab]) await S.upd[S.tab](d);
     } catch (e) {
@@ -977,6 +980,207 @@
     box.querySelector('[data-tkh="24h"]').classList.add('active', 'btn-primary');
 
     return pull;
+  }
+
+  /* ============ 忙时策略 ============ */
+  /* 编辑器只在首次构建，之后原地刷新只动状态区：
+     否则 10 秒定时器会把用户正在填的表单冲掉。 */
+  function tabPolicy(box, d) {
+    box.innerHTML =
+      '<div class="card mb"><div class="card-title">当前状态' +
+      '<div class="right"><span class="chip" id="rl-pol-at">—</span></div></div>' +
+      '<div id="rl-pol-state"><div class="skel" style="height:64px"></div></div></div>' +
+      '<div class="card"><div class="card-title">忙时改写策略' +
+      '<div class="right"><span class="chip mono" id="rl-pol-path"></span></div></div>' +
+      '<div id="rl-pol-editor"><div class="skel" style="height:200px"></div></div></div>';
+
+    let built = false;
+
+    const paintState = (data) => {
+      const el = document.getElementById('rl-pol-state');
+      if (!el) return;
+      if (data.__error) {
+        el.innerHTML = '<div class="muted small">策略读取失败：' + fmt.esc(data.__error) + '</div>' +
+          '<div class="muted small mt">中继统计服务（127.0.0.1:8787）需要包含 /api/busy-hours 的版本。</div>';
+        return;
+      }
+      const cfg = data.config || {}, tap = data.tap || {};
+      const winTxt = (cfg.windows || []).map((w) => w.start + '–' + w.end).join('、') || '（无窗口）';
+      const badge = (ok, yes, no) => '<span class="badge ' + (ok ? 'ok' : 'gray') + '">' + (ok ? yes : no) + '</span>';
+      el.innerHTML =
+        '<div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">' +
+        badge(!!data.window_active_now, '现在处于改写时段', '现在不改写') +
+        badge(!data.switch_off, '策略启用中', '已被临时停用') +
+        badge(!!cfg.enabled, '配置 enabled', '配置已关闭') +
+        badge(!!tap.in_request_path, '流量经过 tap', 'tap 已被旁路：策略不会执行') +
+        '</div>' +
+        '<div class="grid g3" style="gap:10px">' +
+        '<div><div class="stat-label">作用线路</div><div class="mono">/' + fmt.esc(cfg.route || '') + '/ · ' +
+        fmt.esc(cfg.route || '') + '</div></div>' +
+        '<div><div class="stat-label">命中前缀 → 目标模型</div><div class="mono">' +
+        fmt.esc((cfg.rewrite_prefixes || []).join(', ') || '—') + ' → ' + fmt.esc(cfg.target_model || '—') + '</div></div>' +
+        '<div><div class="stat-label">时区偏移</div><div class="mono">UTC+' +
+        fmt.esc(String(Math.round(Number(cfg.utc_offset_minutes || 0) / 60))) + ' · ' +
+        (cfg.weekdays_only ? '仅工作日' : '每天') + '</div></div>' +
+        '</div>' +
+        '<div class="mt" style="margin-top:10px"><span class="stat-label">窗口</span> <span class="mono">' +
+        fmt.esc(winTxt) + '</span></div>' +
+        (data.probe ? ('<div class="mt" style="margin-top:6px"><span class="stat-label">此刻试算</span> <span class="mono">' +
+          fmt.esc(data.probe.model || '—') + ' → ' + fmt.esc(data.probe.would_rewrite_to || '不改写') +
+          ' (' + fmt.esc(data.probe.reason || '') + ')</span></div>') : '') +
+        '<div class="muted small mt">累计改写 ' + fmt.esc(String(tap.rewrites == null ? '—' : tap.rewrites)) + ' 次' +
+        (tap.last_rewrite ? ('，最近一次 ' + fmt.esc(String(tap.last_rewrite.from || '')) + ' → ' +
+          fmt.esc(String(tap.last_rewrite.to || ''))) : '') + '</div>' +
+        (tap.in_request_path ? '' :
+          '<div class="badge bad mt" style="margin-top:8px">nginx 未把 /v1 转到 tap(8790)，改写与白名单都不会执行</div>') +
+        (data.config_file_invalid ? '<div class="badge warn mt" style="margin-top:8px">策略文件解析失败，tap 正在沿用上一次成功读取的内容</div>' : '');
+      const at = document.getElementById('rl-pol-at');
+      if (at && data.at) at.textContent = '试算时间 ' + fmt.esc(data.at);
+      const p = document.getElementById('rl-pol-path');
+      if (p) p.textContent = data.config_path || '';
+    };
+
+    const buildEditor = (data) => {
+      const host = document.getElementById('rl-pol-editor');
+      if (!host) return;
+      const cfg = data.config || {};
+      const allow = data.go_allowlist || [];
+      const routes = data.policy_routes || ['go'];
+      const winRows = (w) =>
+        '<div class="row rl-pol-win" style="gap:6px;align-items:center;margin-bottom:6px">' +
+        '<input class="input mono" type="time" step="60" value="' + fmt.esc(w.start) + '" data-k="start" style="width:130px">' +
+        '<span class="muted">→</span>' +
+        '<input class="input mono" type="time" step="60" value="' + fmt.esc(w.end) + '" data-k="end" style="width:130px">' +
+        '<button class="btn btn-sm" data-rm>删除</button></div>';
+      host.innerHTML =
+        '<div class="row" style="flex-wrap:wrap;gap:14px;margin-bottom:12px">' +
+        '<label class="row" style="gap:6px;align-items:center"><input type="checkbox" id="rl-pol-on" ' +
+        (cfg.enabled ? 'checked' : '') + '><span>启用策略</span></label>' +
+        '<label class="row" style="gap:6px;align-items:center"><input type="checkbox" id="rl-pol-wd" ' +
+        (cfg.weekdays_only ? 'checked' : '') + '><span>仅工作日（周一至周五）</span></label>' +
+        '</div>' +
+        '<div class="grid g3" style="gap:12px;margin-bottom:12px">' +
+        '<div><div class="stat-label mb">作用线路</div><select class="input" id="rl-pol-route">' +
+        routes.map((r) => '<option value="' + fmt.esc(r) + '"' + (r === cfg.route ? ' selected' : '') + '>' +
+          fmt.esc(r) + '</option>').join('') + '</select></div>' +
+        '<div><div class="stat-label mb">目标模型（改写成）</div><select class="input mono" id="rl-pol-target">' +
+        (allow.length ? allow.map((m) => '<option value="' + fmt.esc(m) + '"' +
+          (m === cfg.target_model ? ' selected' : '') + '>' + fmt.esc(m) + '</option>').join('')
+          : '<option value="' + fmt.esc(cfg.target_model || '') + '">' + fmt.esc(cfg.target_model || '—') + '</option>') +
+        '</select></div>' +
+        '<div><div class="stat-label mb">时区偏移（分钟）</div><input class="input mono" id="rl-pol-off" type="number" ' +
+        'min="-720" max="840" step="60" value="' + fmt.esc(String(cfg.utc_offset_minutes == null ? 480 : cfg.utc_offset_minutes)) + '"></div>' +
+        '</div>' +
+        '<div class="mb" style="margin-bottom:12px"><div class="stat-label mb">命中前缀（逗号分隔，model 以这些开头才被改写）</div>' +
+        '<input class="input mono" id="rl-pol-pre" value="' + fmt.esc((cfg.rewrite_prefixes || []).join(', ')) + '"></div>' +
+        '<div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px">' +
+        '<span class="stat-label">时间窗口（本地时区，止时刻不含）</span>' +
+        '<button class="btn btn-sm" id="rl-pol-add">+ 添加窗口</button></div>' +
+        '<div id="rl-pol-wins">' + (cfg.windows || []).map(winRows).join('') + '</div>' +
+        '<div class="row" style="flex-wrap:wrap;gap:8px;margin-top:14px">' +
+        '<button class="btn btn-sm btn-primary" id="rl-pol-save">保存策略</button>' +
+        '<button class="btn btn-sm" id="rl-pol-preview">试算某个时刻</button>' +
+        '<button class="btn btn-sm ' + (data.switch_off ? 'btn-primary' : '') + '" id="rl-pol-switch">' +
+        (data.switch_off ? '恢复改写' : '临时停用改写') + '</button>' +
+        '<span class="muted small" style="flex:1;min-width:160px">保存会写入 ' +
+        fmt.esc(data.config_path || '/etc/relay/busy-hours.json') + '，tap 按文件变更自动重载，无需重启服务。</span></div>';
+
+      host.querySelector('#rl-pol-add').onclick = () => {
+        const wrap = host.querySelector('#rl-pol-wins');
+        wrap.insertAdjacentHTML('beforeend', winRows({ start: '09:00', end: '12:00' }));
+        const last = wrap.lastElementChild;
+        if (last) last.querySelector('[data-rm]').onclick = () => last.remove();
+      };
+      host.querySelectorAll('.rl-pol-win [data-rm]').forEach((b) => {
+        b.onclick = () => b.closest('.rl-pol-win').remove();
+      });
+      host.querySelector('#rl-pol-save').onclick = (e) => savePolicy(e.currentTarget);
+      host.querySelector('#rl-pol-switch').onclick = (e) => togglePolicySwitch(e.currentTarget, lastData.switch_off);
+      host.querySelector('#rl-pol-preview').onclick = (e) => previewPolicy(e.currentTarget);
+    };
+
+    /* 首次：建编辑器；之后：只刷新状态区，保留用户正在填的内容 */
+    let lastData = { switch_off: false };
+    const upd = async (dd) => {
+      const data = dd['busy-hours'] || dd.busy_hours || { __error: '无数据' };
+      if (!data.__error) lastData = data;
+      paintState(data);
+      if (!built) { built = true; if (!data.__error) buildEditor(data); }
+      const sw = document.getElementById('rl-pol-switch');
+      if (sw && !data.__error) {
+        sw.textContent = data.switch_off ? '恢复改写' : '临时停用改写';
+        sw.classList.toggle('btn-primary', !!data.switch_off);
+      }
+    };
+    /* 首次填充由 render() 里的 `await S.upd[S.tab](d)` 完成，这里不要再调一次 */
+    return upd;
+  }
+
+  function readPolicyDraft() {
+    const g = (id) => document.getElementById(id);
+    const windows = [].map.call(document.querySelectorAll('.rl-pol-win'), (row) => ({
+      start: (row.querySelector('[data-k="start"]') || {}).value || '',
+      end: (row.querySelector('[data-k="end"]') || {}).value || '',
+    }));
+    return {
+      enabled: !!(g('rl-pol-on') || {}).checked,
+      weekdays_only: !!(g('rl-pol-wd') || {}).checked,
+      route: (g('rl-pol-route') || {}).value || 'go',
+      target_model: ((g('rl-pol-target') || {}).value || '').trim(),
+      rewrite_prefixes: ((g('rl-pol-pre') || {}).value || '').split(/[,，\s]+/).filter(Boolean),
+      windows: windows,
+      utc_offset_minutes: Number((g('rl-pol-off') || {}).value || 480),
+    };
+  }
+
+  async function savePolicy(btn) {
+    const draft = readPolicyDraft();
+    if (!draft.rewrite_prefixes.length) { window.toast('至少要有一个命中前缀，否则永远不会改写', 'err'); return; }
+    if (!draft.windows.length) {
+      const go = await modal.confirm('窗口为空', '没有时间段等于策略永不生效。仍要保存吗？', { okText: '仍要保存' });
+      if (!go) return;
+    }
+    const ok = await modal.confirm('保存忙时策略',
+      '线路 <b>/' + fmt.esc(draft.route) + '/</b> 命中 <b>' + fmt.esc(draft.rewrite_prefixes.join(',')) + '</b> 的模型' +
+      '将改写成 <b>' + fmt.esc(draft.target_model) + '</b>。<br>窗口：' +
+      fmt.esc(draft.windows.map((w) => w.start + '-' + w.end).join('、') || '（无）') +
+      '<br>' + (draft.weekdays_only ? '仅工作日' : '每天') + ' · ' + (draft.enabled ? '启用' : '关闭') +
+      '<br><span class="muted small">这会改变生产环境的路由行为。</span>',
+      { okText: '确认保存' });
+    if (!ok) return;
+    ui.busy(btn, true);
+    try {
+      const out = await CM.api.post('/relay/action', { name: 'busy-hours/save', payload: draft });
+      window.toast(out.warning ? ('已保存（注意：' + out.warning + '）') : '策略已保存', out.warning ? 'warn' : 'ok');
+      refreshNow();
+    } catch (e) { window.toast(e.message, 'err'); }
+    ui.busy(btn, false);
+  }
+
+  async function togglePolicySwitch(btn, currentlyOff) {
+    ui.busy(btn, true);
+    try {
+      const out = await CM.api.post('/relay/action', { name: 'busy-hours/switch', payload: { off: !currentlyOff } });
+      window.toast(out.note || '完成', 'ok');
+      refreshNow();
+    } catch (e) { window.toast(e.message, 'err'); }
+    ui.busy(btn, false);
+  }
+
+  async function previewPolicy(btn) {
+    const r = await modal.prompt('试算某个时刻', [
+      { name: 'at', label: '时间（HH:MM 或 YYYY-MM-DD HH:MM，按策略时区）', placeholder: '10:30', mono: true },
+    ], { okText: '试算' });
+    if (!r || !r.at) return;
+    ui.busy(btn, true);
+    try {
+      const data = await CM.api.get('/relay/busy-hours?at=' + encodeURIComponent(r.at.trim()), 2000);
+      const p = data.probe || {};
+      window.toast((data.at || r.at) + '：' + (p.model || '—') + ' → ' +
+        (p.would_rewrite_to || '不改写') + '（' + (p.reason || '') + '）',
+        p.would_rewrite_to ? 'ok' : 'info');
+    } catch (e) { window.toast(e.message, 'err'); }
+    ui.busy(btn, false);
   }
 
   /* ============ actions ============ */

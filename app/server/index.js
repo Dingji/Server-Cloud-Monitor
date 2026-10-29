@@ -375,7 +375,7 @@ const RELAY_GET = [
   'models', 'models-daily', 'tokens', 'model-status', 'health', 'selfheal',
   'latency', 'ttfb', 'streaming', 'sizes', 'status', 'routes', 'methods',
   'endpoints', 'failover', 'errors', 'recent', 'sessions', 'session-memory',
-  'useragents', 'ips',
+  'useragents', 'ips', 'busy-hours',
 ];
 for (const name of RELAY_GET) {
   api.get('/relay/' + name, wrap(async (req, res) => {
