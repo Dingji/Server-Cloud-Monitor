@@ -20,7 +20,9 @@ const agentMod = S.soft('../agent');
 const express = S.soft('express');
 
 const MAX_TEXT = 2 * 1024 * 1024;       /* edit / preview size guard */
-const MAX_UPLOAD = 64 * 1024 * 1024;
+/* 上传上限（MB）。流式落盘后内存占用与文件大小无关，唯一约束是磁盘；
+   可用环境变量 CM_MAX_UPLOAD_MB 调整，改完 systemctl restart cloud-monitor。 */
+const MAX_UPLOAD_MB = Math.max(1, Number(process.env.CM_MAX_UPLOAD_MB || 1024) || 1024);
 const PREVIEW_BYTES = 64 * 1024;
 const LIST_CAP = 3000;
 const TRASH_DAYS = 30;
@@ -572,21 +574,55 @@ function register(api, wrap, audited) {
     return { ok: true, archive: a, to, output: r.stdout.slice(0, 500) };
   }));
 
-  if (express && typeof express.raw === 'function') {
-    api.post('/ops/files/upload',
-      express.raw({ type: () => true, limit: MAX_UPLOAD }),
-      audited('ops.files.upload', async (req) => {
-        const dir = abs(String((req.query && req.query.dir) || (req.body && req.body.dir) || '/'), '上传目录');
-        if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) bad('目录不存在：' + dir, 404);
-        const name = safeName(String((req.query && req.query.name) || req.headers['x-file-name'] || 'upload.bin'));
-        const buf = Buffer.isBuffer(req.body) ? req.body : Buffer.alloc(0);
-        if (!buf.length) bad('上传内容为空');
-        const target = path.join(dir, name);
-        if (fs.existsSync(target) && String(req.query.overwrite || '') !== '1') bad('同名文件已存在（加 overwrite=1 覆盖）：' + target, 409);
-        fs.writeFileSync(target, buf);
-        return { ok: true, path: target, bytes: buf.length };
-      }));
-  }
+  /* 流式上传：整个 body 不再进内存（旧实现 express.raw 会把文件整体缓冲，而面板进程
+     堆上限只有 256MB）。边收边写同目录的 .part 临时文件，收完原子改名——失败或中断
+     都不会留下半个文件，也不会覆盖同名文件。上限见 MAX_UPLOAD_MB。 */
+  const mkErr = (msg, code) => { const e = new Error(msg); e.status = code || 400; return e; };
+  api.post('/ops/files/upload', audited('ops.files.upload', (req) => new Promise((resolve, reject) => {
+    let target = null, tmp = null, out = null, bytes = 0, done = false;
+    const cleanup = () => { if (tmp) { const t = tmp; tmp = null; fs.unlink(t, () => {}); } };
+    const fail = (e) => {
+      if (done) return;
+      done = true;
+      if (out) out.destroy();
+      cleanup();
+      if (req.readable) req.resume();          /* 把余量排掉，让 413 能送达客户端 */
+      reject(e);
+    };
+    let dir;
+    try {
+      dir = abs(String((req.query && req.query.dir) || '/'), '上传目录');
+      if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) bad('目录不存在：' + dir, 404);
+      const name = safeName(String((req.query && req.query.name) || req.headers['x-file-name'] || 'upload.bin'));
+      target = path.join(dir, name);
+      if (fs.existsSync(target) && String((req.query && req.query.overwrite) || '') !== '1')
+        bad('同名文件已存在（加 overwrite=1 覆盖）：' + target, 409);
+      if (req._body) bad('请求体已被当作 JSON 解析，无法按文件接收（请勿用 application/json 上传）', 400);
+      const declared = Number(req.headers['content-length'] || 0);
+      if (declared > MAX_UPLOAD_MB * 1024 * 1024) bad(`文件超过上限 ${MAX_UPLOAD_MB}MB`, 413);
+    } catch (e) { reject(e); return; }
+
+    tmp = target + '.upload-' + process.pid + '-' + Date.now() + '.part';
+    try { out = fs.createWriteStream(tmp); } catch (e) { tmp = null; reject(e); return; }
+    out.on('error', (e) => fail(mkErr('写入失败：' + (e.message || e), 500)));
+    req.on('error', (e) => fail(mkErr('读取请求体失败：' + (e.message || e), 400)));
+    req.on('aborted', () => fail(mkErr('客户端中断上传', 400)));
+    req.on('data', (c) => {
+      bytes += c.length;
+      if (bytes > MAX_UPLOAD_MB * 1024 * 1024) fail(mkErr(`文件超过上限 ${MAX_UPLOAD_MB}MB`, 413));
+    });
+    out.on('finish', () => {
+      if (done) return;
+      done = true;
+      try {
+        if (!bytes) { const t = tmp; tmp = null; fs.unlinkSync(t); throw mkErr('上传内容为空'); }
+        fs.renameSync(tmp, target);
+        tmp = null;
+        resolve({ ok: true, path: target, bytes });
+      } catch (e) { cleanup(); reject(e); }
+    });
+    req.pipe(out);
+  })));
 }
 
 function stIsDirSafe(p) { try { return fs.statSync(p).isDirectory(); } catch (_) { return false; } }
