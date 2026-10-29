@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package com.servermaintance.panel.pages.relay
 import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.trfn
@@ -7,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -250,9 +253,10 @@ private fun HitPlanCard(p: JsonObject) {
                 color = Palette.muted,
                 style = MaterialTheme.typography.bodySmall,
             )
-            Row(
+            // 最多 5 个错误徽章：窄屏折行，而不是把后面的裁掉
+            FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 val chips = listOf(
