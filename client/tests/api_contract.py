@@ -38,7 +38,10 @@ DUMP_DIR = os.path.join(ROOT, "api-dump")
 TESTS_DIR = os.path.join(ROOT, "tests")
 BASE_URL = os.environ.get("SM_PANEL_URL", "http://8.153.153.176/panel")
 API = BASE_URL.rstrip("/") + "/api"
-PASSWORD = os.environ["SM_PANEL_PASSWORD"]
+PASSWORD = os.environ.get("SM_PANEL_PASSWORD", "")
+if not PASSWORD:
+    sys.exit("需要 SM_PANEL_PASSWORD（面板登录口令）：故意不留默认值，口令不进仓库")
+
 TOKEN_FILE = os.path.join(ROOT, "tools", ".token")
 
 REQ_TIMEOUT = 60          # 单请求超时（部分收集器较慢）

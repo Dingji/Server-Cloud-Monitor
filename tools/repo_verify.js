@@ -73,6 +73,13 @@ function isCommentLine(src, index) {
   const t = src.slice(lineStart, index).trimStart();
   return t.startsWith('*') || t.startsWith('//') || t.startsWith('/*');
 }
+/** true when the require sits in a try/catch: a guarded alternative path the author
+ *  already expects to miss (server/ops/alerting.js tries ../relayhubmon then ./relayhubmon). */
+function isGuardedRequire(src, index) {
+  const lineStart = src.lastIndexOf('\n', index) + 1;
+  const line = src.slice(lineStart, src.indexOf('\n', index) < 0 ? src.length : src.indexOf('\n', index));
+  return /(^|[^.\w])(try|catch)\s*[({]/.test(line.slice(0, index - lineStart));
+}
 for (const f of jsFiles) {
   const src = fs.readFileSync(f, 'utf8');
   let m;
@@ -84,6 +91,10 @@ for (const f of jsFiles) {
       const base = path.resolve(path.dirname(f), spec);
       const cands = [base + '.js', base + '.json', path.join(base, 'index.js'), base];
       if (!cands.some((c) => { try { return fs.statSync(c).isFile(); } catch (_) { return false; } })) {
+        if (isGuardedRequire(src, m.index)) {
+          notes.push('guarded require skipped: ' + path.relative(ROOT, f) + ' -> ' + spec);
+          continue;
+        }
         failures.push('REQUIRE ' + path.relative(ROOT, f) + ' -> ' + spec + ' not found');
       }
     } else if (vendorPkgs && !vendorPkgs.has(spec.split('/').slice(0, spec.startsWith('@') ? 2 : 1).join('/'))) {
@@ -100,7 +111,10 @@ if (fs.existsSync(appjs)) {
   const lazy = {};
   const lazyBlock = /CM\.lazyPages\s*=\s*\{([\s\S]*?)\n\s*\};/.exec(src);
   if (lazyBlock) {
-    for (const mm of lazyBlock[1].matchAll(/([A-Za-z0-9_-]+)\s*:\s*'([^']+)'/g)) lazy[mm[1]] = mm[2];
+    // Keys may be quoted: `'ops-uptime': 'js/pages/ops-uptime.js'`. The old pattern
+    // allowed only bare keys, so every quoted entry was skipped and reported as
+    // "has no lazyPages entry" -- nine false failures, both sides actually correct.
+    for (const mm of lazyBlock[1].matchAll(/['"]?([A-Za-z0-9_-]+)['"]?\s*:\s*'([^']+)'/g)) lazy[mm[1]] = mm[2];
   }
   for (const id of ids) {
     const file = lazy[id];

@@ -112,7 +112,8 @@ import kotlin.math.ceil
  *       / 今日流量↓↑ / 连接 / 最近上线
  *     · 端口映射编辑器 RhPortMapCard（按当前设备）
  *  R4 降级：frps_ok=false → 顶部警示条；连续 3 次拉取失败 → 「中继服务暂时不可达」
- *  R5 端口池配置 RhPortPoolCard（全局，页底整宽）
+ *  R5 运维洞察 RhInsightCard（GET /relayhub/insight，结论由面板侧 relayhubmon.js 折好）
+ *  R6 端口池配置 RhPortPoolCard（全局，页底整宽）
  *
  * 适配：窄屏（Android 手持端 / 窄窗口）用 contentStacked 叠成单列，
  * GridLayout 手持端自动降为 1 列，DataTable 手持端自带横向滚动。
@@ -536,7 +537,11 @@ fun RelayHubPage() {
                     }
                 }
 
-                /* ---- R5 端口池配置（全局卡，面板 rh-pool-card） ---- */
+                /* ---- R5 运维洞察（面板 rh-insight-card：结论由 relayhubmon.js 算好） ---- */
+                Spacer(Modifier.height(14.dp))
+                RhInsightCard()
+
+                /* ---- R6 端口池配置（全局卡，面板 rh-pool-card） ---- */
                 Spacer(Modifier.height(14.dp))
                 RhPortPoolCard()
             }

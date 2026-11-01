@@ -19,8 +19,9 @@ opencode  ──HTTP──►  http://8.153.153.176/v1      (OpenCode Go 套餐�
                         └─ nginx → usagetap(127.0.0.1:8790) → 上游
 ```
 
-中继做三件事：替换凭据（客户端持有的是**中继令牌**，不是官方 key）、记录 token 用量、
-按套餐白名单拦掉不能用的模型。**忙时策略**（见 §7）在工作日高峰把 deepseek 请求改写到 mimo。
+中继做四件事：替换凭据（客户端持有的是**分发 key**（`rk_…`），不是官方 key，也不是过去那枚全局共享令牌）、
+按 key 记录 token 用量、按 key 拦时/周/月额度、按套餐白名单拦掉不能用的模型。
+**忙时策略**（见 §7）在工作日高峰把 deepseek 请求改写到 mimo。
 
 已验证的版本与路径（截至 2026-10-29）：
 
@@ -28,7 +29,7 @@ opencode  ──HTTP──►  http://8.153.153.176/v1      (OpenCode Go 套餐�
 |---|---|
 | opencode | `v2.1.4`（`opencode --version`） |
 | 配置文件 | `%USERPROFILE%\.config\opencode\opencode.json`（Windows 与 Linux 同一路径规则：`~/.config/opencode/opencode.json`） |
-| 中继令牌环境变量 | `OPENCODE_RELAY_KEY`（Windows 上是 **User 级**环境变量） |
+| 分发 key 环境变量 | `OPENCODE_RELAY_KEY`（Windows 上是 **User 级**环境变量） |
 | 数据目录 | `~/.local/share/opencode/`（含 `opencode.db`、`config-backups/`、`log/`） |
 | 中继地址 | `http://8.153.153.176`（**HTTP，无 TLS**，见 §8 安全提示） |
 
@@ -36,37 +37,41 @@ opencode  ──HTTP──►  http://8.153.153.176/v1      (OpenCode Go 套餐�
 
 ## 1. 【STOP】开始前向人类要两样东西
 
-1. **中继令牌**（relay token）。不要猜测、不要生成、不要从别处复制。
-   人类可以从服务器上取：`ssh root@8.153.153.176 "sed -n 's/.*set \$relay_token *\"\([^\"]*\)\".*/\1/p' /etc/relay/relay.env"`
+1. **分发 key**（`rk_` 开头）。不要猜测、不要生成、不要从别处复制。
+   发放人在面板 **OpenCode 中继 → 分发 Key** 里「新建 key」，明文只在生成那一刻显示一次；
+   面板里只能看到掩码（`rk_efb3b…91d96f`）。旧的全局共享令牌仍然可用（作为不限额的主令牌），
+   但**新客户端一律发分发 key** —— 只有分发 key 才带时/周/月额度、也才能单独停用。
 2. **要接哪几条线路**。默认建议：`relay-go`（套餐内免费额度）+ `relay-zen`（按量，模型多）。
    只有人类明确要求时才加 `relay-glm` / `relay-mimo`。
 
-拿到令牌后立刻验证它有效，再往下做：
+拿到 key 后立刻验证它有效，再往下做：
 
 ```bash
 curl -s -o /dev/null -w '%{http_code}\n' \
   -X POST http://8.153.153.176/v1/chat/completions \
-  -H "Authorization: Bearer <RELAY_TOKEN>" -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer <RELAY_KEY>" -H 'Content-Type: application/json' \
   -d '{"model":"mimo-v2.6-flash","messages":[{"role":"user","content":"say ok"}],"max_tokens":8}'
 ```
 
-**预期：`200`。** 得到 `401` 说明令牌不对；`403` 说明模型不在白名单（见 §3 的白名单）；
-`503` 是套餐 key 全部超额，此时**不要继续配置**，先让人类补 key。
+**预期：`200`。** 得到 `401` 说明这枚分发 key 不存在或已被停用（发放人在面板里能看到）；
+`403` 说明模型不在白名单（见 §3 的白名单）；`429` 说明这枚 key 的时/周/月额度用到了上限，
+响应体的 `error.message` 会写明是哪个窗口、什么时候释放（见 §7b）；
+`503` 是套餐的上游 key 全部超额，此时**不要继续配置**，先让人类补 key。
 
 ---
 
-## 2. 设置令牌环境变量（持久）
+## 2. 设置分发 key 环境变量（持久）
 
 Windows（PowerShell，只影响当前用户，不需要管理员）：
 
 ```powershell
-[Environment]::SetEnvironmentVariable('OPENCODE_RELAY_KEY','<RELAY_TOKEN>','User')
+[Environment]::SetEnvironmentVariable('OPENCODE_RELAY_KEY','<RELAY_KEY>','User')
 ```
 
 Linux / macOS：写进 shell 配置文件，不要只在当前 shell `export`：
 
 ```bash
-printf '\nexport OPENCODE_RELAY_KEY=%q\n' '<RELAY_TOKEN>' >> ~/.bashrc
+printf '\nexport OPENCODE_RELAY_KEY=%q\n' '<RELAY_KEY>' >> ~/.bashrc
 ```
 
 **验证（关键，AI 常漏）**：环境变量是**新进程**才生效的。必须重开一个终端再查：
@@ -80,8 +85,27 @@ printf '\nexport OPENCODE_RELAY_KEY=%q\n' '<RELAY_TOKEN>' >> ~/.bashrc
 echo "${OPENCODE_RELAY_KEY:+set}"
 ```
 
-**预期：Windows 返回那串令牌；POSIX 返回 `set`。** 如果为空，opencode 会在本地就报
+**预期：Windows 返回那串 `rk_…`；POSIX 返回 `set`。** 如果为空（或仍是旧的全局令牌），opencode 会在本地就报
 `Invalid credential`，与中继无关 —— 先修好这一步再往下。
+
+**退干净 opencode 进程（2026-10-31 踩出来的，AI 常漏）**：关掉 opencode 窗口不等于退出 ——
+Windows 上 `opencode.exe` 的后台 daemon 会残留，手里还攥着旧环境变量；之后每一次请求
+（包括 `opencode run`）都从它们手里出门，`setx` 设的新 key 完全不起作用。设完 key 必须确认进程清零：
+
+```powershell
+# Windows：必须输出为空；不为空就 taskkill /F /IM opencode.exe
+tasklist | findstr /i opencode
+```
+```bash
+# Linux/macOS
+pgrep -fa opencode || echo clean
+```
+
+还有一个次级藏匿点：opencode 的凭据库 `~/.local/share/opencode/opencode.db` 的
+`credential` 表（integration `opencode-go`）。对这台 provider 跑过 `opencode auth login`
+的机器会在这里压着一枚旧 key 作 fallback —— 环境变量和它不一致时，行为按进程版本定，
+别赌。两处保持同一枚 key；仓库 `tools/swap_local_relay_key.py`（`--rollback` 可还原）
+就是同时换这两处的。
 
 ---
 
@@ -199,22 +223,29 @@ python ~/.config/opencode/relay/client_guard.py
 
 ---
 
-## 7. 忙时改写
+## 7. 忙时 / 闲时路由
 
-中继在工作日高峰把 deepseek 请求改到 mimo 上，因为那个时段 deepseek 容量会退化。
+中继按时段自动换模型：**忙时**（工作日高峰）deepseek 容量退化 → deepseek 请求改到 mimo；
+**闲时**（其余全部时间）deepseek 容量好 → **该线路所有请求**都改到 deepseek-v4.1-flash。
+客户端不需要任何改动，界面上显示的始终是你选的模型。
 
-| 项 | 值 |
-|---|---|
-| 生效时段 | **北京时间 周一~周五 09:00–12:00、14:00–18:00**（`12:00`/`18:00` 不含） |
-| 生效线路 | 只有 `relay-go`（`/v1`）。Zen / GLM / MiMo 三条线路**不改写** |
-| 改写规则 | 请求的 model 以 `deepseek` 开头 → 改为 `mimo-v2.6-flash` |
-| 其它模型 | 原样透传，包括 `longcat-*`、`mimo-*` |
-| 时段外 / 周末 | 完全不改写 |
+| 项 | 忙时策略 | 闲时策略 |
+|---|---|---|
+| 生效时段 | **北京时间 周一~周五 09:00–12:00、14:00–18:00**（`12:00`/`18:00` 不含，节假日自动跳过） | 忙时窗口的**补集**：晚间、午休、周末与节假日整天 |
+| 生效线路 | 只有 `relay-go`（`/v1`）。Zen / GLM / MiMo 三条线路**不改写** | 同左 |
+| 改写规则 | model 以 `deepseek` 开头 → `mimo-v2.6-flash` | **全部模型** → `deepseek-v4.1-flash` |
+| 例外 | 非 deepseek 模型原样透传 | 请求的就是 deepseek-v4.1-flash 时不重复改写 |
+| 开关 | `/etc/relay/busy-hours.json` 的 `enabled` / `idle.enabled`；`busy_hours.py off` 同时停掉两个方向 | 同左 |
+
+> 配置文件 `/etc/relay/busy-hours.json`（v2）里 `idle.windows` 留空 = 补集语义；
+> 也可以像忙时一样显式给 `idle.windows`。两个方向都 fail-open：目标模型不在 Go 白名单、
+> 开关关闭或配置损坏时，客户端拿到它请求的模型。
 
 AI 需要知道的三个表现：
 
-1. **响应会多两个头**：`X-Relay-Rewritten-From: deepseek-v4.1-flash`、
-   `X-Relay-Rewritten-To: mimo-v2.6-flash`。HTTP 状态仍是 `200`，正文正常。
+1. **响应会多三个头**：`X-Relay-Rewritten-From: <你请求的模型>`、
+   `X-Relay-Rewritten-To: <实际服务的模型>`、`X-Relay-Rewritten-Policy: busy|idle`。
+   HTTP 状态仍是 `200`，正文正常。
 2. **opencode 界面上显示的仍然是用户选的那个模型**（改写发生在服务端）。
    所以"显示 deepseek、行为像 mimo"不是 bug。要确认就看头。
 3. **用量统计里记的是实际服务的那个模型**，`raw` 字段带 `rewritten_from`。
@@ -230,14 +261,45 @@ AI 需要知道的三个表现：
 命令行验证（在服务器上，人类执行）：
 
 ```bash
-python3 /opt/relay/busy_hours.py status      # 现在是不是忙时、策略是什么
-python3 /opt/relay/busy_hours.py check 10:30 # 预览那个时刻会不会改写
+python3 /opt/relay/busy_hours.py status      # 忙时/闲时策略与当前生效方向
+python3 /opt/relay/busy_hours.py check 10:30 # 预览那个时刻：忙时 deepseek→mimo
+python3 /opt/relay/busy_hours.py check 20:00 # 预览那个时刻：闲时全部→deepseek
 ```
 
 临时停用（不重启服务、不改配置文件）：`python3 /opt/relay/busy_hours.py off`，恢复 `on`。
 策略文件 `/etc/relay/busy-hours.json` 改完自动重载，无需重启 `relay-usagetap`。
 
+**面板可视化配置**（2026-10-30 起）：OpenCode 中继 →「忙时 / 闲时」页签（KMP 客户端同名页签）
+可以直接改两个方向的策略并试算：相位横幅实时显示「忙时 / 闲时（改写生效中）」与生效方向，
+试算任意时刻、编辑窗口与目标模型（带 Go 白名单校验，写错目标会被拒绝而不是变成 403）、
+临时停用/恢复。保存走面板审计日志，策略文件自动备份（保留最近 5 份，
+`/var/lib/relay/busy-hours.json.bak-*`）。
+
 ---
+
+### 7b. 每枚 key 的时 / 周 / 月额度
+
+分发 key 不只是"能进门的凭据"，它还带着自己的消费上限。tap 在**放行前**按这枚 key 已经记在
+`usage_events` 里的 token 数判定，超了直接 `429`，请求不会到达上游，也就不会花钱。
+
+| 窗口 | 口径 | 到顶后什么时候恢复 |
+|---|---|---|
+| 时 | **滚动 1 小时**（不是整点） | 最早计入的那笔请求滑出窗口时逐量释放 |
+| 周 | 本自然周，**周一 00:00（北京时间）** | 周一 00:00 整点重置 |
+| 月 | 本自然月，**1 号 00:00（北京时间）** | 1 号 00:00 整点重置 |
+
+- 单位是 **token 数**（上游报的 `total`，没有 `total` 时按 输入+输出 计）。**命中缓存的输入不计**，
+  所以反复带同一份大上下文比想象的省。上限填 `0` = 不限。
+- 额度只作用于会花钱的方法（`POST/PUT/PATCH`）；超额后 `GET /v1/models` 仍然通，
+  客户端不会因为被限流而连模型列表都拿不到。
+- 响应体：`{"error":{"type":"relay_key_quota_exceeded","window":"hour","limit":…,"used":…,"resets_at":…}}`，
+  `message` 是中文的"哪个窗口、什么时候恢复"。opencode 会把它当普通上游错误显示，
+  看到 `429` 就照 `resets_at` 等，或者让发放人调高上限 —— **这不是故障，不要改客户端配置**。
+- 停用与额度是两套生效路径：停用要重新下发 nginx 凭据名单（面板的 `重新下发名单`），
+  调上限则下一个请求就咬（tap 按 mtime 热加载仓库，无需重启）。
+- 一处已知粗糙：一次请求在**结束后**才记账，且 tap 对某枚 key 的用量缓存 15 秒，
+  所以刚好卡在上限附近时可能多放过 15 秒内的几个请求。要精确封顶就留一点余量。
+
 
 ## 8. 验证清单（全部做完才算配好）
 
@@ -275,7 +337,12 @@ X-Relay-Rewritten-To: mimo-v2.6-flash
 按客户端指纹拦了，用 curl 的默认 UA 重试即可，与中继策略无关。
 
 最后让**人类**在 opencode 里实际发一句话（`/models` 选 `relay-go/mimo-v2.6-flash`）。
-看到回答即完成。
+看到回答后**还差第 4 步**：
+
+**4. 记账归属核验 —— 前三步抓不住"账记错了"这件事。** 让发放人在面板「分发 Key」确认
+这枚 key 的用量在涨。旧全局令牌（`ck_master`）不限额、一直有效：哪怕 opencode 还在拿旧
+key 出门，配置校验、模型列表、直连 200、正常回答全是绿的（实测一次：三绿，一周 2700 万
+token 全记在 master 名下）。用量不动时按 §2 末尾的顺序查：残留 daemon → 凭据库旧 key。
 
 > **安全提示**：中继是明文 HTTP，令牌在网络上裸跑。这条链路只适合你控制的机器；
 > 换机器或加公网链路前先给 `/v1` 套 TLS（`install.sh --nginx-standalone` + certbot）。
@@ -291,6 +358,8 @@ X-Relay-Rewritten-To: mimo-v2.6-flash
 | 所有请求本地失败 | 同步脚本按一份空/坏的上报重写了配置，provider 里没有可用模型 | 从 `config-backups/` 恢复，再重跑同步 |
 | `Managed service port ... already in use` | 后台服务占着端口但客户端连不上 | `client_guard.py` 会重启卡死的服务 |
 | `403 model_not_allowed` | 模型不在 Go 套餐白名单 | 换 `mimo-v2.6-flash` / `deepseek-v4.1-flash`，或改用 Zen/GLM/MiMo 线路 |
+| 一切正常，但面板里这枚 key 的**用量不动** | 客户端还在用旧 key：残留的 `opencode.exe` daemon（Windows 关窗口不退进程）、或凭据库 `credential` 表里压着旧 key；另一可能：看的是 `ck_master`（不限额 key 在面板永远显示 `used=None`，设计行为） | `tasklist | findstr /i opencode` 清进程 → 核对 `~/.local/share/opencode/opencode.db` 的 `credential` 表（`tools/swap_local_relay_key.py` 可换可回滚）→ 用 §8 第 4 步复核归属 |
+| `429 relay_key_quota_exceeded` | 这枚分发 key 的时/周/月额度到顶（不是中继坏了，也不是配置错） | 看 `error.message` 里的窗口与恢复时间；等窗口重置，或让发放人在面板「分发 Key」调高上限 / 换一枚 key。见 §7b |
 | `503 relay_all_keys_exhausted` | 中继侧所有 key 的 5 小时/周/月额度用尽 | 人类在中继 dashboard 补 key，或等窗口重置。这不是配置错误 |
 | 统计页 `/stats/` 用量为空 | 模型条目没写 `X-Relay-Model` 头 | 见 §4 约束 3 |
 

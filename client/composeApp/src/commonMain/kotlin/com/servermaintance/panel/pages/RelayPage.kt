@@ -29,6 +29,7 @@ import com.servermaintance.panel.core.str
 import com.servermaintance.panel.openUrl
 import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.pages.relay.RelayClientsTab
+import com.servermaintance.panel.pages.relay.RelayDistKeysTab
 import com.servermaintance.panel.pages.relay.RelayHitrateTab
 import com.servermaintance.panel.pages.relay.RelayKeysTab
 import com.servermaintance.panel.pages.relay.RelayOverviewTab
@@ -44,7 +45,7 @@ import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelIcon
 
 /**
- * OpenCode 中继 —— relay.js 的页签（8 个统计页签 + 忙时策略配置）。
+ * OpenCode 中继 —— relay.js 的页签（8 个统计页签 + 分发 Key + 忙时策略配置）。
  *
  * 页头显示当前页签的刷新节奏（命中率类 2 秒实时，其余 10 秒）；手持端提供
  * 「旧版面板」外链。`GET /relay/available` 探测失败时以非阻断横幅提示
@@ -59,6 +60,7 @@ private val RELAY_TABS  get() = listOf(
     "clients" to L["客户端与会话_fd8ce68403"],
     "tokens" to "Token",
     "keys" to L["密钥池_6ab58f884e"],
+    "distkeys" to L["分发_key_4091c997cc"],
     "policy" to L["忙时策略_b8602746fc"],
 )
 
@@ -133,6 +135,7 @@ fun RelayPage() {
             "clients" -> RelayClientsTab()
             "tokens" -> RelayTokensTab()
             "keys" -> RelayKeysTab()
+            "distkeys" -> RelayDistKeysTab()
             "policy" -> RelayPolicyTab()
             else -> RelayOverviewTab()
         }

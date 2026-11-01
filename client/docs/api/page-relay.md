@@ -4,7 +4,7 @@
 
 - `registerPage({ id:'relay', title:'OpenCode 中继', desc:'LLM API 中继的请求量、Token 用量、密钥池配额、模型可用性与质量分析' })`（`upstream/public/js/pages/relay.js:L17-L20`，源码 1019 行）。
 - **导航显示条件**：app.js `OPTIONAL_NAV` 探测 `GET /relay/available` 成功且 `ok` 为真才插入菜单项（排在仪表盘之后），缓存 15s（`app.js:L57-L71`）。采集器不可达时整页入口隐藏。
-- **页签（8 个）**（`TABS`，`relay.js:L8-L12`）：`概览`(overview)、`流量分析`(traffic)、`质量分析`(quality)、`套餐命中率`(hitrate)、`Token 命中率`(tokenhit)、`客户端与会话`(clients)、`Token`(tokens)、`密钥池`(keys)。
+- **页签（10 个）**（`TABS`，`relay.js:L8-L13`）：`概览`(overview)、`流量分析`(traffic)、`质量分析`(quality)、`套餐命中率`(hitrate)、`Token 命中率`(tokenhit)、`客户端与会话`(clients)、`Token`(tokens)、`密钥池`(keys)、`分发 Key`(distkeys)、`忙时 / 闲时`(policy)。
 - **刷新机制（特殊）**：mount 后启动 **1 秒主定时器**（L35-L43），按当前页签节奏放行：普通页签 **10 秒**（`REFRESH_MS=10000`，L13），`hitrate/tokenhit` **2 秒**（`REFRESH_MS_TAB`，L15）；跳过条件：无 token、`document.hidden`、当前页不是 relay；`S.nextAt` 控制节奏。页头文案：`每 10 秒自动刷新` / `实时 · 每 2 秒刷新`（L25、L72-L78）。`hide()` 清定时器、`show()` 立即 render（L45-L46）。
 - **渲染策略**：切页签全量重建（丢弃 `S.upd` 更新器，L30），同页签定时刷新走**原地更新**（数字补间、表格签名跳过、图表复用，L79-L85、L139-L148）；渲染异常 → `渲染失败` 卡 + pre（L101）。
 - 页头右侧有 `旧版面板` 外链 `/stats/`（L26，KMP 可去掉或用 openUrl）。
@@ -22,9 +22,10 @@
 | quality | `summary, latency, ttfb, streaming, sizes, failover, errors, model-status, weekday` | 10s |
 | hitrate | （页内自取）`GET /relayops/hitrate?range=<1h\|6h\|24h\|7d\|all>`（L824，HR_RANGES L719） | 2s |
 | tokenhit | （页内自取）`GET /relayops/tokenhit?range=…`（L960） | 2s |
-| clients | `sessions, session-memory, useragents, recent, summary` | 10s |
+| clients | `sessions, session-memory, useragents, recent, summary, clients-usage?days=7` | 10s |
 | tokens | 页内自取 `GET /relay/tokens?days=1|7|30` + `GET /relay/models?days=30`（并行，L644-L647，缓存 2s） | 10s |
 | keys | `providers`；选中 provider 后 `GET /relay/keys?provider=<id>`（L662、L676，缓存 2s） | 10s |
+| distkeys | `client-keys`（一次返回全部 key + 各窗口已用/上限，无二级请求） | 10s |
 
 > `GET /relay/ips`（RELAY_GET 列表里有）**本机 404 `{"error":"unknown endpoint"}`**，本页未使用它，但 KMP 若实现该数据项要容错。
 
@@ -43,6 +44,13 @@
 | `keys/test` | `{id, provider}` | 密钥行 `测试`（L698） | 无 |
 | `keys/enable` | `{id, provider, enabled}` | 密钥行 `禁用/启用`（L699） | 无 |
 | `keys/remove` | `{id, provider}` | 密钥行 `删除`（L700） | `删除密钥` / `删除后无法恢复，确认删除该密钥？`（danger, okText `删除`，L994-L996） |
+| `client-keys/create` | `{label, note, quota:{hour,week,month}}` | 分发 Key `新建 key`（prompt：`用途 / 使用人` + 三个窗口上限 + `备注`，okText `生成`） | 无；成功后 `modal.output` 一次性显示明文 |
+| `client-keys/update` | `{id, label?, note?, quota?}` | 分发 Key 行 `改额度 / 标签` | 无 |
+| `client-keys/enable` | `{id, enabled}` | 分发 Key 行 `停用` / `启用` | 无 |
+| `client-keys/delete` | `{id}` | 分发 Key 行 `删除` | `删除 key` / `删除后这枚 key 立刻不可用…`（danger, okText `删除`） |
+| `client-keys/apply` | `{}` | 分发 Key 卡头 `重新下发名单` | 无 |
+
+`client-keys/*` 的返回统一带 `applied`（bool）与 `detail`：仓库 `/etc/relay/client-keys.json` 先写、nginx 凭据名单后发；`applied:false` 时 `detail` 已改成「key 进不了中继」的告警文案并把原因放在 `warning`，前端按 `applied===false → toast err` 处理（`relay.js` 的 `dkAct()`）。`quota` 里缺哪个窗口就保哪个窗口的原值，不会因为局部提交把上限清零变成不限。
 
 统一实现：`act(name, payload, btn, confirmFirst)` 与 `keyAct()`（L993-L1013）：busy 态 → POST → toast `detail||msg||status||'操作完成'` → `refreshNow()`；失败 toast 首行。
 
@@ -57,6 +65,7 @@
 | `/relay/quota` | `{fetched_at, key_masked, usage:{rolling:{status,percent,resetsAt}, weekly:{…}, monthly:{…}}}` |
 | `/relay/providers` | `{available, providers:[{id,label,windows,active_id,exhausted,key_count,usable}]}` |
 | `/relay/keys` | `{provider, label, windows[], active_id, exhausted, meta{}, keys:[{id,label,masked,enabled,order,state,exhausted_windows,recovers_at,usage,usage_error,usage_at,added_at,…}], switch_log:[{at,ok,detail,to,to_masked}], updated_at, available}` |
+| `/relay/client-keys` | `{ok, keys:[{id,label,note,masked,fingerprint,enabled,internal,quota:{hour,week,month},windows:{hour:{limit,used,remaining,over,kind,resets_at,since},week:{…},month:{…}},created_at}], totals:{hour:{used,limit},week:{…},month:{…}}, labels, window_starts, reset_at, store, updated_at}` —— 客户端持有的**分发 key**（官方 key 由中继替换，永不出服务器）。`windows.<w>.used` 直接按 `usage_events.client_key = fingerprint` 汇总，所以面板显示的和 tap 拦的是同一个口径；`limit=0` 为不限（`used` 也就留空）；`internal:true` 是旧共享令牌登记的主令牌，不受额度、不可删除。明文只在 `client-keys/create` 的响应里出现一次 |
 | `/relay/hourly` | `{hourly:[{hour,requests,bytes_out,avg_ttfb,errors}]}` |
 | `/relay/daily` | `{daily:[{day,requests,bytes_out,bytes_in,errors,errors_4xx,errors_5xx,retried,attempts,sessions,clients,models,…}]}` |
 | `/relay/models` | `{models:[{model,route,requests,bytes_out,avg_latency,p95_latency,avg_ttfb,retried,sessions,errors,success_rate,last_seen}]}` |
@@ -76,6 +85,7 @@
 | `/relay/sessions` | `{daily:[{day,sessions,requests}], distribution:[{bucket,count}], top:[{session,requests,models,clients,first,last}]}` |
 | `/relay/session-memory` | `{since, sessions:[{sess,turns,total,input,output,cache_read,max_ctx,avg_ctx,models,routes,first_ts,last_ts,…}], archive_available}` |
 | `/relay/useragents` | `{user_agents:[{family,requests,bytes_out,bytes_in,sessions,ok,samples,success_rate,clients,last_seen}]}` |
+| `/relay/clients-usage?days=N` | `{days,since,clients:[{ip,ua,ua_family,label,key,requests,ok,input_tokens,output_tokens,cache_tokens,reasoning_tokens,total_tokens,token_share,models,sessions,active_days,model_list,first_seen,last_seen,fingerprint}],series:{fp:[{day,tokens,requests}]},total_tokens,note}` —— 客户端 = 来源 IP + User-Agent（+ 令牌哈希），来自 tap 的 usage_events 身份列；面板代理 `RELAY_GET` 转发到 collector |
 | `/relay/tokens` | `{available, since, requests, measured, unmeasured, coverage, input, output, cache_read, cache_write, reasoning, total, streaming, client_gone, avg_per_request, max_request, cache_hit_rate, output_share, reasoning_share, daily:[{day,n,measured,input,output,cache_read,reasoning,total}]}`（带 `days=` 查询参数） |
 | `/relay/key` | `{key_masked, configured, updated_at}` |
 | `/relay/ips` | **404** `{error:"unknown endpoint"}`（本机） |

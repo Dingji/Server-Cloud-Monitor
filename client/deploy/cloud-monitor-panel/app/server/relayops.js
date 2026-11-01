@@ -1,8 +1,4 @@
 'use strict';
-if (process.platform === 'win32') {
-  module.exports = require('./relayops-win');
-  return;
-}
 /*
  * Relay ops: rate limiting, audit trail, health alerts, daily backups.
  */

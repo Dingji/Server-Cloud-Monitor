@@ -37,7 +37,17 @@ const METRICS = {
   procsRunning: { label: '运行中进程数', unit: '', src: 'cpu.procs.running', get: (m) => m.cpu && m.cpu.procs && num(m.cpu.procs.running) },
   probeDown: { label: '拨测失败任务数', unit: '个', src: 'ops/uptime', external: true, get: () => upSummary().down },
   notifyFailed: { label: '近 1 小时通知失败次数', unit: '次', src: 'ops/notify', external: true, get: () => notify.recent(400).filter((r) => !r.ok && r.ts > S.now() - 3600000).length },
+  /* 内网中继（relayhub）：取不到快照时返回 null，规则引擎按"无数据"跳过，不会误报 */
+  relayTunnelDown:  { label: '中继离线设备数', unit: '台', src: 'relayhub/insight', external: true, get: () => (rhmon ? rhmon.metricTunnelDown() : null) },
+  relayTunnelErr:   { label: '中继隧道报错数', unit: '条', src: 'relayhub/insight', external: true, get: () => (rhmon ? rhmon.metricTunnelErrors() : null) },
+  relayPortFree:    { label: '中继端口池剩余', unit: '个', src: 'relayhub/insight', external: true, get: () => (rhmon ? rhmon.metricPortFree() : null) },
+  relayPortPct:     { label: '中继端口池占用', unit: '%', src: 'relayhub/insight', external: true, get: () => (rhmon ? rhmon.metricPortPct() : null) },
 };
+
+/** relayhubmon 部署在 server/ 下（本模块在 server/ops/）；仓库目录不同，两条路径都试。 */
+let rhmon = null;
+try { rhmon = require('../relayhubmon'); }
+catch (_) { try { rhmon = require('./relayhubmon'); } catch (__) { rhmon = null; } }
 
 function num(v) { return typeof v === 'number' && Number.isFinite(v) ? v : (v === undefined || v === null ? null : Number(v)); }
 function div(v, d) { const n = num(v); return n == null ? null : n / d; }

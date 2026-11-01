@@ -21,8 +21,23 @@ import time
 import urllib.error
 import urllib.request
 
-TOKEN = open("/etc/relay/relay-token", encoding="utf-8").read().strip() if os.path.exists(
-    "/etc/relay/relay-token") else "5278dae39bb5b8ec5f5a5c5546b68280821d39407bf3698a"
+def _token():
+    """The relay's own admin token: on-disk file first, then the environment.
+
+    No shipped default. This tree is a public repository, and the value that used
+    to sit here as a fallback is the unlimited master credential for the upstream
+    pools -- anyone reading the repo could spend it.
+    """
+    path = "/etc/relay/relay-token"
+    if os.path.exists(path):
+        return open(path, encoding="utf-8").read().strip()
+    env = os.environ.get("RELAY_TOKEN", "").strip()
+    if env:
+        return env
+    sys.exit("modelcatalog: no token -- write it to %s or set RELAY_TOKEN" % path)
+
+
+TOKEN = _token()
 PUBLIC = "/var/lib/relay/public"
 OUT = os.path.join(PUBLIC, "models-catalog.json")
 PROBE_BUDGET = float(os.environ.get("PROBE_BUDGET", "90"))   # seconds of upstream calls

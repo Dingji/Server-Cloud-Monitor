@@ -76,6 +76,13 @@ def token():
 TOKEN = token()
 
 
+# The old 6000-byte cap silently truncated /v1/models once the catalog grew past
+# it, and the truncated body then raised inside main() -- so the whole nightly
+# report died instead of one provider entry. Read generously, and let the caller
+# decide what a malformed body means.
+MAX_BODY = 2_000_000
+
+
 def http(path, payload, headers, timeout=TIMEOUT):
     body = json.dumps(payload).encode() if payload is not None else None
     req = urllib.request.Request(
@@ -83,14 +90,23 @@ def http(path, payload, headers, timeout=TIMEOUT):
         headers={"Content-Type": "application/json", "User-Agent": UA, **headers})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            return r.status, r.read(6000).decode("utf-8", "replace")
+            return r.status, r.read(MAX_BODY).decode("utf-8", "replace")
     except urllib.error.HTTPError as e:
         try:
-            return e.code, e.read(6000).decode("utf-8", "replace")
+            return e.code, e.read(MAX_BODY).decode("utf-8", "replace")
         except Exception:
             return e.code, ""
     except Exception as e:
         return 0, "%s: %s" % (type(e).__name__, e)
+
+
+def catalog_ids(body):
+    """Model ids from a /models body, or None when the body is not readable JSON."""
+    try:
+        data = json.loads(body).get("data", [])
+    except Exception:
+        return None
+    return [m.get("id") for m in data if isinstance(m, dict) and m.get("id")]
 
 
 def classify(code, body):
@@ -208,7 +224,13 @@ def main():
         if status != 200:
             result["providers"][pid] = {"error": "list HTTP %s" % status, "models": {}}
             continue
-        ids = [m.get("id") for m in json.loads(body).get("data", []) if m.get("id")]
+        # A catalog that will not parse marks its own provider and the run goes on:
+        # that is what keeps one bad list from zeroing out the whole nightly report.
+        ids = catalog_ids(body)
+        if ids is None:
+            result["providers"][pid] = {"error": "list is not valid JSON (%d bytes)" % len(body),
+                                        "models": {}}
+            continue
         # ── NIGHTLY_SCOPE: only the Go allowlist and the free models ────────
         # The nightly availability/statistics run exists to answer one question:
         # "do the models this plan may use still work?" Everything else is

@@ -89,6 +89,7 @@
 | E5 | 套餐命中率（卡片/趋势/明细/口径 + 范围切换） | ✅ | `pages/relay/RelayHitrate.kt` `RelayHitrateTab()`、`HitPlanCard()`、`HitRateNotes()`；趋势用 `ui/Charts.kt` `MultiLineChart`（y 0–100%） |
 | E6 | Token 命中率（上下文构成/趋势/排行/按模型） | ✅ | `pages/relay/RelayTokenHit.kt` `RelayTokenHitTab()`；趋势用 `ui/Charts.kt` `LineChart` |
 | E7 | 客户端与会话（会话分布/每日/Top/内存视图/UA/最近请求） | ✅ | `pages/relay/RelayClients.kt` `RelayClientsTab()`（+ IP 卡片，见 E15） |
+| E7b | 客户端用量：tap 记录每请求的来源 IP+UA+令牌哈希（usage_events 身份列），`/api/clients-usage` 按客户端聚合 Token 用量并在网页端 clients 页签展示（标签用 `/etc/relay/client-labels.json`） | ✅ | `usagetap.py client_identity()`、`collector.py q_clients_usage()`、`relay.js clients` 页签 |
 | E8 | Token 页签（日/周/月窗口 + 构成 + 模型统计 + 明细） | ✅ | `pages/relay/RelayTokens.kt` `RelayTokensTab()`、`WIN` 三窗口、`RelayMultiBar` 堆叠图 |
 | E9 | 密钥池（provider 卡 + 密钥行 + 切换历史） | ✅ | `pages/relay/RelayKeys.kt` `RelayKeysTab()`、`ProviderKeysCard()`、`KeyRow()` |
 | E10 | 密钥动作（添加/切换/刷新/测试/启停/删除） | ✅ | `RelayKeys.kt` `KeyRow()` 五个按钮 + `addKey()`；删除走 `Modal.confirm(danger)`、添加走 `Modal.prompt(key,label)`；统一经 `RelayCommon.kt` `relayAction()` → `Actions.run("/relay/action", {name,payload})` |
@@ -96,6 +97,7 @@
 | E12 | 10s/2s 双节奏自动刷新 + 页头节奏文案 | ✅ | `RelayPage.kt` `LIVE_SLOW="每 10 秒自动刷新"` / `LIVE_FAST="实时 · 每 2 秒刷新"`；各页 `rememberRelayFeed(intervalMs = 10_000L / 2_000L)`（命中率两类 2s，与 `relay.js REFRESH_MS_TAB` 一致） |
 | E13 | 原地更新（数字补间、表格签名、图表复用） | ⚠️ 机制差异 | 原面板在 DOM 上做数字补间与签名跳过；Compose 是**状态驱动重组**——数据 holder（`RelayFeed` 的 `SnapshotStateMap`）不变则不重绘，图表/表格由同一状态驱动，**视觉效果等价但无补间动画**。建议按「机制差异」豁免 |
 | E14 | 逐区块错误容错（`__error`） | ✅ | `pages/relay/RelayCommon.kt` `RelayFeed.errors`（单条失败不阻塞整页）+ `FeedError()` 全失败时降级 |
+| E15b | 忙时/闲时策略页签：相位横幅（闲时改写生效中）、双向编辑（忙时 deepseek→mimo + 闲时全部→deepseek-v4.1-flash）、试算、临时停用；保存经 collector 校验（白名单拒绝错误目标）并自动备份 | ✅ | web `relay.js tabPolicy()`；KMP `RelayPolicyTab.kt`（idle 编辑区）；collector `busy_validate` v2（保留 idle 子块） |
 | E15 | `/relay/ips`、`/relay/key` 端点（面板 API 附带能力） | ✅ | `RelayClients.kt` IP 卡片 404 → `EmptyState` **静默降级不弹 toast**；`RelayKeys.kt` 顶部「当前密钥」信息行读 `/relay/key` |
 | — | 页面级采集器不可用降级 | ✅ | `pages/RelayPage.kt` `ProbeBanner()`（读 `GET /relay/available` 的 `ok` / `data.ok` / `data.ingest_error`）+ 各页 `FeedError()` |
 
@@ -146,6 +148,10 @@ KMP 侧字段与面板 1:1；**2026-10-27 排版重做**（面板那张页在 ~2
 | E+16 | 写接口的提交形状（端口池 apply 会真的改写生产 frps.toml 并重启 frps） | ✅ | `desktopTest/…/RhPortPoolTest.kt` 9 例：期望值逐条取自真机响应，钉住 `rhPoolPayload` 的数值面额/钳位/白名单、`rhPoolSig` 的「算不算改动」、`rhFrpsMatch` 徽章判定、映射行过滤与自动代理名重算 |
 | E+17 | **页面排版重做**（2026-10-27）：字段仍与面板对齐，观感按 KMP 端重排 | ✅ | `RhOverviewBar()`(顶区一卡：4 指标 + 分隔线 + 3 徽章) / `RhMetricCell()`(去卡版磁贴) / `DeviceRail()`(250dp + 标题行，单机不立栏) / 头卡去掉重复设备名 / 两张同主键表并成「隧道一览」 / 图表降到 168dp |
 | E+18 | 重排时顺带修掉的两个共享 UI 缺陷（`ui/` 只增未改签名） | ✅ | `PanelCard` 补折叠箭头（`CollapseChevron`，此前折叠态与空卡片长得一模一样）；`MultiLineChart` 增可选 `chartHeight`（原先高度写死 200/168dp，调用方无法收紧） |
+| E+19 | **运维洞察**（端口池容量/碎片/最热端口、frps `allowPorts` 配置漂移、隧道报错与抖动、在线但无映射、公网探测延迟）——结论在面板侧一次算好，web 与 KMP 只画同一份数 | ✅ | 服务端 `server/relayhubmon.js`（只读，15s 快照 TTL + 30s 后台轮询；`/api/summary` 与 `/api/port-pool` 都不重问）→ `GET /relayhub/insight`；页面 `public/js/pages/relayhub.js` 的 `rh-insight-card` + KMP `pages/RhInsightCard.kt`（10s 一次，不进 500ms 实时循环） |
+| E+20 | 中继指标进告警引擎：`relayTunnelDown` / `relayTunnelErr` / `relayPortFree` / `relayPortPct`（取不到快照时返回 `null`，引擎按「无数据」跳过，绝不误报） | ✅ | `ops-server/alerting.js` `METRICS` + `require('../relayhubmon')`（部署布局在 `server/ops/`，仓库布局同级，两条路径都试） |
+| E+21 | `/relayhub/summary` 不再外泄 `meta.frps_token`（拿到即可伪装成 frpc 接入）：只留 `frps_token_masked` 前 4 位，`server_bind_password` 直接删 | ✅ | `panel-server/index.js` 的 summary 代理 |
+| E+22 | 「② 应用到服务端」永久灰死的闸门修复（`previewStale` 与 `dirty` 互斥，预览成功后 `load()` 早把 dirty 清掉）| ✅ | `panel-web/relayhub.js` `poolActionState()` / `poolApplyConfirm()`；KMP `RhPortPoolCard.kt` 同一处（`val stale = previewStale`，`dirty` 只留给离开页面时的确认弹窗） |
 
 **待产品确认的译文（不做主观看齐）**：ru 的 `{0}` 无法承载 1 / 2-4 / 5+ 三档复数变格（现统一用复数属格，端口数为 1 或 2-4 时会读错，除非引入 ICU 复数）；lo/th 的「端口池 / 公网自检 / 无监听」属小语种术语空缺，翻译者明确标为存疑（lo `ກອງພອດ`、th `ตรวจจากสาธารณะ`、并保留英文 `listen`）；ja「公网」与既有 `公衆IP` 用词不一致，本次按日本 UI 惯例用了 `公開ポート`。
 
@@ -205,6 +211,21 @@ token，NoteBox 用 **session cookie**（`POST /api/login` → `Set-Cookie: sess
 | W18 | **待办进阶**（多级清单、标签筛选、子任务清单与进度、重复规则且完成自动生成下一次） | ✅ | `routes_todos.py`；`TodoRec`/`TodoEditDialog`/`TodoRow` |
 | W19 | **待办邮件增强**（完整备注、清单路径、标签、子任务进度、优先级/重复、`.ics` 日历邀请、签名一键完成链接、手动发送） | ✅ | 服务端 `scheduler.py`/`mailer.py`/`mailtokens.py`/`routes_todos.py`；`TodosPage.kt`「发送详情邮件」 |
 | W20 | 后端回归测试（归类/回收站/重复/邮件模板/旧接口兼容） | ✅ | `notebox-server/tests/test_features.py` |
+| W21 | **网页端「笔记与待办」页**（此前只有 KMP 客户端有）：面板只做 API 代理，界面用面板自己的组件与主题；页签 笔记 / 待办 / 回收站 / 导入导出 / 统计，搜索·文件夹·标签·来源(`scope`)·排序·状态筛选，按钮按服务端的 owner/admin/edit 三档权限门控 | ✅ | 代理 `panel-server/notebox.js`（`/panel/api/notebox/*` → notebox `/api/*`；`Set-Cookie` 改写到 `Path=/panel/api/notebox`、剥 `Secure`、`SameSite=Lax`；`/notebox/assets` 走 `express.raw` 保 multipart 字节；探测路由排在通配之前）；页面 `panel-web/notebox.js`；导航 `OPTIONAL_NAV` 用 `/notebox/probe` 探测 |
+| W22 | 两级会话互不牵连：notebox 回 401 只表示「没登录笔记服务」，不能把面板会话一起清掉 | ✅ | `upstream/public/js/core.js` + 部署包同名文件：`path.indexOf('/notebox/') === 0` 时不 `showLogin`，改抛 `e.noteboxAuth`，页面据此落到笔记登录卡 |
+| W23 | 面板弹窗支持多行输入与自定义宽度（笔记正文、待办说明、子任务清单都得能编辑） | ✅ | `core.js` `modal.prompt` 新增 `type:'textarea'`（`rows`）与 `opts.width`（只收 `\d+(px|%|vw)`，不把任意串拼进 style） |
+| W24 | 代理的回归夹具（路径拼接、GET/DELETE 不带体、cookie 改写、404/401 原样透传、multipart 字节不丢、探测路由不被通配吞掉、静态件二进制与 304） | ✅ | `tools/notebox_proxy_test.js`：本地起「假 notebox」+ 真 Express，**20 项**断言；这两处缺陷（`/apibootstrap`、`delete out.transfer-encoding` 被解析成减法）就是它拦下来的 |
+| W25 | 网页端补齐客户端那四页：**分享**（按分享码只读预览）· **设置**（SMTP/提醒/摘要/基址 13 项，管理员可改 + 改自己口令 + 发测试邮件）· **邮件通知**（`email_log` 最近 50 封，含失败原因）· **用户**（建/改/启停/重发验证信/删） | ✅ | `panel-web/notebox.js` 的 `renderShare/renderSettings/renderMail/renderUsers`；权限照服务端抄：`/api/emails`、`/api/admin/users*`、`PUT /api/settings` 是 `@admin_required`，非管理员直接不出页签 |
+| W26 | **归类树管理**（改名/换上级/删除；删除不毁数据，条目与子归类上移到被删归类的父级）+ 待办**手动发提醒邮件**（服务端限流 6 次/10 分钟且要求已配 SMTP） | ✅ | `panel-web/notebox.js` `folderManager()` / `[data-notify]`；契约见 `routes_folders.py`、`routes_todos.py::notify_todo` |
+| W27 | **Markdown 渲染**：复用 notebox 自己的 `md.js`（escape-first + URL 白名单），面板再过一道结构消毒（剥 `script/style/object/embed/form/link/meta/base/svg/math`、非 checkbox 的 `input`、所有 `on*`、`javascript:` 协议；`iframe` 只留 youtube-nocookie / bilibili 播放器）；正文里的 `/uploads/<图>` 改写成面板代理路径并带 `?token=`（`<img>` 请求加不了 Authorization 头） | ✅ | `upstream/public/js/md.js`（源自 notebox 留档）+ `panel-web/notebox.js` `ensureMd/sanitizeMd/renderMd/readNote` + `panel-server/notebox.js` 的 `/notebox/uploads/*`（含 `If-None-Match` 透传与 304 无体） |
+| W28 | `GET /api/settings` 会把 `smtp_pass` 原文带回来（notebox 自己的 SPA 就预填）。面板**不回显、不进 DOM**，保存时只有用户真改了才提交这一项 | ✅ | `panel-web/notebox.js` `SETTING_FIELDS` 的 `secret` 分支 + 保存逻辑；线上实测该输入框 `value=""`、placeholder 显示「已配置（留空=不修改）」 |
+| W29 | **笔记编辑器**（替掉原来那串 `modal.prompt`）：标题写在头部、正文占满中间、元数据收进底栏；工具栏 13 项 Markdown 操作（粗体/斜体/删除线/行内码与代码块/标题/三种列表/引用/表格/分隔线/链接/图片）；**编辑·分栏·预览**三档视图 + 实时渲染；图片上传插链（`POST /notebox/assets`，multipart 直发、不经 JSON 包装）；`Ctrl+S` 保存、`Ctrl+B/I/K` 就地加格式、`Esc` 关闭；脏值圆点 + 「未保存/保存中/已保存」；**有改动时关闭必须确认，取消后内容原样保留**；自动保存默认关（开为停止输入 2.2 秒后静默 PUT）；保存失败在底栏内联显示而不是只弹一条 toast；卡片**双击直接进编辑** | ✅ | `panel-web/notebox.js` 的 `editNote/applyMd/upload/folderOptions/ensureEdCss`（注入 `#nb-ed-css`；≤860px 降为单栏「编辑」模式） |
+| W30 | 时间列显示修正：notebox 服务端把 `created_at/updated_at/deleted_at/last_login` 存成 **epoch 秒**，`Date.parse("1792582872")` 是 NaN，于是列表和编辑器页脚露出一串裸数字。改成 `toMs()` 认秒/毫秒/ISO 三种形态，超过 30 天直接落到具体日期 | ✅ | `panel-web/notebox.js` `toMs/fmtDateTime/ago`；线上实测「10 天前」带 `title="2026-10-21 19:41"`、页脚「上次更新 2026-10-21 19:41」 |
+| W31 | 卡片摘要不再露 Markdown 记号：`mdPreview()` 先把 `#`、`**`、代码块、表格分隔行、列表符号抹平再截断加省略号 | ✅ | `panel-web/notebox.js` `mdPreview` |
+| W32 | **编辑器左右滚动同步 + 光标跟随 + 反向跳转**：按「渲染块 → 源码字符位置」**内容匹配**建锚点（把正文规范化并保留每个字符的原位置，拿渲染段开头回源码里 `indexOf`，光标单调前推），段内线性插值；打字/移动光标时只在对应段落跑出可视区才挪预览，避免一路抖；**双击预览某一段**把光标跳回源码对应段开头；工具栏「滚动同步」可关 | ✅ | `panel-web/notebox.js` `normSource/normChunk/buildAnchors/mapPos/followCaret/jumpFromPreview`。**为什么不能按索引 zip**：一个源码块（标题下直接跟列表、中间不空行）会渲染成多个元素，实测按索引配对时双击第 5 段会跳到第 9 段的位置 |
+| W33 | 源码侧位置只能**量**不能算：textarea 有软换行，「行号 × 行高」对不上，所以用一个与 textarea 同宽同字体的隐形量尺（`.nb-ed-mirror`）把「第几个字符」换成像素；关闭编辑器时随弹窗一起移除 | ✅ | 同上 `mirrorEl/srcPxAt`；锚点必须单调不减（配到同一段的渲染块会被丢掉），>60k 字的正文退回端点线性，不做每次 O(n) 规范化 |
+| W34 | 编辑器版式的两处窄屏真缺陷（截图发现）：工具栏/元数据条换行时**被 `flex-shrink` 挤扁**，第二行叠到正文底下完全看不见；分栏用 grid 时隐式行不拉伸，两栏一个 81px 一个 142px 填不满容器 | ✅ | 非正文区一律 `flex:0 0 auto` 锁自然高度，正文 `flex:1 1 auto` + `min-height:min(180px,38vh)`；分栏改 flex（交叉轴 stretch 可靠）。实测 454×558 窗口里 `toolFits/metaFits/footFits` 全 true、两栏各 230px |
+| ⚠ | notebox 的公开分享页 `/s/<码>` 与 `POST /api/register`、`/verify/<token>` 仍未接进面板：分享页引用根绝对 `/static/*`，前缀反代会全打错，公开它等于对外开一个匿名可读页面（是否要开、开在哪个域名，是安全决定，留给你）。当前面板用只读 `GET /api/share/<码>` 自己渲染同一份数据 | 未做 | `routes_public.py`；笔记卡的「分享/取消分享」已可用（`/api/notes/<id>/share`、`/unshare`） |
 
 > **多用户契约**（服务端 `/opt/notebox/app/notebox/*.py` 已逐条核对）：
 > 笔记带 `my_permission`（null=owner，否则 read/edit/admin）、`is_owner`、`owner_email`、`share_code`；
@@ -226,6 +247,10 @@ token，NoteBox 用 **session cookie**（`POST /api/login` → `Set-Cookie: sess
 ---
 
 ## Y. 运维增强：拨测 · 告警规则 · 通知渠道 · 文件管理 · 纳管主机（服务器 `ops` 模块，✅ 已集成）
+
+> **网页端**（2026-10-30 补齐）：`public/js/pages/ops-*.js` 八个页面（可用性拨测 / 告警规则 / 通知渠道 /
+> 纳管主机 / 安全巡检 / 磁盘治理 / 服务看护 / 远程主机）+ `files.js` 文件管理，导航归入「运维」分组，
+> 与 KMP 客户端同源端点、同一套字段；沿用面板响应式断点（1150/860/480px），移动端为单列布局 + 表格横向滚动。
 
 对标同类商业运维软件的**运维能力**（不是付费功能）。服务端 `ops-server/` 部署为
 `/opt/cloud-monitor/server/ops/`，客户端复用面板 Bearer token，无第二套会话。
@@ -279,6 +304,12 @@ token，NoteBox 用 **session cookie**（`POST /api/login` → `Set-Cookie: sess
 | Z16 | 可达性探测：打开 SSH 端口读 banner（不发送凭据），顺带得到对端 OpenSSH 版本 | ✅ | `hosts.js checkReachability`；banner 展示在清单 |
 | Z17 | 批量探测与统计（可达/不通/未探测/无地址、按用途与环境聚合） | ✅ | `POST /ops/host/check` 无 id；`stats()` |
 | Z18 | 顶栏运维提示：拨测不可用、规则触发中、通知失败、主机不通（点击直达对应页） | ✅ | `screens/Root.kt` TopBar |
+
+| Z19 | 分类型预览：preview 响应带 `kind`（archive/image/video/audio/pdf/other）与 `mime` | ✅ | `files.js kindOf()`；客户端 `fileKindOf()` |
+| Z20 | 图片内联预览：`GET /ops/files/raw` 按扩展名给 MIME 的流式读取（sandbox CSP，≤20MB 可调，超限 413） | ✅ | 网页端 `<img>`（fetch→blob）；客户端 `decodeImageBitmap` |
+| Z21 | 压缩包内部浏览：清单 / 条目预览（文本与 base64 图片）/ 条目流式下载，`archive_tool.py` 读出、从不落盘（zip-slip 免疫）；zip 打包在缺 `zip` 命令时回落 python | ✅ | `archive/list\|entry\|download`、`archive_tool.py`；两端 UI |
+| Z22 | 网页端文件管理页（`public/js/pages/files.js`）：浏览/分类型预览/在线编辑/上传下载/移动复制/权限属主/打包解压/搜索/占用/回收站 | ✅ | `files.js` + `app.js` NAV（服务器组） |
+| Z23 | 客户端音视频/PDF 不内嵌播放器时降级为信息卡 + 下载；文本 64KB 截断时锁定编辑 | ✅ | `OpsFilesPage.kt` 分支；`files.js` 编辑器 |
 
 > 所有写操作经面板 `audited()` 落 `logs/audit.log`（动作名 `ops.files.*`、`ops.host.*`）。
 > 端点表见 [`docs/api/ops.md`](../api/ops.md)；自检 `python tools/ops_smoke.py files`（24 步往返）。

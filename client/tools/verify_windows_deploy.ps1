@@ -3,7 +3,12 @@ param(
   [string]$Password = $env:CM_TEST_PASSWORD
 )
 $ErrorActionPreference = "Stop"
-if (-not $Password) { $Password = "WinPanelTest!2026" }
+if (-not $Password) {
+  # No baked-in default: this tree is published, and a "test" password written here
+  # is a password someone actually uses.
+  Write-Error "set CM_TEST_PASSWORD (or pass -Password) before running"
+  exit 2
+}
 $fail = 0
 function Test-Line($name, $cond) {
   if ($cond) { Write-Host "OK  $name" } else { Write-Host "FAIL $name"; $fail++ }

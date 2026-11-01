@@ -12,10 +12,12 @@ Secrets and box-specific state are never pulled:
   python tools/build_panel_package.py            # pull + assemble
   python tools/build_panel_package.py --no-vendor  # skip node_modules (slow link)
 """
+import fnmatch
 import hashlib
 import io
 import os
 import posixpath
+import re
 import shutil
 import sys
 import tarfile
@@ -31,7 +33,8 @@ VENDOR = os.path.join(PKG, "vendor")
 HOST = os.environ.get("SM_HOST", "8.153.153.176")
 PORT = int(os.environ.get("SM_PORT", "22"))
 USER = os.environ.get("SM_USER", "root")
-PASS = os.environ["SM_PASS"]
+PASS = os.environ.get("SM_PASS", "")
+
 KEY = os.environ.get("SM_KEY", os.path.expanduser("~/.ssh/oc_relay_ed25519"))
 
 REMOTE_ROOT = "/opt/cloud-monitor"
@@ -41,6 +44,9 @@ APP_EXCLUDES = [
     "server/keys",          # empty since the licensing layer was removed
     "server/page_test.js",  # dev-only contract runner, hardcodes /opt/cloud-monitor
 ]
+# 线上每次改动都留一份 <file>.bak.<stamp>，那是这台机器的回滚材料，不是发行物。
+# tar 的 --exclude 按通配匹配文件名，校验循环也用同一组通配跳过它们。
+EXCLUDE_GLOBS = ["*.bak.*", "*.bak-*", "*-bak.*", "*-bak", "*.recovered.*", "*.orig", "*~"]
 
 
 def connect():
@@ -53,6 +59,8 @@ def connect():
             return c
         except paramiko.SSHException:
             pass
+    if not PASS:
+        raise SystemExit("密钥登录失败且未设置 SM_PASS：口令只从环境变量给，不留默认值")
     c.connect(HOST, port=PORT, username=USER, password=PASS, timeout=25,
               banner_timeout=25, auth_timeout=25, look_for_keys=False, allow_agent=False)
     return c
@@ -131,13 +139,15 @@ def main():
     print(out.strip())
 
     # 1) app payload
-    excl = " ".join(f"--exclude={e}" for e in APP_EXCLUDES)
+    excl = " ".join(f"--exclude={e}" for e in APP_EXCLUDES + EXCLUDE_GLOBS)
     items = " ".join(APP_ITEMS)
     tmp_app = os.path.join(VENDOR, "_app.tar.gz")
     size = stream_tar(client, f"cd {REMOTE_ROOT} && tar -czf - {excl} {items}", tmp_app)
     print(f"app tar: {size/1024:.0f} KB")
-    if os.path.isdir(APP):
-        shutil.rmtree(APP)
+    # 覆盖式同步，不 rmtree：包里还有一批只在本地存在的 Windows 专属服务端模块
+    # （actions-win/collectors-win/distro-win/pkgmgr-win/relayops-win/svc-win/
+    #   ops/secops-win/hostplatform/scripts/install-windows-service），
+    # Linux 线上没有它们，整目录重建等于把 Windows 发行物删掉（2026-10-31 就这么丢过一次）。
     extract(tmp_app, APP, strip_top=False)
     os.remove(tmp_app)
 
@@ -149,6 +159,7 @@ def main():
         if len(parts) == 2:
             remote[parts[1].strip().lstrip("./")] = parts[0]
     checked = mismatch = 0
+    local_only = []
     bad = []
     for root, _, files in os.walk(APP):
         for fn in files:
@@ -159,12 +170,21 @@ def main():
             if any(rel == e or rel.startswith(e + "/") for e in APP_EXCLUDES):
                 bad.append("LEAKED EXCLUDED: " + rel)
                 continue
+            if any(fnmatch.fnmatch(fn, g) for g in EXCLUDE_GLOBS):
+                bad.append("LEAKED BACKUP FILE: " + rel)
+                continue
             if rel in remote:
                 checked += 1
                 if md5_of(lp) != remote[rel]:
                     mismatch += 1
                     bad.append("MD5 MISMATCH: " + rel)
-    print(f"md5 checked={checked} mismatch={mismatch}")
+            else:
+                local_only.append(rel)
+    print(f"md5 checked={checked} mismatch={mismatch} 本地独有={len(local_only)}")
+    for rel in sorted(local_only)[:12]:
+        print("  本地独有（线上没有，保留）: " + rel)
+    if len(local_only) > 12:
+        print("  ...另 %d 个" % (len(local_only) - 12))
     if bad:
         raise SystemExit("refusing to build:\n" + "\n".join(bad[:20]))
 
@@ -183,7 +203,11 @@ def main():
                 text = open(lp, "r", encoding="utf-8", errors="ignore").read()
             except OSError:
                 continue
-            if '"passwordHash": "scrypt$' in text or "PRIVATE KEY" in text:
+            # 真正的私钥文件在头行后面跟着 base64 体；表单里那句
+            # '-----BEGIN OPENSSH PRIVATE KEY-----' 只是 textarea 的 placeholder，
+            # 光匹头行会把 php.js 误判成泄密（2026-10-31 就这么红过一次）。
+            if '"passwordHash": "scrypt$' in text or re.search(
+                    r"PRIVATE KEY-----(?:\n|\\n)[A-Za-z0-9+/]{30,}", text):
                 secret_hits.append(os.path.relpath(lp, PKG))
     if secret_hits:
         raise SystemExit("possible secrets inside package:\n" + "\n".join(secret_hits))

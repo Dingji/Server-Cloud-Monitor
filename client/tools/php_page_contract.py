@@ -57,7 +57,7 @@ def has(obj, path):
 def main():
     global TOKEN, fails
     TOKEN = req("/login", {"password": os.environ["SM_PANEL_PASS"]}).get("token")
-    assert TOKEN, "login failed"
+    assert TOKEN, "login failed (set SM_PANEL_PASS)"
 
     req("/php/site/delete", {"slug": SLUG})
     ssh("rm -rf /srv/php/" + SLUG + " /etc/nginx/sites-enabled/panel-php-" + SLUG + ".conf "

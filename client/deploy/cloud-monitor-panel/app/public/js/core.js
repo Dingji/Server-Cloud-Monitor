@@ -9,11 +9,11 @@
     ready: false,
   };
 
-  CM.BUILD = '20261025-27';
-
   CM.base = location.pathname.replace(/\/public\/.*$/, '') || '';
   CM.apiBase = CM.base + '/api';
 
+  /* 面板主机是不是 Windows：/me 的 env.family 为准，panelMode 兜底。
+     Windows 专属页（wintools）与 Linux 专属页都靠它决定导航显隐。 */
   CM.isWindows = function () {
     if (CM.me && CM.me.env && CM.me.env.family === 'windows') return true;
     const pm = CM.me && CM.me.info && String(CM.me.info.panelMode || '');
@@ -80,7 +80,10 @@
       let res;
       try { res = await fetch(CM.apiBase + path, opts); }
       catch (e) { throw new Error('网络错误: ' + e.message); }
-      if (res.status === 401) {
+      /* notebox 有自己的账号会话：它回 401 只表示"没登录笔记服务"，
+         不能顺手把面板会话也清掉（否则一进笔记页就被踢出面板）。 */
+      const nb = path.indexOf('/notebox/') === 0;
+      if (res.status === 401 && !nb) {
         CM.token = '';
         try { localStorage.removeItem('cm_token'); } catch (_) {}
         CM.showLogin('会话已过期，请重新登录');
@@ -88,7 +91,13 @@
       }
       let data = {};
       try { data = await res.json(); } catch (_) {}
-      if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+      if (!res.ok) {
+        const e = new Error(data.error || ('HTTP ' + res.status));
+        e.status = res.status;
+        e.payload = data;
+        e.noteboxAuth = nb && res.status === 401;
+        throw e;
+      }
       return data;
     },
     /* GET with optional cache ttl (ms); concurrent identical requests share one promise */
@@ -137,7 +146,7 @@
     const pw = document.getElementById('login-password').value;
     const errEl = document.getElementById('login-error');
     errEl.textContent = '';
-    /* 未配置面板密码时允许空密码登录 */
+    if (!pw) { errEl.textContent = '请输入密码'; return; }
     try {
       const r = await api.request('POST', '/login', { password: pw });
       CM.token = r.token;
@@ -200,8 +209,20 @@
       modalRoot().appendChild(mask);
       mask.querySelector('[data-a=close]').onclick = () => closeModal(mask);
       mask.querySelector('[data-a=copy]').onclick = async () => {
-        try { await navigator.clipboard.writeText(text); window.toast('已复制到剪贴板', 'ok'); }
-        catch (_) { window.toast('复制失败', 'err'); }
+        if (await ui.copy(text)) { window.toast('已复制到剪贴板', 'ok'); return; }
+        /* 剪贴板被浏览器拒了（http 非安全上下文，或这一击没带上用户手势）：
+           与其只说一句"复制失败"，不如把整段替你选中，按 Ctrl+C 就能拿走。 */
+        const pre = mask.querySelector('.pre');
+        if (pre && window.getSelection && document.createRange) {
+          const rg = document.createRange();
+          rg.selectNodeContents(pre);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(rg);
+          window.toast('浏览器不让脚本复制，已替你选中，按 Ctrl+C 即可', 'info');
+        } else {
+          window.toast('复制失败，请手动选中后复制', 'err');
+        }
       };
       mask.addEventListener('click', (e) => { if (e.target === mask) closeModal(mask); });
     },
@@ -214,9 +235,14 @@
           if (f.type === 'select') {
             return `<label class="fld mb">${fmt.esc(f.label)}<select class="inp" name="${f.name}">${f.options.map((o) => `<option value="${fmt.esc(o)}" ${o === f.value ? 'selected' : ''}>${fmt.esc(o)}</option>`).join('')}</select></label>`;
           }
+          if (f.type === 'textarea') {
+            return `<label class="fld mb">${fmt.esc(f.label)}<textarea class="inp ${f.mono ? 'mono' : ''}" name="${f.name}" rows="${f.rows || 6}" placeholder="${fmt.esc(f.placeholder || '')}">${fmt.esc(f.value || '')}</textarea></label>`;
+          }
           return `<label class="fld mb">${fmt.esc(f.label)}<input class="inp ${f.mono ? 'mono' : ''}" name="${f.name}" value="${fmt.esc(f.value || '')}" placeholder="${fmt.esc(f.placeholder || '')}"></label>`;
         }).join('');
-        mask.innerHTML = `<div class="modal" style="max-width:480px">
+        /* 宽度只收形如 760px / 60% 的值，避免把任意串拼进 style */
+        const w = /^[\d.]+(px|%|vw)$/.test(String(opts.width || '')) ? opts.width : '480px';
+        mask.innerHTML = `<div class="modal" style="max-width:${w}">
           <div class="modal-head">${fmt.esc(title)}</div>
           <div class="modal-body">${body}</div>
           <div class="modal-foot">
@@ -457,7 +483,6 @@
             <div class="job-bar"><div data-r="fill" style="width:0%"></div></div>
           </div>
           <div class="job-steps" data-r="steps"></div>
-          <div class="job-result" data-r="result" style="display:none"></div>
           <div class="job-meta">
             <b data-r="phase">排队中</b>
             <span data-r="detail" class="muted"></span>
@@ -481,48 +506,13 @@
       document.body.appendChild(pill);
 
       const q = (k) => mask.querySelector(`[data-r="${k}"]`);
-      let hidden = false, fails = 0, finished = false;
+      let hidden = false, fails = 0;
 
       const showMask = () => { hidden = false; mask.style.display = ''; if (!mask.isConnected) rootEl.appendChild(mask); pill.style.display = 'none'; };
       const hideMask = () => { if (hidden) return; hidden = true; mask.style.display = 'none'; pill.style.display = ''; };
-      const finishUi = (v) => {
-        finished = true;
-        const ok = v.state === 'done';
-        const stateEl = q('state');
-        stateEl.textContent = ok ? '成功' : '失败';
-        stateEl.className = 'badge ' + (ok ? 'ok' : 'bad');
-        const pct = ok ? 100 : Math.max(0, Math.min(100, v.percent || 0));
-        q('pct').textContent = ok ? '✓' : '✗';
-        q('fill').style.width = pct + '%';
-        q('fill').style.background = ok ? 'linear-gradient(90deg,#22c55e,#4ade80)' : 'linear-gradient(90deg,#ef4444,#f87171)';
-        q('phase').textContent = ok ? '已完成' : '执行失败';
-        const banner = q('result');
-        banner.style.display = '';
-        const secs = v.seconds != null ? `用时 ${v.seconds}s` : '';
-        const exit = v.exit_code != null ? ` · 退出码 ${v.exit_code}` : '';
-        if (ok) {
-          banner.className = 'job-result ok';
-          banner.innerHTML = `${icon('check', { size: 15 })} <b>操作成功</b><span class="muted">${fmt.esc(secs + exit)}</span>
-            <span class="muted small">日志见下方，关闭后可到「可升级」页签复查结果。</span>`;
-          const btn = q('bg'); if (btn) btn.style.display = 'none';
-          const done = mask.querySelector('[data-a=done]');
-          if (done) { done.disabled = false; done.textContent = '关闭'; }
-        } else {
-          banner.className = 'job-result bad';
-          const firstErr = String(v.error || v.output || '任务失败').split('\n').filter(Boolean).slice(-4).join('\n');
-          banner.innerHTML = `${icon('warning', { size: 15 })} <b>操作失败</b><span class="muted">${fmt.esc(secs + exit)}</span>
-            <pre class="pre" style="max-height:120px;margin-top:8px">${fmt.esc(firstErr || '（无错误输出）')}</pre>`;
-          const btn = q('bg'); if (btn) btn.style.display = 'none';
-          const done = mask.querySelector('[data-a=done]');
-          if (done) { done.disabled = false; done.textContent = '关闭'; }
-        }
-      };
       pill.onclick = showMask;
       mask.querySelector('[data-a=bg]').onclick = hideMask;
-      const doneBtn = mask.querySelector('[data-a=done]');
-      const closeAll = () => { mask.remove(); teardown(); };
-      doneBtn.onclick = closeAll;
-      mask.addEventListener('click', (e) => { if (e.target === mask) { if (finished) closeAll(); else hideMask(); } });
+      mask.addEventListener('click', (e) => { if (e.target === mask) hideMask(); });
 
       const renderSteps = (v) => {
         const host = q('steps');
@@ -575,19 +565,20 @@
             throw err;
           }
           paint(v);
-          if (v.state === 'done' || v.state === 'failed') {
-            /* 结果横幅留在窗口里，直到用户点「关闭」——升级到底成没成功一目了然 */
-            finishUi(v);
-            if (v.state === 'done') return v;
+          if (v.state === 'done') {
+            mask.remove(); teardown();
+            return v;
+          }
+          if (v.state === 'failed') {
+            mask.remove(); teardown();
             const err = new Error(v.error || '任务执行失败');
             err.job = v;
-            err.handledInModal = true;
             throw err;
           }
           await sleepMs(650);
         }
       } catch (e) {
-        if (!finished) { mask.remove(); teardown(); }
+        mask.remove(); teardown();
         throw e;
       }
     },
@@ -652,14 +643,12 @@
 
     async navigate(id) {
       if (!id) id = 'dashboard';
-      if (CM.hiddenPages && CM.hiddenPages.has(id)) id = 'dashboard';
       if (!CM.pages.find((p) => p.id === id) && !(CM.lazyPages && CM.lazyPages[id])) id = 'dashboard';
       if (location.hash !== '#/' + id) { location.hash = '#/' + id; return; } // triggers hashchange
       this.activate(id);
     },
 
     async activate(id) {
-      if (CM.hiddenPages && CM.hiddenPages.has(id)) id = 'dashboard';
       if (!CM.pages.find((p) => p.id === id)) {
         try { await CM.loadPageModule(id); } catch (e) { console.error(e); return; }
       }

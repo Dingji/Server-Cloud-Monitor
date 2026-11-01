@@ -119,6 +119,7 @@ class PanelApi(private val config: () -> ServerConfig) {
             code = code,
             output = out?.takeIf { it.isNotBlank() },
             isAuth = code == 401,
+            fromServer = !msg.isNullOrBlank(),
         )
     }
 

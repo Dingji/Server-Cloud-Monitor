@@ -36,7 +36,7 @@ import urllib.error
 import urllib.request
 from collections import deque
 
-AGENT_VER = "1.1.0"
+AGENT_VER = "1.2.0"
 HOME = "/opt/hwagent"
 CONF = os.path.join(HOME, "config.json")
 UNIT = "/etc/systemd/system/hwagent.service"
@@ -48,6 +48,7 @@ DEFAULTS = {
     "interval_ms": 500,       # 核心指标采样/上报节拍
     "heavy_ms": 5000,         # 进程 Top 等重数据节拍
     "journal_ms": 30000,      # journal 错误采集节拍(最贵)
+    "docker_ms": 10000,       # Docker/Compose 采集节拍(stats 有 1~3s 开销)
     "buffer_max": 1200,       # 离线缓冲上限(条) ≈ 10 分钟
     "timeout": 8,
 }
@@ -370,6 +371,211 @@ def health(cache):
     return h
 
 
+# ---------------------------------------------------------------- 采集:Docker / Compose
+DOCKER_PS_FMT = ("{{.ID}}|{{.Names}}|{{.Image}}|{{.State}}|{{.Status}}|{{.Ports}}"
+                 "|{{.Label \"com.docker.compose.project\"}}"
+                 "|{{.Label \"com.docker.compose.service\"}}"
+                 "|{{.Label \"com.docker.compose.project.working_dir\"}}"
+                 "|{{.Label \"com.docker.compose.project.config_files\"}}")
+DOCKER_STATS_FMT = ("{{.Name}}|{{.CPUPerc}}|{{.MemUsage}}|{{.MemPerc}}"
+                    "|{{.NetIO}}|{{.BlockIO}}|{{.PIDs}}")
+DOCKER_INSPECT_FMT = ("{{.Name}}|{{.State.Status}}|{{.RestartCount}}|{{.State.OOMKilled}}|"
+                      "{{.State.ExitCode}}|{{if .State.Health}}{{.State.Health.Status}}"
+                      "{{else}}none{{end}}|{{.State.StartedAt}}")
+
+_SIZE_UNITS = {
+    "B": 1, "KB": 1000, "MB": 1000 ** 2, "GB": 1000 ** 3, "TB": 1000 ** 4,
+    "KIB": 1024, "MIB": 1024 ** 2, "GIB": 1024 ** 3, "TIB": 1024 ** 4,
+}
+
+
+def parse_size(s):
+    """把 '123.4MiB' / '1.2kB' 解析成字节数;无法解析返回 None。"""
+    if not s:
+        return None
+    m = re.match(r"^\s*([0-9.]+)\s*([A-Za-z]+)?", str(s))
+    if not m:
+        return None
+    try:
+        v = float(m.group(1))
+    except ValueError:
+        return None
+    unit = (m.group(2) or "B").upper()
+    return int(v * _SIZE_UNITS.get(unit, 1))
+
+
+def parse_pct(s):
+    if not s:
+        return None
+    m = re.search(r"([0-9.]+)", str(s))
+    if not m:
+        return None
+    try:
+        return round(float(m.group(1)), 2)
+    except ValueError:
+        return None
+
+
+def docker_snapshot():
+    """采集 Docker / Compose 快照。未安装或 daemon 不可用时返回 available=False。
+
+    生产约束:
+      * 只用一次 ps + 一次 inspect + 一次 stats,避免 N 次 fork
+      * 任何异常都降级为 error 字段,绝不影响主机指标采集
+    """
+    out = {"available": False, "version": None, "containers": [],
+           "projects": [], "error": None, "collectedAt": int(time.time() * 1000)}
+    exe = shutil.which("docker")
+    if not exe:
+        return out
+    try:
+        ver = run_cmd([exe, "version", "--format", "{{.Server.Version}}"], timeout=6).strip()
+    except Exception:
+        ver = ""
+    if not ver or "Cannot connect" in ver or "permission denied" in ver.lower():
+        out["error"] = ver[:200] if ver else "docker daemon 不可达"
+        return out
+    out["available"] = True
+    out["version"] = ver
+
+    # ---- 1) 容器清单(含 compose 编排标签) ----
+    ps = run_cmd([exe, "ps", "-a", "--no-trunc", "--format", DOCKER_PS_FMT], timeout=12)
+    rows = []
+    for line in ps.splitlines():
+        p = line.split("|")
+        if len(p) < 6:
+            continue
+        while len(p) < 10:
+            p.append("")          # 兼容缺省标签(Go 模板可能省略尾部分隔符)
+        rows.append({
+            "id": p[0].strip()[:64],
+            "name": p[1].strip(),
+            "image": p[2].strip(),
+            "state": p[3].strip(),
+            "status": p[4].strip(),
+            "ports": p[5].strip(),
+            "project": p[6].strip(),
+            "service": p[7].strip(),
+            "workdir": p[8].strip(),
+            "configFiles": p[9].strip(),
+        })
+
+    # ---- 2) 重启次数 / OOM / 退出码 / 健康(一次 inspect 批量拿) ----
+    by_name = {r["name"]: r for r in rows}
+    ids = [r["id"] for r in rows if r["id"]]
+    if ids and len(ids) <= 200:
+        insp = run_cmd([exe, "inspect", "--format", DOCKER_INSPECT_FMT] + ids, timeout=15)
+        for line in insp.splitlines():
+            p = line.split("|")
+            if len(p) < 7:
+                continue
+            name = p[0].strip().lstrip("/")
+            r = by_name.get(name)
+            if not r:
+                continue
+            r["restartCount"] = int(p[2]) if p[2].strip().isdigit() else 0
+            r["oomKilled"] = p[3].strip().lower() == "true"
+            r["exitCode"] = int(p[4]) if p[4].strip().lstrip("-").isdigit() else None
+            r["health"] = None if p[5].strip() in ("", "none", "<no value>") else p[5].strip()
+            r["startedAt"] = p[6].strip()
+
+    # ---- 3) 实时资源(仅运行中的容器;一次 stats) ----
+    running = [r for r in rows if r["state"] == "running"]
+    if running:
+        st = run_cmd([exe, "stats", "--no-stream", "--format", DOCKER_STATS_FMT], timeout=20)
+        by_stat = {}
+        for line in st.splitlines():
+            p = line.split("|")
+            if len(p) < 7:
+                continue
+            used, _, limit = p[2].partition("/")
+            by_stat[p[0].strip()] = {
+                "cpuPct": parse_pct(p[1]),
+                "memUsed": parse_size(used.strip()),
+                "memLimit": parse_size(limit.strip()),
+                "memPct": parse_pct(p[3]),
+                "netIO": p[4].strip(),
+                "blockIO": p[5].strip(),
+                "pids": int(p[6]) if p[6].strip().isdigit() else None,
+            }
+        for r in rows:
+            s = by_stat.get(r["name"])
+            if s:
+                r.update(s)
+
+    # ---- 4) 按 Compose 项目聚合 ----
+    groups = {}
+    for r in rows:
+        key = r["project"] or ""
+        g = groups.get(key)
+        if not g:
+            g = groups[key] = {
+                "project": key or None,
+                "containers": [],
+                "services": [],
+                "workdir": r["workdir"] or "",
+                "configFiles": r["configFiles"] or "",
+                "running": 0, "exited": 0, "unhealthy": 0, "restarting": 0,
+                "restarts": 0, "cpuPct": 0.0, "memUsed": 0,
+            }
+        g["containers"].append(r)
+        if r["service"]:
+            g["services"].append(r["service"])
+        if r["state"] == "running":
+            g["running"] += 1
+        elif r["state"] == "restarting":
+            g["restarting"] += 1
+        else:
+            g["exited"] += 1
+        if r.get("health") in ("unhealthy", "starting"):
+            g["unhealthy"] += 1
+        g["restarts"] += r.get("restartCount", 0) or 0
+        g["cpuPct"] += r.get("cpuPct") or 0
+        g["memUsed"] += r.get("memUsed") or 0
+
+    projects = []
+    for key, g in groups.items():
+        g["services"] = sorted(set(g["services"]))
+        g["cpuPct"] = round(g["cpuPct"], 1)
+        g["total"] = len(g["containers"])
+        g["composeFile"] = (g["configFiles"] or "").split(",")[0].strip()
+        g["containers"].sort(key=lambda x: (x["service"] or x["name"]))
+        projects.append(g)
+    # Compose 项目优先,未编排的容器放最后
+    projects.sort(key=lambda g: (g["project"] is None, g["project"] or ""))
+
+    out["containers"] = rows
+    out["projects"] = projects
+    out["total"] = len(rows)
+    out["running"] = sum(1 for r in rows if r["state"] == "running")
+    out["composeProjects"] = sum(1 for g in projects if g["project"])
+    return out
+
+
+class DockerWatcher(threading.Thread):
+    """独立线程采集 Docker:docker stats 可能耗时 1~3 秒,绝不能卡住 500ms 采样节拍。"""
+
+    def __init__(self, interval_ms=10000):
+        super().__init__(name="docker", daemon=True)
+        self.interval = max(3000, int(interval_ms)) / 1000.0
+        self.snap = {"available": False, "containers": [], "projects": [], "stale": True}
+        self._stop = threading.Event()
+
+    def run(self):
+        while not self._stop.is_set():
+            try:
+                snap = docker_snapshot()
+                snap["stale"] = False
+                self.snap = snap
+            except Exception as e:  # noqa: BLE001
+                self.snap = {"available": False, "containers": [], "projects": [],
+                             "error": str(e)[:200], "stale": False}
+            self._stop.wait(self.interval)
+
+    def stop(self):
+        self._stop.set()
+
+
 def sysinfo():
     os_name = ""
     txt = read("/etc/os-release") or ""
@@ -402,8 +608,9 @@ def sysinfo():
 
 # ---------------------------------------------------------------- 主采集器
 class Sampler:
-    def __init__(self, cfg):
+    def __init__(self, cfg, docker=None):
         self.cfg = cfg
+        self.docker = docker
         self.mounts = _read_mounts()
         self.prev_stat, self.prev_extra = _read_cpu_stat()
         self.prev_net = _read_net()
@@ -537,6 +744,7 @@ class Sampler:
                 "procCount": len(rows),
                 "sys": sysinfo(),
                 "health": health(self.jcache),
+                "docker": self.docker.snap if self.docker else None,
             }
         # 只在刚刷新时携带重数据(否则每拍都要多传 3~5KB,500ms 节拍下白烧流量)
         if fresh:
@@ -620,7 +828,7 @@ def load_config():
             cfg.update(json.load(f))
     except Exception as e:
         log("配置读取失败 %s: %s" % (CONF, e))
-    for k in ("interval_ms", "heavy_ms", "journal_ms", "buffer_max", "timeout"):
+    for k in ("interval_ms", "heavy_ms", "journal_ms", "buffer_max", "timeout", "docker_ms"):
         try:
             cfg[k] = int(cfg[k])
         except Exception:
@@ -634,7 +842,9 @@ def run(cfg):
         return 2
     log("hwagent %s start device=%s interval=%dms -> %s"
         % (AGENT_VER, cfg["device"] or "?", cfg["interval_ms"], cfg["endpoint"]))
-    sampler = Sampler(cfg)
+    docker = DockerWatcher(cfg.get("docker_ms", 10000))
+    docker.start()
+    sampler = Sampler(cfg, docker)
     pusher = Pusher(cfg, sampler)
     threading.Thread(target=pusher.loop, name="push", daemon=True).start()
 
@@ -727,7 +937,10 @@ def main():
             cfg[k] = getattr(a, k)
     if a.once:
         s = Sampler(cfg).sample()
-        s["heavy"] = None
+        if isinstance(s.get("heavy"), dict):
+            s["heavy"]["docker"] = docker_snapshot()
+        else:
+            s["docker"] = docker_snapshot()
         print(json.dumps(s, ensure_ascii=False, indent=1))
         return 0
     if a.check:

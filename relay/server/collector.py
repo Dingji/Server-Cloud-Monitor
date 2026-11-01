@@ -49,6 +49,13 @@ except Exception as _ks_exc:  # pragma: no cover
     keystore = None
     print(f"keystore unavailable: {_ks_exc}", file=sys.stderr)
 
+# Client-facing keys: who may call the relay, and how much they may spend.
+try:
+    import clientkeys
+except Exception as _ck_exc:  # pragma: no cover
+    clientkeys = None
+    print(f"clientkeys unavailable: {_ck_exc}", file=sys.stderr)
+
 DATA_DIR = "/var/lib/relay"
 PUBLIC_DIR = os.path.join(DATA_DIR, "public")
 DB_PATH = os.path.join(DATA_DIR, "relay.db")
@@ -135,8 +142,20 @@ def busy_phase(config, data, mod_ok):
         ph = {"state": "idle", "label": "闲时", "in_effect": False, "at": at,
               "reason": "临时停用标记生效" + ("，尽管此刻落在窗口内（%s）" % win if active else "")}
     elif not active:
-        ph = {"state": "idle", "label": "闲时", "in_effect": False, "at": at,
-              "reason": "此刻不在生效窗口内" + ("（%s）" % win if win else "（未配置窗口）")}
+        # 闲时：不在忙时窗口内。若 idle 策略启用且配了目标，此刻是「闲时改写生效中」
+        # （该线路全部请求 → idle.target_model），而不是"无改写"。
+        idle = config.get("idle") or {}
+        idle_on = bool(idle.get("enabled", True)) and bool(idle.get("target_model"))
+        win_note = "（%s）" % win if win else "（未配置窗口）"
+        if idle_on:
+            iw = idle.get("windows") or []
+            iw_note = " · ".join("%s-%s" % (w.get("start"), w.get("end")) for w in iw) if iw else "忙时窗口的补集"
+            ph = {"state": "idle", "label": "闲时（改写生效中）", "in_effect": True, "at": at,
+                  "reason": "不在忙时窗口内%s · 全部模型 → %s（idle 窗口：%s）"
+                            % (win_note, idle.get("target_model"), iw_note)}
+        else:
+            ph = {"state": "idle", "label": "闲时（无改写）", "in_effect": False, "at": at,
+                  "reason": "不在生效窗口内%s，且闲时策略未启用" % win_note}
     else:
         prefix = "/".join(config.get("rewrite_prefixes") or []) or "-"
         ph = {"state": "busy", "label": "忙时", "in_effect": True, "at": at,
@@ -183,6 +202,13 @@ def busy_state(at=None):
         "windows": [{"start": str(w.get("start", "")), "end": str(w.get("end", ""))}
                     for w in (doc.get("windows") or []) if isinstance(w, dict)],
         "utc_offset_minutes": int(doc.get("utc_offset_minutes", 480) or 0),
+        "idle": (lambda d: {
+            "enabled": bool(d.get("enabled", True)),
+            "target_model": str(d.get("target_model") or ""),
+            "windows": [{"start": str(w.get("start", "")), "end": str(w.get("end", ""))}
+                        for w in (d.get("windows") or []) if isinstance(w, dict)],
+            "weekdays_only": bool(d.get("weekdays_only", False)),
+        })(doc.get("idle") if isinstance(doc.get("idle"), dict) else {}),
     }
     out = {
         "ok": True,
@@ -202,6 +228,7 @@ def busy_state(at=None):
             "last_rewrite": tap_state.get("last"),
             "skips": tap_state.get("skips") or {},
         },
+        "idle_hours": health.get("idle_hours") or {},
         "calendar": busy_calendar(busy_local_year(doc)),
         "calendar_years": busy_calendar_years(),
     }
@@ -419,10 +446,54 @@ def busy_validate(payload):
     if not (-720 <= offset <= 840):
         errors.append("utc_offset_minutes 应在 -720..840 之间")
 
+    # ── idle 子块（v2）：闲时把该线路【全部】请求改写到 idle.target_model ──
+    # windows 为空 = 忙时窗口的补集（晚间/午休/周末节假日整天都是闲时）。
+    # 保存请求没带 idle 时沿用现有文件里的值——v1 时代的调用方不该悄悄抹掉闲时策略。
+    idle_raw = payload.get("idle")
+    idle_src = idle_raw if isinstance(idle_raw, dict) else None
+    if idle_src is None:
+        current = read_json_file(BUSY_CONF_PATH)
+        idle_src = current.get("idle") if isinstance(current, dict) and isinstance(current.get("idle"), dict) else {}
+    idle_enabled = idle_src.get("enabled", True)
+    if not isinstance(idle_enabled, bool):
+        errors.append("idle.enabled 必须是布尔值")
+        idle_enabled = True
+    idle_target = str(idle_src.get("target_model") or "").strip()
+    if idle_target:
+        if not MODEL_RE.match(idle_target):
+            errors.append("idle.target_model 名称不合法")
+        elif allowed and idle_target not in allowed:
+            errors.append("idle.target_model %s 不在 Go 套餐白名单里 —— 闲时改写到它只会 403" % idle_target)
+    idle_weekdays = idle_src.get("weekdays_only", False)
+    if not isinstance(idle_weekdays, bool):
+        errors.append("idle.weekdays_only 必须是布尔值")
+        idle_weekdays = False
+    idle_windows = idle_src.get("windows")
+    idle_windows = idle_windows if isinstance(idle_windows, list) else []
+    if len(idle_windows) > POLICY_MAX_WINDOWS:
+        errors.append("idle.windows 最多 %d 个" % POLICY_MAX_WINDOWS)
+    clean_idle_windows, idle_seen = [], set()
+    for w in idle_windows:
+        if not isinstance(w, dict):
+            errors.append("idle 窗口项必须是对象")
+            continue
+        s2, e2 = str(w.get("start") or "").strip(), str(w.get("end") or "").strip()
+        if not HHMM_RE.match(s2) or not HHMM_RE.match(e2):
+            errors.append("idle 窗口 %s-%s 时间格式应为 HH:MM" % (s2 or "?", e2 or "?"))
+            continue
+        if s2 == e2:
+            errors.append("idle 窗口 %s-%s 起止相同" % (s2, e2))
+            continue
+        if (s2, e2) in idle_seen:
+            errors.append("idle 窗口 %s-%s 重复" % (s2, e2))
+            continue
+        idle_seen.add((s2, e2))
+        clean_idle_windows.append({"start": s2, "end": e2})
+
     doc = {
-        "version": 1,
+        "version": 2,
         "note": "由 Cloud Monitor 面板写入。手改也行，tap 按 mtime 自动重载。"
-                "临时停用用 /opt/relay/busy_hours.py off。",
+                "临时停用用 /opt/relay/busy_hours.py off（同时停忙时与闲时改写）。",
         "enabled": bool(enabled),
         "route": route,
         "target_model": target,
@@ -430,6 +501,12 @@ def busy_validate(payload):
         "weekdays_only": bool(weekdays),
         "utc_offset_minutes": offset,
         "windows": clean_windows,
+        "idle": {
+            "enabled": bool(idle_enabled),
+            "target_model": idle_target,
+            "windows": clean_idle_windows,
+            "weekdays_only": bool(idle_weekdays),
+        },
     }
     return doc, errors, bool(errors == [] and not clean_windows)
 
@@ -1230,6 +1307,78 @@ def q_clients(conn, since, since_ts, limit=60):
     }
 
 
+def q_clients_usage(conn, since, days, limit=100):
+    """Per-client TOKEN usage from usage_events (identity captured by the tap).
+
+    客户端 = (client_ip, user_agent, token-hash)。中继令牌是全局共享的一枚，真正
+    区分外发客户端的是来源 IP + UA；令牌哈希一起分组，未来签发多枚令牌时自动按
+    令牌拆分。部署身份采集之前的旧行没有这三个字段，聚合在 "(unknown)" 下。
+    """
+    labels = client_labels()
+    ident_filter = " AND (user_agent IS NULL OR user_agent NOT LIKE ?)"
+    rows = conn.execute(
+        "SELECT COALESCE(NULLIF(client_ip,''),'(unknown)') cip,"
+        " COALESCE(NULLIF(user_agent,''),'(unknown)') cua,"
+        " COALESCE(client_key,'') ckey,"
+        " COUNT(*) reqs, SUM(CASE WHEN status < 400 THEN 1 ELSE 0 END) ok,"
+        " COALESCE(SUM(COALESCE(input_tokens,0)),0) tin,"
+        " COALESCE(SUM(COALESCE(output_tokens,0)),0) tout,"
+        " COALESCE(SUM(COALESCE(cache_read,0)+COALESCE(cache_write,0)),0) tcache,"
+        " COALESCE(SUM(COALESCE(total_tokens,0)),0) ttotal,"
+        " COALESCE(SUM(COALESCE(reasoning,0)),0) treason,"
+        " COUNT(DISTINCT model) models, COUNT(DISTINCT sess) sess,"
+        " COUNT(DISTINCT day) active_days,"
+        " GROUP_CONCAT(DISTINCT model) model_list,"
+        " MIN(ts) first_ts, MAX(ts) last_ts"
+        " FROM usage_events WHERE day >= ?" + ident_filter +
+        " GROUP BY cip, cua, ckey ORDER BY ttotal DESC LIMIT ?",
+        (since, PROBE_PAT, limit)).fetchall()
+    grand = sum(r["ttotal"] for r in rows) or 1
+    out, fingerprints = [], []
+    for r in rows:
+        fp = "%s|%s|%s" % (r["cip"], r["cua"][:40], r["ckey"][:8])
+        fingerprints.append(fp)
+        out.append({
+            "ip": r["cip"], "ua": r["cua"], "ua_family": ua_family(r["cua"]),
+            "label": labels.get(r["cip"], ""), "key": r["ckey"],
+            "requests": r["reqs"], "ok": r["ok"] or 0,
+            "input_tokens": r["tin"], "output_tokens": r["tout"],
+            "cache_tokens": r["tcache"], "reasoning_tokens": r["treason"],
+            "total_tokens": r["ttotal"],
+            "token_share": round(100.0 * r["ttotal"] / grand, 2),
+            "models": r["models"], "sessions": r["sess"],
+            "active_days": r["active_days"],
+            "model_list": (r["model_list"] or "")[:240],
+            "first_seen": datetime.fromtimestamp(r["first_ts"], TZ).isoformat(timespec="seconds") if r["first_ts"] else None,
+            "last_seen": datetime.fromtimestamp(r["last_ts"], TZ).isoformat(timespec="seconds") if r["last_ts"] else None,
+            "fingerprint": fp,
+        })
+    # top 客户端的按日 token 序列，画堆叠趋势用
+    series = {}
+    for r in conn.execute(
+            "SELECT COALESCE(NULLIF(client_ip,''),'(unknown)') cip,"
+            " COALESCE(NULLIF(user_agent,''),'(unknown)') cua,"
+            " COALESCE(client_key,'') ckey, day,"
+            " COALESCE(SUM(COALESCE(total_tokens,0)),0) t, COUNT(*) c"
+            " FROM usage_events WHERE day >= ?" + ident_filter +
+            " GROUP BY cip, cua, ckey, day", (since, PROBE_PAT)):
+        fp = "%s|%s|%s" % (r["cip"], r["cua"][:40], r["ckey"][:8])
+        if fp not in fingerprints[:12]:
+            continue
+        series.setdefault(fp, []).append({"day": r["day"], "tokens": r["t"], "requests": r["c"]})
+    for fp in series:
+        series[fp].sort(key=lambda x: x["day"])
+    return {
+        "days": days, "since": since,
+        "clients": out,
+        "series": series,
+        "labels_path": CLIENT_LABELS_PATH,
+        "total_tokens": grand if rows else 0,
+        "note": "客户端 = 来源 IP + User-Agent（+ 令牌哈希）；令牌是共享的，改标签用"
+                " /api/device-label（按 IP）。部署身份采集前的旧数据聚合在 (unknown)。",
+    }
+
+
 def q_client_detail(conn, ip, since, days):
     """Everything we know about one source IP inside the window."""
     base = " FROM requests WHERE day >= ? AND ua NOT LIKE ? AND ip = ?"
@@ -1354,6 +1503,79 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as exc:
             return self._send(500, {"error": f"{type(exc).__name__}: {exc}"})
 
+    def _client_keys_action(self, op, p):
+        """Issue / edit / revoke a client-facing key, then push the credential list.
+
+        The store is always written first: it is what the usage tap reads on every
+        request, so a revocation bites immediately. nginx then gets the generated
+        include, which is what lets the key through at the edge (and what serves the
+        static model catalog to it). If that reload fails the store is still correct
+        and the failure is reported, not swallowed.
+        """
+        def say_limits(rec):
+            return " / ".join("%s %s" % (clientkeys.WINDOW_LABEL[w],
+                                         format(int((rec["quota"].get(w) or 0)), ",")
+                                         if int(rec["quota"].get(w) or 0) > 0 else "不限")
+                              for w in clientkeys.WINDOWS)
+
+        if op == "create":
+            label = str(p.get("label") or "").strip()
+            if not label:
+                return self._send(400, {"ok": False, "error": "请填写用途标签", "detail": "请填写用途标签"})
+            rec, _backup = clientkeys.create(label, str(p.get("note") or ""),
+                                             {w: (p.get("quota") or {}).get(w) for w in clientkeys.WINDOWS})
+            applied, msg = clientkeys.apply_include()
+            body = {"ok": True, "id": rec["id"], "key": rec["key"],
+                    "detail": "已生成 key：%s（%s）。明文只显示这一次，立刻复制保存。"
+                              % (label, say_limits(rec)),
+                    "applied": applied, "keys": clientkeys.list_status()}
+            if not applied:
+                body["warning"] = msg
+                body["detail"] = ("key 已写入仓库，但 nginx 的凭据名单没更新，它现在还进不了中继：%s"
+                                  "修好后用「重新下发名单」重试。" % msg)
+            return self._send(200, body)
+
+        if op == "reveal":
+            # The list endpoint only ever carries a mask, so a missed one-time display
+            # would otherwise be unrecoverable. The plaintext lives in a 0600 store and
+            # is needed there anyway (nginx's credential list is rendered from it); this
+            # route just hands it back to an authenticated panel session, and every call
+            # lands in the panel audit log as relay.action.
+            doc = clientkeys.read_doc() or clientkeys.empty_doc()
+            rec = clientkeys.get_by_id(doc, str(p.get("id") or "").strip())
+            if rec is None:
+                why = "找不到这枚 key（%s）" % p.get("id")
+                return self._send(400, {"ok": False, "error": why, "detail": why})
+            return self._send(200, {"ok": True, "key": rec.get("key") or "",
+                                    "detail": "已取出完整 key（这次读取已记入面板审计日志）"})
+
+        kid = str(p.get("id") or "").strip()
+        if op == "update":
+            fields = {k: p[k] for k in ("label", "note", "quota") if k in p}
+            if not fields:
+                return self._send(400, {"ok": False, "error": "没有要修改的字段", "detail": "没有要修改的字段"})
+            ok, msg = clientkeys.update(kid, fields)
+        elif op == "enable":
+            ok, msg = clientkeys.update(kid, {"enabled": bool(p.get("enabled", True))})
+        elif op == "delete":
+            ok, msg = clientkeys.remove(kid)
+        elif op == "apply":
+            ok, msg = clientkeys.apply_include()
+            return self._send(200 if ok else 500,
+                              {"ok": ok, "detail": msg, "applied": ok,
+                               "keys": clientkeys.list_status()})
+        else:
+            return self._send(400, {"ok": False, "error": "未知操作：%s" % op,
+                                    "detail": "未知操作：%s" % op})
+        if not ok:
+            return self._send(400, {"ok": False, "error": msg, "detail": msg})
+        applied, amsg = clientkeys.apply_include()
+        out = {"ok": True, "detail": msg + ("：" + amsg if applied else "；" + amsg),
+               "applied": applied, "keys": clientkeys.list_status()}
+        if not applied:
+            out["warning"] = amsg
+        return self._send(200, out)
+
     def _action(self, name, payload):
         if name == "busy-hours/save":
             doc, errors, no_windows = busy_validate(payload or {})
@@ -1411,6 +1633,11 @@ class Handler(BaseHTTPRequestHandler):
                                         "detail": (r.stderr or r.stdout or "").strip()[-200:]})
             except Exception as exc:
                 return self._send(500, {"error": f"{type(exc).__name__}: {exc}"})
+
+        if name.startswith("client-keys/"):
+            if clientkeys is None:
+                return self._send(503, {"error": "clientkeys.py 未安装，分发 Key 不可用"})
+            return self._client_keys_action(name[len("client-keys/"):], payload or {})
 
         if name == "keys/meta":
             if not keys_enabled():
@@ -1904,6 +2131,13 @@ class Handler(BaseHTTPRequestHandler):
             since_ts = datetime.strptime(since, "%Y-%m-%d").replace(tzinfo=TZ).timestamp()
             return self._send(200, q_clients(conn, since, since_ts, limit))
 
+        if name == "clients-usage":
+            try:
+                limit = min(500, max(1, int(params.get("limit", ["100"])[0])))
+            except ValueError:
+                limit = 100
+            return self._send(200, q_clients_usage(conn, since, days, limit))
+
         if name == "client-detail":
             ip = (params.get("ip", [""])[0] or "").strip()
             if not re.fullmatch(r"[0-9A-Za-z:._\-]{3,64}", ip):
@@ -2046,6 +2280,11 @@ class Handler(BaseHTTPRequestHandler):
             except ValueError:
                 limit = 30
             return self._send(200, {"errors": q_errors(since, fargs, limit)})
+
+        if name == "client-keys":
+            if clientkeys is None:
+                return self._send(503, {"error": "clientkeys.py 未安装，分发 Key 不可用"})
+            return self._send(200, clientkeys.list_status())
 
         if name == "busy-hours":
             at = (params.get("at") or [""])[0]

@@ -24,6 +24,7 @@ private val CLIENTS_PATHS = mapOf(
     "useragents" to "/relay/useragents",
     "recent" to "/relay/recent",
     "summary" to "/relay/summary",
+    "clients-usage" to "/relay/clients-usage?days=7",
     "ips" to "/relay/ips",
 )
 
@@ -155,6 +156,44 @@ fun RelayClientsTab() {
             ),
             emptyText = L["暂无数据_b246458f20"],
         )
+    }
+
+    /* ---------------- 客户端用量（tap 身份列按来源聚合，与网页端 clients-usage 同源） ---------------- */
+    RelaySection(title = L["客户端用量_Token_按来源区分_f315e22d03"], cardKey = "rl-c-usage") {
+        val cu = feed["clients-usage"]
+        val clients = cu.arr("clients").filterIsInstance<JsonObject>()
+        if (clients.isEmpty()) {
+            com.servermaintance.panel.ui.EmptyState(text = L["暂无数据_b246458f20"], icon = "users")
+        } else {
+            relayTable(
+                rows = clients,
+                cols = listOf(
+                    RCol(
+                        "ip", L["客户端_09afbbcc9b"], mono = true, width = 1.5f,
+                        fmt = { el ->
+                            val ip = jstr(el)
+                            val label = (el as? JsonObject)?.get("label")
+                            val l = if (label is kotlinx.serialization.json.JsonPrimitive && label !is kotlinx.serialization.json.JsonNull) label.content else ""
+                            val tag = jstr((el as? JsonObject)?.get("ua_family"))
+                            if (ip == "(unknown)") L["旧数据无身份_部署采集前_9f2c1b2a3d"] else listOf(l, ip, tag).filter { it.isNotBlank() }.joinToString(" · ")
+                        },
+                    ),
+                    RCol("requests", L["请求_926f6b6b6a"], num = true),
+                    RCol("ok", L["成功_51991a5d11"], num = true),
+                    RCol("input_tokens", L["输入_e8850440f2"], num = true),
+                    RCol("output_tokens", L["输出_ded698ae1e"], num = true),
+                    RCol("cache_tokens", L["缓存读_37ec7f1ba3"], num = true),
+                    RCol("total_tokens", L["累计token_7b460149d3"], num = true),
+                    RCol("token_share", L["占比_380a2fed3f"], num = true, fmt = { pct1(jnum(it)) }),
+                    RCol("sessions", L["会话_836ffe0e10"], num = true),
+                    RCol("active_days", L["活跃天_b375067cb7"], num = true),
+                    RCol("model_list", L["模型_98fd0cbd9c"], mono = true, width = 1.6f, fmt = { jstr(it).split(',').take(3).joinToString(",") }),
+                    RCol("first_seen", L["首次_a5a7c570b3"], fmt = { rTm(it) }),
+                    RCol("last_seen", L["最近_8c73d90eca"], fmt = { rTm(it) }),
+                ),
+                emptyText = L["暂无数据_b246458f20"],
+            )
+        }
     }
 
     /* ---------------- 实时活动（最近请求） ---------------- */

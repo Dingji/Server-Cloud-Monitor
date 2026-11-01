@@ -310,6 +310,7 @@
               <button class="btn btn-sm" data-act="detail" data-slug="${fmt.esc(v)}">${detail === v ? '收起' : '管理'}</button>
               <button class="btn btn-sm" data-act="deploy" data-slug="${fmt.esc(v)}">${icon('upload', { size: 12 })} 部署</button>
               <button class="btn btn-sm" data-act="toggle" data-slug="${fmt.esc(v)}" data-on="${r.enabled && r.linked ? '0' : '1'}">${r.enabled && r.linked ? '停用' : '启用'}</button>
+              <button class="btn btn-sm btn-danger" data-act="del" data-slug="${fmt.esc(v)}">${icon('trash', { size: 12 })} 删除</button>
             </div>`,
           },
         ], sites);
@@ -328,6 +329,11 @@
                 if (!okc) return;
               }
               try { await runAction('/php/site/toggle', { slug: slug, enabled: on }, { showOutput: false }); await load(); } catch (_) {}
+              return;
+            }
+            if (act === 'del') {
+              const cur = (data.sites || []).find((x) => (x.slug || x.id) === slug) || {};
+              await deleteSite(slug, cur);
             }
           };
         });
@@ -345,7 +351,7 @@
           <div class="row" style="gap:10px;flex-wrap:wrap">
             ${pair(fld('slug', '站点标识（小写字母/数字/连字符）', '', 'my-shop'),
               sel('preset', '框架预设', presets, 'generic'))}
-            ${pair(sel('php', 'PHP 版本', vers, vers[0][0]),
+            ${pair(sel('php', 'PHP 版本', vers, data.defaultVersion || vers[vers.length - 1][0]),
               fld('name', '显示名称（可选）', '', '默认同站点标识'))}
             ${pair(fld('domains', '域名（多个用空格或逗号分隔）', '', 'a.com www.a.com'),
               fld('ports', '监听端口', '80', '80 / 443 / 或 1024+ 单端口'))}
@@ -373,6 +379,11 @@
           return;
         }
         window.toast(r.output || '站点已创建', 'ok', 7000);
+        const odd = (body.ports || []).filter((x) => x !== '80' && x !== '443');
+        if (odd.length) {
+          window.toast('监听了非 80/443 端口 ' + odd.join('/') +
+            '：云服务器安全组 / 主机防火墙要一起放行，否则外网访问不通', 'warn', 9000);
+        }
         if (v.withDb) {
           try {
             const d = await CM.api.post('/php/db/create', { slug: body.slug });
@@ -387,6 +398,15 @@
       async function deployDialog(slug) {
         const d = await CM.api.get('/php/site?slug=' + encodeURIComponent(slug));
         const rel = d.releases || {};
+        /* 预设列表以服务器为准：刚装完一个新栈再开弹窗不该看到旧列表。
+           取不到就退回页面加载时那份，其它部署通道不受影响。 */
+        let presets = data.presets || [];
+        let keep = rel.keep || 8;
+        try {
+          const pr = await CM.api.get('/php/presets', 60000);
+          if (pr && Array.isArray(pr.presets) && pr.presets.length) presets = pr.presets;
+          if (pr && pr.keepReleases) keep = pr.keepReleases;
+        } catch (e) { /* 用页面快照 */ }
         let picked = null;
         const v = await form('部署到 ' + slug, `
           ${sel('channel', '部署方式', [
@@ -400,12 +420,12 @@
           ], 'archive')}
           <div data-ch="archive" class="mt">
             ${fld('name', '压缩包文件名', '', 'site.zip')}
-            <div class="muted small">选文件后直接上传到面板暂存目录 ${fmt.esc(d.staging || '/srv/php/uploads')}，任务完成后自动清理。</div>
+            <div class="muted small">选文件后直接上传到面板暂存目录 ${fmt.esc(data.staging || '/srv/php/uploads')}，任务完成后自动清理。</div>
             <input type="file" class="inp mt" data-file="1" accept=".zip,.tar,.gz,.tgz,.tar.bz2,.tar.xz,.7z,.rar">
             <div class="muted small mt" data-r="fname">未选择文件</div>
           </div>
           <div data-ch="url" class="mt" hidden>${fld('url', '压缩包下载地址', '', 'https://example.com/site.tar.gz')}</div>
-          <div data-ch="path" class="mt" hidden>${fld('path', '服务器上的绝对路径', '', (d.staging || '/srv/php/uploads') + '/site.tar.gz')}
+          <div data-ch="path" class="mt" hidden>${fld('path', '服务器上的绝对路径', '', (data.staging || '/srv/php/uploads') + '/site.tar.gz')}
             <div class="muted small">注意：面板服务有 PrivateTmp，宿主机 /tmp 下的路径读不到。</div></div>
           <div data-ch="git" class="mt" hidden>
             ${fld('url', '仓库地址', (d.record.git || {}).url || '', 'https://github.com/me/site.git 或 git@github.com:me/site.git')}
@@ -413,7 +433,7 @@
             ${fld('subdir', '仓库内子目录（可选）', (d.record.git || {}).subdir || '')}
           </div>
           <div data-ch="scaffold" class="mt" hidden>
-            ${sel('app', '要安装的应用', (data.presets || []).filter((p) => p.install)
+            ${sel('app', '要安装的应用', presets.filter((p) => p.install)
               .map((p) => [p.id, p.label + '（' + p.install.kind + '）']), 'wordpress')}
             <div class="muted small">会下载/生成到当前版本目录，并自动写入配套配置（如 wp-config.php 的数据库与密钥）。</div>
           </div>
@@ -421,7 +441,7 @@
           <div class="mt row" style="gap:10px;flex-wrap:wrap">
             ${pair(fld('note', '版本备注', '', '本次发布说明'), chk('autoRollback', '部署后探测失败自动回滚', true))}
           </div>
-          <div class="mt muted small">每次部署生成一个新的 <code>releases/&lt;时间戳&gt;</code>，切换软链是原子的；旧版本保留 ${rel.keep || 8} 个。</div>
+          <div class="mt muted small">每次部署生成一个新的 <code>releases/&lt;时间戳&gt;</code>，切换软链是原子的；旧版本保留 ${keep} 个。</div>
         `, {
           okText: '开始部署', width: '700px',
           onOpen: (m) => {
@@ -589,7 +609,7 @@
             <button class="btn btn-sm btn-danger" data-d="del">${icon('trash', { size: 12 })} 删除站点</button>
           </div>
           <div class="muted small mt">删除会移除 nginx 站点、FPM 池、系统用户与配套数据库；站点目录（代码+日志+备份）移动到
-            <code class="mono">${fmt.esc((d.trash || '/var/lib/cloud-panel/ops/php_deleted'))}</code> 保留，可手工恢复。</div>
+            <code class="mono">/var/lib/cloud-panel/ops/php_deleted</code> 保留，可手工恢复。</div>
         </div>`;
 
         host.querySelector('[data-d=close]').onclick = () => { detail = null; render(); };
@@ -633,16 +653,7 @@
           await runAction('/php/site/toggle', { slug: slug, enabled: on });
           return load();
         }
-        if (act === 'del') {
-          const okc = await modal.confirm('删除站点',
-            '将移除 <b class="mono">' + fmt.esc(slug) + '</b> 的 nginx 站点、PHP-FPM 池、系统用户'
-            + (d.db && d.db.bound ? ' 及其 MariaDB 数据库/用户' : '')
-            + '。<div class="muted small mt">站点目录（代码/日志/数据库备份）会移动到回收位置保留，不是直接 rm -rf。</div>',
-            { danger: true, okText: '确认删除' });
-          if (!okc) return;
-          try { await runAction('/php/site/delete', { slug: slug }, { showOutput: true }); detail = null; await load(); } catch (_) {}
-          return;
-        }
+        if (act === 'del') return deleteSite(slug, d);
         if (act === 'ssl') return sslDialog(slug, d);
         if (act === 'ssloff') { await runAction('/php/ssl/disable', { slug: slug }); return load(); }
         if (act === 'db') return dbDialog(slug, d);
@@ -743,12 +754,58 @@
           return;
         }
         const info = await CM.api.get('/php/db?slug=' + encodeURIComponent(slug));
-        const v = await form('数据库 · ' + (info.db || {}).name, `
-          <div class="mono small">库名 ${fmt.esc((info.db || {}).name || '-')}<br>用户 ${fmt.esc((info.db || {}).user || '-')}@${fmt.esc((info.db || {}).host || 'localhost')}<br>
+        const i = info.db || {};
+        let want = null;
+        const v = await form('数据库 · ' + (i.name || ''), `
+          <div class="mono small">库名 ${fmt.esc(i.name || '-')}<br>用户 ${fmt.esc(i.user || '-')}@${fmt.esc(i.host || 'localhost')}<br>
           表数 ${info.tables || 0} · 占用 ${byteFmt(info.bytes)} · 连接${info.connected ? '正常' : '（无表）'}</div>
+          <div class="row mt" style="gap:6px;flex-wrap:wrap">
+            <button class="btn btn-sm btn-danger" type="button" data-x="reset">${icon('refresh', { size: 12 })} 重置密码</button>
+            <button class="btn btn-sm" type="button" data-x="dump">${icon('download', { size: 12 })} 导出备份</button>
+          </div>
           <div class="mt muted small">明文密码只在创建/重置的那一刻显示一次，接口与站点记录都不会回传。</div>`,
-          { okText: '关闭', width: '560px' });
-        if (!v) return;
+          { okText: '关闭', width: '560px',
+            onOpen: (m) => {
+              m.querySelectorAll('[data-x]').forEach((b) => {
+                b.onclick = () => { want = b.dataset.x; m.querySelector('[data-a=ok]').click(); };
+              });
+            } });
+        if (want === 'reset') await resetDbPassword(slug);
+        else if (want === 'dump') {
+          try { await jobModal.run(CM.api.post('/php/db/dump', { slug: slug }), slug + ' · 导出数据库备份'); await load(); }
+          catch (_) {}
+        }
+        void v;
+      }
+
+      async function deleteSite(slug, d) {
+        const bound = !!(d && d.db && d.db.bound !== false);
+        const okc = await modal.confirm('删除站点',
+          '将移除 <b class="mono">' + fmt.esc(slug) + '</b> 的 nginx 站点、PHP-FPM 池、系统用户'
+          + (bound ? ' 及其 MariaDB 数据库/用户' : '')
+          + '。<div class="muted small mt">站点目录（代码/日志/数据库备份）会移动到回收位置保留，不是直接 rm -rf。</div>',
+          { danger: true, okText: '确认删除' });
+        if (!okc) return;
+        try { await runAction('/php/site/delete', { slug: slug }, { showOutput: true }); detail = null; await load(); } catch (_) {}
+      }
+
+      /* 重置密码：旧密码立即失效，面板会尽量代写 shared/.env；WordPress 的 wp-config.php 要手工同步。 */
+      async function resetDbPassword(slug) {
+        const okc = await modal.confirm('重置数据库密码',
+          '为 <b class="mono">' + fmt.esc(slug) + '</b> 生成新的随机强密码。<b>旧密码立刻失效</b>。'
+          + '<div class="muted small mt">面板会同步改 <code>shared/.env</code>；WordPress 的 <code>wp-config.php</code> 改不动，'
+          + '需要到站点详情 → 配置 里手工更新，否则后台会报数据库连接失败。</div>',
+          { danger: true, okText: '重置' });
+        if (!okc) return;
+        try {
+          const r = await CM.api.post('/php/db/password', { slug: slug });
+          if (r.password) modal.output('新数据库密码（只显示这一次）', r.password);
+          window.toast(r.output || '数据库密码已重置', 'ok', 7000);
+          await load();
+        } catch (e) {
+          window.toast(e.message || '重置失败', 'err', 8000);
+          if (e.output) modal.output('重置失败', e.output, { error: true });
+        }
       }
 
       function showCreds(r) {

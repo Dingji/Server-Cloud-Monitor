@@ -9,7 +9,7 @@
     ['overview', '概览'], ['traffic', '流量分析'], ['quality', '质量分析'],
     ['hitrate', '套餐命中率'], ['tokenhit', 'Token 命中率'],
     ['clients', '客户端与会话'], ['tokens', 'Token'], ['keys', '密钥池'],
-    ['policy', '忙时策略'],
+    ['distkeys', '分发 Key'], ['policy', '忙时 / 闲时'],
   ];
   const REFRESH_MS = 10000;
   /* 命中率类页签走实时刷新：主定时器按 1 秒滴答，各页签按自己的节奏拉取 */
@@ -20,10 +20,11 @@
     title: 'OpenCode 中继',
     desc: 'LLM API 中继的请求量、Token 用量、密钥池配额、模型可用性与质量分析',
     async mount(root) {
-      root.innerHTML = '<div class=relay-header><div class=relay-header-top><div><div class=relay-title>OpenCode 中继</div><div class=relay-subtitle>LLM API 中继监控 · 请求量、Token 用量、密钥池、模型可用性与质量分析</div></div><div class=relay-header-actions><span class=relay-live id=rl-live><span class=relay-live-dot></span>每 ' + (REFRESH_MS / 1000) + ' 秒自动刷新</span><a class=btn href=/stats/ target=_blank rel=noopener>' + icon('external', { size: 13 }) + ' 旧版面板</a></div></div><div class=relay-tabs id=rl-tabs></div></div><div class=relay-body id=rl-body></div><style>.relay-header{background:linear-gradient(135deg,rgba(99,102,241,.22) 0%,transparent 55%),var(--panel);border:1px solid var(--border);border-radius:22px;padding:28px 36px;margin-bottom:32px;box-shadow:0 1px 2px rgba(0,0,0,.01),0 90px 110px -90px rgba(99,102,241,.7)}.relay-header-top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:26px;margin-bottom:28px}.relay-title{font-size:25px;font-weight:600;letter-spacing:-.02em}.relay-subtitle{margin-top:7px;font-size:13.5px;color:var(--muted)}.relay-header-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px}.relay-live{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;border:1px solid rgba(34,197,94,.6);background:radial-gradient(circle at top,rgba(34,197,94,.26),transparent 70%),rgba(34,197,94,.18);color:#22c55e;font-size:12.5px}.relay-live-dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 6px rgba(34,197,94,.22);animation:relay-pulse 2s infinite}.relay-tabs{display:flex;flex-wrap:wrap;gap:6px;padding:6px;border-radius:999px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.018) 0%,transparent 100%);width:fit-content;max-width:100%}.relay-tabs .btn{border:0;background:transparent;border-radius:999px;padding:12px 26px;font-size:14px;transition:all .25s ease}.relay-tabs .btn:hover{background:rgba(255,255,255,.05);color:#fff}.relay-tabs .btn.active,.relay-tabs .btn.btn-primary{background:linear-gradient(90deg,rgba(99,102,241,1) 0%,rgba(59,130,246,1) 100%);color:#fff;box-shadow:0 20px 80px -30px rgba(99,102,241,1)}.relay-body{display:flex;flex-direction:column;gap:28px}.relay-page .card{border-radius:22px;border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,.01),0 80px 110px -90px rgba(15,23,42,.98)}.relay-page .card-title{padding:26px 34px;background:linear-gradient(180deg,rgba(255,255,255,.024) 0%,transparent 100%);font-weight:600}.relay-page .grid{gap:26px}.relay-page .tbl{border-radius:18px;overflow:hidden}@keyframes relay-pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.24)}70%{box-shadow:0 0 0 16px rgba(34,197,94,0)}}</style>';
+      root.innerHTML = '<div class="range-btns" id="rl-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div><div id="rl-body"></div>';
       const tb = document.getElementById('rl-tabs');
-      tb.innerHTML = TABS.map(function(kv){var k=kv[0],l=kv[1];return '<button class="btn ' + (S.tab===k?'active btn-primary':'') + '" data-tab="'+k+'">'+l+'</button>';}).join('');
-
+      tb.innerHTML = TABS.map(([k, l]) => `<button class="btn btn-sm ${S.tab === k ? 'active btn-primary' : ''}" data-tab="${k}">${l}</button>`).join('') +
+        '<span style="flex:1"></span><span class="muted small" id="rl-live">每 ' + (REFRESH_MS / 1000) + ' 秒自动刷新</span>' +
+        '<a class="btn btn-sm" href="/stats/" target="_blank" rel="noopener">' + icon('external', { size: 13 }) + ' 旧版面板</a>';
       tb.querySelectorAll('[data-tab]').forEach((b) => (b.onclick = () => {
         S.tab = b.dataset.tab;
         S.nextAt = 0;                /* 切页签立刻拉一次，不等节奏 */
@@ -47,15 +48,16 @@
   });
 
   const FETCH = {
+    policy: ['busy-hours'],
     overview: ['summary', 'health', 'selfheal', 'quota', 'providers', 'hourly', 'daily'],
     traffic: ['summary', 'hourly', 'daily', 'models', 'models-daily', 'status', 'routes', 'endpoints', 'methods'],
     quality: ['summary', 'latency', 'ttfb', 'streaming', 'sizes', 'failover', 'errors', 'model-status', 'weekday'],
     hitrate: [],
     tokenhit: [],
-    clients: ['sessions', 'session-memory', 'useragents', 'recent', 'summary', 'client-origins'],
+    clients: ['sessions', 'session-memory', 'useragents', 'recent', 'summary', 'clients-usage?days=7'],
     tokens: [],
     keys: ['providers'],
-    policy: ['busy-hours'],
+    distkeys: ['client-keys'],
   };
 
   async function load(names) {
@@ -96,6 +98,7 @@
       else if (S.tab === 'clients') S.upd[S.tab] = tabClients(box, d);
       else if (S.tab === 'tokens') S.upd[S.tab] = tabTokens(box, d);
       else if (S.tab === 'keys') S.upd[S.tab] = await tabKeys(box, d);
+      else if (S.tab === 'distkeys') S.upd[S.tab] = tabDistKeys(box, d);
       else if (S.tab === 'policy') S.upd[S.tab] = tabPolicy(box, d);
       /* 首次填充：用刚拉到的数据执行一次原地更新 */
       if (S.upd[S.tab]) await S.upd[S.tab](d);
@@ -491,37 +494,18 @@
   function tabClients(box, d) {
     box.innerHTML =
       liveStats([['sess', '会话数(今日)'], ['clients', '客户端数'], ['sessmem', '会话内存视图'], ['uas', '客户端软件']]) +
-      section('来源设备（服务器实际看到的地址 / 客户端网关带来的内网地址 / 人工标签）', '<div id="rl-c-src"></div><div id="rl-c-srcnote" class="muted small" style="margin-top:8px"></div>') +
       '<div class="grid g2">' +
       section('会话分布（按请求数）', '<div id="rl-c-dist"></div>') +
       section('每日会话', '<div id="rl-c-daily"></div>') +
       '</div>' +
       section('Top 会话', '<div id="rl-c-top"></div>') +
       section('会话上下文明细（内存视图）', '<div id="rl-c-mem"></div>') +
-      section('客户端软件构成', '<div id="rl-c-ua"></div>') +
+      section('客户端用量（Token · 按来源区分） <span class="muted small">客户端 = 分发 Key + 来源 IP + User-Agent；改标签用 /api/device-label</span>', '<div id="rl-c-usage"></div>') +
+            section('客户端软件构成', '<div id="rl-c-ua"></div>') +
       section('实时活动（最近请求）', '<div id="rl-c-recent"></div>');
 
     const R = {};
     ['sess', 'clients', 'sessmem', 'uas'].forEach((k) => { R[k] = live(box, k); });
-
-    /* box 是复用的 #rl-body，所以监听只挂一次，靠 data 属性委托到每次重画的按钮上 */
-    if (!box.__srcBound) {
-      box.__srcBound = true;
-      box.addEventListener('click', (ev) => {
-        const b = ev.target && ev.target.closest && ev.target.closest('[data-labelip]');
-        if (!b) return;
-        const ip = b.getAttribute('data-labelip') || '';
-        const cur = b.getAttribute('data-labelcur') || '';
-        modal.prompt('给这台设备起名', [
-          { name: 'label', label: '名称（留空则清除）', placeholder: cur || '例如：书房那台 Mac', mono: false },
-        ], { okText: '保存' }).then((r) => {
-          if (!r) return;
-          CM.api.post('/relay/action', { name: 'clients/label', payload: { ip: ip, label: String(r.label || '') } })
-            .then(() => { window.toast('设备标签已保存', 'ok'); render(); })
-            .catch((e) => window.toast(e.message, 'err'));
-        });
-      });
-    }
 
     return (nd) => {
       nd = nd || {};
@@ -536,25 +520,6 @@
         _time: String(r.time || '').replace('T', ' ').slice(11, 19), _out: fmt.bytes(r.bytes_out), _in: fmt.bytes(r.bytes_in),
         _stream: r.streaming ? ui.badge('S', 'ok') : '', _sess: fmt.esc(String(r.session || '').slice(0, 20)),
       }));
-
-      /* 来源设备：类型标签是本地化映射，分类本身由 collector 判定（它才看得到真实对端）。
-         MAC 不显示：这台机器上取不到，collector 的 note 里写明了原因。 */
-      const CLS = { public: '公网', private: '私网', 'same-subnet': '同网段(VPC)', 'carrier-nat': '运营商NAT', loopback: '本机回环', 'link-local': '链路本地', other: '未知' };
-      const cs = nd['client-origins'] || {};
-      const srcRows = (cs.clients || []).map((x) => Object.assign({}, x, {
-        _cls: CLS[x.class] || x.class || '-',
-        _last: tm(x.last_ts),
-        _xff: x.xff ? fmt.esc(String(x.xff).split(',').pop().trim()) : '<span class="muted">未提供</span>',
-        _label: x.label ? fmt.esc(x.label) : '<span class="muted">—</span>',
-        _act: '<button class="btn btn-sm" data-labelip="' + fmt.esc(x.ip) + '" data-labelcur="' +
-          fmt.esc(x.label || '') + '">起名</button>',
-      }));
-      slot(box, 'rl-c-src', T([
-        ['_label', '设备'], ['ip', '来源IP', 'mono'], ['_cls', '类型'], ['_xff', '内网地址(XFF)', 'mono small'],
-        ['hits', '请求数', 'num'], ['_last', '最近', 'mono small'], ['_act', '', '', (v) => v],
-      ], srcRows, 'max-height:38vh'), sigOf(cs.clients));
-      const noteEl = box.querySelector('#rl-c-srcnote');
-      if (noteEl && cs.note && noteEl.textContent !== cs.note) noteEl.textContent = cs.note;
 
       setNum(R.sess.v, Number(todayS.sessions || 0));
       setText(R.sess.s, '今日请求 ' + num(todayS.requests));
@@ -573,6 +538,27 @@
         ['cache_read', '缓存读', 'num'], ['max_ctx', '最大上下文', 'num'], ['_chr', '均上下文', 'num'], ['latest_context', '最近上下文', 'num'],
         ['_cache', '缓存命中', 'num'], ['archived_turns', '已归档', 'num'], ['max_msgs', '最大消息', 'num'],
       ], smRows, 'max-height:32vh'), sigOf(sm.sessions));
+      const cu = nd['clients-usage?days=7'] || {};
+      const cuRows = (cu.clients || []).map((c) => Object.assign({}, c, {
+        _client: (c.label ? c.label : '') || c.ip,
+        _ip: c.ip,
+        _ua: c.ua_family,
+        _in: num(c.input_tokens), _out: num(c.output_tokens),
+        _cache: num(c.cache_tokens), _total: num(c.total_tokens),
+        _share: pct1(c.token_share),
+        _first: tm(c.first_seen), _last: tm(c.last_seen),
+        _models: String(c.model_list || '').split(',').slice(0, 3).join(','),
+        _unknown: c.ip === '(unknown)',
+      }));
+      slot(box, 'rl-c-usage', T([
+        ['_client', '客户端', 'mono', (v, r) => (r._unknown ? '<span class="muted">' + fmt.esc(v) + '（旧数据无身份）</span>' : fmt.esc(v))],
+        ['_ip', '来源 IP', 'mono small', (v, r) => r._unknown ? '' : fmt.esc(v)],
+        ['_ua', 'UA 族', 'mono'], ['requests', '请求', 'num'], ['ok', '成功', 'num'],
+        ['_in', '输入Token', 'num'], ['_out', '输出Token', 'num'], ['_cache', '缓存Token', 'num'],
+        ['_total', '总Token', 'num'], ['_share', '占比', 'num'],
+        ['sessions', '会话', 'num'], ['active_days', '活跃天', 'num'],
+        ['_models', '模型', 'mono small', (v) => fmt.esc(v)], ['_first', '首次'], ['_last', '最近'],
+      ], cuRows, 'max-height:36vh'), sigOf(cu.clients));
       slot(box, 'rl-c-ua', T([
         ['family', 'UA 族', 'mono'], ['requests', '请求', 'num'], ['bytes_out', '出站', 'num', (v) => fmt.bytes(v)], ['bytes_in', '入站', 'num', (v) => fmt.bytes(v)],
         ['sessions', '会话', 'num'], ['clients', '客户端', 'num'], ['_sr', '成功率', 'num'], ['_samples', '样本', 'mono small', (v) => fmt.esc(v)], ['_last', '最近'],
@@ -753,6 +739,168 @@
       }));
     };
 
+    return paint;
+  }
+
+  /* ============ 6b. 分发 Key（发给客户端的内部 key） ============ */
+  /* 客户端只持有这一类 key：官方 key 由中继在请求途中替换，从不出服务器。
+     时/周/月上限按 key 统计，数据就是 tap 自己写的用量表（usage_events），
+     所以「用了多少」与「拦不拦」是同一个口径。停用在名单重新下发后生效；
+     上限调整则是下一个请求就咬。 */
+  const DK_W = ['hour', 'week', 'month'];
+  const DK_LABEL = { hour: '近 1 小时', week: '本周', month: '本月' };
+  const DK_HINT = { hour: '滚动窗口', week: '周一 00:00 重置', month: '1 号 00:00 重置' };
+  const DK_DEFAULT = { hour: 20000000, week: 200000000, month: 600000000 };
+
+  function dkBar(win, key) {
+    if (!win) return '';
+    const label = '<span>' + DK_LABEL[key] + '</span>';
+    if (!win.limit) {
+      return '<div class="rl-win">' + label +
+        '<div class="bar"><div style="width:0"></div></div><span class="muted">不限</span></div>';
+    }
+    const used = Number(win.used || 0), pct = Math.min(100, Math.round((used / win.limit) * 100));
+    const cls = pct >= 90 ? 'bad' : pct >= 70 ? 'warn' : 'ok';
+    return '<div class="rl-win">' + label +
+      '<div class="bar ' + cls + '"><div style="width:' + pct + '%"></div></div>' +
+      '<span class="mono">' + num(used) + ' / ' + num(win.limit) + (win.over ? ' 已超' : '') + '</span></div>';
+  }
+
+  function dkQuotaFields(rec) {
+    const q = (rec && rec.quota) || {};
+    return DK_W.map((w) => ({
+      name: w,
+      label: DK_LABEL[w] + '上限（token，0=不限 · ' + DK_HINT[w] + '）',
+      value: String(q[w] != null ? q[w] : (DK_DEFAULT[w] || '')),
+      mono: true,
+    }));
+  }
+  const dkParse = (o) => {
+    const quota = {};
+    DK_W.forEach((w) => {
+      const v = parseInt(String((o[w] || '0').replace(/[, ]/g, '')), 10);
+      quota[w] = isNaN(v) || v < 0 ? 0 : v;
+    });
+    return quota;
+  };
+
+  async function createDistKey() {
+    const r = await modal.prompt('新建分发 Key —— 给谁用', [
+      { name: 'label', label: '用途 / 使用人', placeholder: '例：张三的笔记本' },
+    ].concat(dkQuotaFields(null), [{ name: 'note', label: '备注', placeholder: '可选' }]), { okText: '生成' });
+    if (!r || !String(r.label || '').trim()) return;
+    try {
+      const out = await CM.api.post('/relay/action', {
+        name: 'client-keys/create',
+        payload: { label: r.label, note: r.note, quota: dkParse(r) },
+      });
+      modal.output('这枚 key 只显示这一次，请立刻复制分发', out.key);
+      window.toast(out.detail, out.applied ? 'ok' : 'err');
+      refreshNow();
+    } catch (e) { window.toast(e.message, 'err'); }
+  }
+
+  async function editDistKey(rec) {
+    const r = await modal.prompt('调整额度 - ' + (rec.label || rec.id),
+      [{ name: 'label', label: '用途 / 使用人', value: rec.label || '' }]
+        .concat(dkQuotaFields(rec), [{ name: 'note', label: '备注', value: rec.note || '' }]),
+      { okText: '保存' });
+    if (!r) return;
+    await dkAct('client-keys/update', { id: rec.id, label: r.label, note: r.note, quota: dkParse(r) });
+  }
+
+  /* 列表里只有掩码；错过一次性弹窗时靠这个把完整 key 取回来（面板审计会记下这次读取）。 */
+  async function dkCopy(rec, btn) {
+    if (btn) ui.busy(btn, true);
+    try {
+      const out = await CM.api.post('/relay/action', { name: 'client-keys/reveal', payload: { id: rec.id } });
+      if (await ui.copy(out.key || '')) window.toast('完整 key 已复制到剪贴板', 'ok');
+      else modal.output('这枚 key 的完整值（浏览器不让脚本复制，请手动选中）', out.key || '');
+    } catch (e) { window.toast(e.message, 'err'); }
+    if (btn) ui.busy(btn, false);
+  }
+
+  async function dkAct(name, payload, btn) {
+    if (name === 'client-keys/delete') {
+      const okc = await modal.confirm('删除 key',
+        '删除后这枚 key 立刻不可用，且无法恢复（历史用量仍保留）。确认删除？',
+        { danger: true, okText: '删除' });
+      if (!okc) return;
+    }
+    if (btn) ui.busy(btn, true);
+    try {
+      const out = await CM.api.post('/relay/action', { name, payload });
+      window.toast(out.detail, out.applied === false ? 'err' : 'ok');
+      refreshNow();
+    } catch (e) { window.toast(e.message, 'err'); }
+    if (btn) ui.busy(btn, false);
+  }
+
+  function tabDistKeys(box, d) {
+    box.innerHTML = '<div id="rl-dk"></div>';
+    const host = box.querySelector('#rl-dk');
+    const paint = (dd) => {
+      const data = (dd || {})['client-keys'] || dd || {};
+      if (data.error) { host.innerHTML = '<div class="card"><div class="muted small">' + fmt.esc(data.error) + '</div></div>'; host.dataset.sig = ''; return; }
+      const keys = data.keys || [];
+      /* 这页每 10 秒被定时器重画一次。整块 innerHTML 重建会把按钮换成新节点，
+         正在点的那一下就会落在游离节点上（表现为"点了没反应"），选中状态也会丢。
+         签名只取真正显示出来的字段：windows.<w>.since 是滚动窗口的起点，每次拉取都不同，
+         把它算进去等于永远重建。 */
+      const sig = sigOf(keys.map((k) => [k.id, k.label, k.note, k.masked, k.enabled, k.internal,
+        k.quota, k.created_at,
+        DK_W.map((w) => { const e = (k.windows || {})[w] || {}; return [e.limit, e.used, !!e.over]; })]));
+      if (host.dataset.sig === sig) return;
+      host.dataset.sig = sig;
+      const enabled = keys.filter((k) => k.enabled).length;
+      const totals = data.totals || {};
+      host.innerHTML =
+        '<div class="grid g4 mb">' +
+        stat('启用中', enabled + ' / ' + keys.length, '客户端持有的内部 key') +
+        DK_W.map((w) => stat(DK_LABEL[w] + '已用', num((totals[w] || {}).used || 0),
+          (totals[w] || {}).limit ? '上限合计 ' + num(totals[w].limit) : '均未设上限')).join('') +
+        '</div>' +
+        '<div class="card mb"><div class="card-title">分发 Key' +
+        '<div class="right"><button class="btn btn-sm" id="dk-apply">' + icon('refresh', { size: 12 }) + ' 重新下发名单</button>' +
+        '<button class="btn btn-sm btn-ok" id="dk-new">' + icon('plus', { size: 12 }) + ' 新建 key</button></div></div>' +
+        '<div class="muted small" style="padding:0 16px 10px">客户端把 <code>OPENCODE_RELAY_KEY</code> 填成这里的 key 即可；' +
+        '官方 key 由中继替换，不落客户端。额度口径：时=滚动 1 小时，周=本自然周（周一起），月=本自然月（1 号起），0 为不限。' +
+        '名单文件 <span class="mono">' + fmt.esc(data.store || '') + '</span>，仓库更新 ' + tmFull(data.updated_at) + '。</div>' +
+        '<div id="dk-list"></div></div>';
+      const list = host.querySelector('#dk-list');
+      list.innerHTML = keys.length ? keys.map((k) => {
+        const over = DK_W.filter((w) => (k.windows || {})[w] && (k.windows || {})[w].over);
+        return '<div class="rl-key">' +
+          '<div class="rl-key-head"><span class="mono">' + fmt.esc(k.masked) + '</span>' +
+          '<b>' + fmt.esc(k.label || '（未命名）') + '</b>' +
+          (k.enabled ? '<span class="badge ok">启用</span>' : '<span class="badge gray">已停用</span>') +
+          (k.internal ? '<span class="badge info">主令牌 · 不受额度限制</span>' : '') +
+          (over.length ? '<span class="badge bad">' + over.map((w) => DK_LABEL[w]).join('/') + '超额</span>' : '') +
+          '<span class="chip">' + fmt.esc(k.id) + '</span>' +
+          (k.note ? '<span class="muted small">' + fmt.esc(k.note) + '</span>' : '') + '</div>' +
+          '<div class="rl-wins">' + DK_W.map((w) => dkBar((k.windows || {})[w], w)).join('') + '</div>' +
+          '<div class="row" style="gap:6px">' +
+          (k.internal ? '' :
+            '<button class="btn btn-sm" data-dk="copy" data-id="' + fmt.esc(k.id) + '">' + icon('copy', { size: 12 }) + ' 复制完整 key</button>' +
+            '<button class="btn btn-sm" data-dk="edit" data-id="' + fmt.esc(k.id) + '">改额度 / 标签</button>' +
+            '<button class="btn btn-sm" data-dk="toggle" data-id="' + fmt.esc(k.id) + '" data-en="' + (!k.enabled) + '">' + (k.enabled ? '停用' : '启用') + '</button>' +
+            '<button class="btn btn-sm btn-danger" data-dk="delete" data-id="' + fmt.esc(k.id) + '">删除</button>') +
+          '<span style="flex:1"></span><span class="muted small">创建于 ' + tmFull(k.created_at) + '</span></div>' +
+          '</div>';
+      }).join('') : '<div class="muted small" style="padding:12px">还没有分发 key，点右上「新建 key」生成第一枚。</div>';
+
+      host.querySelector('#dk-new').onclick = createDistKey;
+      host.querySelector('#dk-apply').onclick = () => dkAct('client-keys/apply', {});
+      list.querySelectorAll('[data-dk]').forEach((b) => {
+        const rec = keys.find((x) => x.id === b.dataset.id) || {};
+        b.onclick = () => {
+          if (b.dataset.dk === 'copy') dkCopy(rec, b);
+          else if (b.dataset.dk === 'edit') editDistKey(rec);
+          else if (b.dataset.dk === 'toggle') dkAct('client-keys/enable', { id: rec.id, enabled: b.dataset.en === 'true' }, b);
+          else dkAct('client-keys/delete', { id: rec.id }, b);
+        };
+      });
+    };
     return paint;
   }
 
@@ -1020,231 +1168,6 @@
     return pull;
   }
 
-  function tabPolicy(box, d) {
-    box.innerHTML =
-      '<div class="bp-wrap">' +
-      '<div class="bp-layout"><aside class="bp-aside"><div class="bp-panel"><div class="bp-panel-head"><div class="bp-panel-title"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3l2 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>运行状态</span></div></div><div class="bp-panel-body" id="rl-pol-state"><div class="bp-skel"></div></div></div><div class="bp-panel"><div class="bp-panel-head"><div class="bp-panel-title"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="2" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="2" y="7" width="12" height="2" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="2" y="10" width="12" height="2" rx="1" stroke="currentColor" stroke-width="1.4"/></svg><span>中国国内节假日与调休</span></div><div class="bp-panel-sub" id="rl-pol-cal-src">数据源：中继服务端</div></div><div class="bp-panel-body"><div id="rl-pol-holidays" style="display:flex;flex-direction:column;gap:8px"><div class="bp-skel"></div></div></div></div></aside><main class="bp-main"><div class="bp-panel"><div class="bp-panel-head"><div class="bp-panel-title"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M2 6h12M5 3v2M11 3v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>策略配置</span></div><div class="bp-panel-sub">保存后即时生效</div></div><div class="bp-panel-body" id="rl-pol-editor"><div class="bp-skel tall"></div></div></div></main></div></div>';
-
-    let built = false;
-    let lastData = { switch_off: false };
-    const paintState = function(data){
-      var el = document.getElementById('rl-pol-state');
-      if(!el) return;
-      if(data.__error){ el.innerHTML = '<div class="bp-panel-sub">' + fmt.esc(data.__error) + '</div>'; return; }
-      var cfg = data.config || {}, tap = data.tap || {};
-      var winTxt = (cfg.windows && cfg.windows.length) ? cfg.windows.map(function(w){return w.start+' - '+w.end;}).join(' · ') : '未配置';
-      el.innerHTML = phaseBadge(data.phase || {}) + '<div class="bp-panel-sub">作用线路 /' + fmt.esc(cfg.route||'') + '/ · 目标 ' + fmt.esc(cfg.target_model||'-') + ' · 累计改写 ' + (tap.rewrites==null?'-':tap.rewrites) + ' 次</div><div class="bp-panel-sub">窗口：' + fmt.esc(winTxt) + '</div>';
-    };
-    const buildEditor = function(data){
-      var host = document.getElementById('rl-pol-editor');
-      if(!host) return;
-      var cfg = data.config || {}, allow = data.go_allowlist || [], routes = data.policy_routes || ['go'];
-      var winRows = function(w){ return '<div class="bp-win-row rl-pol-win"><div style="display:flex;align-items:center;gap:12px"><span class="bp-panel-sub">起始</span><input class="bp-input mono" type="time" step="60" value="'+fmt.esc(w.start)+'" data-k="start" style="width:150px"><span class="bp-panel-sub">结束</span><input class="bp-input mono" type="time" step="60" value="'+fmt.esc(w.end)+'" data-k="end" style="width:150px"></div><div style="flex:1"></div><button class="btn btn-sm" data-rm>移除</button></div>'; };
-      var tzList = [{v:480,n:'(UTC+08:00) 北京、上海、香港、新加坡'},{v:540,n:'(UTC+09:00) 东京、首尔'},{v:420,n:'(UTC+07:00) 曼谷、雅加达'},{v:0,n:'(UTC+00:00) 伦敦'},{v:-240,n:'(UTC-04:00) 纽约'},{v:-480,n:'(UTC-08:00) 洛杉矶'},{v:60,n:'(UTC+01:00) 巴黎、柏林'},{v:120,n:'(UTC+02:00) 开罗、赫尔辛基'},{v:330,n:'(UTC+05:30) 孟买、新德里'},{v:600,n:'(UTC+10:00) 悉尼'}];
-      var curTz = Number(cfg.utc_offset_minutes == null ? 480 : cfg.utc_offset_minutes);
-      var isCustom = true;
-      for(var i=0;i<tzList.length;i++){ if(tzList[i].v===curTz){ isCustom=false; break; } }
-      var opts = '';
-      for(var j=0;j<tzList.length;j++){ opts += '<option value="'+tzList[j].v+'"'+(tzList[j].v===curTz && !isCustom?' selected':'')+'>'+tzList[j].n+'</option>'; }
-      opts += '<option value="custom"'+(isCustom?' selected':'')+'>自定义（分钟偏移）</option>';
-      var routesOpts = '';
-      for(var r=0;r<routes.length;r++){ routesOpts += '<option value="'+fmt.esc(routes[r])+'"'+(routes[r]===cfg.route?' selected':'')+'>'+fmt.esc(routes[r])+'</option>'; }
-      var targetsOpts = allow.length ? allow.map(function(m){ return '<option value="'+fmt.esc(m)+'"'+(m===cfg.target_model?' selected':'')+'>'+fmt.esc(m)+'</option>'; }).join('') : '<option value="'+fmt.esc(cfg.target_model||'')+'">'+fmt.esc(cfg.target_model||'-')+'</option>';
-      var winsHtml = (cfg.windows||[]).map(winRows).join('');
-      host.innerHTML = '<div class="bp-toggle-row"><label class="bp-toggle"><input type="checkbox" id="rl-pol-on" '+(cfg.enabled?'checked':'')+'><div class="bp-toggle-text"><span>启用忙时改写</span><span class="bp-toggle-sub">开启后将在指定时段内按规则改写模型</span></div></label><label class="bp-toggle"><input type="checkbox" id="rl-pol-wd" '+(cfg.weekdays_only?'checked':'')+'><div class="bp-toggle-text"><span>仅中国大陆工作日（含调休）</span><span class="bp-toggle-sub">根据中国大陆法定工作日及调休安排判定</span></div></label></div>'+
-        '<div class="bp-section"><div class="bp-section-header"><div class="bp-section-title"><span class="bp-section-dot"></span><span>基本设置</span></div></div><div class="bp-form-grid">'+
-          '<div class="bp-field"><div class="bp-field-label">作用线路</div><select class="bp-select" id="rl-pol-route">'+routesOpts+'</select></div>'+
-          '<div class="bp-field"><div class="bp-field-label">改写目标模型</div><select class="bp-select mono" id="rl-pol-target">'+targetsOpts+'</select></div>'+
-          '<div class="bp-field"><div class="bp-field-label">时区</div><select class="bp-select" id="rl-pol-tz">'+opts+'</select><input class="bp-input mono" id="rl-pol-off" type="number" min="-720" max="840" step="30" value="'+fmt.esc(String(curTz))+'" style="margin-top:10px;'+(isCustom?'':'display:none')+'"></div>'+
-        '</div></div>'+
-        '<div class="bp-section"><div class="bp-section-header"><div class="bp-section-title"><span class="bp-section-dot"></span><span>改写规则</span></div></div><div class="bp-field"><div class="bp-field-label">命中前缀（逗号分隔）</div><input class="bp-input mono" id="rl-pol-pre" placeholder="例如：deepseek-chat, kimi" value="'+fmt.esc((cfg.rewrite_prefixes||[]).join(', '))+'"></div></div>'+
-        '<div class="bp-section"><div class="bp-section-header"><div class="bp-section-title"><span class="bp-section-dot"></span><span>生效时段</span></div><button class="btn btn-sm" id="rl-pol-add">新增时段</button></div><div style="display:flex;flex-direction:column;gap:10px" id="rl-pol-wins">'+winsHtml+'</div></div>'+
-        '<div class="bp-actions"><div class="bp-actions-group"><button class="btn btn-primary" id="rl-pol-save">保存策略</button><button class="btn" id="rl-pol-preview">按时刻试算</button><button class="btn '+(data.switch_off?'btn-primary':'')+'" id="rl-pol-switch">'+(data.switch_off?'恢复改写':'临时停用')+'</button></div><div class="bp-actions-hint">写入 '+fmt.esc(data.config_path||'/etc/relay/busy-hours.json')+'</div></div>';
-      var tzSel = host.querySelector('#rl-pol-tz'), offIn = host.querySelector('#rl-pol-off');
-      if(tzSel){ tzSel.onchange = function(){ if(tzSel.value === 'custom'){ offIn.style.display='block'; offIn.focus(); } else { offIn.style.display='none'; offIn.value = tzSel.value; } }; }
-      host.querySelector('#rl-pol-add').onclick = function(){ var w = host.querySelector('#rl-pol-wins'); var row = document.createElement('div'); row.className = 'bp-win-row rl-pol-win'; row.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><span class="bp-panel-sub">起始</span><input class="bp-input mono" type="time" step="60" value="09:00" data-k="start" style="width:150px"><span class="bp-panel-sub">结束</span><input class="bp-input mono" type="time" step="60" value="12:00" data-k="end" style="width:150px"></div><div style="flex:1"></div><button class="btn btn-sm" data-rm>移除</button>'; w.appendChild(row); row.querySelector('[data-rm]').onclick = function(){ row.remove(); }; };
-      var rms = host.querySelectorAll('.rl-pol-win [data-rm]');
-      for(var k=0;k<rms.length;k++){ rms[k].onclick = function(){ var r = this.closest('.rl-pol-win'); if(r) r.remove(); }; }
-      var sv = host.querySelector('#rl-pol-save');
-      if(sv){ sv.onclick = function(e){ var tzv = tzSel ? tzSel.value : '480'; var offv = (tzv === 'custom' && offIn) ? offIn.value : tzv; var h = document.getElementById('rl-pol-off-hidden'); if(!h){ h = document.createElement('input'); h.type='hidden'; h.id='rl-pol-off-hidden'; host.appendChild(h); } h.value = offv; savePolicy(e.currentTarget); }; }
-      var swb = host.querySelector('#rl-pol-switch');
-      if(swb){ swb.onclick = function(e){ togglePolicySwitch(e.currentTarget, lastData.switch_off); }; }
-      var pvb = host.querySelector('#rl-pol-preview');
-      if(pvb){ pvb.onclick = function(e){ previewPolicy(e.currentTarget); }; }
-    };
-    const upd = async function(dd){
-      var data = dd['busy-hours'] || dd.busy_hours || {__error:'无数据'};
-      if(!data.__error){ lastData = data; POLICY_BASE = data; }
-      paintState(data);
-      paintCalendar(data);
-      if(!built){ built = true; if(!data.__error) buildEditor(data); }
-      var sw = document.getElementById('rl-pol-switch');
-      if(sw && !data.__error){ sw.textContent = data.switch_off ? '恢复改写' : '临时停用'; if(data.switch_off) sw.classList.add('btn-primary'); else sw.classList.remove('btn-primary'); }
-    };
-    return upd;
-  }
-
-
-  /* ---- 调休日历：由中继服务端用 tap 同一个 is_workday() 算好下发 ----
-     以前这里在浏览器里 fetch raw.githubusercontent.com，这台机器的网络到不了，
-     而且就算到了，展示的假期也和真正改写流量的那份判定不是一个来源。 */
-  let POLICY_BASE = null;   // 最近一次服务端返回的已保存策略，用来判断表单有没有未保存改动
-
-  /* 忙/闲的判定来自服务端（也就是 tap 本人），这里只负责画出来 */
-  function phaseBadge(ph) {
-    const st = ph.state === 'busy' ? 'busy' : (ph.state === 'unknown' ? 'unknown' : 'idle');
-    const col = st === 'busy' ? '#f59e0b' : (st === 'unknown' ? 'var(--muted)' : '#22c55e');
-    const bg = st === 'busy' ? 'rgba(245,158,11,.14)' : (st === 'unknown' ? 'rgba(148,163,184,.12)' : 'rgba(34,197,94,.12)');
-    const bd = st === 'busy' ? 'rgba(245,158,11,.5)' : (st === 'unknown' ? 'rgba(148,163,184,.35)' : 'rgba(34,197,94,.45)');
-    const label = ph.label || (st === 'busy' ? '忙时' : (st === 'unknown' ? '未知' : '闲时'));
-    return '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">' +
-      '<span style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;' +
-      'font-size:13px;font-weight:600;letter-spacing:.02em;border:1px solid ' + bd + ';background:' + bg + ';color:' + col + '">' +
-      '<span style="width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px ' + bg + '"></span>' +
-      fmt.esc(label) + '</span>' +
-      '<span class="bp-panel-sub">' + fmt.esc(ph.reason || '') + '</span>' +
-      (ph.at ? '<span class="bp-panel-sub mono" style="margin-left:auto">' + fmt.esc(ph.at) + '</span>' : '') +
-      '</div>';
-  }
-
-  function paintCalendar(data) {
-    const hel = document.getElementById('rl-pol-holidays');
-    if (!hel) return;
-    const src = document.getElementById('rl-pol-cal-src');
-    if (data.__error) {
-      if (src) src.textContent = '数据源：中继服务端';
-      hel.innerHTML = '<div class="bp-panel-sub">日历不可用：' + fmt.esc(data.__error) + '</div>';
-      return;
-    }
-    const cal = data.calendar || {}, yrs = data.calendar_years || {};
-    if (src) src.textContent = '数据源：服务端 chinese_calendar' + (yrs.min ? '（' + yrs.min + '-' + yrs.max + '）' : '');
-    if (!cal.available) {
-      hel.innerHTML = '<div class="bp-panel-sub">' + fmt.esc(cal.note || '该年没有节假日数据') + '</div>';
-      return;
-    }
-    const today = String(data.at || '').slice(0, 10) || new Date().toISOString().slice(0, 10);
-    const days = (cal.days || []).slice();
-    /* 接下来的安排排在前面，已经过去的沉下去 */
-    days.sort(function (a, b) {
-      const fa = a.date >= today ? 0 : 1, fb = b.date >= today ? 0 : 1;
-      if (fa !== fb) return fa - fb;
-      return fa === 0 ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date);
-    });
-    const wk = ['一', '二', '三', '四', '五', '六', '日'];
-    const head = '<div class="bp-panel-sub">' + cal.year + ' 年：休假 ' + cal.off_count +
-      ' 天 · 调休上班 ' + cal.makeup_count + ' 天</div>';
-    const rows = days.slice(0, 12).map(function (x) {
-      const label = x.type === 'off' ? '休假' : '调休上班';
-      const color = x.type === 'off' ? 'color:var(--ok)' : 'color:var(--warn,#f59e0b)';
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);' +
-        (x.date < today ? 'opacity:.45' : '') + '"><div><div>' + fmt.esc(x.name || label) +
-        '</div><div class="bp-panel-sub">' + fmt.esc(x.date) + ' 周' + (wk[x.weekday] || '') +
-        '</div></div><div style="' + color + ';font-size:12px">' + label + '</div></div>';
-    }).join('');
-    hel.innerHTML = head + (rows || '<div class="bp-panel-sub">今年没有与周一到周五不同的安排</div>') +
-      (days.length > 12 ? '<div class="bp-panel-sub">其余 ' + (days.length - 12) + ' 天略</div>' : '');
-  }
-
-  function readPolicyDraft() {
-    const g = function (id) { return document.getElementById(id); };
-    const on = g('rl-pol-on'), wd = g('rl-pol-wd'), pre = g('rl-pol-pre');
-    const route = g('rl-pol-route'), target = g('rl-pol-target');
-    const tzv = g('rl-pol-tz'), offi = g('rl-pol-off'), hid = g('rl-pol-off-hidden');
-    let offRaw = '480';
-    if (hid && String(hid.value) !== '') offRaw = hid.value;
-    else if (tzv && tzv.value !== 'custom') offRaw = tzv.value || '480';
-    else if (offi) offRaw = offi.value;
-    const wins = [];
-    const host = g('rl-pol-editor');
-    if (host) {
-      host.querySelectorAll('.rl-pol-win').forEach(function (row) {
-        const s = row.querySelector('[data-k="start"]'), e = row.querySelector('[data-k="end"]');
-        if (s && e) wins.push({ start: String(s.value || '').trim(), end: String(e.value || '').trim() });
-      });
-    }
-    const prefixes = [];
-    String(pre ? pre.value : '').split(/[,，\s]+/).forEach(function (p) {
-      p = p.trim().toLowerCase();
-      if (p && prefixes.indexOf(p) < 0) prefixes.push(p);
-    });
-    return {
-      enabled: !!(on && on.checked),
-      weekdays_only: !!(wd && wd.checked),
-      route: route ? route.value : 'go',
-      target_model: String(target ? target.value : '').trim(),
-      rewrite_prefixes: prefixes,
-      utc_offset_minutes: Number(offRaw) || 0,
-      windows: wins,
-    };
-  }
-
-  /* 试算走的是已保存策略（tap 也只读那份文件），所以表单和它不一致时要说清楚 */
-  function draftDiffers(d, cfg) {
-    if (!cfg) return false;
-    return JSON.stringify(d) !== JSON.stringify({
-      enabled: !!cfg.enabled, weekdays_only: !!cfg.weekdays_only, route: String(cfg.route),
-      target_model: String(cfg.target_model), rewrite_prefixes: cfg.rewrite_prefixes || [],
-      utc_offset_minutes: Number(cfg.utc_offset_minutes) || 0,
-      windows: (cfg.windows || []).map(function (w) { return { start: w.start, end: w.end }; }),
-    });
-  }
-
-  async function savePolicy(btn) {
-    const d = readPolicyDraft();
-    const winTxt = d.windows.length
-      ? d.windows.map(function (w) { return w.start + '-' + w.end; }).join(' · ')
-      : '（空窗：等价于不改写，要停用请用旁边那个开关）';
-    const msg = '线路 /' + d.route + '/ · 前缀 ' + (d.rewrite_prefixes.join(', ') || '（空）') +
-      ' → ' + d.target_model + '\n时段 ' + winTxt +
-      '\n' + (d.weekdays_only ? '仅中国大陆工作日（含调休）' : '每天') +
-      '\n' + (d.enabled ? '保存后立即参与改写判定' : '保存后策略仍为停用');
-    if (!(await modal.confirm('保存忙时策略', msg.replace(/\n/g, '<br>'), { okText: '保存' }))) return;
-    ui.busy(btn, true);
-    try {
-      const out = await CM.api.post('/relay/action', { name: 'busy-hours/save', payload: d });
-      window.toast((out.detail || '已保存') + (out.warning ? '（' + out.warning + '）' : ''), 'ok', 5000);
-      refreshNow();
-    } catch (e) { window.toast(e.message, 'err', 6000); }
-    ui.busy(btn, false);
-  }
-
-  async function togglePolicySwitch(btn, currentlyOff) {
-    const next = !currentlyOff;
-    const okc = await modal.confirm(next ? '临时停用忙时改写' : '恢复忙时改写',
-      next ? '只创建停用标记文件，策略配置原样不动；期间所有请求按客户端要求的模型转发。'
-           : '删除停用标记文件，恢复按配置改写。策略配置原样不动。',
-      { okText: next ? '停用' : '恢复', danger: next });
-    if (!okc) return;
-    ui.busy(btn, true);
-    try {
-      const out = await CM.api.post('/relay/action', { name: 'busy-hours/switch', payload: { off: next } });
-      window.toast(out.detail || out.note || '完成', 'ok');
-      refreshNow();
-    } catch (e) { window.toast(e.message, 'err', 6000); }
-    ui.busy(btn, false);
-  }
-
-  async function previewPolicy(btn) {
-    const r = await modal.prompt('按时刻试算', [
-      { name: 'at', label: '时刻（HH:MM 或 YYYY-MM-DD HH:MM，按策略时区）', placeholder: '10:30', mono: true },
-    ], { okText: '试算' });
-    if (!r || !r.at) return;
-    ui.busy(btn, true);
-    try {
-      const data = await CM.api.get('/relay/busy-hours?at=' + encodeURIComponent(String(r.at).trim()), 0);
-      const p = data.probe || {}, cal = data.calendar || {};
-      const hit = p.would_rewrite_to ? (p.model + ' → ' + p.would_rewrite_to)
-                                     : ('不改写（' + (p.reason || '?') + '）');
-      const unsaved = draftDiffers(readPolicyDraft(), POLICY_BASE && POLICY_BASE.config);
-      window.toast((data.at || '') + '\n' + (data.window_active_now ? '在生效时段内' : '不在生效时段') +
-        '\n' + hit +
-        (cal.available ? '' : '\n' + (cal.note || '')) +
-        (unsaved ? '\n注意：试算的是已保存策略，表单里有未保存的改动' : ''), data.window_active_now ? 'ok' : 'info', 7000);
-      paintCalendar(data);
-    } catch (e) { window.toast(e.message, 'err', 6000); }
-    ui.busy(btn, false);
-  }
-
   /* ============ actions ============ */
   async function addKey(provId) {
     const r = await modal.prompt('添加密钥 - ' + provId, [
@@ -1282,4 +1205,193 @@
   function refreshNow() {
     render();
   }
+/* ============ 9. policy（忙时 / 闲时改写） ============
+   编辑器只改配置文件；改不改写由请求路径上的 tap 决定。判定不在客户端复刻第二份：
+   现在是什么相位、试算某时刻会不会改写，都交给 GET /relay/busy-hours（服务端调 tap 本人的函数）。 */
+function tabPolicy(box, d) {
+  d = (d && (d['busy-hours'] || d)) || {};
+  if (d['busy-hours']) d = d['busy-hours'];
+  box.innerHTML =
+    '<div id="pl-phase" class="mb"></div>' +
+    '<div class="grid g2 mb">' +
+      section('策略状态', '<div id="pl-state"></div>') +
+      section('试算（选一个时刻看会不会改写）',
+        '<div style="display:flex;gap:8px;align-items:center;padding:0 16px 12px">' +
+        '<input class="inp mono" id="pl-at" style="width:200px" placeholder="HH:MM 或 YYYY-MM-DD HH:MM">' +
+        '<button class="btn btn-sm btn-primary" id="pl-probe">试算</button></div>' +
+        '<div id="pl-probe-out"></div>') +
+    '</div>' +
+    '<div class="card mb">' +
+      '<div class="card-title">忙时改写（deepseek 容量退化的时段）' +
+        '<div class="right"><button class="btn btn-sm btn-primary" id="pl-busy-save">保存忙时</button></div>' +
+      '</div>' +
+      '<div id="pl-busy-form" style="padding:4px 16px 12px"></div>' +
+    '</div>' +
+    '<div class="card mb">' +
+      '<div class="card-title">闲时改写（其余全部时间 · 全部模型 → 目标模型）' +
+        '<div class="right"><button class="btn btn-sm btn-primary" id="pl-idle-save">保存闲时</button></div>' +
+      '</div>' +
+      '<div id="pl-idle-form" style="padding:4px 16px 12px"></div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="card-title">策略文件与执行' +
+        '<div class="right">' +
+          '<button class="btn btn-sm" id="pl-refresh">刷新</button>' +
+          '<button class="btn btn-sm btn-danger" id="pl-switch">临时停用</button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="pl-meta" class="small muted" style="padding:0 16px 12px"></div>' +
+    '</div>';
+
+  const cfg = d.config || {}, ph = d.phase || {}, probe = d.probe || {}, tap = d.tap || {};
+  const allowed = d.go_allowlist || [];
+  const routes = d.policy_routes || ['go', 'zen', 'glm', 'mimo'];
+  const sel = (name, value, options) =>
+    `<select class="inp" data-f="${name}">${options.map((o) => `<option value="${fmt.esc(o)}" ${o === value ? 'selected' : ''}>${fmt.esc(o)}</option>`).join('')}</select>`;
+
+  /* ── 相位横幅 ── */
+  const pState = ph.state || 'unknown';
+  const pInEffect = ph.in_effect === true;
+  document.getElementById('pl-phase').innerHTML = `<div class="card" style="border-left:3px solid ${pState === 'busy' ? '#c79209' : pInEffect ? '#2fa84f' : '#5d7089'}">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="badge ${pState === 'busy' ? 'warn' : pInEffect ? 'ok' : ''}" style="font-size:13px">${fmt.esc(ph.label || '未知')}</span>
+      <span class="small muted">${fmt.esc(ph.reason || '')}</span>
+      ${d.at ? `<span class="small muted mono" style="margin-left:auto">${fmt.esc(d.at)}</span>` : ''}
+    </div></div>`;
+
+  /* ── 状态卡 ── */
+  const idleCfg = cfg.idle || {};
+  document.getElementById('pl-state').innerHTML = ui.table([
+    { k: 'k', label: '', cls: 'mono' },
+    { k: 'v', label: '' },
+  ], [
+    { k: '忙时', v: cfg.enabled ? `${(cfg.rewrite_prefixes || []).join('/')} → ${cfg.target_model || '—'}` : '已停用' },
+    { k: '忙时窗口', v: (cfg.windows || []).map((w) => `${w.start}-${w.end}`).join(' · ') || '未配置' },
+    { k: '闲时', v: idleCfg.enabled ? `全部 → ${idleCfg.target_model || '—'}` : '已停用' },
+    { k: '闲时窗口', v: (idleCfg.windows || []).length ? (idleCfg.windows || []).map((w) => `${w.start}-${w.end}`).join(' · ') : '忙时窗口的补集' },
+    { k: '累计改写', v: `${tap.rewrites != null ? tap.rewrites : '—'}（最近：${tap.last_rewrite ? (tap.last_rewrite.from + '→' + tap.last_rewrite.to) : '—'}）` },
+    { k: '执行路径', v: tap.in_request_path ? '流量经过 tap ✓' : 'tap 被旁路（改写不执行）' },
+  ], { hint: false });
+
+  /* ── 试算 ── */
+  document.getElementById('pl-probe-out').innerHTML = probe.model
+    ? `<div class="small" style="padding:0 16px 12px">试算 <b class="mono">${fmt.esc(probe.model)}</b> → <b class="mono">${fmt.esc(probe.would_rewrite_to || '不改写')}</b> <span class="muted">（${fmt.esc(probe.reason || '')}）</span></div>`
+    : '';
+  document.getElementById('pl-probe').onclick = async () => {
+    const at = document.getElementById('pl-at').value.trim();
+    if (!at) { window.toast('请填时刻（HH:MM）', 'warn'); return; }
+    try {
+      const r = await CM.api.get('/relay/busy-hours?at=' + encodeURIComponent(at), 0);
+      const p2 = r.probe || {}, pp = r.phase || {};
+      document.getElementById('pl-probe-out').innerHTML =
+        `<div class="small" style="padding:0 16px 12px">${fmt.esc(r.at || at)}：<span class="badge ${pp.state === 'busy' ? 'warn' : pp.in_effect ? 'ok' : ''}">${fmt.esc(pp.label || '')}</span> 试算 <b class="mono">${fmt.esc((p2.model || '') + ' → ' + (p2.would_rewrite_to || '不改写'))}</b> <span class="muted">${fmt.esc(p2.reason || '')}</span></div>`;
+    } catch (e) { window.toast('试算失败：' + e.message, 'err'); }
+  };
+
+  /* ── 窗口行编辑器 ── */
+  const winRows = (rows, mountId, key) => {
+    const box = document.getElementById(mountId);
+    const draw = () => {
+      box.innerHTML = rows.map((w, i) =>
+        `<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+          <input class="inp mono" style="width:110px" data-w="${key}" data-i="${i}" data-k="start" value="${fmt.esc(w.start)}" placeholder="09:00"> –
+          <input class="inp mono" style="width:110px" data-w="${key}" data-i="${i}" data-k="end" value="${fmt.esc(w.end)}" placeholder="18:00">
+          <button class="btn btn-sm btn-danger" data-wdel="${key}" data-i="${i}">删除</button>
+        </div>`).join('') +
+        `<button class="btn btn-sm" data-wadd="${key}">${icon('plus', { size: 12 })} 添加窗口</button>` +
+        (key === 'idle' ? '<div class="small muted" style="margin-top:6px">留空 = 忙时窗口的补集：晚间、午休、周末与节假日整天都算闲时</div>' : '');
+      box.querySelectorAll('[data-w]').forEach((inp) => {
+        inp.onchange = () => { rows[Number(inp.dataset.i)][inp.dataset.k] = inp.value.trim(); };
+      });
+      box.querySelectorAll('[data-wdel]').forEach((b) => {
+        b.onclick = () => { rows.splice(Number(b.dataset.i), 1); draw(); };
+      });
+      box.querySelectorAll('[data-wadd]').forEach((b) => {
+        b.onclick = () => { rows.push({ start: '', end: '' }); draw(); };
+      });
+    };
+    draw();
+    return rows;
+  };
+  const busyRows = (cfg.windows || []).map((w) => ({ start: w.start, end: w.end }));
+  const idleRows = (idleCfg.windows || []).map((w) => ({ start: w.start, end: w.end }));
+  winRows(busyRows, 'pl-busy-form', 'busy');
+  winRows(idleRows, 'pl-idle-form', 'idle');
+
+  const busyForm = document.getElementById('pl-busy-form');
+  busyForm.insertAdjacentHTML('afterbegin',
+    `<div class="grid g3" style="gap:10px;margin-bottom:10px">
+      <label class="fld">启用${sel('enabled', String(cfg.enabled !== false), ['true', 'false'])}</label>
+      <label class="fld">仅工作日（节假日自动跳过）${sel('weekdays_only', String(cfg.weekdays_only !== false), ['true', 'false'])}</label>
+      <label class="fld">作用线路${sel('route', cfg.route || 'go', routes)}</label>
+      <label class="fld">目标模型${sel('target_model', cfg.target_model || '', allowed)}</label>
+      <label class="fld" style="grid-column:span 2">命中前缀（逗号分隔，模型以这些开头才被改写）<input class="inp mono" data-f="rewrite_prefixes" value="${fmt.esc((cfg.rewrite_prefixes || []).join(','))}"></label>
+    </div>`);
+
+  const idleForm = document.getElementById('pl-idle-form');
+  idleForm.insertAdjacentHTML('afterbegin',
+    `<div class="grid g3" style="gap:10px;margin-bottom:10px">
+      <label class="fld">启用${sel('idle.enabled', String(idleCfg.enabled !== false), ['true', 'false'])}</label>
+      <label class="fld">目标模型${sel('idle.target_model', idleCfg.target_model || '', allowed)}</label>
+      <label class="fld">窗口仅工作日${sel('idle.weekdays_only', String(idleCfg.weekdays_only === true), ['false', 'true'])}</label>
+    </div>`);
+
+  const collect = () => {
+    const get = (name) => {
+      const el = box.querySelector(`[data-f="${name}"]`);
+      return el ? el.value : '';
+    };
+    return {
+      enabled: get('enabled') === 'true',
+      weekdays_only: get('weekdays_only') === 'true',
+      route: get('route'),
+      target_model: get('target_model'),
+      rewrite_prefixes: get('rewrite_prefixes').split(/[\s,，]+/).filter(Boolean),
+      windows: busyRows,
+      idle: {
+        enabled: get('idle.enabled') === 'true',
+        target_model: get('idle.target_model'),
+        weekdays_only: get('idle.weekdays_only') === 'true',
+        windows: idleRows,
+      },
+    };
+  };
+
+  const save = async (which) => {
+    const payload = collect();
+    if (!payload.target_model) { window.toast('请选择忙时目标模型', 'warn'); return; }
+    if (payload.idle.enabled && !payload.idle.target_model) { window.toast('请选择闲时目标模型', 'warn'); return; }
+    const whichTxt = which === 'both' ? '忙时+闲时' : (which === 'busy' ? '忙时' : '闲时');
+    if (!await modal.confirm('保存' + whichTxt + '策略',
+      `写入策略文件并立即生效（tap 按文件变更自动重载）。这会改变生产环境的路由行为：<br>
+       <b>忙时</b>：${(payload.rewrite_prefixes || []).join('/')} → ${payload.target_model}（${payload.windows.map((w) => w.start + '-' + w.end).join('、') || '无窗口'}，${payload.weekdays_only ? '仅工作日' : '每天'}）<br>
+       <b>闲时</b>：${payload.idle.enabled ? '全部 → ' + payload.idle.target_model + '（' + (payload.idle.windows.length ? payload.idle.windows.map((w) => w.start + '-' + w.end).join('、') : '忙时窗口的补集') + '）' : '停用'}`,
+      { okText: '保存并生效', danger: true })) return;
+    try {
+      const out = await CM.api.post('/relay/action', { name: 'busy-hours/save', payload });
+      window.toast(out.detail || '策略已保存并生效', 'ok');
+      refreshNow();
+    } catch (e) { window.toast('保存失败：' + e.message, 'err'); }
+  };
+  document.getElementById('pl-busy-save').onclick = () => save('both');
+  document.getElementById('pl-idle-save').onclick = () => save('both');
+
+  const sw = document.getElementById('pl-switch');
+  sw.textContent = d.switch_off ? '恢复改写' : '临时停用';
+  sw.onclick = async () => {
+    const off = !d.switch_off;
+    if (!await modal.confirm(off ? '临时停用改写' : '恢复改写',
+      off ? '创建停用标记：忙时与闲时改写都暂停（不改配置文件，恢复用同按钮）。' : '删除停用标记，恢复按策略改写。',
+      { danger: off, okText: '确认' })) return;
+    try {
+      const out = await CM.api.post('/relay/action', { name: 'busy-hours/switch', payload: { off } });
+      window.toast(out.detail || '已切换', 'ok');
+      refreshNow();
+    } catch (e) { window.toast('失败：' + e.message, 'err'); }
+  };
+  document.getElementById('pl-refresh').onclick = () => refreshNow();
+  document.getElementById('pl-meta').innerHTML =
+    `配置文件 <span class="mono">${fmt.esc(d.config_path || '')}</span> · 保存自动备份 · 白名单 ${((d.go_allowlist || []).join(' / ')) || '—'}` +
+    (d.config_file_invalid ? ' · <span style="color:#c79209">策略文件上次解析失败，tap 沿用上一次成功读取的内容</span>' : '');
+}
 })();

@@ -28,6 +28,7 @@ ops-server/node_modules/
 
 # ---- IDE / OS ----
 .idea/
+.vs/
 *.iml
 .vscode/
 .DS_Store
@@ -67,7 +68,38 @@ tasks.txt
 # ---- Python bytecode (tools/tests 脚本产物) ----
 __pycache__/
 *.pyc
+# 脚本的中间输出与临时测试数据
+tools/_out/
+.test-data-*/
 
 # ---- 部署包产物（内含依赖，按需由 tools/build_panel_package.py 重建）----
 /deploy/*.tar.gz
+# 远程桌面第三方二进制（wfreerdp.exe 8.7MB + RDP interop DLL，需另行下载；
+# 同目录的 vendor/*.js 与 freerdp/LICENSE.txt 仍然入库）
+deploy/cloud-monitor-dotnet/vendor/freerdp/*.exe
+deploy/cloud-monitor-dotnet/vendor/interop/
+# 面板部署包里的依赖目录（1226 个文件，由 npm install 重建）
+deploy/cloud-monitor-panel/app/node_modules/
+# .NET 面板的构建与发布输出（publish*/ 内含 15MB 级框架 DLL，dotnet publish 可重建）
+deploy/cloud-monitor-dotnet/publish/
+deploy/cloud-monitor-dotnet/publish-*/
+deploy/cloud-monitor-dotnet/_publish_test/
+deploy/cloud-monitor-dotnet/**/bin/
+deploy/cloud-monitor-dotnet/**/obj/
+# NoteBox 的本地运行副本（含下载来的运行时）
+deploy/notebox-windows/.local-notebox/
 
+# ---- i18n 绑定器的回滚副本（tools/i18n_bind_one.py 生成，不是源码）----
+*.before-i18n
+
+# ---- 根目录排查散件（重定向/临时补丁，历来只用一次）----
+/a.txt
+/a1.txt
+/a2.txt
+/a3.txt
+/r.txt
+/tmp_*.py
+
+
+# ---- 会话级 SSH 助手（内网直连用，不入库）----
+tools/ssh/

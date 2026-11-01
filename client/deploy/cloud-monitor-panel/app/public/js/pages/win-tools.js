@@ -21,6 +21,10 @@
         return;
       }
       const S = { perfSel: ['cpu', 'mem'], rdp: { sock: null, connected: false, keyGrab: false, listeners: [] } };
+      /* 自动刷新按页签给节奏；数据没变的 tick 不重建 DOM（见各 render* 的 quiet 分支），
+         否则点按钮的那一瞬间节点会被换掉，表现为"点了没反应"。 */
+      const AUTO_MS = { overview: 5000, 'hosts-mgmt': 5000, update: 30000 };
+      let auto = null;
       /* [id, label, icon, 一句话描述] —— 概览页据此渲染功能入口网格 */
       const TABS = [
         ['overview', '概览', 'dashboard', '系统状态总览与全部功能入口'],
@@ -71,8 +75,12 @@
       };
 
       /* ============ 概览：状态卡 + 快捷维护 + 功能入口网格 ============ */
-      async function renderOverview() {
-        const o = await CM.api.get('/windows/overview', 20000);
+      let ovSig = '';
+      async function renderOverview(quiet) {
+        const o = await CM.api.get('/windows/overview', 5000);
+        const sig = JSON.stringify(o);
+        if (quiet && sig === ovSig) return;
+        ovSig = sig;
         const fw = o.firewall || {};
         body.innerHTML = `
           <div class="grid3 mb">
@@ -157,8 +165,12 @@
       }
 
       /* ============ 主机纳管（WinRM 探测 + .rdp 下载） ============ */
-      async function renderHostsMgmt() {
-        const d = await CM.api.get('/windows/managed-hosts', 15000);
+      let hmSig = '';
+      async function renderHostsMgmt(quiet) {
+        const d = await CM.api.get('/windows/managed-hosts', 5000);
+        const sig = JSON.stringify(d);
+        if (quiet && sig === hmSig) return;
+        hmSig = sig;
         const hosts = d.hosts || [];
         body.innerHTML = `
           <div class="card mb">
@@ -302,12 +314,16 @@
       }
 
       /* ============ 更新与安全（WU + 策略 + 基线 + BitLocker） ============ */
-      async function renderUpdate() {
+      let upSig = '';
+      async function renderUpdate(quiet) {
         const [wu, pol, base] = await Promise.all([
-          CM.api.get('/windows/wu', 180000).catch(() => ({ total: 0, updates: [], error: '加载失败' })),
-          CM.api.get('/windows/wu-policy', 15000).catch(() => ({})),
-          CM.api.get('/windows/sec-baseline', 120000).catch(() => ({})),
+          CM.api.get('/windows/wu', 0).catch(() => ({ total: 0, updates: [], error: '加载失败' })),
+          CM.api.get('/windows/wu-policy', 5000).catch(() => ({})),
+          CM.api.get('/windows/sec-baseline', 30000).catch(() => ({})),
         ]);
+        const sig = JSON.stringify([wu, pol, base]);
+        if (quiet && sig === upSig) return;
+        upSig = sig;
         const updates = wu.updates || [];
         const bl = base.bitlocker || [];
         body.innerHTML = `
@@ -389,6 +405,7 @@
               activeEnd: parseInt(document.getElementById('wt-up-ae').value, 10) || 0,
             });
             window.toast('更新策略已保存', 'ok');
+            await renderUpdate();
           } catch (e) { window.toast(e.message, 'err', 7000); }
         };
         document.getElementById('wt-sec-lockout').onclick = async () => {
@@ -857,29 +874,43 @@
         R.listeners.push(['keydown', onKeyDown], ['keyup', onKeyUp], ['blur', onBlur]);
       }
 
-      async function render() {
-        if (S.tab !== 'rdp') rdpCleanup();
-        body.innerHTML = '<div class="ui-skeleton"></div>';
+      async function render(quiet) {
+        /* quiet = 自动刷新的那一拍：先取数，内容真变了才重画；
+           一进来就清空 body 等于每 5 秒换掉全部按钮，点击会落在游离节点上。 */
+        if (!quiet) {
+          if (S.tab !== 'rdp') rdpCleanup();
+          body.innerHTML = '<div class="ui-skeleton"></div>';
+        }
         try {
-          if (S.tab === 'hosts-mgmt') await renderHostsMgmt();
+          if (S.tab === 'hosts-mgmt') await renderHostsMgmt(quiet);
           else if (S.tab === 'rdp') await renderRdp();
           else if (S.tab === 'perf') await renderPerf();
-          else if (S.tab === 'update') await renderUpdate();
+          else if (S.tab === 'update') await renderUpdate(quiet);
           else if (S.tab === 'hosts') await renderHosts();
           else if (S.tab === 'startup') await renderStartup();
           else if (S.tab === 'env') await renderEnv();
           else if (S.tab === 'sys') await renderSys();
-          else await renderOverview();
+          else await renderOverview(quiet);
         } catch (e) {
-          body.innerHTML = '<div class="card"><div class="muted">' + esc(e.message) + '</div></div>';
+          if (quiet) { window.toast('自动刷新失败：' + (e.message || e), 'err', 6000); return; }
+          body.innerHTML = '<div class="card"><div class="card-title">加载失败</div>'
+            + '<div class="muted small">' + esc(e.message || String(e)) + '</div>'
+            + '<div class="mt"><button type="button" class="btn btn-sm btn-primary" id="wt-retry">'
+            + icon('refresh', { size: 12 }) + ' 重试</button></div></div>';
+          const r = document.getElementById('wt-retry');
+          if (r) r.onclick = () => render();
         }
       }
 
       S.tab = S.tab || 'overview';
+      auto = CM.autoRefresh(() => { if (AUTO_MS[S.tab]) render(AUTO_MS[S.tab]); }, { pageId: 'wintools', ms: () => 5000 });
+      auto.start();
       renderTabs();
       render();
     },
+    show() { if (auto && auto.isEnabled()) auto.start(); },
     hide() {
+      if (auto) auto.stop();
       /* 离开页面时释放远程桌面通道（后台页面不再需要串流） */
       if (CM._rdpCleanup) { CM._rdpCleanup(); }
     },

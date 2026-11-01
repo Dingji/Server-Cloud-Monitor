@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "note": "OpenCode Go 忙时/闲时路由。忙时（工作日北京 09:00-12:00, 14:00-18:00）把 deepseek 请求改写到 mimo-v2.6-flash；闲时（其余全部时间：晚间、午休、周末与节假日）把该线路的【所有】请求改写到 idle.target_model=deepseek-v4.1-flash。改这个文件不需要重启 relay-usagetap，tap 按 mtime 自动重载。临时停用用 busy_hours.py off（等价于建 /var/lib/relay/busy-hours.off，同时停掉忙时与闲时改写）。idle.windows 留空=忙时窗口的补集；也可以像 windows 一样显式给窗口。",
+  "enabled": true,
+  "route": "go",
+  "target_model": "mimo-v2.6-flash",
+  "rewrite_prefixes": [
+    "deepseek"
+  ],
+  "weekdays_only": true,
+  "utc_offset_minutes": 480,
+  "windows": [
+    {
+      "start": "09:00",
+      "end": "12:00"
+    },
+    {
+      "start": "14:00",
+      "end": "18:00"
+    }
+  ],
+  "idle": {
+    "enabled": true,
+    "target_model": "deepseek-v4.1-flash",
+    "windows": [],
+    "weekdays_only": false
+  }
+}

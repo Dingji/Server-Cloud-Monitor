@@ -29,6 +29,54 @@
 
 ---
 
+## 2026-10-30 全量功能审计与补齐（服务端 + 网页端 + KMP 客户端）
+
+对三端做了逐功能对账（机器化对账：`tests/parity.py` 228 项 + `tests/endpoint_inventory.py`），
+把缺口全部补齐并部署到生产。本目录新增三个镜像目录，让服务端与前端代码入库：
+`panel-server/`（面板 Node 服务端）、`panel-web/`（网页前端：shell + 页面）、
+`relay-server/`（OpenCode 中继采集/改写服务）。**部署源以这三个目录为准**，
+`upstream/` 仍是生产机的参考镜像（不入库）。
+
+### 网页端（`panel-web/`）
+
+- **文件管理**（新页面）：浏览/分类型预览（文本可编辑、图片、音视频、PDF、压缩包内部浏览 +
+  子文件下载）/上传下载/回收站/权限属主/打包解压
+- **运维分组 8 个新页面**：可用性拨测 · 告警规则 · 通知渠道 · 纳管主机 · 安全巡检 ·
+  磁盘治理 · 服务看护 · 远程主机——与 KMP 同源端点、同一套字段
+- **OpenCode 中继新增「忙时 / 闲时」页签**：相位横幅（闲时改写生效中/忙时）、双向编辑
+  （忙时 deepseek→mimo；闲时全部模型→deepseek-v4.1-flash，窗口留空=忙时窗口补集）、
+  任意时刻试算、临时停用/恢复；保存走面板审计并自动备份策略文件
+- **客户端用量**：中继按 来源IP+UA+令牌哈希 统计每个客户端的 Token 用量（clients 页签）
+- 移动端：全部页面沿用面板响应式断点（1150/860/480px），窄屏单列 + 表格横滚
+
+### 服务端（`ops-server/`、`relay-server/`、`panel-server/`）
+
+- `ops/files.js` + `archive_tool.py`：分类型预览（kind/mime）、`/raw` 内联流、
+  压缩包内部清单/条目预览/条目流式下载（zip-slip 免疫）、tar 解压修复、zip 打包 python 回退
+- `relay-server/usagetap.py`：闲时改写策略（补集语义）、客户端身份列（usage_events 迁移）、
+  `X-Relay-Rewritten-Policy` 头
+- `relay-server/collector.py`：`/api/clients-usage` 聚合、busy-hours 策略 API 升级 v2
+  （校验并保留 idle 子块）、闲时/忙时相位判定
+- `panel-server/relay.js`：修复 relay.action 丢 payload 的 Content-Length bug（影响所有带参
+  中继管理操作）；`index.js`：RELAY_GET 增补 clients/clients-usage 等
+
+### KMP 客户端（`composeApp/`）
+
+- 文件管理页分类型预览（图片内嵌解码/压缩包内部浏览器/信息卡降级）
+- 中继「客户端与会话」页签新增客户端用量表；「忙时/闲时」页签新增闲时编辑区
+- 修复路径 404 被误判为模块未部署（`ApiException.fromServer`）
+- 18 语 i18n 全量补齐；`compileKotlinDesktop` 通过，parity 228 项 0 缺失
+
+### 验证
+
+- `node tools/ops_test.js`：130 PASS（本地契约测试）
+- `python tools/relay_policy_test.py`：20 PASS（忙/闲时策略单测）
+- `python tools/deploy_files_preview.py --smoke-only`：18/18（生产冒烟）
+- 浏览器逐页扫描 30 页 + 全部新页面写路径交互测试 + 390px 移动端抽检
+
+---
+
+
 ## 构建与运行
 
 完整步骤、工具链版本表与故障排查见 **[`docs/guide/build.md`](docs/guide/build.md)**。常用命令：

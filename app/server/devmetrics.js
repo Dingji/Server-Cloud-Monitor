@@ -46,6 +46,7 @@ const DEFAULT_ALERTS = {
   disk: 95,       /* 任一挂载点 % */
   temp: 75,       /* SoC 温度 ℃ */
   offlineSec: 90, /* 超过该秒数未上报判定掉线 */
+  dockerEnabled: true, /* 容器/Compose 状态告警 */
 };
 
 /* ---------------- 设备注册表 ---------------- */
@@ -482,6 +483,50 @@ function evaluate(dev, st, cameBack) {
     fire(dev, st, 'online', 'ok', `${name} 已恢复上报`);
     st.notifiedOffline = false;
   }
+  if (st.heavy) evaluateDocker(dev, st);
+}
+
+/* ---------------- 容器 / Compose 告警 ----------------
+ * 只在状态"变化"时提醒一次,避免每 5 秒重复刷屏;恢复也发一条。
+ * 状态快照存在 st.dockerState = { <containerName>: {sig, ...} } */
+function evaluateDocker(dev, st) {
+  const dk = st.heavy && st.heavy.docker;
+  if (!dk || !dk.available) return;
+  const a = effAlerts(dev);
+  if (a.dockerEnabled === false) return;
+  const prev = st.dockerState || (st.dockerState = {});
+  const name = dev.name || dev.id;
+  const now = {};
+
+  for (const c of dk.containers || []) {
+    const health = c.health || '';
+    const sig = [c.state, health, c.restartCount, c.oomKilled].join('|');
+    now[c.name] = { sig, state: c.state, health, restartCount: c.restartCount, oomKilled: !!c.oomKilled };
+    const before = prev[c.name];
+    if (!before || before.sig === sig) continue;   /* 首次采集或状态未变:不打扰 */
+
+    if (c.oomKilled && !before.oomKilled) {
+      fire(dev, st, 'docker-oom-' + c.name, 'bad',
+        `${name} 容器 ${c.name} 因内存不足被内核 OOM 杀死`,
+        [{ k: '镜像', v: c.image }, { k: '项目', v: c.project || '未编排' }]);
+    } else if ((c.restartCount || 0) > (before.restartCount || 0)) {
+      const delta = (c.restartCount || 0) - (before.restartCount || 0);
+      fire(dev, st, 'docker-restart-' + c.name, 'warn',
+        `${name} 容器 ${c.name} 重启 ${delta} 次(累计 ${c.restartCount})`,
+        [{ k: '状态', v: c.status }, { k: '退出码', v: String(c.exitCode) }]);
+    } else if (health === 'unhealthy' && before.health !== 'unhealthy') {
+      fire(dev, st, 'docker-unhealthy-' + c.name, 'bad',
+        `${name} 容器 ${c.name} 健康检查转为 unhealthy`,
+        [{ k: '镜像', v: c.image }, { k: '项目', v: c.project || '未编排' }]);
+    } else if (c.state !== 'running' && before.state === 'running') {
+      fire(dev, st, 'docker-down-' + c.name, 'bad',
+        `${name} 容器 ${c.name} 已停止(${c.state})`,
+        [{ k: '状态', v: c.status }, { k: '退出码', v: String(c.exitCode) }]);
+    } else if (c.state === 'running' && before.state !== 'running') {
+      fire(dev, st, 'docker-up-' + c.name, 'ok', `${name} 容器 ${c.name} 已恢复运行`);
+    }
+  }
+  st.dockerState = now;
 }
 
 function fmtBytes(n) {
@@ -654,6 +699,7 @@ function normalizeAlerts(b, existing) {
   b = b || {};
   const cur = Object.assign({}, DEFAULT_ALERTS, existing || {});
   const out = { enabled: b.enabled === undefined ? cur.enabled : !!b.enabled };
+  out.dockerEnabled = b.dockerEnabled === undefined ? cur.dockerEnabled !== false : !!b.dockerEnabled;
   for (const k of ['cpu', 'mem', 'disk', 'temp', 'offlineSec']) {
     const v = Number(b[k]);
     if (Number.isFinite(v)) {

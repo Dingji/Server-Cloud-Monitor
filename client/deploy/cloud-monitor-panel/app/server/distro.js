@@ -1,8 +1,4 @@
 'use strict';
-if (process.platform === 'win32') {
-  module.exports = require('./distro-win');
-  return;
-}
 /*
  * Distribution / package-manager abstraction.
  *

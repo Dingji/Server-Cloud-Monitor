@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 const S = require('./store');
 const shq = S.shq;
 
@@ -26,6 +26,40 @@ const MAX_UPLOAD_MB = Math.max(1, Number(process.env.CM_MAX_UPLOAD_MB || 1024) |
 const PREVIEW_BYTES = 64 * 1024;
 const LIST_CAP = 3000;
 const TRASH_DAYS = 30;
+const RAW_INLINE_MB = 20;               /* 图片/音视频内联预览的默认字节上限 */
+
+const MIME_BY_EXT = {
+  png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp',
+  svg: 'image/svg+xml', bmp: 'image/bmp', ico: 'image/x-icon', avif: 'image/avif',
+  mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', m4v: 'video/x-m4v',
+  mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg', oga: 'audio/ogg', m4a: 'audio/mp4',
+  flac: 'audio/flac', aac: 'audio/aac', opus: 'audio/ogg',
+  pdf: 'application/pdf',
+  txt: 'text/plain; charset=utf-8', log: 'text/plain; charset=utf-8', conf: 'text/plain; charset=utf-8',
+  json: 'application/json; charset=utf-8', xml: 'application/xml', csv: 'text/csv; charset=utf-8',
+  md: 'text/markdown; charset=utf-8', html: 'text/html; charset=utf-8', htm: 'text/html; charset=utf-8',
+  css: 'text/css; charset=utf-8', js: 'text/javascript; charset=utf-8',
+  yaml: 'text/plain; charset=utf-8', yml: 'text/plain; charset=utf-8', sh: 'text/plain; charset=utf-8',
+};
+
+/** 前端按这个分类型决定用什么方式预览（archive/image/video/audio/pdf/other）。 */
+function kindOf(name) {
+  const lower = String(name).toLowerCase();
+  if (/\.(zip|tar|tar\.gz|tgz|tar\.bz2|tbz2|tar\.xz|txz)$/.test(lower)) return 'archive';
+  if (/\.(png|jpe?g|gif|webp|svg|bmp|ico|avif)$/.test(lower)) return 'image';
+  if (/\.(mp4|webm|mov|m4v|mkv|avi)$/.test(lower)) return 'video';
+  if (/\.(mp3|wav|ogg|oga|m4a|flac|aac|opus)$/.test(lower)) return 'audio';
+  if (lower.endsWith('.pdf')) return 'pdf';
+  return 'other';
+}
+
+const mimeOf = (name) => MIME_BY_EXT[String(name).toLowerCase().split('.').pop()] || 'application/octet-stream';
+const archiveTool = () => path.join(__dirname, 'archive_tool.py');
+/* shq 是 POSIX 单引号；Windows 的 exec/spawn(shell:true) 走 cmd.exe 不认单引号，
+   会把引号当文件名的一部分传给 python。测试/开发机需要的是双引号包裹。 */
+const shqFor = (s) => (process.platform === 'win32'
+  ? '"' + String(s).replace(/%/g, '%%').replace(/"/g, '""') + '"'
+  : shq(s));
 
 const BOOKMARKS = [
   { label: '网站根目录', path: '/var/www' },
@@ -234,7 +268,7 @@ async function preview(p) {
   let st;
   try { st = fs.statSync(abs_); } catch (_) { bad('文件不存在：' + abs_, 404); }
   if (st.isDirectory()) bad('这是目录，请用浏览：' + abs_);
-  if (st.size > MAX_TEXT) return { ok: true, binary: false, tooLarge: true, path: abs_, size: st.size, limit: MAX_TEXT };
+  if (st.size > MAX_TEXT) return { ok: true, binary: false, tooLarge: true, path: abs_, size: st.size, limit: MAX_TEXT, kind: kindOf(abs_), mime: mimeOf(abs_) };
   const fd = fs.openSync(abs_, 'r');
   const buf = Buffer.alloc(Math.min(PREVIEW_BYTES, st.size));
   let read = 0;
@@ -244,6 +278,7 @@ async function preview(p) {
   for (let i = 0; i < slice.length; i++) if (slice[i] === 0) { binary = true; break; }
   return {
     ok: true, path: abs_, size: st.size, mtimeMs: Math.round(st.mtimeMs), binary,
+    kind: kindOf(abs_), mime: mimeOf(abs_),
     truncated: st.size > read,
     text: binary ? '' : slice.toString('utf8'),
     ext: path.extname(abs_).slice(1, 12),
@@ -351,6 +386,75 @@ function pruneTrash() {
   return keep.length;
 }
 
+/* ---------------- archive inner files (zip / tar family) ----------------
+ * 清单与条目内容都由 archive_tool.py（stdlib zipfile/tarfile）读出，条目内容
+ * 直接从压缩包流式读出、从不落盘，所以恶意条目名（../、绝对路径）不可能逃逸。
+ * python 不可用时退回 unzip/zipinfo/tar 文本解析（只保证清单与文本预览可用）。
+ */
+const PY_CACHE = { bin: undefined };
+async function pyBin() {
+  if (PY_CACHE.bin !== undefined) return PY_CACHE.bin;
+  for (const b of ['python3', 'python']) {
+    /* 不带 2>/dev/null：Windows cmd 会把 /dev/null 当文件路径，探测会假阴性 */
+    const r = await shell(`${b} -c "import zipfile,tarfile"`, 8000);
+    if (r.code === 0) { PY_CACHE.bin = b; return b; }
+  }
+  PY_CACHE.bin = null;
+  return null;
+}
+
+async function openArchiveFile(p, label) {
+  const st = fs.statSync(p); // caller already 404-guarded
+  if (st.isDirectory()) bad('这是目录，不是压缩包：' + p);
+  if (!st.isFile()) bad('不是普通文件：' + p);
+  return st;
+}
+
+const ARCHIVE_RE = /\.(zip|tar|tar\.gz|tgz|tar\.bz2|tbz2|tar\.xz|txz)$/i;
+
+function parseZipinfo(out) {
+  /* `unzip -Zl` rows: length datetime time attr name(-dir/) */
+  const entries = [];
+  for (const line of out.split('\n').slice(3)) {
+    const m = /^\s*(\d+)\s+\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}\s+[0-9a-zA-Z-]+\s+(.+)$/.exec(line.trim());
+    if (!m) continue;
+    const isDir = m[2].endsWith('/');
+    const name = m[2].replace(/\/$/, '');
+    if (isDir || !name) continue;
+    entries.push({ name, isDir: false, isLink: false, size: Number(m[1]) || 0, mtimeMs: 0 });
+  }
+  return entries;
+}
+
+function parseTarTvf(out) {
+  /* GNU tar -tvf: -rw-r--r-- root/root 4096 2026-10-30 12:00 path */
+  const entries = [];
+  for (const line of out.split('\n')) {
+    const m = /^[-dlbcps][^ ]*\s+(\S+\/\S+|\S+)\s+(\d+)\s+\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}(?::\d{2})?\s+(.+)$/.exec(line.trim());
+    if (!m) continue;
+    const name = m[3].replace(/\/$/, '').replace(/^\.\//, '');
+    if (!name) continue;
+    entries.push({ name, isDir: line.trim().startsWith('d'), isLink: line.trim().startsWith('l'), size: Number(m[2]) || 0, mtimeMs: 0 });
+  }
+  return entries;
+}
+
+/** spawn 一个读条目的命令，把 stdout 原样导进响应（不进内存，支持大文件）。
+ * 命令串已经用 shq/shqFor 引好，所以两端都走 shell。 */
+function streamEntryTo(cmd, res, timeoutMs) {
+  return new Promise((resolve) => {
+    const child = spawn(cmd, { shell: true, windowsHide: true });
+    let settled = false;
+    const finish = (ok, msg) => { if (!settled) { settled = true; clearTimeout(timer); resolve({ ok, error: msg }); } };
+    const timer = setTimeout(() => { try { child.kill('SIGKILL'); } catch (_) {} finish(false, '读取超时'); }, timeoutMs || 120000);
+    child.stdout.pipe(res);
+    child.stderr.on('data', () => {});
+    child.on('error', (e) => finish(false, e.message));
+    child.on('close', (code) => finish(code === 0, code === 0 ? '' : `读取条目失败（退出码 ${code}）`));
+    res.on('close', () => { try { child.kill('SIGKILL'); } catch (_) {} });
+  });
+}
+
 /* ---------------- routes ---------------- */
 
 function register(api, wrap, audited) {
@@ -372,6 +476,25 @@ function register(api, wrap, audited) {
     res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(path.basename(p))}`);
     fs.createReadStream(p).on('error', (e) => { try { res.status(500).json({ error: '读取失败：' + e.message }); } catch (_) {} }).pipe(res);
   }));
+
+  /* 内联预览（图片/音视频/PDF）：与 download 相同的流式读法，但按扩展名给 MIME、
+     带 Content-Disposition: inline 和 sandbox CSP（防 SVG 内嵌脚本在同源执行）。
+     字节上限挡住"预览"一个 10GB 日志的误操作，超限就引导用户走下载。 */
+  api.get('/ops/files/raw', wrap(async (req, res) => {
+    const p = abs(String(req.query.path || ''));
+    let st;
+    try { st = fs.statSync(p); } catch (_) { bad('文件不存在：' + p, 404); }
+    if (st.isDirectory()) bad('不能内联预览目录：' + p);
+    const maxMB = Math.min(500, Math.max(1, Number(req.query.maxMB) || RAW_INLINE_MB));
+    if (st.size > maxMB * 1024 * 1024) bad(`文件超过内联预览上限 ${maxMB}MB，请改用下载`, 413);
+    res.setHeader('Content-Type', mimeOf(p));
+    res.setHeader('Content-Length', String(st.size));
+    res.setHeader('Content-Disposition', 'inline');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "sandbox; default-src 'none'; img-src data:; style-src 'unsafe-inline'");
+    fs.createReadStream(p).on('error', (e) => { try { res.status(500).json({ error: '读取失败：' + e.message }); } catch (_) {} }).pipe(res);
+  }));
+
   api.get('/ops/files/search', wrap(async (req, res) => {
     const dir = abs(String(req.query.dir || '/'));
     const q = String(req.query.q || '').trim().slice(0, 60);
@@ -416,6 +539,102 @@ function register(api, wrap, audited) {
     }
     res.json({ ok: true, dir, items: [], unit: 'KB', usedShell: false, note: '该环境没有 du 命令' });
   }));
+
+  /* ---- 压缩包内部浏览：清单 / 条目预览 / 条目下载 ---- */
+  async function archiveGuard(req) {
+    const a = abs(String(req.query.path || ''));
+    try { fs.statSync(a); } catch (_) { bad('压缩包不存在：' + a, 404); }
+    if (!ARCHIVE_RE.test(a)) bad('暂不支持该压缩包格式（支持 zip / tar / tar.gz / tar.bz2 / tar.xz）');
+    await openArchiveFile(a);
+    return a;
+  }
+
+  function entryOf(req) {
+    const entry = String(req.query.entry || '');
+    if (!entry) bad('缺少条目名 entry');
+    if (entry.length > 4000 || /[\u0000-\u0008\u000b-\u001f]/.test(entry)) bad('条目名非法');
+    return entry;
+  }
+
+  api.get('/ops/files/archive/list', wrap(async (req, res) => {
+    const a = await archiveGuard(req);
+    const py = await pyBin();
+    if (py) {
+      const r = await shell(`${py} ${shqFor(archiveTool())} list ${shqFor(a)}`, 60000);
+      const out = r.stdout.trim();
+      if (out.startsWith('{')) {
+        const j = JSON.parse(out);
+        if (j.ok) return res.json({ ok: true, path: a, kind: j.kind, entries: j.entries, count: j.count, truncated: j.truncated, usedPython: true });
+        bad(j.error, 400);
+      }
+      if (!out) bad('读取压缩包清单失败：' + (r.stderr || 'python 不可用').slice(0, 300), 500);
+    }
+    if (!hasUnixTools()) bad('本机没有 python3/unzip/tar，无法读取压缩包内部', 500);
+    const lower = a.toLowerCase();
+    const cmd = lower.endsWith('.zip') ? `unzip -Zl ${shqFor(a)}` : `tar -tvf ${shqFor(a)} 2>NUL`;
+    const r = await shell(cmd, 60000);
+    const entries = lower.endsWith('.zip') ? parseZipinfo(r.stdout) : parseTarTvf(r.stdout);
+    if (!entries.length) bad('读取压缩包清单失败：' + (r.stderr || '没有解析到条目').slice(0, 300), 500);
+    res.json({ ok: true, path: a, kind: lower.endsWith('.zip') ? 'zip' : 'tar', entries, count: entries.length, truncated: false, usedPython: false });
+  }));
+
+  api.get('/ops/files/archive/entry', wrap(async (req, res) => {
+    const a = await archiveGuard(req);
+    const entry = entryOf(req);
+    const wantB64 = req.query.base64 === '1';
+    const py = await pyBin();
+    if (py) {
+      const r = await shell(`${py} ${shqFor(archiveTool())} preview ${shqFor(a)} ${shqFor(entry)}${wantB64 ? ' --b64' : ''}`, 60000);
+      const out = r.stdout.trim();
+      if (!out) bad('预览条目失败：' + (r.stderr || 'python 不可用').slice(0, 300), 500);
+      const j = JSON.parse(out);
+      if (!j.ok) bad(j.error, 400);
+      return res.json({ ok: true, path: a, entry, ...j });
+    }
+    if (!hasUnixTools()) bad('本机没有 python3/unzip/tar，无法预览压缩包内条目', 500);
+    const lower = a.toLowerCase();
+    const cmd = lower.endsWith('.zip')
+      ? `unzip -p ${shqFor(a)} ${shqFor(entry)} 2>NUL`
+      : `tar -xOf ${shqFor(a)} ${shqFor(entry)} 2>NUL`;
+    /* 无 python 的降级路径拿不到 head -c（Windows 没有），直接截返回串 */
+    const r = await shell(cmd, 60000);
+    if (r.code !== 0 && !r.stdout) bad('预览条目失败：' + (r.stderr || '命令不可用').slice(0, 300), 500);
+    const text = r.stdout.slice(0, PREVIEW_BYTES);
+    const binary = text.includes('\u0000');
+    res.json({ ok: true, path: a, entry, size: Buffer.byteLength(text), binary, truncated: true,
+      text: binary ? '' : text, mime: mimeOf(entry), degraded: '未检测到 python，二进制与 base64 预览不可用' });
+  }));
+
+  api.get('/ops/files/archive/download', wrap(async (req, res) => {
+    const a = await archiveGuard(req);
+    const entry = entryOf(req);
+    /* 先用 preview 模式确认条目存在并拿真实大小：一是错误走 JSON 而不是混进字节流，
+       二是 Content-Length 让客户端能画真实进度。这一步过了才允许碰响应头——
+       校验阶段任何失败都必须还能干净地回一个 JSON 错误。 */
+    const py = await pyBin();
+    let size = null;
+    if (py) {
+      const r = await shell(`${py} ${shqFor(archiveTool())} preview ${shqFor(a)} ${shqFor(entry)}`, 60000);
+      const out = r.stdout.trim();
+      if (!out) bad('读取条目失败：' + (r.stderr || 'python 不可用').slice(0, 300), 500);
+      const j = JSON.parse(out);
+      if (!j.ok) bad(j.error, 400);
+      if (typeof j.size === 'number') size = j.size;
+    }
+    const base = path.basename(entry) || 'entry.bin';
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(base)}`);
+    if (size != null) res.setHeader('Content-Length', String(size));
+    /* 从这里开始已向客户端提交字节流，中途失败只能断开连接，不能改发 JSON */
+    const cmd = py
+      ? `${py} ${shqFor(archiveTool())} cat ${shqFor(a)} ${shqFor(entry)}`
+      : (a.toLowerCase().endsWith('.zip')
+        ? `unzip -p ${shqFor(a)} ${shqFor(entry)} 2>NUL`
+        : `tar -xOf ${shqFor(a)} ${shqFor(entry)} 2>NUL`);
+    const out = await streamEntryTo(cmd, res, 300000);
+    if (!out.ok) { try { res.destroy(); } catch (_) {} }
+  }));
+
 
   api.post('/ops/files/mkdir', audited('ops.files.mkdir', async (req) => {
     const b = req.body || {};
@@ -554,8 +773,17 @@ function register(api, wrap, audited) {
     if (!srcs.length) bad('请选择要打包的条目');
     const list = srcs.map((p) => shq(p)).join(' ');
     if (b.kind === 'zip') {
-      const r = await shell(`cd ${shq(path.dirname(srcs[0]))} && zip -qr ${shq(out)} ${srcs.map((p) => shq(path.basename(p))).join(' ')}`, 120000);
-      if (r.code !== 0) bad('打包失败：' + (r.stderr || 'zip 不可用').slice(0, 200), 500);
+      /* 优先 zip 命令；缺失时回落 python zipfile（archive_tool.py zip），布局一致 */
+      let r = await shell(`which zip >/dev/null 2>&1 && cd ${shq(path.dirname(srcs[0]))} && zip -qr ${shq(out)} ${srcs.map((p) => shq(path.basename(p))).join(' ')}`, 120000);
+      if (r.code !== 0) {
+        const py = await pyBin();
+        if (!py) bad('打包失败：本机没有 zip 命令也没有 python3，无法创建 zip 包', 500);
+        r = await shell(`${py} ${shqFor(archiveTool())} zip ${shqFor(out)} ${srcs.map((p) => shqFor(p)).join(' ')}`, 120000);
+        if (r.code !== 0 || !r.stdout.includes('"ok": true')) {
+          try { fs.unlinkSync(out); } catch (_) {}
+          bad('打包失败：' + (r.stderr || r.stdout || 'python 打包异常').slice(0, 200), 500);
+        }
+      }
     } else {
       const r = await shell(`tar -czf ${shq(out)} ${list}`, 120000);
       if (r.code !== 0) bad('打包失败：' + (r.stderr || 'tar 不可用').slice(0, 200), 500);
@@ -568,7 +796,8 @@ function register(api, wrap, audited) {
     const to = abs(b.to || path.dirname(a), '解压目标');
     if (!fs.existsSync(to) || !fs.statSync(to).isDirectory()) bad('目标目录不存在：' + to, 404);
     const lower = a.toLowerCase();
-    const cmd = lower.endsWith('.zip') ? `unzip -o -q ${shq(a)} -d ${shq(to)}` : `tar -xzf ${shq(a)} -C ${shq(to)}`;
+    /* tar -xf 让 tar 按内容自动识别 gzip/bzip2/xz/无压缩，而不是只认 gzip */
+    const cmd = lower.endsWith('.zip') ? `unzip -o -q ${shq(a)} -d ${shq(to)}` : `tar -xf ${shq(a)} -C ${shq(to)}`;
     const r = await shell(cmd, 180000);
     if (r.code !== 0) bad('解压失败：' + (r.stderr || '对应命令不可用').slice(0, 240), 500);
     return { ok: true, archive: a, to, output: r.stdout.slice(0, 500) };
@@ -630,4 +859,5 @@ function stIsDirSafe(p) { try { return fs.statSync(p).isDirectory(); } catch (_)
 module.exports = {
   register, listDir, statOne, tree, preview, writeText, abs, safeName, symbolicMode, addToTrash,
   readTrashIndex, pruneTrash, sizeOf, hardMove, BOOKMARKS, TRASH_DAYS, MAX_TEXT, roots, trashRoot,
+  kindOf, mimeOf, ARCHIVE_RE,
 };

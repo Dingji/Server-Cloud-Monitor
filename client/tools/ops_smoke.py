@@ -12,7 +12,10 @@ import urllib.request
 
 BASE = os.environ.get("SM_PANEL_URL", "http://8.153.153.176/panel").rstrip("/")
 API = BASE + "/api"
-PASSWORD = os.environ["SM_PANEL_PW"]
+PASSWORD = os.environ.get("SM_PANEL_PW", "")
+if not PASSWORD:
+    sys.exit("需要 SM_PANEL_PW（面板登录口令）：故意不留默认值，口令不进仓库")
+
 TOKEN = None
 VERBOSE = "verbose" in sys.argv
 

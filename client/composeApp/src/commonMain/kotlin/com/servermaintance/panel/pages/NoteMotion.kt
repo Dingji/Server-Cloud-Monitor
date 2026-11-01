@@ -23,16 +23,21 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -49,6 +54,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.BlendMode
@@ -56,6 +62,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
@@ -527,3 +534,195 @@ internal fun NbProgressBar(fraction: Float, modifier: Modifier = Modifier) {
 
 /** 卡片圆角：桌面更圆润、手持端略收敛。 */
 internal fun nbCardRadius(large: Dp = 10.dp, small: Dp = 8.dp): Dp = if (platformHandheld) small else large
+
+/* ==================================================================== *
+ * 材质与控件 —— 第二轮美化：从「一块纯色 + 1px 描边」升级到「有厚度的面」
+ *
+ * 面板里几十处 `background(Palette.panel).border(1.dp, Palette.border, shape)`
+ * 让所有层级看起来都一样平。下面这几个原语把「投影 + 上浅下深的渐变 +
+ * 顶边内高光」收进一条 modifier，两处页面共用，改一次全体生效。
+ * ==================================================================== */
+
+/**
+ * 卡片材质：柔和投影打底，纵向渐变（上亮下暗）铺面，顶边一条内高光模拟受光。
+ * [tint] 非空时整张面按主题色淡染（选中态、置顶卡用）。
+ */
+internal fun Modifier.nbSurface(
+    shape: Shape,
+    tint: Color? = null,
+    elevation: Dp = if (platformHandheld) 2.5.dp else 3.5.dp,
+    highlighted: Boolean = true,
+    bordered: Boolean = true,
+): Modifier = composed {
+    val top = Palette.panel2
+    val bottom = Palette.panel
+    this
+        .shadow(elevation = elevation, shape = shape, clip = false)
+        .clip(shape)
+        .drawBehind {
+            drawOutline(
+                outline = shape.createOutline(size, layoutDirection, this),
+                brush = Brush.verticalGradient(listOf(top, bottom)),
+            )
+            if (tint != null) {
+                drawOutline(
+                    outline = shape.createOutline(size, layoutDirection, this),
+                    brush = Brush.verticalGradient(
+                        listOf(tint.copy(alpha = 0.16f), tint.copy(alpha = 0.05f)),
+                    ),
+                )
+            }
+            /* 顶边内高光：只有 1.5px，但足以让面板从背景里「浮」起来 */
+            if (highlighted && size.height > 6f) {
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        listOf(Palette.white.copy(alpha = 0.055f), Color.Transparent),
+                        endY = 1.8.dp.toPx(),
+                    ),
+                )
+            }
+        }
+        .then(if (bordered) Modifier.border(1.dp, Palette.border, shape) else Modifier)
+}
+
+/**
+ * 统一图标按钮：悬停时底圈从 0.55 长到满（不是简单换个底色），按下回弹，
+ * [active] 时底部亮一颗小圆点 —— 让「当前所在」即使没有文字也能认出来。
+ */
+@Composable
+internal fun NbIconBtn(
+    icon: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    active: Boolean = false,
+    danger: Boolean = false,
+    boxSize: Dp = 30.dp,
+    glyph: Dp = 15.dp,
+) {
+    val interaction = remember { MutableInteractionSource() }
+    val hovered by interaction.collectIsHoveredAsState()
+    val pressed by interaction.collectIsPressedAsState()
+    val accent = AccentState.current
+    val tint by animateColorAsState(
+        targetValue = when {
+            danger && hovered -> Palette.bad
+            active -> accent.secondary
+            hovered -> Palette.text
+            else -> Palette.muted
+        },
+        tween(170, easing = FastOutSlowInEasing), label = "nbBtnTint",
+    )
+    /* 底圈：半径与透明度一起长，比直接换背景柔和 */
+    val ring by animateFloatAsState(
+        targetValue = when {
+            pressed -> 1f
+            hovered || active -> 1f
+            else -> 0f
+        },
+        nbSpringSoft(stiffness = 420f), label = "nbBtnRing",
+    )
+    val ringAlpha by animateFloatAsState(
+        targetValue = when {
+            active -> 0.18f
+            pressed -> 0.24f
+            hovered -> 0.12f
+            else -> 0f
+        },
+        tween(170), label = "nbBtnRingA",
+    )
+    val scale by animateFloatAsState(
+        targetValue = if (pressed) 0.88f else if (hovered) 1.06f else 1f,
+        nbSpringPop(stiffness = 520f), label = "nbBtnScale",
+    )
+    val dot by animateFloatAsState(
+        targetValue = if (active) 1f else 0f, nbSpringSoft(360f), label = "nbBtnDot",
+    )
+    Box(
+        modifier.size(boxSize).graphicsLayer { scaleX = scale; scaleY = scale },
+        contentAlignment = Alignment.Center,
+    ) {
+        Canvas(Modifier.fillMaxSize().graphicsLayer { alpha = ringAlpha }) {
+            val r = size.minDimension / 2f * (0.55f + 0.45f * ring)
+            drawCircle(
+                color = when {
+                    danger -> Palette.bad
+                    active -> accent.primary
+                    else -> Palette.text
+                },
+                radius = r,
+            )
+        }
+        PanelIcon(icon, glyph, tint)
+        /* 底部小圆点：从中心横向展开，不占布局高度 */
+        if (dot > 0.01f) {
+            Box(
+                Modifier.align(Alignment.BottomCenter).offset(y = (-2.5).dp)
+                    .size(width = (4.5f * dot).dp, height = 2.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(accent.secondary),
+            )
+        }
+        Box(
+            Modifier.matchParentSize()
+                .clickable(interactionSource = interaction, indication = null) { onClick() },
+        )
+    }
+}
+
+/** 计数小胶囊：数字变化时弹一下，让「刚多了/少了一条」这件事被看见。 */
+@Composable
+internal fun NbCountPill(
+    count: Int,
+    modifier: Modifier = Modifier,
+    tone: Color = Palette.muted,
+    max: Int = 999,
+) {
+    val pop = remember { Animatable(1f) }
+    var last by remember { mutableStateOf(count) }
+    LaunchedEffect(count) {
+        if (count != last) {
+            last = count
+            pop.snapTo(1.28f)
+            pop.animateTo(1f, nbSpringPop(stiffness = 340f))
+        }
+    }
+    Box(
+        modifier
+            .graphicsLayer { scaleX = pop.value; scaleY = pop.value }
+            .clip(RoundedCornerShape(50))
+            .background(Palette.inset)
+            .border(1.dp, Palette.border2, RoundedCornerShape(50))
+            .padding(horizontal = 7.dp, vertical = 1.5.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            if (count > max) "$max+" else "$count",
+            color = tone, fontSize = 9.5.sp, fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.SemiBold, maxLines = 1,
+        )
+    }
+}
+
+/**
+ * 左侧色条：笔记卡 / 归类行 / 待办行共用的一条竖条。
+ * [grow] 从 0 滑到 1 时它自上而下长出来，比直接显示一条色块有精神。
+ * 放在 BoxScope 里，靠 align 贴左 —— 调用方的容器必须是 Box。
+ */
+@Composable
+internal fun BoxScope.NbLeftRail(
+    color: Color,
+    grow: Float,
+    modifier: Modifier = Modifier,
+    width: Dp = 3.dp,
+) {
+    Box(
+        modifier
+            .align(Alignment.CenterStart)
+            .fillMaxHeight()
+            .padding(vertical = 7.dp)
+            .width(width)
+            .graphicsLayer { scaleY = grow; transformOrigin = TransformOrigin(0.5f, 0f) }
+            .clip(RoundedCornerShape(50))
+            .background(color),
+    )
+}

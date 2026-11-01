@@ -56,11 +56,37 @@ internal fun mdMediaKind(raw: String): String? {
 internal fun mdYoutubeId(url: String): String = YT_RE.find(url)?.groupValues?.get(1) ?: ""
 internal fun mdBiliId(url: String): String = BILI_RE.find(url)?.groupValues?.get(1) ?: ""
 
+/**
+ * 一个渲染块 + 它在**原始 markdown 里的字符起点**。
+ * 编辑器的左右滚动同步、光标跟随、双击预览跳回源码，全靠这份映射；
+ * 没有 start 的话只能按「第几块对第几块」猜 —— 网页端第一版就是这么写的，
+ * 实测一个源码块（标题下直接跟列表、中间不空行）会渲染成多个元素，
+ * 按索引配对时双击第 5 段会跳到第 9 段的位置。
+ */
+internal data class MdBlock(val node: MdNode, val start: Int)
+
+/**
+ * 换行归一：CRLF 与孤立 CR 都收成 LF。
+ * 编辑缓冲与解析器必须用同一份文本，否则块偏移与光标偏移会逐块错位；
+ * 从 Windows 贴进来的笔记带 CRLF 是常态。
+ */
+internal fun mdNormalizeNewlines(src: String): String =
+    if (!src.contains('\r')) src else src.replace("\r\n", "\n").replace('\r', '\n')
+
 /** Parse markdown into a node list (fenced code captured first, like md.js). */
-internal fun parseMdNodes(src: String): List<MdNode> {
-    val text = src.replace("\r\n", "\n")
+internal fun parseMdNodes(src: String): List<MdNode> = parseMdBlocks(src).map { it.node }
+
+internal fun parseMdBlocks(src: String): List<MdBlock> {
+    val text = mdNormalizeNewlines(src)
     val lines = text.split("\n")
-    val out = ArrayList<MdNode>()
+    // 每行的字符起点：块偏移 = 块首行的起点，不用回头重扫
+    val lineStart = IntArray(lines.size + 1)
+    run {
+        var acc = 0
+        for (k in lines.indices) { lineStart[k] = acc; acc += lines[k].length + 1 }
+        lineStart[lines.size] = acc
+    }
+    val out = ArrayList<MdBlock>()
     var i = 0
 
     fun isTableSep(l: String): Boolean {
@@ -75,8 +101,10 @@ internal fun parseMdNodes(src: String): List<MdNode> {
             t.startsWith(">") || LIST_RE.matches(t) ||
             (l.startsWith("    ") || l.startsWith("\t"))
     }
+    fun emit(node: MdNode, at: Int) { out += MdBlock(node, lineStart[at.coerceIn(0, lines.size)]) }
 
     while (i < lines.size) {
+        val at = i
         val line = lines[i]
         val trimmed = line.trim()
 
@@ -94,7 +122,7 @@ internal fun parseMdNodes(src: String): List<MdNode> {
             i++ // skip closing fence
             val code = sb.toString().removeSuffix("\n")
             val norm = normalizeMdLang(explicit)
-            out += MdNode.Code(code, norm, explicit)
+            emit(MdNode.Code(code, norm, explicit), at)
             continue
         }
 
@@ -108,7 +136,7 @@ internal fun parseMdNodes(src: String): List<MdNode> {
                 paras += lines[i].trim().removePrefix(">").removePrefix(" ")
                 i++
             }
-            out += MdNode.Quote(paras)
+            emit(MdNode.Quote(paras), at)
             continue
         }
 
@@ -116,14 +144,14 @@ internal fun parseMdNodes(src: String): List<MdNode> {
         val hm = FENCE_RE.find(trimmed)
         if (hm != null) {
             val level = hm.value.takeWhile { it == '#' }.length
-            out += MdNode.Heading(level, trimmed.substring(hm.value.length).trim())
+            emit(MdNode.Heading(level, trimmed.substring(hm.value.length).trim()), at)
             i++
             continue
         }
 
         // Horizontal rule
         if (HR_RE.matches(trimmed)) {
-            out += MdNode.Hr
+            emit(MdNode.Hr, at)
             i++
             continue
         }
@@ -139,7 +167,7 @@ internal fun parseMdNodes(src: String): List<MdNode> {
                 rows += cells(lines[i])
                 i++
             }
-            out += MdNode.Table(head, rows)
+            emit(MdNode.Table(head, rows), at)
             continue
         }
 
@@ -153,7 +181,7 @@ internal fun parseMdNodes(src: String): List<MdNode> {
                 sb.append(lines[i].removePrefix("    ").removePrefix("\t"))
                 i++
             }
-            out += MdNode.Code(sb.toString(), detectMdLang(sb.toString()), "")
+            emit(MdNode.Code(sb.toString(), detectMdLang(sb.toString()), ""), at)
             continue
         }
 
@@ -170,7 +198,7 @@ internal fun parseMdNodes(src: String): List<MdNode> {
                 checkbox = cm.groupValues[1].lowercase() == "x"
                 rest = cm.groupValues[2]
             }
-            out += MdNode.ListItem(rest, ordered, idx, depth, checkbox)
+            emit(MdNode.ListItem(rest, ordered, idx, depth, checkbox), i)
             i++
             // Consecutive list lines + item continuation lines
             while (i < lines.size) {
@@ -189,12 +217,13 @@ internal fun parseMdNodes(src: String): List<MdNode> {
                     if (nOrdered != ordered && nd == depth) idx = 0
                     ordered = nOrdered
                     idx++
-                    out += MdNode.ListItem(nRest, ordered, idx, nd, nCheckbox)
+                    emit(MdNode.ListItem(nRest, ordered, idx, nd, nCheckbox), i)
                     i++
-                } else if (next.isNotBlank() && !isBlockStart(next) && out.last() is MdNode.ListItem) {
-                    // continuation line: merge into previous item
-                    val prev = out.removeAt(out.lastIndex) as MdNode.ListItem
-                    out += prev.copy(text = prev.text + " " + next.trim())
+                } else if (next.isNotBlank() && !isBlockStart(next) && out.last().node is MdNode.ListItem) {
+                    // continuation line: merge into previous item（起点仍是它最初那一行）
+                    val prev = out.removeAt(out.lastIndex)
+                    val item = prev.node as MdNode.ListItem
+                    out += prev.copy(node = item.copy(text = item.text + " " + next.trim()))
                     i++
                 } else {
                     break
@@ -211,7 +240,7 @@ internal fun parseMdNodes(src: String): List<MdNode> {
         if (bareUrl) {
             val kind = mdMediaKind(single)
             if (kind != null) {
-                out += MdNode.Media(kind, single.replace("&amp;", "&"), "")
+                emit(MdNode.Media(kind, single.replace("&amp;", "&"), ""), at)
                 i++
                 continue
             }
@@ -219,11 +248,11 @@ internal fun parseMdNodes(src: String): List<MdNode> {
         // Whole-line image `![alt](url)` (md.js renders <img> inside the paragraph too)
         val im = INLINE_IMG_RE.find(single)
         if (im != null) {
-            out += MdNode.Media("image", im.groupValues[2].replace("&amp;", "&"), im.groupValues[1])
+            emit(MdNode.Media("image", im.groupValues[2].replace("&amp;", "&"), im.groupValues[1]), at)
             i++
             continue
         }
-        out += MdNode.Para(listOf(single))
+        emit(MdNode.Para(listOf(single)), at)
         i++
     }
     return out

@@ -2,5 +2,17 @@
   "A1": {
     "status": "✅",
     "note": "登录按「非 200 即失败 + 解析 {error}」实现，与面板 core.js doLogin 行为一致（parity ✓）。2026-10-26 起服务端 /login 用 try/catch 透传 e.status：密码错误 → 401 {error:密码错误}、失败 8 次锁 10 分钟 → 429 {error:尝试次数过多，请 10 分钟后再试}；此前未包 wrap() 一律 500 {error:服务器内部错误}（安卓端曾因此在锁定期内「密码正确也报服务器内部错误」）。客户端不依赖具体状态码，仍按非 200 即失败处理；401 也用于带 token 的受保护端点（core.js L75-L80 对等实现见 V1）。"
+  },
+  "A9": {
+    "status": "✅",
+    "note": "告警铃铛：Hub.kt 处理 WS `alert` 消息（_alertFeed/alerts），/alerts 轮询在 AppState.kt；parity 工具只搜字面量误报"
+  },
+  "O4": {
+    "status": "✅",
+    "note": "Nginx 站点表经 GET /web 聚合端点的 nginx.sites 子字段（WebPage.kt:248 sites 渲染），非独立 /web.nginx.sites 端点"
+  },
+  "U3": {
+    "status": "✅",
+    "note": "刷新间隔 POST /config 后经 WS `refresh-interval` 同步（Hub.kt:52 文档与实现一致）"
   }
 }

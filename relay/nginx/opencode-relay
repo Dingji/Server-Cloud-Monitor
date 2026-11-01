@@ -111,6 +111,8 @@ server {
     # ==== end Cloud Monitor panel ====
 
     location /v1/ {
+        # CLIENT_IDENTITY_MARK: tap 用 X-Real-IP 区分外发客户端（用量统计）
+        proxy_set_header X-Real-IP $remote_addr;
         include /etc/relay/relay-auth.conf;
         include /etc/relay/upstream-auth.conf;
         include /etc/relay/upstream-session.conf;
@@ -126,6 +128,8 @@ server {
 
     # OpenCode Zen
     location /zen/v1/ {
+        # CLIENT_IDENTITY_MARK: tap 用 X-Real-IP 区分外发客户端（用量统计）
+        proxy_set_header X-Real-IP $remote_addr;
         include /etc/relay/relay-auth.conf;
         include /etc/relay/upstream-auth.conf;
         include /etc/relay/upstream-session.conf;
@@ -142,6 +146,8 @@ server {
     # ── GLM Coding Plan ───────────────────────────────────────────────────
     # OpenAI protocol:  /glm/v1/chat/completions -> open.bigmodel.cn/api/coding/paas/v4/...
     location /glm/v1/ {
+        # CLIENT_IDENTITY_MARK: tap 用 X-Real-IP 区分外发客户端（用量统计）
+        proxy_set_header X-Real-IP $remote_addr;
         include /etc/relay/relay-auth.conf;
         include /etc/relay/glm-auth.conf;
         if ($glm_exhausted = 1) {
@@ -153,6 +159,8 @@ server {
 
     # Anthropic protocol (Claude Code style): /glm/anthropic/v1/messages -> open.bigmodel.cn/api/anthropic/v1/messages
     location /glm/anthropic/ {
+        # CLIENT_IDENTITY_MARK: tap 用 X-Real-IP 区分外发客户端（用量统计）
+        proxy_set_header X-Real-IP $remote_addr;
         include /etc/relay/relay-auth.conf;
         include /etc/relay/glm-auth.conf;
         if ($glm_exhausted = 1) {
@@ -165,6 +173,8 @@ server {
     # ── MiMo Token Plan (CN) ──────────────────────────────────────────────
     # OpenAI protocol: /mimo/v1/chat/completions -> token-plan-cn.xiaomimimo.com/v1/...
     location /mimo/v1/ {
+        # CLIENT_IDENTITY_MARK: tap 用 X-Real-IP 区分外发客户端（用量统计）
+        proxy_set_header X-Real-IP $remote_addr;
         include /etc/relay/relay-auth.conf;
         include /etc/relay/mimo-auth.conf;
         if ($mimo_exhausted = 1) {
@@ -176,9 +186,7 @@ server {
 
     # Model availability report (used by the daily client sync job), token protected
     location = /models-status.json {
-        if ($http_authorization != "Bearer $relay_token") {
-            return 401;
-        }
+        include /etc/relay/relay-auth.conf;
         alias /var/lib/relay/public/models-status.json;
         default_type application/json;
         add_header Cache-Control "no-store";
@@ -186,9 +194,7 @@ server {
 
     location = /models-catalog.json {
         # relay-token only: the canonical model list every client config is generated from
-        if ($http_authorization != "Bearer $relay_token") {
-            return 401;
-        }
+        include /etc/relay/relay-auth.conf;
         alias /var/lib/relay/public/models-catalog.json;
         default_type application/json;
         add_header Cache-Control "no-store";

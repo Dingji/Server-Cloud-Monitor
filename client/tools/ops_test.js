@@ -11,6 +11,16 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const http = require('http');
+const { Readable, Writable } = require('stream');
+const { execFileSync } = require('child_process');
+
+/* 与 files.js 相同的探测顺序：先 python3 再 python */
+function filesPyBin() {
+  for (const b of ['python3', 'python']) {
+    try { execFileSync(b, ['-c', 'import zipfile,tarfile'], { stdio: 'ignore' }); return b; } catch (_) {}
+  }
+  return null;
+}
 
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'cmops-'));
 const SERVER = path.join(TMP, 'server');
@@ -19,7 +29,10 @@ fs.mkdirSync(OPS, { recursive: true });
 fs.mkdirSync(path.join(TMP, 'data'), { recursive: true });
 
 for (const f of fs.readdirSync(path.join(__dirname, '..', 'ops-server'))) {
-  fs.copyFileSync(path.join(__dirname, '..', 'ops-server', f), path.join(OPS, f));
+  const src = path.join(__dirname, '..', 'ops-server', f);
+  const dst = path.join(OPS, f);
+  if (fs.statSync(src).isDirectory()) fs.cpSync(src, dst, { recursive: true });
+  else fs.copyFileSync(src, dst);
 }
 
 const state = { metrics: null, disks: null, hubAlerts: [], auditedNames: [] };
@@ -89,18 +102,39 @@ async function call(method, route, opt) {
   const handlers = routes.get(method + ' ' + route);
   if (!handlers) throw new Error('route not registered: ' + method + ' ' + route);
   const o = opt || {};
-  const req = { body: o.body || {}, query: o.query || {}, headers: {}, clientIp: '203.0.113.9' };
+  /* streaming endpoints (raw upload / archive download) need a real stream req/res */
+  let req;
+  if (o.raw) {
+    req = Readable.from([o.raw]);
+    req.query = o.query || {}; req.headers = {}; req.clientIp = '203.0.113.9';
+  } else {
+    req = { body: o.body || {}, query: o.query || {}, headers: {}, clientIp: '203.0.113.9' };
+  }
   let status = 200, json = null;
-  const res = { status(s) { status = s; return this; }, json(o2) { json = o2; return this; }, setHeader() { return this; } };
+  const chunks = [];
+  const res = new Writable({ write(c, e, cb) { chunks.push(c); cb(); } });
+  res._headers = {};
+  res.status = (s) => { status = s; return res; };
+  res.json = (o2) => { json = o2; return res; };
+  res.setHeader = (k, v) => { res._headers[String(k).toLowerCase()] = v; return res; };
+  Object.defineProperty(res, 'headersSent', { get: () => json != null || chunks.length > 0 });
   let idx = 0;
   const next = async () => {
     if (idx >= handlers.length) return;
     await handlers[idx++](req, res, next);
   };
   await next();
-  return { status, json };
+  /* 流式端点在 handler 返回后管道还在走，等 finish 才能拿到完整 body（JSON 端点不会 end，
+     所以只在显式要求时等待，并设超时兜底） */
+  if (o.waitFinish) {
+    await Promise.race([
+      new Promise((r) => res.once('finish', r)),
+      new Promise((r) => setTimeout(r, 5000)),
+    ]);
+  }
+  return { status, json, body: Buffer.concat(chunks), headers: res._headers };
 }
-const get = (r, q) => call('GET', r, { query: q });
+const get = (r, q, extra) => call('GET', r, Object.assign({ query: q || {} }, extra));
 const post = (r, b) => call('POST', r, { body: b });
 
 let pass = 0, fail = 0;
@@ -458,12 +492,65 @@ function stubFetch(failTimes) {
   ok('复制改名成功', fs.existsSync(path.join(TMP, 'fsroot', 'logs', 'note-copy.txt')), r.json);
 
   global.__rawBody = Buffer.from('uploaded-bytes');
-  r = await call('POST', '/ops/files/upload', { query: { dir: FSROOT + '/uploads', name: 'up.bin' } });
+  r = await call('POST', '/ops/files/upload', { query: { dir: FSROOT + '/uploads', name: 'up.bin' }, raw: global.__rawBody });
   ok('分块上传走 raw 解析并落盘', r.status === 200 && r.json.bytes === global.__rawBody.length, r.json);
-  r = await call('POST', '/ops/files/upload', { query: { dir: FSROOT + '/uploads', name: 'up.bin' } });
+  r = await call('POST', '/ops/files/upload', { query: { dir: FSROOT + '/uploads', name: 'up.bin' }, raw: global.__rawBody });
   ok('同名上传默认拒绝，避免覆盖', r.status === 409, r.json);
-  r = await call('POST', '/ops/files/upload', { query: { dir: FSROOT + '/uploads', name: 'up.bin', overwrite: '1' } });
+  r = await call('POST', '/ops/files/upload', { query: { dir: FSROOT + '/uploads', name: 'up.bin', overwrite: '1' }, raw: global.__rawBody });
   ok('overwrite=1 时允许覆盖', r.status === 200, r.json);
+
+  /* ---- 压缩包内部浏览与条目下载 + 内联预览 ---- */
+  fs.writeFileSync(path.join(TMP, 'fsroot', 'uploads', 'inside.txt'), 'hello inside\n', 'utf8');
+  fs.writeFileSync(path.join(TMP, 'fsroot', 'uploads', 'logo.png'), Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'));
+  const py = filesPyBin();
+  if (py) {
+    const zipPath = path.join(TMP, 'fsroot', 'uploads', 'bundle.zip');
+    execFileSync(py, ['-c', [
+      'import zipfile,sys',
+      "z=zipfile.ZipFile(sys.argv[1],'w')",
+      "z.write(sys.argv[2],'inside.txt')",
+      "z.write(sys.argv[3],'logo.png')",
+      'z.close()',
+    ].join(';'), zipPath,
+    path.join(TMP, 'fsroot', 'uploads', 'inside.txt'),
+    path.join(TMP, 'fsroot', 'uploads', 'logo.png')]);
+    r = await get('/ops/files/archive/list', { path: FSROOT + '/uploads/bundle.zip' });
+    ok('压缩包清单列出内部条目', r.status === 200 && r.json.count === 2 && r.json.entries.some((x) => x.name === 'inside.txt'), r.json);
+    r = await get('/ops/files/archive/entry', { path: FSROOT + '/uploads/bundle.zip', entry: 'inside.txt' });
+    ok('压缩包内文本条目可预览', r.status === 200 && r.json.binary === false && r.json.text.includes('hello inside'), r.json);
+    r = await get('/ops/files/archive/entry', { path: FSROOT + '/uploads/bundle.zip', entry: 'logo.png', base64: '1' });
+    ok('压缩包内二进制条目可 base64 预览', r.status === 200 && r.json.binary === true && r.json.base64.length > 50, r.json);
+    r = await get('/ops/files/archive/entry', { path: FSROOT + '/uploads/bundle.zip', entry: 'nope.txt' });
+    ok('不存在的条目给可读错误', r.status === 400 && String(r.json.error).includes('nope'), r.json);
+    r = await get('/ops/files/archive/download', { path: FSROOT + '/uploads/bundle.zip', entry: 'inside.txt' }, { waitFinish: true });
+    ok('压缩包内条目可流式下载', r.status === 200 && r.body.toString('utf8') === 'hello inside\n', r.body);
+    ok('条目下载带 attachment 文件名', (r.headers['content-disposition'] || '').includes('inside.txt'), r.headers);
+    r = await get('/ops/files/archive/download', { path: FSROOT + '/uploads/bundle.zip', entry: '../../../etc/passwd' });
+    ok('条目名带路径穿越也不会写出（按名查找失败）', r.status === 400 || r.status === 500, r.json);
+  } else {
+    console.log('  SKIP  压缩包内部用例（本机无 python）');
+  }
+
+  r = await get('/ops/files/raw', { path: FSROOT + '/uploads/logo.png' }, { waitFinish: true });
+  ok('raw 内联预览按扩展名给 image/png', r.status === 200 && r.headers['content-type'] === 'image/png' && r.body.length > 50, { status: r.status, headers: r.headers });
+  ok('raw 内联预览带 sandbox CSP 与 inline', r.headers['content-security-policy'].includes('sandbox') && r.headers['content-disposition'] === 'inline', r.headers);
+  r = await get('/ops/files/raw', { path: FSROOT + '/uploads/inside.txt', maxMB: '1' }, { waitFinish: true });
+  ok('raw 文本文件给 text/plain', r.status === 200 && String(r.headers['content-type']).includes('text/plain') && r.body.toString('utf8') === 'hello inside\n', r.headers);
+  r = await get('/ops/files/preview', { path: FSROOT + '/uploads/logo.png' });
+  ok('预览响应带 kind=image 与 mime', r.json.kind === 'image' && r.json.mime === 'image/png' && r.json.binary === true, r.json);
+  r = await get('/ops/files/preview', { path: FSROOT + '/uploads/bundle.zip' });
+  ok('预览响应带 kind=archive', r.json.kind === 'archive', r.json);
+
+  console.log('  DBG uploads listing=', fs.readdirSync(path.join(TMP, 'fsroot', 'uploads')).join(','));
+  r = await post('/ops/files/archive', { name: 'made.zip', paths: [FSROOT + '/logs/note-copy.txt'], to: FSROOT + '/uploads', kind: 'zip' });
+  ok('zip 打包（无 zip 命令时走 python 回退）', r.status === 200 && fs.existsSync(path.join(TMP, 'fsroot', 'uploads', 'made.zip')) && fs.statSync(path.join(TMP, 'fsroot', 'uploads', 'made.zip')).size > 50, r.json);
+  r = await get('/ops/files/archive/list', { path: FSROOT + '/uploads/made.zip' });
+  ok('打出来的 zip 能被内部清单读取（往返一致）', r.status === 200 && r.json.entries.some((x) => x.name === 'note-copy.txt'), r.json);
+  r = await post('/ops/files/extract', { path: FSROOT + '/uploads/made.zip', to: FSROOT + '/uploads' });
+  ok('zip 解压端点可用', r.status === 200, r.json);
+  r = await post('/ops/files/archive', { name: 'ghost.zip', paths: [FSROOT + '/uploads/ghost.txt'], to: FSROOT + '/uploads', kind: 'zip' });
+  ok('zip 源不存在时报错且不留半成品', r.status >= 400 && !fs.existsSync(path.join(TMP, 'fsroot', 'uploads', 'ghost.zip')), r.json);
 
   r = await get('/ops/files/search', { dir: FSROOT, q: 'note' });
   ok('按名称搜索命中多条', r.json.items.length >= 2 && r.json.items.every((x) => /note/i.test(x.path)), r.json.items);

@@ -20,12 +20,15 @@ val Json: kotlinx.serialization.json.Json by lazy {
     }
 }
 
-/** Thrown for HTTP errors; mirrors the panel's `{error, output}` contract. */
+/** Thrown for HTTP errors; mirrors the panel's `{error, output}` contract.
+ *  fromServer=true 表示响应体是面板的 JSON `{error}`（业务错误，如「目录不存在」）；
+ *  false 通常是网关/路由层的 HTML 404（ops 模块未部署）——两者语义不同。 */
 class ApiException(
     message: String,
     val code: Int = 0,
     val output: String? = null,
     val isAuth: Boolean = false,
+    val fromServer: Boolean = false,
 ) : Exception(message)
 
 /* ------------------------------------------------------------------ *

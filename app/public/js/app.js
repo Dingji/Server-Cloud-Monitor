@@ -16,11 +16,20 @@
     { id: 'security', label: '安全管理', icon: 'shield' },
     { id: 'services', label: '系统服务', icon: 'gear' },
     { id: 'packages', label: '软件包管理', icon: 'package' },
+    { sep: '运维' },
+    { id: 'files', label: '文件管理', icon: 'folder' },
+    { id: 'ops-uptime', label: '可用性拨测', icon: 'activity' },
+    { id: 'ops-rules', label: '告警规则', icon: 'bell' },
+    { id: 'ops-channels', label: '通知渠道', icon: 'export' },
+    { id: 'ops-hosts', label: '纳管主机', icon: 'server' },
+    { id: 'ops-sec', label: '安全巡检', icon: 'shield' },
+    { id: 'ops-disk', label: '磁盘治理', icon: 'disk' },
+    { id: 'ops-watch', label: '服务看护', icon: 'flask' },
+    { id: 'ops-remote', label: '远程主机', icon: 'wlan' },
     { sep: '应用' },
     { id: 'databases', label: '数据库', icon: 'database' },
     { id: 'docker', label: 'Docker 容器', icon: 'docker' },
     { id: 'web', label: '网站 / Nginx', icon: 'browser' },
-    { id: 'php', label: 'PHP 站点', icon: 'code' },
     { id: 'cron', label: '定时任务', icon: 'clock' },
     { id: 'backups', label: '备份中心', icon: 'archive' },
     { id: 'logs', label: '日志中心', icon: 'logs' },
@@ -57,7 +66,11 @@
    * entry only when available, so a stock Linux install shows a clean menu. */
   const OPTIONAL_NAV = [
     { id: 'relay', after: 'dashboard', label: 'OpenCode 中继', icon: 'satellite', probe: '/relay/available' },
+    /* relayhub 排在 relay 之后（本数组按序 splice，relay 必须先入表） */
     { id: 'relayhub', after: 'relay', label: '内网中继监控', icon: 'wlan', probe: '/relayhub/available' },
+    { id: 'php', after: 'web', label: 'PHP 站点', icon: 'code', probe: '/php/overview' },
+    /* notebox 是独立 Flask 服务；装了才显示（面板只做 API 代理 + 自己的界面） */
+    { id: 'notebox', after: 'audit', label: '笔记与待办', icon: 'edit', probe: '/notebox/probe' },
   ];
   async function detectOptionalNav() {
     for (const o of OPTIONAL_NAV) {
@@ -74,13 +87,12 @@
 
   /* ---------- lazy page modules ---------- */
   /* bump on each deploy so browsers pick up new page code immediately */
-  CM.BUILD = "20261028-0939";
+  CM.BUILD = "20261031-1622";
   CM.lazyPages = {
     dashboard: 'js/pages/dashboard.js',
     healthalerts: 'js/pages/healthalerts.js',
     slo: 'js/pages/slo.js',
     relay: 'js/pages/relay.js',
-    relayhub: 'js/pages/relayhub.js',
     processes: 'js/pages/processes.js',
     disks: 'js/pages/disks.js',
     memory: 'js/pages/memory.js',
@@ -92,12 +104,24 @@
     docker: 'js/pages/docker.js',
     web: 'js/pages/web.js',
     php: 'js/pages/php.js',
+    relayhub: 'js/pages/relayhub.js',
+    notebox: 'js/pages/notebox.js',
     cron: 'js/pages/cron.js',
     backups: 'js/pages/backups.js',
     logs: 'js/pages/logs.js',
     audit: 'js/pages/audit.js',
+    wintools: 'js/pages/win-tools.js',
     terminal: 'js/pages/terminal.js',
     settings: 'js/pages/settings.js',
+    files: 'js/pages/files.js',
+    'ops-uptime': 'js/pages/ops-uptime.js',
+    'ops-rules': 'js/pages/ops-rules.js',
+    'ops-channels': 'js/pages/ops-channels.js',
+    'ops-hosts': 'js/pages/ops-hosts.js',
+    'ops-sec': 'js/pages/ops-sec.js',
+    'ops-disk': 'js/pages/ops-disk.js',
+    'ops-watch': 'js/pages/ops-watch.js',
+    'ops-remote': 'js/pages/ops-remote.js',
   };
 
   function buildNav() {
@@ -243,6 +267,20 @@
     }
 
     document.getElementById('brand-host').textContent = CM.me.info.hostname;
+    if (CM.isWindows()) {
+      /* Windows 面板不展示 Linux 向页面：健康告警、SLO 与用量 */
+      CM.hiddenPages = new Set(['healthalerts', 'slo']);
+      const remove = (id) => { const i = NAV.findIndex((n) => n.id === id); if (i >= 0) NAV.splice(i, 1); };
+      remove('healthalerts');
+      remove('slo');
+      const w = NAV.find((n) => n.id === 'web');
+      if (w) w.label = '网站 / IIS';
+      const pk = NAV.find((n) => n.id === 'packages');
+      if (pk) pk.label = '应用 (winget)';
+      const toolsSep = NAV.findIndex((n) => n.sep === '工具');
+      if (toolsSep >= 0 && !NAV.some((n) => n.id === 'wintools'))
+        NAV.splice(toolsSep + 1, 0, { id: 'wintools', label: 'Windows 工具', icon: 'gear' });
+    }
     CM.hideLogin();
     buildNav();
     detectOptionalNav();   /* 异步补齐可选模块（探测失败则保持隐藏，不阻塞启动） */

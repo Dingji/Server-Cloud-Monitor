@@ -12,6 +12,14 @@
   CM.base = location.pathname.replace(/\/public\/.*$/, '') || '';
   CM.apiBase = CM.base + '/api';
 
+  /* 面板主机是不是 Windows：/me 的 env.family 为准，panelMode 兜底。
+     Windows 专属页（wintools）与 Linux 专属页都靠它决定导航显隐。 */
+  CM.isWindows = function () {
+    if (CM.me && CM.me.env && CM.me.env.family === 'windows') return true;
+    const pm = CM.me && CM.me.info && String(CM.me.info.panelMode || '');
+    return /windows/i.test(pm);
+  };
+
   /* ---------- formatting ---------- */
   const fmt = window.fmt = {
     bytes(n) {
@@ -72,7 +80,10 @@
       let res;
       try { res = await fetch(CM.apiBase + path, opts); }
       catch (e) { throw new Error('网络错误: ' + e.message); }
-      if (res.status === 401) {
+      /* notebox 有自己的账号会话：它回 401 只表示"没登录笔记服务"，
+         不能顺手把面板会话也清掉（否则一进笔记页就被踢出面板）。 */
+      const nb = path.indexOf('/notebox/') === 0;
+      if (res.status === 401 && !nb) {
         CM.token = '';
         try { localStorage.removeItem('cm_token'); } catch (_) {}
         CM.showLogin('会话已过期，请重新登录');
@@ -80,7 +91,13 @@
       }
       let data = {};
       try { data = await res.json(); } catch (_) {}
-      if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+      if (!res.ok) {
+        const e = new Error(data.error || ('HTTP ' + res.status));
+        e.status = res.status;
+        e.payload = data;
+        e.noteboxAuth = nb && res.status === 401;
+        throw e;
+      }
       return data;
     },
     /* GET with optional cache ttl (ms); concurrent identical requests share one promise */
@@ -192,8 +209,20 @@
       modalRoot().appendChild(mask);
       mask.querySelector('[data-a=close]').onclick = () => closeModal(mask);
       mask.querySelector('[data-a=copy]').onclick = async () => {
-        try { await navigator.clipboard.writeText(text); window.toast('已复制到剪贴板', 'ok'); }
-        catch (_) { window.toast('复制失败', 'err'); }
+        if (await ui.copy(text)) { window.toast('已复制到剪贴板', 'ok'); return; }
+        /* 剪贴板被浏览器拒了（http 非安全上下文，或这一击没带上用户手势）：
+           与其只说一句"复制失败"，不如把整段替你选中，按 Ctrl+C 就能拿走。 */
+        const pre = mask.querySelector('.pre');
+        if (pre && window.getSelection && document.createRange) {
+          const rg = document.createRange();
+          rg.selectNodeContents(pre);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(rg);
+          window.toast('浏览器不让脚本复制，已替你选中，按 Ctrl+C 即可', 'info');
+        } else {
+          window.toast('复制失败，请手动选中后复制', 'err');
+        }
       };
       mask.addEventListener('click', (e) => { if (e.target === mask) closeModal(mask); });
     },
@@ -206,9 +235,14 @@
           if (f.type === 'select') {
             return `<label class="fld mb">${fmt.esc(f.label)}<select class="inp" name="${f.name}">${f.options.map((o) => `<option value="${fmt.esc(o)}" ${o === f.value ? 'selected' : ''}>${fmt.esc(o)}</option>`).join('')}</select></label>`;
           }
+          if (f.type === 'textarea') {
+            return `<label class="fld mb">${fmt.esc(f.label)}<textarea class="inp ${f.mono ? 'mono' : ''}" name="${f.name}" rows="${f.rows || 6}" placeholder="${fmt.esc(f.placeholder || '')}">${fmt.esc(f.value || '')}</textarea></label>`;
+          }
           return `<label class="fld mb">${fmt.esc(f.label)}<input class="inp ${f.mono ? 'mono' : ''}" name="${f.name}" value="${fmt.esc(f.value || '')}" placeholder="${fmt.esc(f.placeholder || '')}"></label>`;
         }).join('');
-        mask.innerHTML = `<div class="modal" style="max-width:480px">
+        /* 宽度只收形如 760px / 60% 的值，避免把任意串拼进 style */
+        const w = /^[\d.]+(px|%|vw)$/.test(String(opts.width || '')) ? opts.width : '480px';
+        mask.innerHTML = `<div class="modal" style="max-width:${w}">
           <div class="modal-head">${fmt.esc(title)}</div>
           <div class="modal-body">${body}</div>
           <div class="modal-foot">

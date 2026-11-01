@@ -369,6 +369,10 @@ api.post('/db/upload', express.raw({ type: '*/*', limit: '500mb' }), audited('db
 
 /* ============ optional relay integration ============ */
 const relay = require('./relay');
+const relayhubmon = require('./relayhubmon');
+/* notebox（笔记/待办）API 代理：挂在 auth.middleware 之后，
+   面板登录态守门，notebox 自己的账号权限决定谁能看到什么。 */
+const notebox = require('./notebox');
 /* every endpoint the original /stats/ dashboard uses */
 const RELAY_GET = [
   'summary', 'keys', 'key', 'quota', 'providers', 'daily', 'hourly', 'weekday',
@@ -376,6 +380,7 @@ const RELAY_GET = [
   'latency', 'ttfb', 'streaming', 'sizes', 'status', 'routes', 'methods',
   'endpoints', 'failover', 'errors', 'recent', 'sessions', 'session-memory',
   'useragents', 'ips', 'busy-hours', 'client-origins',
+  'clients', 'client-detail', 'clients-usage', 'client-keys',
 ];
 for (const name of RELAY_GET) {
   api.get('/relay/' + name, wrap(async (req, res) => {
@@ -416,7 +421,24 @@ async function relayhubFetch(pathname, init) {
 api.get('/relayhub/available', wrap(async (req, res) => {
   try { res.json(await relayhubFetch('/api/health')); } catch (e) { res.json({ ok: false }); }
 }));
-api.get('/relayhub/summary', wrap(async (req, res) => res.json(await relayhubFetch('/api/summary'))));
+/* frps 的鉴权令牌随 /api/summary 的 meta 一起回来。面板页面从不显示它，
+   但任何已登录客户端都能读到 —— 拿到就能伪装成 frpc 接入。这里统一抹掉。 */
+api.get('/relayhub/summary', wrap(async (req, res) => {
+  const d = await relayhubFetch('/api/summary');
+  if (d && d.meta) {
+    if (d.meta.frps_token) { d.meta.frps_token_masked = String(d.meta.frps_token).slice(0, 4) + '…'; delete d.meta.frps_token; }
+    delete d.meta.server_bind_password;
+  }
+  res.json(d);
+}));
+/* 运维洞察：端口池容量/碎片、frps 配置漂移、隧道错误与抖动、探测延迟。
+   只读，且带 15s 快照缓存（relayhubmon.js）。 */
+notebox.mount(api, express);
+relayhubmon.startPolling();
+api.get('/relayhub/insight', wrap(async (req, res) => {
+  const d = await relayhubmon.snapshot();
+  res.json(Object.assign({}, d, { cacheAgeMs: relayhubmon.ageMs(), stale: relayhubmon.isStale() }));
+}));
 api.post('/relayhub/probe-now', audited('relayhub.probe', async () => relayhubFetch('/api/probe-now', { method: 'POST' })));
 api.get('/relayhub/mappings', wrap(async (req, res) => res.json(await relayhubFetch('/api/mappings'))));
 api.post('/relayhub/mappings', audited('relayhub.mappings', (req) => relayhubFetch('/api/mappings', { method: 'POST', body: JSON.stringify(req.body || {}) })));

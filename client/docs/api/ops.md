@@ -115,14 +115,26 @@ send_mail.py      邮件通道用的 SMTP 发送器（服务器无 MTA，用 pyt
 ## 文件管理器
 
 读：`GET /ops/files/list?dir=`（条目 + 面包屑 + 书签 + df）、`stat?path=`、`tree?dir=&depth=`、
-`preview?path=`、`search?dir=&q=&depth=`、`usage?dir=`、`trash`、`download?path=`（流式）。
+`preview?path=`（响应带 `kind`=archive/image/video/audio/pdf/other 与 `mime`）、`raw?path=&maxMB=`
+（按扩展名给 MIME 的内联流式读取，`inline` + sandbox CSP，供网页端 `<img>/<video>/<embed>` 与
+客户端图片预览；默认 ≤20MB，`maxMB` 可调，超限 413）、`archive/list?path=`（压缩包内部清单，
+支持 zip / tar / tar.gz / tar.bz2 / tar.xz）、`archive/entry?path=&entry=&base64=1`（压缩包内条目
+预览：文本给 `text`，图片给 `base64`）、`search?dir=&q=&depth=`、`usage?dir=`、`trash`、
+`download?path=`（流式）、`archive/download?path=&entry=`（压缩包内条目流式下载，先校验条目
+存在并回 Content-Length）。
 
 写（全部 `audited()`）：`POST /ops/files/mkdir` `{dir,name}`、`touch` `{dir,name}` 或 `{paths[]}`、
 `write` `{path,content}`、`rename` `{path,name}`、`move` `{paths[],to}`、`copy` `{paths[],to,name?}`、
 `delete` `{paths[],purge?}`（默认进回收站）、`restore` `{ids[]}`、`trash/delete` `{ids[]}`、
 `trash/empty`、`chmod` `{paths[],mode,recursive}`、`chown` `{paths[],owner,recursive}`、
-`archive` `{paths[],name,to,kind}`、`extract` `{path,to}`、
-`upload?dir=&name=&overwrite=1`（raw body，`express.raw`，≤64MB）。
+`archive` `{paths[],name,to,kind}`（zip 优先用 `zip` 命令，缺失时回落 `archive_tool.py zip`）、
+`extract` `{path,to}`（tar 用 `-xf` 自动识别 gzip/bzip2/xz/无压缩）、
+`upload?dir=&name=&overwrite=1`（raw body 流式落盘，上限 `CM_MAX_UPLOAD_MB`，默认 1024MB）。
+
+压缩包内部读操作的实现与边界：清单与条目内容由 `server/ops/archive_tool.py`（stdlib
+zipfile/tarfile）读出，条目**从不落盘**（直接从压缩包流式读出），所以恶意条目名（`../`、
+绝对路径）不可能逃逸；python 不可用时 `archive/list`、`archive/entry` 退回
+`unzip -Zl` / `tar -tvf` / `unzip -p` 文本解析（无 base64 与二进制预览）。
 
 路径与权限语义：
 

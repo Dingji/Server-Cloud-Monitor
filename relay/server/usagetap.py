@@ -29,6 +29,7 @@ Safety
 * Storage failures are swallowed after logging -- stats must never break traffic.
 """
 
+import hashlib
 import http.client
 import json
 import os
@@ -46,6 +47,17 @@ except Exception:
     def is_workday(d):
         return d.weekday() < 5
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+# The credential gate lives next to the store it reads (/opt/relay/clientkeys.py).
+# Losing it must not take the relay down: nginx already refuses unknown credentials
+# from the generated include, so without the module only the per-key ceilings are
+# off -- traffic keeps flowing.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    import clientkeys
+except Exception as _ck_exc:                      # noqa: BLE001
+    clientkeys = None
+    print("client key gate unavailable: %s" % _ck_exc, file=sys.stderr, flush=True)
 
 LISTEN_HOST = "127.0.0.1"
 LISTEN_PORT = 8790
@@ -122,10 +134,90 @@ CREATE INDEX IF NOT EXISTS ix_turn_sess ON session_turns(sess, ts);
 CREATE INDEX IF NOT EXISTS ix_turn_day ON session_turns(day);
 """
 
+# CLIENT_IDENTITY_MARK: per-client usage without touching the clients.
+# A client is (key-hash, ip, user-agent): the sha256 prefix of the credential it
+# presented (never the credential itself), its real IP (nginx passes X-Real-IP)
+# and the User-Agent. This hash is also what the per-key ceilings are billed
+# against, so it is the ledger key, not just a label -- see client_credential().
+# Rows written before the credential reached the tap intact carry the hash of the
+# *upstream* key instead; they all share one value and aggregate under the old
+# "one globally shared token" reading.
+IDENTITY_COLUMNS = (
+    ("client_key", "TEXT"),
+    ("client_ip", "TEXT"),
+    ("user_agent", "TEXT"),
+)
+
+
+def migrate_db(conn):
+    """Add the identity columns/indexes to an existing database, idempotently."""
+    existing = {r[1] for r in conn.execute("PRAGMA table_info(usage_events)")}
+    for name, decl in IDENTITY_COLUMNS:
+        if name not in existing:
+            conn.execute("ALTER TABLE usage_events ADD COLUMN %s %s" % (name, decl))
+    for name in ("client_ip", "client_key"):
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_usage_%s ON usage_events(%s)" % (name, name))
+    # The per-key ceilings SUM tokens over a window, so they read (key, time)
+    # together; without this each admission check scans the whole table.
+    conn.execute("CREATE INDEX IF NOT EXISTS ix_usage_ck_ts ON usage_events(client_key, ts)")
+
+
+def client_credential(headers):
+    """The key the *client* presented -- not the Authorization header on the wire.
+
+    nginx includes /etc/relay/upstream-auth.conf in the same location, which
+    rewrites Authorization to the official upstream credential before proxying to
+    this tap. So the client's own credential arrives as X-Relay-Client-Auth /
+    X-Relay-Client-Apikey (set by the generated relay-auth.conf, which overwrites
+    anything a caller forges under those names). Those two are consulted first: an
+    Anthropic-style caller puts its key in x-api-key and would otherwise be read as
+    the upstream key. A caller that reaches the tap directly on loopback never went
+    through nginx, so its own Authorization / x-api-key headers are still intact.
+    """
+    for name in ("X-Relay-Client-Auth", "X-Relay-Client-Apikey", "Authorization", "x-api-key"):
+        value = (headers.get(name) or "").strip()
+        if not value:
+            continue
+        return value[7:].strip() if value.lower().startswith("bearer ") else value
+    return ""
+
+
+# Never forwarded upstream: they carry a client's credential to this tap only.
+CLIENT_CRED_HEADERS = ("x-relay-client-auth", "x-relay-client-apikey")
+
+
+def client_identity(headers, peer):
+    """(token_hash, ip, ua) for one request. The raw token never leaves this
+    function; only its sha256 prefix is persisted."""
+    token = client_credential(headers)
+    key = hashlib.sha256(token.encode("utf-8", "replace")).hexdigest()[:16] if token else ""
+    ip = (headers.get("X-Real-IP") or headers.get("X-Forwarded-For") or "").split(",")[0].strip()
+    if not ip:
+        ip = peer or ""
+    ua = (headers.get("User-Agent") or "").strip()[:120]
+    return key, ip, ua
+
 STATE = {"rows": 0, "last": None, "error": None, "started": time.time(), "requests": 0,
-         "rewrites": 0, "last_rewrite": None, "rewrite_skips": {}}
+         "rewrites": 0, "last_rewrite": None, "rewrite_skips": {},
+         "policy_counts": {"busy": 0, "idle": 0},
+         "key_blocks": {}, "last_key_block": None}
 prune_last = [0.0]
 _LOCK = threading.Lock()
+
+
+def key_health():
+    """What the credential gate can currently see, for the dashboard."""
+    if clientkeys is None:
+        return {"gate": "absent", "reason": "clientkeys.py 未安装：按 key 的时/周/月额度未生效"}
+    doc = clientkeys.load_doc()
+    keys = doc.get("keys") or []
+    return {"gate": "on",
+            "store_loaded": clientkeys.store_loaded(),
+            "keys_total": len(keys),
+            "keys_enabled": sum(1 for r in keys if r.get("enabled", True)),
+            "blocks": dict(STATE["key_blocks"]),
+            "last_block": STATE["last_key_block"],
+            "updated_at": doc.get("updated_at")}
 
 
 # ── upstream credential (kept in sync with what nginx would send) ───────────
@@ -171,6 +263,7 @@ def init_db():
         conn = db()
         try:
             conn.executescript(SCHEMA)
+            migrate_db(conn)
             conn.commit()
         finally:
             conn.close()
@@ -199,8 +292,8 @@ def record(row):
                 conn.execute(
                     "INSERT INTO usage_events (ts, day, hour, route, protocol, model, sess, status,"
                     " streaming, duration, input_tokens, output_tokens, cache_read, cache_write,"
-                    " reasoning, total_tokens, client_gone, raw)"
-                    " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", row)
+                    " reasoning, total_tokens, client_gone, raw, client_key, client_ip, user_agent)"
+                    " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", row)
                 conn.commit()
             finally:
                 conn.close()
@@ -587,6 +680,14 @@ BUSY_DEFAULTS = {
     "windows": [{"start": "09:00", "end": "12:00"}, {"start": "14:00", "end": "18:00"}],
     "weekdays_only": True,
     "utc_offset_minutes": 480,
+    # IDLE_POLICY_MARK: 闲时把该线路的全部请求改写到 deepseek（deepseek 闲时容量好）。
+    # windows 为空 = 忙时窗口的补集（周末与节假日整天都是闲时）；给了 windows 就按窗口。
+    "idle": {
+        "enabled": True,
+        "target_model": "deepseek-v4.1-flash",
+        "windows": [],
+        "weekdays_only": False,
+    },
 }
 _busy_conf = {"mtime": None, "doc": dict(BUSY_DEFAULTS)}
 
@@ -607,6 +708,12 @@ def busy_conf():
                     doc["windows"] = BUSY_DEFAULTS["windows"]
                 if not isinstance(doc.get("rewrite_prefixes"), list):
                     doc["rewrite_prefixes"] = BUSY_DEFAULTS["rewrite_prefixes"]
+                if not isinstance(doc.get("idle"), dict):
+                    doc["idle"] = dict(BUSY_DEFAULTS["idle"])
+                else:
+                    # 浅拷贝会让 idle 子字典与 BUSY_DEFAULTS 共享引用，调用方
+                    # （busy_hours.py 等）就地修改就会污染默认值，这里断开别名
+                    doc["idle"] = dict(doc["idle"])
                 _busy_conf["doc"] = doc
             _busy_conf["mtime"] = st.st_mtime
         except Exception:
@@ -656,31 +763,89 @@ def busy_off():
     return os.path.exists(BUSY_OFF_FLAG)
 
 
-def busy_rewrite(route, model, allowed, nowdt=None):
-    """(new_model, reason) or (None, why-not). Never raises."""
+def idle_window_active(doc, nowdt):
+    """True when the idle policy applies at nowdt.
+
+    Idle windows given in the config are matched directly; the default (no
+    windows) is the complement of the busy windows -- weekends, holidays,
+    evenings and lunch breaks all count as idle.
+    """
+    idle = doc.get("idle") if isinstance(doc.get("idle"), dict) else dict(BUSY_DEFAULTS["idle"])
+    windows = idle.get("windows")
+    if isinstance(windows, list) and windows:
+        probe = dict(doc)
+        probe["windows"] = windows
+        probe["weekdays_only"] = bool(idle.get("weekdays_only", False))
+        return busy_window_active(probe, nowdt)
+    return not busy_window_active(doc, nowdt)
+
+
+def policy_rewrite(route, model, allowed, nowdt=None):
+    """(new_model, reason, policy) or (None, why, None). Never raises.
+
+    忙时窗口内维持原策略：deepseek* 改写到 mimo（OpenCode Go 的 deepseek 容量退化）。
+    闲时（窗口补集，或 idle.windows 配置的窗口）：该线路全部请求改写到
+    idle.target_model（当前是 deepseek-v4.1-flash）。两个方向都 fail-open：目标不在
+    白名单、开关关闭、配置损坏都意味着"不改写"，客户端拿到它请求的模型。
+    """
     try:
         doc = busy_conf()
         if not doc.get("enabled", True):
-            return None, "disabled_in_config"
+            return None, "disabled_in_config", None
         if busy_off():
-            return None, "switch_off"
+            return None, "switch_off", None
         if route != doc.get("route", "go"):
-            return None, "other_route"
-        target = str(doc.get("target_model") or "")
-        if not target or not str(model).startswith(tuple(doc.get("rewrite_prefixes") or ())):
-            return None, "not_a_match"
+            return None, "other_route", None
+        now = nowdt or datetime.now(TZ)
+
+        if busy_window_active(doc, now):
+            target = str(doc.get("target_model") or "")
+            if not target or not str(model).startswith(tuple(doc.get("rewrite_prefixes") or ())):
+                return None, "busy_not_a_match", None
+            if model == target:
+                return None, "already_target", None
+            if allowed is None or not allowed or target not in allowed:
+                # Rewriting into a model the plan may refuse would turn a working
+                # request into a 403. With an unknown or broken allowlist, keep the
+                # model the client asked for.
+                return None, "target_not_allowed", None
+            return target, "rewritten", "busy"
+
+        idle = doc.get("idle") if isinstance(doc.get("idle"), dict) else dict(BUSY_DEFAULTS["idle"])
+        if not idle.get("enabled", True):
+            return None, "idle_disabled", None
+        target = str(idle.get("target_model") or "")
+        if not target:
+            return None, "idle_no_target", None
         if model == target:
-            return None, "already_target"
+            return None, "already_target", None
         if allowed is None or not allowed or target not in allowed:
-            # Rewriting into a model the plan may refuse would turn a working
-            # request into a 403. With an unknown or broken allowlist, keep the
-            # model the client asked for.
-            return None, "target_not_allowed"
-        if not busy_window_active(doc, nowdt or datetime.now(TZ)):
-            return None, "outside_window"
-        return target, "rewritten"
+            return None, "target_not_allowed", None
+        if not idle_window_active(doc, now):
+            return None, "idle_off", None
+        return target, "rewritten", "idle"
     except Exception as exc:
-        return None, "policy_error:%s" % type(exc).__name__
+        return None, "policy_error:%s" % type(exc).__name__, None
+
+
+def busy_rewrite(route, model, allowed, nowdt=None):
+    """Backwards-compatible wrapper (busy_hours.py reads the pair form)."""
+    new_model, why, _policy = policy_rewrite(route, model, allowed, nowdt)
+    return new_model, why
+
+
+def idle_health():
+    """Snapshot for the health file / collector: what the idle policy would do now."""
+    doc = busy_conf()
+    idle = doc.get("idle") if isinstance(doc.get("idle"), dict) else dict(BUSY_DEFAULTS["idle"])
+    return {
+        "enabled": bool(idle.get("enabled", True)),
+        "target_model": str(idle.get("target_model") or ""),
+        "active": idle_window_active(doc, datetime.now(TZ)),
+        "rewrites": STATE["policy_counts"].get("idle", 0),
+        "busy_rewrites": STATE["policy_counts"].get("busy", 0),
+        "switch_off": busy_off(),
+    }
 
 
 def busy_rewritten_body(body, model):
@@ -755,6 +920,34 @@ class Handler(BaseHTTPRequestHandler):
         if target is None:
             return self._json(404, {"error": "unknown route"})
 
+        # CLIENT_IDENTITY_MARK: the key this request came in on, captured from the
+        # client's own headers (see client_credential); it is also the ledger key
+        # the ceilings above are billed against.
+        ident_key, ident_ip, ident_ua = client_identity(
+            self.headers, self.client_address[0] if self.client_address else "")
+        ident_row = (ident_key or None, ident_ip or None, ident_ua or None)
+
+        # CLIENT_KEYS_MARK: which distribution key is asking, and may it still spend.
+        # nginx has already matched this credential against the generated include
+        # (/etc/relay/relay-auth.conf), so what is settled here is whether this key
+        # is switched off and whether it is at its hour / week / month ceiling.
+        # Checked before the request body is even read and before the model policy
+        # rewrite: a refused request costs nothing, and nothing is billed twice.
+        if clientkeys is not None:
+            gate = clientkeys.gate(client_credential(self.headers), method=method)
+            if not gate.ok:
+                kind = gate.deny[0]
+                status, payload = clientkeys.block_body(gate)
+                with _LOCK:
+                    STATE["requests"] += 1
+                    STATE["key_blocks"][kind] = STATE["key_blocks"].get(kind, 0) + 1
+                    STATE["last_key_block"] = {
+                        "ts": time.time(), "reason": kind, "http": status,
+                        "key": (gate.rec or {}).get("label") or (gate.rec or {}).get("id") or "",
+                        "client_key": ident_key, "client_ip": ident_ip,
+                        "window": gate.detail.get("window"), "path": self.path[:120]}
+                return self._json(status, payload)
+
         try:
             length = int(self.headers.get("Content-Length") or 0)
         except ValueError:
@@ -769,7 +962,7 @@ class Handler(BaseHTTPRequestHandler):
         key = current_key(host)
         headers = {}
         for name, value in self.headers.items():
-            if name.lower() in HOP_BY_HOP:
+            if name.lower() in HOP_BY_HOP or name.lower() in CLIENT_CRED_HEADERS:
                 continue
             headers[name] = value
         headers["Host"] = host
@@ -789,22 +982,26 @@ class Handler(BaseHTTPRequestHandler):
 
         # BUSY_HOURS_MARK: rewrite before the allowlist check, so the substituted
         # model is the one validated and billed, and the body sent upstream matches
-        # the "model" recorded for this turn.
+        # the "model" recorded for this turn. policy is "busy" (deepseek -> mimo in
+        # the busy windows) or "idle" (everything -> the idle target outside them).
         rewritten_from = None
+        rewritten_policy = None
         if route == "go" and method in ("POST", "PUT", "PATCH") and model:
-            new_model, why = busy_rewrite(route, model, go_allowlist())
+            new_model, why, policy = policy_rewrite(route, model, go_allowlist())
             if new_model:
                 nb = busy_rewritten_body(body, new_model)
                 if nb is not None:
-                    rewritten_from, model, body = model, new_model, nb
+                    rewritten_from, rewritten_policy = model, policy
+                    model, body = new_model, nb
                     with _LOCK:
                         STATE["rewrites"] += 1
+                        STATE["policy_counts"][policy] = STATE["policy_counts"].get(policy, 0) + 1
                         STATE["last_rewrite"] = {
                             "ts": time.time(), "from": rewritten_from, "to": new_model,
-                            "path": self.path[:120]}
+                            "policy": policy, "path": self.path[:120]}
                 else:
                     why = "body_not_rewritable"
-            if why not in ("rewritten", "outside_window", "not_a_match", "already_target"):
+            if why not in ("rewritten", "already_target"):
                 with _LOCK:
                     STATE["rewrite_skips"][why] = STATE["rewrite_skips"].get(why, 0) + 1
 
@@ -943,6 +1140,7 @@ class Handler(BaseHTTPRequestHandler):
                         if rewritten_from:
                             self.send_header("X-Relay-Rewritten-From", rewritten_from)
                             self.send_header("X-Relay-Rewritten-To", model or "")
+                            self.send_header("X-Relay-Rewritten-Policy", rewritten_policy or "")
                         self.send_header("Connection", "close")
                         self.send_header("Content-Length", str(len(sse)))
                         self.end_headers()
@@ -959,7 +1157,8 @@ class Handler(BaseHTTPRequestHandler):
                     nowdt = datetime.now(TZ)
                     raw = json.dumps({**usage, "injected": injected,
                                       "stream_fallback": True,
-                                      **({"rewritten_from": rewritten_from} if rewritten_from else {})},
+                                      **({"rewritten_from": rewritten_from, "policy": rewritten_policy}
+                                         if rewritten_from else {})},
                                      ensure_ascii=False)[:400]
                     prompt, msgs = extract_turn(body)
                     if sess and (prompt or parser.reply_text()):
@@ -976,7 +1175,7 @@ class Handler(BaseHTTPRequestHandler):
                         usage.get("input"), usage.get("output"), usage.get("cache_read"),
                         usage.get("cache_write"), usage.get("reasoning"), usage.get("total"),
                         1 if client_gone else 0, raw,
-                    ))
+                    ) + ident_row)
                     self.close_connection = True
                     return
                 # Retry failed: fall through and relay the original error body.
@@ -994,6 +1193,7 @@ class Handler(BaseHTTPRequestHandler):
                 # but must be able to see what actually answered.
                 self.send_header("X-Relay-Rewritten-From", rewritten_from)
                 self.send_header("X-Relay-Rewritten-To", model or "")
+                self.send_header("X-Relay-Rewritten-Policy", rewritten_policy or "")
             self.send_header("Connection", "close")
             self.end_headers()
         except Exception:
@@ -1050,8 +1250,10 @@ class Handler(BaseHTTPRequestHandler):
         nowdt = datetime.now(TZ)
         raw_doc = {**usage, "injected": injected}
         if rewritten_from:
-            # stats can show that a deepseek turn was actually served by mimo
+            # stats can show that a deepseek turn was actually served by mimo,
+            # or which idle turn was served by the idle target
             raw_doc["rewritten_from"] = rewritten_from
+            raw_doc["policy"] = rewritten_policy
         if status >= 400:
             text = b"".join(error_sink or []).decode("utf-8", "replace").strip()
             raw_doc["upstream_status"] = status
@@ -1071,7 +1273,7 @@ class Handler(BaseHTTPRequestHandler):
             usage.get("input"), usage.get("output"), usage.get("cache_read"),
             usage.get("cache_write"), usage.get("reasoning"), usage.get("total"),
             1 if client_gone else 0, raw,
-        ))
+        ) + ident_row)
         self.close_connection = True
 
 
@@ -1090,6 +1292,8 @@ def health_loop(stop):
                                "skips": STATE["rewrite_skips"],
                                "switch_off": busy_off(),
                                "window_active": busy_window_active(busy_conf(), datetime.now(TZ))},
+                           "idle_hours": idle_health(),
+                           "keys": key_health(),
                            "checked_at": datetime.now(TZ).isoformat(timespec="seconds")},
                           f, ensure_ascii=False, indent=2)
             os.replace(tmp, HEALTH_PATH)

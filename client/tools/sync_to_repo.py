@@ -17,7 +17,9 @@ import shutil
 import sys
 
 WS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LIVE = os.path.join(WS, "upstream", "live-20261029")
+# The live snapshot to mirror into app/ and relayhub/. Bump the stamp with each
+# server_pull run instead of editing this line:  STAMP=live-20261101 python tools/sync_to_repo.py
+LIVE = os.path.join(WS, "upstream", os.environ.get("STAMP", "live-20261029"))
 REPO = os.environ.get("TARGET_REPO", r"D:\Project\ms\_sync\Server-Cloud-Monitor")
 
 # ---------------------------------------------------------------- app/

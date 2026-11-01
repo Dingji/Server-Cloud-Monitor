@@ -171,9 +171,17 @@ def c_disk_guard():
     return _state_check("disk watermark guard", "/var/lib/relay/diskguard.state", 1, "action")
 
 
-def c_relay_guard():
-    """The self-healing guard's own verdict: integrity + end-to-end canaries."""
-    path = "/var/lib/relay/guard.state"
+GUARD_STATE = "/var/lib/relay/guard.state"
+
+
+def c_relay_guard(path=GUARD_STATE):
+    """The self-healing guard's own verdict: integrity + end-to-end canaries.
+
+    The name must say what actually broke. Until 2026-11-01 every degraded guard run
+    was reported as "relay guard: canary" -- including a stale models report, on a
+    host where canaries are skipped entirely by a systemd drop-in. The label sent
+    whoever read the alert looking in the wrong place.
+    """
     if not os.path.exists(path):
         return "relay guard", False, "guard 未运行过"
     try:
@@ -181,12 +189,14 @@ def c_relay_guard():
         age = time.time() - os.path.getmtime(path)
         if age > 15 * 60:
             return "relay guard", False, "guard state 过期 %.1fmin" % (age / 60)
-        if not d.get("ok"):
-            return "relay guard: canary", False, ", ".join(d.get("problems") or [])[:300]
         canaries = (d.get("checks") or {}).get("canaries") or {}
         bad = [k for k, v in canaries.items() if not v.get("ok")]
         if bad:
             return "relay guard: canary", False, ", ".join(bad)
+        if not d.get("ok"):
+            return "relay guard", False, ", ".join(d.get("problems") or [])[:300]
+        if not canaries:
+            return "relay guard", True, "integrity ok（canaries 由 drop-in 跳过）"
         return "relay guard: canary", True, "%d canaries ok" % len(canaries)
     except Exception as ex:
         return "relay guard", False, str(ex)

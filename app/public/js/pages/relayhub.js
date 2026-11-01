@@ -59,6 +59,19 @@
   .rh-pill.ok{color:var(--ok);border-color:rgba(34,197,94,.35)}
   .rh-pill.bad{color:var(--bad);border-color:rgba(239,68,68,.35)}
   .rh-pill.warn{color:var(--warn);border-color:rgba(234,179,8,.35)}
+  /* 运维洞察：窄屏自动单列，宽屏四格 */
+  .rh-in-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+  .rh-in-cell{border:1px solid var(--border);border-radius:8px;padding:9px 11px;background:var(--panel2)}
+  .rh-in-h{font-size:12px;font-weight:600;margin-bottom:7px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .rh-in-bar{height:5px;border-radius:3px;background:var(--border);overflow:hidden;margin-bottom:6px}
+  .rh-in-bar>i{display:block;height:100%;border-radius:3px;background:var(--ok);transition:width .6s var(--ease-out)}
+  .rh-in-bar>i.warn{background:var(--warn)}
+  .rh-in-bar>i.bad{background:var(--bad)}
+  .rh-in-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+  .rh-in-chips .rh-pill{font-size:10.5px;padding:1px 7px}
+  .rh-in-err{margin-top:6px;font-size:11px;line-height:1.55;max-height:96px;overflow:auto}
+  .rh-in-err .muted{color:var(--muted)}
+  .rh-in-warn{margin-top:6px;font-size:11px;color:var(--warn)}
   .rh-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .rh-stat{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px}
   .rh-stat b{font-size:16px;font-variant-numeric:tabular-nums}
@@ -107,7 +120,7 @@
   .rh-poolstep b{font-size:12px;min-width:84px}
   .rh-poolarrow{font-family:var(--mono);font-size:11.5px;color:var(--info);word-break:break-all}
 
-  /* ---- 内网设备硬件性能(经 Agent 上报) ---- */
+  /* ---- 内网设备硬件性能 + 容器/Compose(Agent 上报) ---- */
   .hw-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:2px 9px;border-radius:10px;border:1px solid var(--border);color:var(--muted)}
   .hw-badge.on{color:var(--ok);border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.07)}
   .hw-badge.off{color:var(--bad);border-color:rgba(239,68,68,.38);background:rgba(239,68,68,.07)}
@@ -141,6 +154,15 @@
   .hw-jrow{font-family:var(--mono);font-size:11.5px;color:var(--bad);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);word-break:break-all;line-height:1.5}
   .hw-jrow:last-child{border-bottom:none}
   .hw-empty{color:var(--muted);font-size:12px;padding:7px 0}
+  /* 容器/Compose */
+  .ct-proj{border:1px solid var(--border);border-radius:10px;margin-top:10px;overflow:hidden;background:var(--panel2)}
+  .ct-proj>.h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 12px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+  .ct-proj>.h b{font-size:12.5px}
+  .ct-proj>.h .mono{font-size:11px;color:var(--muted)}
+  .ct-svc{font-size:11px;color:var(--info);font-family:var(--mono)}
+  .ct-bar{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+  .ct-mini{height:4px;width:54px;border-radius:3px;background:var(--panel3);overflow:hidden}
+  .ct-mini i{display:block;height:100%;border-radius:3px;background:var(--info)}
   @media(max-width:1180px){.hw-gauges{grid-template-columns:repeat(3,1fr)}.hw-two{grid-template-columns:1fr}}
   @media(max-width:640px){.hw-gauges{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:1180px){.rh-poolgrid{grid-template-columns:1fr}}
@@ -168,6 +190,16 @@
           <div class="rh-list" id="rh-list"></div>
           <div class="rh-detail" id="rh-detail"></div>
         </div>
+        <div class="rh-card" id="rh-insight-card" style="margin-top:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+            <b>运维洞察</b>
+            <span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="muted small" id="rh-in-at">读取中…</span>
+              <button class="btn btn-sm" id="rh-in-reload">刷新</button>
+            </span>
+          </div>
+          <div class="rh-in-grid" id="rh-insight"><div class="muted small">读取中…</div></div>
+        </div>
         <div class="rh-card" id="rh-pool-card" style="margin-top:14px">
           <div class="rh-poolhead" id="rh-pool-head" style="cursor:pointer" title="点击展开/收起">
             <b>端口池配置</b>
@@ -193,7 +225,7 @@
       poolWire();
       poolLoad().catch(() => {});
       hwWire();
-      hwBindHub();          /* 订阅设备硬件推送(页面 mount 只执行一次,不会重复注册) */
+      hwBindHub();          /* 订阅设备硬件/容器推送(页面 mount 只执行一次) */
       hwSync().catch(() => {});
       await render(true);
       S.timer = setInterval(tick, 500);
@@ -658,6 +690,9 @@
       const r = await poolRaw('/relayhub/port-pool/preview', { pool: poolPayload() });
       POOL.preview = r.data || { ok: false, errors: ['HTTP ' + r.status] };
       POOL.previewStale = false;
+      /* 预览通过 = 这份草稿已被服务端确认，把它当作新的基线；
+         否则「刷新状态」会误报"有未保存修改"。 */
+      if (POOL.preview && POOL.preview.ok) POOL.baseSig = poolSig(POOL.draft);
       POOL.msg = ''; POOL.kind = '';
     } finally {
       POOL.busy = false;
@@ -691,7 +726,7 @@
   }
 
   async function poolApplyConfirm() {
-    if (POOL.busy || !POOL.preview || !POOL.preview.ok || POOL.previewStale || poolDirty()) return;
+    if (POOL.busy || !POOL.preview || !POOL.preview.ok || POOL.previewStale) return;
     const d = POOL.preview.diff || {};
     const msg = '将生效:' + (d.after ? d.after.text : '') + '(' + (d.after ? d.after.count : '?') + ' 个端口)\n'
       + 'frps allowPorts:\n  ' + (d.before ? d.before.frps : '') + '\n  → ' + (d.after ? d.after.frps : '')
@@ -856,7 +891,7 @@
 
   function poolActionState() {
     const busy = POOL.busy || (POOL.st && POOL.st.busy);
-    const stale = POOL.previewStale || poolDirty();
+    const stale = POOL.previewStale;
     const ap = document.getElementById('rh-pool-applybtn');
     if (ap) ap.disabled = !!busy || !POOL.preview || !POOL.preview.ok || stale;
     const hint = document.getElementById('rh-pool-dirty');
@@ -932,19 +967,82 @@
     poolActionState();
   }
 
-  /* ===== 内网设备硬件性能(Agent 上报 → 面板聚合) =====
+  /* ---- 运维洞察：端口池容量与碎片、frps 配置漂移、隧道错误与抖动、探测延迟 ----
+     数据全部来自 relayhub 已经算好的 /api/summary + /api/port-pool，
+     由面板侧 relayhubmon.js 折成结论（见 GET /relayhub/insight）。 */
+  function inBlock(title, pill, body) {
+    return `<div class="rh-in-cell"><div class="rh-in-h">${title}${pill || ''}</div>${body}</div>`;
+  }
+  function inPill(level, text) {
+    return level ? ` <span class="rh-pill ${level}">${esc(text)}</span>` : '';
+  }
+  function renderInsight(x) {
+    const box = document.getElementById('rh-insight');
+    const at = document.getElementById('rh-in-at');
+    if (!box) return;
+    if (at) at.textContent = !x || !x.ok ? '中继洞察不可用'
+      : ('快照 ' + Math.round((x.cacheAgeMs || 0) / 1000) + ' 秒前' + (x.stale ? '（已过期）' : ''));
+    if (!x || !x.ok) {
+      box.innerHTML = '<div class="muted small">' + esc((x && x.error) || '中继服务未响应') + '</div>';
+      return;
+    }
+    const cells = [];
+    const pl = x.pool;
+    if (pl) {
+      const lvl = pl.level === 'bad' ? 'bad' : pl.level === 'warn' ? 'warn' : 'ok';
+      cells.push(inBlock('端口池', inPill(lvl, pl.pct >= 95 ? '见底' : pl.pct >= 85 ? '偏紧' : '余量充足'),
+        `<div class="rh-in-bar"><i style="width:${Math.min(100, pl.pct)}%" class="${lvl}"></i></div>`
+        + `<div class="mono small">${pl.free} / ${pl.count} 空闲 · 已用 ${pl.used}（${pl.pct}%）</div>`
+        + `<div class="muted small">${pl.exact === false ? '范围过大未统计碎片度'
+            : '空闲连续段 ' + pl.fragments + ' 处 · 最长可分配 ' + pl.longestFreeRun + ' 个'}</div>`
+        + (pl.hottest && pl.hottest.length
+            ? '<div class="rh-in-chips">' + pl.hottest.slice(0, 6).map((h) => `<span class="rh-pill">:${esc(h.port)} ×${h.count}</span>`).join('') + '</div>' : '')
+        + `<div class="muted small" style="margin-top:4px">${esc(pl.rangesText || '')}</div>`));
+    }
+    const dr = x.drift;
+    if (dr) {
+      cells.push(inBlock('配置漂移', inPill(dr.matches ? 'ok' : 'bad', dr.matches ? 'frps 与面板一致' : 'frps 未覆盖'),
+        `<div class="small">期望 <span class="mono">${esc(dr.expected || '-')}</span></div>`
+        + `<div class="small">frps <span class="mono">${esc(dr.frpsAllowPorts || '未设置')}</span></div>`
+        + (dr.missing && dr.missing.length
+            ? `<div class="rh-in-warn">缺段：${esc(dr.missing.join(', '))} —— 这些端口里的隧道会被 frps 直接拒绝</div>` : '')
+        + (dr.cappedByFrps ? `<div class="rh-in-warn">frps 单机上限 ${dr.frpsMaxPerClient} &lt; 面板策略 ${dr.maxPerClient}，超出的隧道同样会被拒</div>` : '')
+        + `<div class="muted small" style="margin-top:4px">ufw 托管规则 ${dr.ufwRules} 条 · 受保护端口 ${pl ? pl.protected : 0} 个</div>`));
+    }
+    const tn = x.tunnels || {};
+    cells.push(inBlock('隧道健康', inPill(tn.errorCount ? 'bad' : (tn.flapping && tn.flapping.length) ? 'warn' : 'ok',
+        tn.errorCount ? tn.errorCount + ' 条报错' : (tn.flapping && tn.flapping.length) ? tn.flapping.length + ' 条抖动' : '无异常'),
+      `<div class="mono small">${tn.online} / ${tn.total} 在线 · 活动连接 ${tn.curConns} · 今日 ↓${fmtB(tn.todayIn || 0)} ↑${fmtB(tn.todayOut || 0)}</div>`
+      + ((tn.errors || []).length ? '<div class="rh-in-err">' + tn.errors.slice(0, 6).map((e) =>
+          `<div><b>${esc(e.device)}</b>${e.name ? ' · ' + esc(e.name) : ''} <span class="muted">${esc(e.err)}</span></div>`).join('') + '</div>' : '')
+      + ((tn.flapping || []).length ? `<div class="muted small">最近掉线：${tn.flapping.slice(0, 4).map((f) => esc((f.device || '') + '/' + f.name) + ' ' + f.closedAgo + ' 分钟前').join('，')}</div>` : '')
+      + ((tn.deviceOffline || []).length ? `<div class="rh-in-warn">离线设备：${esc(tn.deviceOffline.join(', '))}</div>` : '')
+      + ((tn.emptyTunnels || []).length ? `<div class="rh-in-warn">在线但无隧道：${esc(tn.emptyTunnels.join(', '))}（frpc 活着、映射是空的）</div>` : '')));
+    const pr = x.probes || {};
+    cells.push(inBlock('公网探测', inPill(pr.failedCount ? 'warn' : 'ok', pr.failedCount ? pr.failedCount + ' 条不可达' : '全部可达'),
+      `<div class="mono small">覆盖 ${pr.covered} / ${pr.total} 台 · 平均 ${pr.avgMs == null ? '–' : pr.avgMs + ' ms'}</div>`
+      + ((pr.slowest || []).length ? '<div class="rh-in-chips">' + pr.slowest.map((r) =>
+          `<span class="rh-pill">${esc(r.name)} ${r.ms}ms</span>`).join('') + '</div>' : '')
+      + ((pr.failed || []).length ? '<div class="rh-in-err">' + pr.failed.slice(0, 5).map((f) =>
+          `<div><b>${esc(f.name)}</b> <span class="muted">${esc(f.detail || '不可达')}</span></div>`).join('') + '</div>' : '')
+      + '<div class="muted small" style="margin-top:4px">探测只能按超时推断"被拦"；云安全组是否放行需以控制台为准。</div>'));
+    const sig = JSON.stringify([pl && pl.pct, pl && pl.free, dr && dr.matches, tn.online, tn.errorCount, pr.avgMs]);
+    if (box.dataset.sig !== sig) { box.dataset.sig = sig; box.innerHTML = cells.join(''); }
+  }
+
+  /* ===== 内网设备硬件性能 + 容器/Compose（Agent 上报） =====
      数据流:设备 agent 每 500ms POST /api/agent/push → 服务端落 SQLite + WS 广播
      这里靠 WS 增量更新,只在结构签名变化时重建 DOM,与本页其余部分同一套约定。 */
   const HW = {
     devs: [], live: new Map(), alerts: null,
     hist: null, histDev: null, histRange: '10m', histAt: 0, hchart: null, hchartDev: null,
-    open: false, builtFor: null, msg: '', kind: '', busy: false,
-    cmd: '', cmdDev: '', token: '',
-    reg: { id: '', name: '', note: '' },
-    lastSync: 0,
+    open: false, builtFor: null, liveDom: false, ctSig: null,
+    msg: '', kind: '', busy: false, cmd: '', cmdDev: '', token: '',
+    reg: { id: '', name: '', note: '' }, lastSync: 0,
   };
   const HW_RANGES = { '10m': '10 分钟', '1h': '1 小时', '6h': '6 小时', '24h': '24 小时', '7d': '7 天', '30d': '30 天' };
   const hwLive = (id) => HW.live.get(id) || null;
+  const hwDocker = (id) => { const r = hwLive(id); return (r && r.heavy && r.heavy.docker) || null; };
 
   function hwBindHub() {
     if (!CM.hub || CM._hwBound) return;
@@ -954,7 +1052,7 @@
       const rec = HW.live.get(dev) || {};
       Object.assign(rec, patch, { at: Date.now(), online: true });
       HW.live.set(dev, rec);
-      if (S.sel === dev) hwPaintLive(dev);
+      if (S.sel === dev) { hwPaintLive(dev); hwPaintCt(dev); }
       hwPaintChip();
     };
     CM.hub.on('devmetrics', (m) => { if (m && m.data) put(m.data.dev, { light: m.data.light }); });
@@ -991,7 +1089,7 @@
     }
     hwPaintChip();
     hwRenderMgmt();
-    if (S.sel) hwPaintLive(S.sel);
+    if (S.sel) { hwPaintLive(S.sel); hwPaintCt(S.sel); }
   }
 
   function hwPaintChip() {
@@ -1013,7 +1111,7 @@
     return Math.floor(d / 3600) + ' 小时前';
   }
 
-  /* ---------- 实时硬件面板(设备详情内) ---------- */
+  /* ---------- 实时硬件面板 ---------- */
   const GAUGES = [
     { id: 'cpu', label: 'CPU 使用率', ic: 'cpu' },
     { id: 'mem', label: '内存使用率', ic: 'memory' },
@@ -1029,8 +1127,8 @@
       <div class="hw-empty" style="padding:4px 0 2px">
         <b style="display:block;margin-bottom:6px;font-size:12.5px;color:var(--text)">硬件性能 · ${esc(dev)}</b>
         ${known
-          ? '<span class="muted">该设备已注册但尚未收到上报,请检查设备上 cm-agent 服务:<br><span class="mono">systemctl status cm-agent</span></span>'
-          : `<span class="muted">该设备暂未接入硬件性能采集。在下方「硬件性能设备」卡片中点击「接入命令」,在设备上执行一条命令即可完成安装(agent 主动外发,无需公网端口)。</span>`}
+          ? '<span class="muted">该设备已注册但尚未收到上报,请检查设备上服务:<br><span class="mono">systemctl status hwagent</span></span>'
+          : '<span class="muted">该设备暂未接入硬件性能采集。在下方「硬件性能设备」卡片中点击「接入命令」,在设备上执行一条命令即可完成安装(agent 主动外发,无需公网端口)。</span>'}
       </div>`;
   }
 
@@ -1041,7 +1139,6 @@
     if (!hwLive(dev) || !(hwLive(dev).light || hwLive(dev).heavy)) {
       HW.liveDom = false;
       box.innerHTML = hwEmptyHTML(dev);
-      box.removeAttribute('data-dom');
       return;
     }
     HW.liveDom = true;
@@ -1098,7 +1195,6 @@
     const col = p >= 90 ? 'var(--bad)' : p >= 75 ? 'var(--warn)' : 'var(--info)';
     if (e.style.background !== col) e.style.background = col;
   };
-
   const hwSigNet = (rows) => (rows || []).map((r) => r.name).join(',');
   const hwSigDisk = (m) => (m || []).map((x) => x.mount).join(',');
   const hwSigProc = (p) => (p || []).map((x) => x.pid + ':' + x.cmd).join('|');
@@ -1107,7 +1203,6 @@
   function hwPaintLive(dev) {
     const rec = hwLive(dev);
     const has = !!(rec && (rec.light || rec.heavy));
-    /* 空态 → 数据首次到达时必须重建 DOM(否则只有占位文本) */
     if (HW.builtFor !== dev || (has && HW.liveDom === false)) { hwBuildLive(dev); return; }
     if (!has) return;
     const l = rec.light;
@@ -1123,18 +1218,15 @@
       const txt = on ? '● 上报中' : '○ 已失联';
       if (badge.textContent !== txt) badge.textContent = txt;
     }
-    hwSet('hw-meta', `Agent v${meta.agentVer || '–'} · ` +
-      `节拍 ${meta.intervalMs ? (meta.intervalMs + 'ms') : '–'} · 最后上报 ${agoShort(rec.lastPush)}`);
+    hwSet('hw-meta', `Agent v${meta.agentVer || '–'} · 节拍 ${meta.intervalMs ? (meta.intervalMs + 'ms') : '–'} · 最后上报 ${agoShort(rec.lastPush)}`);
 
     if (l) {
-      const cpu = l.cpu == null ? null : l.cpu;
       const mem = l.mem || {};
       const d = l.disk || {};
       const ld = (l.load || [])[0];
-      hwSet('hwv-cpu', cpu == null ? '–' : cpu.toFixed(1) + '%');
-      hwBar('hwb-cpu', cpu);
-      hwSet('hws-cpu', (l.cores && l.cores.length ? l.cores.length + ' 核' : '') +
-        (l.freq ? ' · ' + (l.freq / 1000).toFixed(2) + ' GHz' : ''));
+      hwSet('hwv-cpu', l.cpu == null ? '–' : l.cpu.toFixed(1) + '%');
+      hwBar('hwb-cpu', l.cpu);
+      hwSet('hws-cpu', (l.cores && l.cores.length ? l.cores.length + ' 核' : '') + (l.freq ? ' · ' + (l.freq / 1000).toFixed(2) + ' GHz' : ''));
       hwSet('hwv-mem', mem.usedPct == null ? '–' : mem.usedPct.toFixed(1) + '%');
       hwBar('hwb-mem', mem.usedPct);
       hwSet('hws-mem', mem.total ? (fmtB(mem.used) + ' / ' + fmtB(mem.total)) : '');
@@ -1152,7 +1244,6 @@
       hwBar('hwb-load', ld == null ? 0 : ld / Math.max(1, (l.cores || []).length || 1) * 100);
       hwSet('hws-load', (l.load || []).join(' / ') + (l.running != null ? ' · 运行 ' + l.running : ''));
 
-      /* 每核条形:核数不变则原位改高度 */
       const cores = l.cores || [];
       const coreBox = document.getElementById('hw-cores');
       if (coreBox && coreBox.childElementCount !== cores.length) {
@@ -1165,7 +1256,6 @@
       });
       hwSet('hw-freq', l.freq ? '当前频率 ' + (l.freq / 1000).toFixed(2) + ' GHz' + (l.procs ? ' · 进程数 ' + l.procs : '') : (l.procs ? '进程数 ' + l.procs : ''));
 
-      /* 网络表(接口集合变化才重建) */
       const rows = ((l.net || {}).ifaces || []).slice().sort((a, b) => (b.rxBps + b.txBps) - (a.rxBps + a.txBps));
       const netT = document.getElementById('hw-net');
       if (netT) {
@@ -1197,7 +1287,6 @@
       }
       hwSet('hw-netsum', `↓${fmtBps(l.net ? l.net.rx : 0)} · ↑${fmtBps(l.net ? l.net.tx : 0)}`);
 
-      /* 磁盘挂载表 */
       const mounts = d.mounts || [];
       const dT = document.getElementById('hw-disk');
       if (dT && dT.dataset.sig !== hwSigDisk(mounts)) {
@@ -1207,7 +1296,7 @@
             <td class="mono"><b>${esc(m.mount)}</b>${m.inoPct != null && m.inoPct > 90 ? ' <span class="rh-pill warn">inode ' + m.inoPct + '%</span>' : ''}</td>
             <td>${esc(m.fs)}</td>
             <td class="mono" style="text-align:right">${fmtB(m.total)}</td>
-            <td class="mono" style="text-align:right"><b id="hd-${esc(m.mount)}">–</b></td>
+            <td class="mono" style="text-align:right"><b>–</b></td>
             <td class="mono" style="text-align:right">${fmtB(m.avail)}</td>
           </tr>`).join('') || '<tr><td colspan="5" class="muted small">无挂载数据</td></tr>';
       }
@@ -1225,7 +1314,6 @@
       hwSet('hw-io', `读 ${fmtBps(io.read || 0)} · 写 ${fmtBps(io.write || 0)}`);
     }
 
-    /* 系统信息 + 健康状态(重数据,低频变化) */
     const sysBox = document.getElementById('hw-sys');
     if (sysBox && sys) {
       const sig = hwSigSys(sys);
@@ -1240,8 +1328,8 @@
         ].filter((r) => r[1] != null && r[1] !== '');
         sysBox.innerHTML = rows.map((r) => `<span class="k">${esc(r[0])}</span><span class="v">${esc(String(r[1]))}</span>`).join('');
       } else if (l && l.uptime) {
-        const k = sysBox.querySelectorAll('.k');
-        for (const el of k) if (el.textContent === '运行时长') {
+        for (const el of sysBox.querySelectorAll('.k')) {
+          if (el.textContent !== '运行时长') continue;
           const v = el.nextElementSibling;
           const nv = fmt.uptime(l.uptime);
           if (v && v.textContent !== nv) v.textContent = nv;
@@ -1253,19 +1341,16 @@
     if (hBox) {
       const pills = [];
       const wifi = health.wifi;
-      if (wifi) {
-        const ok = wifi.signal >= -70;
-        pills.push(`<span class="hw-pill ${ok ? 'ok' : 'warn'}">Wi-Fi ${wifi.iface} ${wifi.signal} dBm (${wifi.qualityPct}%)</span>`);
-      }
+      if (wifi) pills.push(`<span class="hw-pill ${wifi.signal >= -70 ? 'ok' : 'warn'}">Wi-Fi ${wifi.iface} ${wifi.signal} dBm (${wifi.qualityPct}%)</span>`);
       const th = health.throttle;
       if (th) pills.push(th.flags && th.flags.length
         ? `<span class="hw-pill ${th.flags.some((f) => f.indexOf('当前') === 0) ? 'bad' : 'warn'}" title="${esc(th.raw)}">${esc(th.flags.join('、'))}</span>`
         : `<span class="hw-pill ok" title="${esc(th.raw)}">供电与温度正常</span>`);
       const fu = health.failedUnits || [];
       if (fu.length) pills.push(`<span class="hw-pill bad">${fu.length} 个失败服务</span>`);
+      else pills.push('<span class="hw-pill ok">systemd 无失败单元</span>');
       const ro = health.roMounts || [];
       if (ro.length) pills.push(`<span class="hw-pill bad">只读挂载 ${esc(ro.join(', '))}</span>`);
-      if (!fu.length) pills.push('<span class="hw-pill ok">systemd 无失败单元</span>');
       const journal = health.journal || [];
       const html = `<div class="hw-pills">${pills.join('')}</div>
         <div style="margin-top:8px">${journal.length
@@ -1275,7 +1360,6 @@
       if (hBox.dataset.sig !== sig) { hBox.dataset.sig = sig; hBox.innerHTML = html; }
     }
 
-    /* 进程 Top 两表 */
     const pc = document.getElementById('hw-pcpu');
     const procs = hv.procs || [];
     if (pc && pc.dataset.sig !== hwSigProc(procs)) {
@@ -1301,6 +1385,113 @@
     hwSet('hw-pcount', hv.procCount ? '共 ' + hv.procCount + ' 个进程' : '');
   }
 
+  /* ---------- 容器 / Compose ---------- */
+  function ctState(c) {
+    const st = String(c.state || '');
+    if (st === 'running') return c.health === 'unhealthy' ? ['warn', '运行中 · 不健康'] : ['ok', c.health === 'starting' ? '运行中 · 启动中' : '运行中'];
+    if (st === 'restarting') return ['warn', '重启中'];
+    if (st === 'paused') return ['warn', '已暂停'];
+    if (st === 'exited') return ['bad', '已退出' + (c.exitCode != null ? ' (' + c.exitCode + ')' : '')];
+    return ['bad', st || '未知'];
+  }
+
+  function ctSigOf(dk) {
+    return (dk.projects || []).map((g) => (g.project || '-') + ':' + (g.containers || []).map((c) => c.name).join(',')).join('|');
+  }
+
+  function hwBuildCt(dev) {
+    const box = document.getElementById('rh-ct');
+    if (!box) return;
+    const dk = hwDocker(dev);
+    if (!dk) {
+      box.dataset.sig = 'none';
+      box.innerHTML = `
+        <div class="hw-sec" style="margin-top:0"><div class="t"><b>容器 / Compose</b>
+          <span class="hw-badge off">Agent 未上报容器信息</span></div></div>
+        <div class="hw-empty">该设备的 Agent 版本较早(不支持容器采集)。用下方「接入命令」重新安装一次即可升级到 v1.2+,之后 Docker/Compose 指标会自动出现。</div>`;
+      return;
+    }
+    if (!dk.available) {
+      box.dataset.sig = 'no:' + (dk.error || '');
+      box.innerHTML = `
+        <div class="hw-sec" style="margin-top:0"><div class="t"><b>容器 / Compose</b>
+          <span class="hw-badge off">未检测到容器运行时</span></div></div>
+        <div class="hw-empty">${dk.error ? ('Docker 不可用:' + esc(dk.error)) :
+          '该设备未安装 Docker。装上 Docker Engine + Compose 插件后,编排项目与容器指标会自动出现(Agent 每 10 秒采集一次,无需改配置)。'}</div>`;
+      return;
+    }
+    box.dataset.sig = ctSigOf(dk);
+    box.innerHTML = `
+      <div class="hw-sec" style="margin-top:0">
+        <div class="t">
+          <b>容器 / Compose</b>
+          <span class="hw-badge ${dk.running ? 'on' : 'off'}">Docker ${esc(dk.version || '?')} · ${dk.running || 0}/${dk.total || 0} 运行</span>
+          <span class="muted small">${dk.composeProjects || 0} 个 Compose 项目 · 每 10 秒采集</span>
+          <span style="flex:1"></span>
+          <span class="muted small">${dk.collectedAt ? agoShort(dk.collectedAt) : ''}</span>
+        </div>
+      </div>
+      <div id="rh-ct-body"></div>`;
+    hwPaintCt(dev);      /* sig 已对齐,这里只填表体 */
+  }
+
+  function hwPaintCt(dev) {
+    const box = document.getElementById('rh-ct');
+    if (!box) return;
+    const dk = hwDocker(dev);
+    if (!dk) {
+      if (box.dataset.sig !== 'none') hwBuildCt(dev);
+      return;
+    }
+    if (!dk.available) {
+      if (box.dataset.sig !== ('no:' + (dk.error || ''))) hwBuildCt(dev);
+      return;
+    }
+    const sig = ctSigOf(dk);
+    if (box.dataset.sig !== sig) { hwBuildCt(dev); return; }
+
+    const body = document.getElementById('rh-ct-body');
+    if (!body) return;
+    const projects = dk.projects || [];
+    if (!projects.length) { body.innerHTML = '<div class="hw-empty">没有容器</div>'; return; }
+
+    body.innerHTML = projects.map((g) => {
+      const label = g.project ? g.project : '未纳入 Compose';
+      const cnt = [];
+      if (g.running) cnt.push(`<span class="hw-pill ok">${g.running} 运行</span>`);
+      if (g.restarting) cnt.push(`<span class="hw-pill warn">${g.restarting} 重启中</span>`);
+      if (g.exited) cnt.push(`<span class="hw-pill bad">${g.exited} 已退出</span>`);
+      if (g.unhealthy) cnt.push(`<span class="hw-pill warn">${g.unhealthy} 不健康</span>`);
+      if (g.restarts) cnt.push(`<span class="hw-pill warn">累计重启 ${g.restarts}</span>`);
+      const svc = (g.services || []).length ? `<span class="ct-svc">${esc(g.services.join(' · '))}</span>` : '';
+      const file = g.composeFile ? `<span class="mono" title="${esc(g.composeFile)}">${esc(g.composeFile)}</span>` : '';
+      const rows = (g.containers || []).map((c) => {
+        const [cls, txt] = ctState(c);
+        const cpu = c.cpuPct == null ? '–' : c.cpuPct.toFixed(2) + '%';
+        const mem = c.memUsed == null ? '–' : (fmtB(c.memUsed) + (c.memPct != null ? ' (' + c.memPct.toFixed(1) + '%)' : ''));
+        return `<tr>
+          <td><b class="mono">${esc(c.service || c.name)}</b>${c.service ? `<div class="muted small mono">${esc(c.name)}</div>` : ''}</td>
+          <td class="mono muted" title="${esc(c.image)}" style="max-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.image)}</td>
+          <td><span class="hw-pill ${cls}">${esc(txt)}</span></td>
+          <td class="mono" style="text-align:right">${cpu}</td>
+          <td class="mono" style="text-align:right">${mem}</td>
+          <td class="mono muted" style="text-align:right;font-size:11px">${esc(c.netIO || '–')}</td>
+          <td class="mono" style="text-align:right">${c.restartCount || 0}${c.oomKilled ? ' <span class="hw-pill bad">OOM</span>' : ''}</td>
+        </tr>`;
+      }).join('');
+      return `<div class="ct-proj">
+        <div class="h">
+          <b>${esc(label)}</b>${svc}${file}
+          <span style="flex:1"></span>${cnt.join('')}
+        </div>
+        <table class="rh-table">
+          <thead><tr><th>服务 / 容器</th><th>镜像</th><th>状态</th><th style="text-align:right">CPU</th><th style="text-align:right">内存</th><th style="text-align:right">网络 IO</th><th style="text-align:right">重启</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+    }).join('');
+  }
+
   /* ---------- 历史趋势 + CSV ---------- */
   async function hwLoadHist(dev, range) {
     if (!dev) return;
@@ -1309,7 +1500,7 @@
     let d;
     try { d = await CM.api.get('/devices/history?dev=' + encodeURIComponent(dev) + '&range=' + HW.histRange, 4000); }
     catch (e) { hwRenderHist(dev, { ok: false, reason: e.message }); return; }
-    if (S.sel !== dev) return;                 /* 期间切换了设备 */
+    if (S.sel !== dev) return;
     HW.hist = d;
     hwRenderHist(dev, d);
   }
@@ -1363,14 +1554,14 @@
     const labels = pts.map((p) => tl(p.t));
     const mk = (key, label, color, axis) => ({
       label, data: pts.map((p) => p[key]),
-      borderColor: color, backgroundColor: color.replace(')', ',.10)').replace('rgb', 'rgba'),
+      borderColor: color, backgroundColor: color.replace('rgb', 'rgba').replace(')', ',.10)'),
       fill: false, tension: .3, pointRadius: 0, borderWidth: 1.8, yAxisID: axis || 'y',
     });
     const datasets = [
       Object.assign(mk('c', 'CPU %', 'rgb(56,189,248)'), { fill: true }),
-      Object.assign(mk('m', '内存 %', 'rgb(122,155,255)'), {}),
-      Object.assign(mk('d', '磁盘 %', 'rgb(52,211,153)'), {}),
-      Object.assign(mk('tp', '温度 ℃', 'rgb(251,191,36)'), { yAxisID: 'y1' }),
+      mk('m', '内存 %', 'rgb(122,155,255)'),
+      mk('d', '磁盘 %', 'rgb(52,211,153)'),
+      mk('tp', '温度 ℃', 'rgb(251,191,36)', 'y1'),
     ];
     if (HW.hchart && HW.hchartDev === dev && HW.hchart.canvas === cv) {
       HW.hchart.data.labels = labels;
@@ -1398,7 +1589,7 @@
     }
   }
 
-  /* ---------- 设备接入 / 阈值管理(页面底部卡片) ---------- */
+  /* ---------- 设备接入 / 阈值管理 ---------- */
   function hwWire() {
     const head = document.getElementById('rh-hw-head');
     const tg = document.getElementById('rh-hw-toggle');
@@ -1424,7 +1615,6 @@
       ? '采样 500ms · 阈值 ' + (HW.alerts ? `CPU ${HW.alerts.cpu}% / 内存 ${HW.alerts.mem}% / 磁盘 ${HW.alerts.disk}% / 温度 ${HW.alerts.temp}℃ / 失联 ${HW.alerts.offlineSec}s` : '读取中')
       : '在设备上执行一条命令即可接入(主动外发,无需公网端口)';
     if (!HW.open || !body) return;
-    /* 用户正在表单里输入时跳过本轮重建(15s 一次的同步会把光标和输入内容清掉) */
     if (body.contains(document.activeElement)) return;
 
     const a = HW.alerts || {};
@@ -1432,12 +1622,15 @@
       const rec = hwLive(d.id) || {};
       const on = rec.online !== false;
       const l = rec.light;
+      const dk = rec.heavy && rec.heavy.docker;
+      const ct = dk && dk.available ? `${dk.running || 0}/${dk.total || 0}` : '–';
       return `<tr>
         <td class="mono"><b>${esc(d.id)}</b><div class="muted small" style="font-family:var(--mono)">${esc(d.name || '')}</div></td>
         <td><span class="hw-pill ${on ? 'ok' : 'bad'}">${on ? '● 上报中' : '○ 失联'}</span></td>
         <td class="mono" style="text-align:right">${l && l.cpu != null ? l.cpu.toFixed(0) + '%' : '–'}</td>
         <td class="mono" style="text-align:right">${l && l.mem ? l.mem.usedPct.toFixed(0) + '%' : '–'}</td>
         <td class="mono" style="text-align:right">${l && l.temp != null ? l.temp + '℃' : '–'}</td>
+        <td class="mono" style="text-align:right">${ct}</td>
         <td class="muted small">${agoShort(rec.lastPush)}</td>
         <td style="text-align:right;white-space:nowrap">
           <button class="btn btn-sm" data-cmd="${esc(d.id)}">接入命令</button>
@@ -1449,17 +1642,17 @@
     body.innerHTML = `
       ${HW.msg ? `<div class="rh-mapmsg ${HW.kind}">${esc(HW.msg)}</div>` : ''}
       <table class="rh-table">
-        <thead><tr><th>设备 ID</th><th>状态</th><th style="text-align:right">CPU</th><th style="text-align:right">内存</th><th style="text-align:right">温度</th><th>最后上报</th><th style="text-align:right">操作</th></tr></thead>
-        <tbody>${devRows || '<tr><td colspan="7" class="muted small" style="padding:15px 8px">还没有设备接入硬件性能采集</td></tr>'}</tbody>
+        <thead><tr><th>设备 ID</th><th>状态</th><th style="text-align:right">CPU</th><th style="text-align:right">内存</th><th style="text-align:right">温度</th><th style="text-align:right">容器</th><th>最后上报</th><th style="text-align:right">操作</th></tr></thead>
+        <tbody>${devRows || '<tr><td colspan="8" class="muted small" style="padding:15px 8px">还没有设备接入硬件性能采集</td></tr>'}</tbody>
       </table>
       ${HW.cmd ? `
       <div class="rh-mapcmd">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:7px">
-          <b style="font-size:12px">在设备 <span class="mono">${esc(HW.cmdDev)}</span> 上以 root 执行一次(安装并启动 cm-agent)</b>
+          <b style="font-size:12px">在设备 <span class="mono">${esc(HW.cmdDev)}</span> 上以 root 执行一次(安装并启动 hwagent)</b>
           <button class="btn btn-sm" id="hw-copy">复制命令</button>
         </div>
         <pre id="hw-cmdtext">${esc(HW.cmd)}</pre>
-        <div class="muted small" style="margin-top:7px">命令含该设备专属 token,请勿外泄。执行后面板约 1 秒内开始收到数据。</div>
+        <div class="muted small" style="margin-top:7px">命令含该设备专属 token,请勿外泄。执行后面板约 1 秒内开始收到数据;若设备上有 Docker/Compose,容器指标会自动附带。</div>
       </div>` : ''}
       <div class="rh-mapfoot" style="margin-top:13px">
         <b style="font-size:12.5px">接入新设备</b>
@@ -1476,6 +1669,7 @@
         <label class="muted small" style="margin:0">温度℃</label><input class="inp rh-map-in" id="hw-t-temp" style="width:66px" value="${esc(a.temp)}">
         <label class="muted small" style="margin:0">失联秒</label><input class="inp rh-map-in" id="hw-t-off" style="width:74px" value="${esc(a.offlineSec)}">
         <label class="muted small" style="margin:0;display:flex;gap:5px;align-items:center"><input type="checkbox" id="hw-t-en"${a.enabled === false ? '' : ' checked'}>启用</label>
+        <label class="muted small" style="margin:0;display:flex;gap:5px;align-items:center"><input type="checkbox" id="hw-t-dk"${a.dockerEnabled === false ? '' : ' checked'}>容器告警</label>
         <button class="btn btn-sm btn-primary" id="hw-t-save"${HW.busy ? ' disabled' : ''}>保存阈值</button>
       </div>`;
 
@@ -1483,8 +1677,8 @@
     body.querySelectorAll('[data-hist]').forEach((b) => (b.onclick = () => {
       S.sel = b.dataset.hist; S.built = null; HW.histDev = null;
       render(true);
-      const box = document.getElementById('rh-detail');
-      if (box) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const el = document.getElementById('rh-detail');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
     body.querySelectorAll('[data-del]').forEach((b) => (b.onclick = () => hwRemove(b.dataset.del)));
     const add = document.getElementById('hw-add');
@@ -1558,7 +1752,11 @@
     };
     const en = document.getElementById('hw-t-en');
     body.enabled = en ? en.checked : true;
-    for (const k of ['cpu', 'mem', 'disk', 'temp', 'offlineSec']) if (body[k] == null) { HW.msg = '阈值必须是数字'; HW.kind = 'err'; hwRenderMgmt(); return; }
+    const dk = document.getElementById('hw-t-dk');
+    body.dockerEnabled = dk ? dk.checked : true;
+    for (const k of ['cpu', 'mem', 'disk', 'temp', 'offlineSec']) {
+      if (body[k] == null) { HW.msg = '阈值必须是数字'; HW.kind = 'err'; hwRenderMgmt(); return; }
+    }
     HW.busy = true; hwRenderMgmt();
     try {
       const r = await CM.api.post('/devices/alerts', { alerts: body });
@@ -1583,6 +1781,7 @@
     }
     failCount = 0;
     if (!d || !d.devices) return;
+    CM.api.get('/relayhub/insight', 8000).then(renderInsight).catch(() => renderInsight(null));
     const devices = d.devices, probes = d.probes || {}, health = d.health || {};
     const oldWarn = document.getElementById('rh-frps-warn');
     if (d.frps_ok === false) {
@@ -1642,6 +1841,7 @@
       S.sigProbes = null;
       HW.builtFor = null;          /* 详情 DOM 被整体重建,硬件卡片必须重画 */
       HW.histDev = null;           /* 历史卡片同理(其 canvas 也随之销毁) */
+      HW.ctSig = null;
       if (HW.hchart) { try { HW.hchart.destroy(); } catch (_) {} HW.hchart = null; HW.hchartDev = null; }
       if (S.chart) { S.chart.destroy(); S.chart = null; }   // 旧实例连同旧 canvas 一起释放
       box.innerHTML = `
@@ -1671,6 +1871,7 @@
           <div class="rh-chartwrap"><canvas id="rh-chart"></canvas></div>
         </div>
         <div class="rh-card" id="rh-hwlive"></div>
+        <div class="rh-card" id="rh-ct"></div>
         <div class="rh-card" id="rh-hwhist"></div>
         <div class="rh-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -1698,6 +1899,8 @@
         </div>`;
 
       mapLoad(sel.name);
+      const ir = document.getElementById('rh-in-reload');
+      if (ir) ir.onclick = () => { CM.api.invalidate && CM.api.invalidate('/relayhub/insight'); CM.api.get('/relayhub/insight', 0).then(renderInsight).catch(() => renderInsight(null)); };
     }
 
     const pill = document.getElementById('rh-pill');
@@ -1787,11 +1990,12 @@
         <td class="muted small">${esc(ago(p.lastStartTime, d.meta.now))}</td>
       </tr>`).join('');
 
-    /* ---- 内网设备硬件性能(Agent 上报) ----
+    /* ---- 内网设备硬件性能 + 容器/Compose(Agent 上报) ----
        结构在 S.built 变化时重建,此后每拍只原位改数值;
        历史曲线按 range 惰性拉取,60s 刷新一次即可(实时值走 WS)。 */
     try {
-      hwPaintLive(sel.name);                       /* builtFor 变化时会自动重建 */
+      hwPaintLive(sel.name);
+      hwPaintCt(sel.name);
       if (HW.histDev !== sel.name) hwLoadHist(sel.name, HW.histRange);
       else if (Date.now() - HW.histAt > 60000) hwLoadHist(sel.name, HW.histRange);
       hwSync().catch(() => {});

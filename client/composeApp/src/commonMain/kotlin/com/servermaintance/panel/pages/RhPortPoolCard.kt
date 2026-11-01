@@ -260,7 +260,9 @@ internal fun RhPortPoolCard() {
     val dirty = d != null && rhPoolSig(d) != baseSig
     val serverBusy = st?.bool("busy") == true
     val dis = busy || serverBusy
-    val stale = previewStale || dirty
+    /* dirty（与上次载入比）不能进闸门：预览成功后 load 早已被清，
+       两者互斥会让「应用到服务端」永远点不动。previewStale 才是过期信号。 */
+    val stale = previewStale
     val inSync = st != null && rhFrpsMatch(st!!)
     val summary = st?.obj("pool")
 
