@@ -1,0 +1,9 @@
+[Unit]
+Description=Relay backup restore drill (verify the newest backup really restores)
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/relay/backup_verify.sh
+Nice=10
+IOSchedulingClass=idle

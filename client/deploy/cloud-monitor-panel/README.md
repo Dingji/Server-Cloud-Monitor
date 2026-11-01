@@ -60,6 +60,25 @@ deploy/cloud-monitor-panel/
 
 ## 三、部署方法
 
+### 方式 W：Windows Server / Windows 10+（本机或机房 Windows）
+
+在**管理员 PowerShell** 中（仓库内路径）：
+
+```powershell
+cd deploy\cloud-monitor-panel
+.\install.ps1                          # 默认 C:\CloudMonitor，127.0.0.1:9000，注册 Windows 服务
+.\install.ps1 -Direct                  # 绑 0.0.0.0，需自行限制防火墙
+.\install.ps1 -AllowNonAdmin -NoService   # 无管理员：只落代码，不注册服务
+.\install-as-service.cmd                  # 双击触发 UAC，以管理员注册 CloudMonitor 服务
+.\register-logon-task.ps1 -Prefix D:\CloudMonitor   # 可选：当前用户登录时自动启动（需任务计划权限）
+```
+
+无管理员时可用启动文件夹快捷方式（`install.ps1` 会生成 `start-cloud-monitor.cmd`，可复制到 `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`）。
+
+装完后浏览器打开 `http://127.0.0.1:9000/panel/`；KMP 客户端把服务器地址改成同一入口即可。
+
+Windows 版与 Linux 版共用同一套 Web 壳与 API 路由；本机采集走 `WinLocalAgent` + PowerShell（`agent mode: local (windows)`）。软件包页走 **winget/choco**；系统服务页走 **sc.exe**；防火墙走 **netsh advfirewall**。部分 Linux 专属能力（ufw/fail2ban/systemd journal、OpenCode 中继采集器等）在 Windows 上为降级或不可用，其余监控/运维页与 Ubuntu 面板对齐。
+
 ### 方式 A：从你的电脑一键推送（推荐）
 
 ```bash

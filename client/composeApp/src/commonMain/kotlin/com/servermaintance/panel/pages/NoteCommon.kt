@@ -5,15 +5,9 @@ import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -52,15 +46,8 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.servermaintance.panel.core.NbSessionState
@@ -70,24 +57,23 @@ import com.servermaintance.panel.core.ToastKind
 import com.servermaintance.panel.core.long
 import com.servermaintance.panel.nowEpochMillis
 import com.servermaintance.panel.ui.AccentState
-import com.servermaintance.panel.ui.Field
 import com.servermaintance.panel.ui.GhostBtn
 import com.servermaintance.panel.ui.HandheldLayout
 import com.servermaintance.panel.ui.Palette
-import com.servermaintance.panel.ui.PanelCard
 import com.servermaintance.panel.ui.PanelIcon
 import com.servermaintance.panel.ui.PrimaryBtn
 import com.servermaintance.panel.ui.handheldImePadding
 import com.servermaintance.panel.platformHandheld
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 
 /** 当前时区的「今天」日期。 */
@@ -136,7 +122,7 @@ internal fun fmtShortTime(tsSec: Long): String {
     if (tsSec <= 0) return "--"
     val ldt = Instant.fromEpochSeconds(tsSec).toLocalDateTime(TimeZone.currentSystemDefault())
     val two = { v: Int -> if (v < 10) "0$v" else "$v" }
-    return "${two(ldt.monthNumber)}-${two(ldt.dayOfMonth)} ${two(ldt.hour)}:${two(ldt.minute)}"
+    return "${two(ldt.month.number)}-${two(ldt.day)} ${two(ldt.hour)}:${two(ldt.minute)}"
 }
 
 /** 秒级时间戳 -> 相对时间（刚刚 / N 分钟前 / N 小时前 / N 天前 / 超 7 天回退 MM-DD HH:mm）。 */
@@ -157,7 +143,7 @@ internal fun fmtDateTimeSec(tsSec: Long): String {
     if (tsSec <= 0) return "--"
     val ldt = Instant.fromEpochSeconds(tsSec).toLocalDateTime(TimeZone.currentSystemDefault())
     val two = { v: Int -> if (v < 10) "0$v" else "$v" }
-    return "${ldt.year}-${two(ldt.monthNumber)}-${two(ldt.dayOfMonth)} ${two(ldt.hour)}:${two(ldt.minute)}:${two(ldt.second)}"
+    return "${ldt.year}-${two(ldt.month.number)}-${two(ldt.day)} ${two(ldt.hour)}:${two(ldt.minute)}:${two(ldt.second)}"
 }
 
 /**
@@ -180,7 +166,7 @@ internal fun dueInfo(t: JsonObject): DueInfo {
         val label = when (ds) {
             today -> L["今天_hm_b5123a00e4"]
             tomorrow -> L["明天_hm_4adda4dab9"]
-            else -> "${ldt.monthNumber}-${(if (ldt.dayOfMonth < 10) "0" else "")}${ldt.dayOfMonth} $hm"
+            else -> "${ldt.month.number}-${(if (ldt.day < 10) "0" else "")}${ldt.day} $hm"
         }
         return DueInfo(late = pending && dueAt < now, today = ds == today, label = label, hasDue = true)
     }

@@ -29,6 +29,7 @@ PANEL_SRC = [
     ROOT / "composeApp/src/commonMain/kotlin/com/servermaintance/panel",
     ROOT / "composeApp/src/androidMain/kotlin/com/servermaintance/panel",
     ROOT / "composeApp/src/desktopMain/kotlin/com/servermaintance/panel",
+    ROOT / "composeApp/src/iosMain/kotlin/com/servermaintance/panel",
 ]
 I18N = ROOT / "composeApp/src/commonMain/resources/i18n"
 I18N_DESK = ROOT / "composeApp/src/desktopMain/resources/i18n"

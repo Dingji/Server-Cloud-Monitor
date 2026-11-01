@@ -1,34 +1,75 @@
-# md5 of the panel source as pulled from 8.153.153.176 2026-10-23T09:20:44+08:00
- f1373355575c43e831ef7abba1f1fbb0  server/actions.js
- 3347097782a785e3a0735f589406b3bb  server/agent.js
- 65c4b2cc050384da521e902859c47ac6  server/auth.js
- a4941c3ad3861775407650390f3c067e  server/collectors.js
- ee2a4e4214f288bf2de8f1ce177d88e7  server/config.js
- d1a88358ef18e61ba8e4cbee4f564504  server/dbadmin.js
- 98f338546de7f9ee78b8e3aaf5db0ee0  server/dbmulti.js
- cb64d4249f22c883e1dad437e6bd0bbd  server/distro.js
- 510cc8289ded998720f09b299ae4e453  server/hub.js
- 3c7c944a889076961964fef35e448466  server/index.js
- ea20b1ed7f9ae9f9308dae4ba1ad1b77  server/logsources.js
- e5026b02da4360e40962bfbb9e92711f  server/metricsstore.js
- c8e25e711db6a3360d261c3e1cb77a69  server/page_test.js
- 7ef05c08f4cefe0e65f63796034c2d19  server/paths.js
- dacb83c503ccb3481dd9457a569472da  server/pkgmgr.js
- e929b23fd158047fe9d929887af77252  server/relay.js
- fb9012ba9df0cc4b3019aa83a7b935c1  server/relaymetrics.js
- 2b0dd30d8e7ced7bc737ac9188954844  server/relayops.js
- b35ab354d79131cf8ac59986de19b7cb  server/shell.js
- ca94aafcd51b05550242d13cc15a79b2  server/svc.js
- 11b59bc9ad3062fd892340d8ff676888  server/util.js
- 1b27b753ad93d88c0e623ecf3c3c0c4c  server/ops/alerting.js
- ce561819e713ad0b1a2e0ee163498e30  server/ops/disk.js
- 5dcae9eb247d33c0446d3dc1c0e5ad18  server/ops/exec.js
- c1ce1d594aa5e277b4e08e4953d67854  server/ops/files.js
- 21e6cfccc144d82e2fb48e4e892e3117  server/ops/hosts.js
- a0f171d819dfa46c398ae392c8be0823  server/ops/index.js
- a9043c58905ad69603b59e554ca48100  server/ops/notify.js
- 71d69abb8be7032fe37f9e7ad4435ae2  server/ops/remote.js
- 8e79f44b897407a6e2d4a6b5c739fe58  server/ops/secops.js
- c7f2e6397c70ebf59f0c103027d4b219  server/ops/store.js
- bc0ad00792eb8701035584819b1d3464  server/ops/uptime.js
- 5387a29d869823dd2530b9fad641671b  server/ops/watchdog.js
+# md5 of the panel source as bundled here, pulled from 8.153.153.176 and committed 2026-10-29T09:21:50+0800
+81aaeb8a49d53d8988901080864c8687  public/cm-agent.py
+af35ae29ea7d77ddb54fcb17a3dc8738  public/css/app.css
+9dcb78f2ca91f92b9d03cd958fd62f84  public/index.html
+de910e43d3c3c5cd5c8ee3fe5b013952  public/js/app.js
+d03cdeedff37c4f4dc0463df5e4ffbf1  public/js/core.js
+92c7afe85fcfcfa088dcd8e245ab8b30  public/js/icons.js
+44bb16340b8cdb84ff6b271c192aff25  public/js/pages/audit.js
+199ad6d68ad37974c536aed5f52fe536  public/js/pages/backups.js
+b86e66ec411ec5112057d98652484546  public/js/pages/cron.js
+6798fdf8cb587599aa18085ea4ed8ddc  public/js/pages/dashboard.js
+4463e3a4d71bafae19c1798dcba11c1d  public/js/pages/databases.js
+cf5a1d789f3267fbb103d2ba10350168  public/js/pages/disks.js
+c6913dd7d5ac9c2028b9bcfcb041f1a8  public/js/pages/docker.js
+8ef6bb9615b4e493bfbb8e2c3f72f772  public/js/pages/healthalerts.js
+21bc3a6c991b63effbbdc62fad5a625a  public/js/pages/logs.js
+835409afbbdf3e51a461458609a5646e  public/js/pages/memory.js
+63300973cfc9c4161ea6d27c47aa0f0d  public/js/pages/network.js
+d9f93b020bb10e33f977c960ea16857b  public/js/pages/packages.js
+a186c175371961d0c7ee12a1f2557a4a  public/js/pages/php.js
+674678f51824a423798da971c246b460  public/js/pages/processes.js
+731246cfb52eeef78e21fdbb3590d3ca  public/js/pages/relay.js
+647367cea3e10d5b496cfbbee22e1d96  public/js/pages/relayhub.js
+c33587cc9f1c9e72cc5b0e584cf421d8  public/js/pages/security.js
+41d337a4ab553f17c2d17d63c3439a2f  public/js/pages/services.js
+b48a54cf5f7927d4b295a96b8ec5e870  public/js/pages/settings.js
+3a9323b89a1ce88d4125fa42657d5016  public/js/pages/slo.js
+52bcc0ed437f74fb77d44e333fa39361  public/js/pages/terminal.js
+cc12463c3155d1a524fca588f9b4e759  public/js/pages/web.js
+765abe33620ef9d69a75773c57d88167  public/js/ui.js
+f1373355575c43e831ef7abba1f1fbb0  server/actions.js
+3347097782a785e3a0735f589406b3bb  server/agent.js
+65c4b2cc050384da521e902859c47ac6  server/auth.js
+a4941c3ad3861775407650390f3c067e  server/collectors.js
+ee2a4e4214f288bf2de8f1ce177d88e7  server/config.js
+d1a88358ef18e61ba8e4cbee4f564504  server/dbadmin.js
+98f338546de7f9ee78b8e3aaf5db0ee0  server/dbmulti.js
+39aa76b25741510ff84e005801e7fad0  server/devmetrics.js
+cb64d4249f22c883e1dad437e6bd0bbd  server/distro.js
+a629b4f7174e0de83b032cee80690834  server/hub.js
+b63f2983cddecd622ba51a7b17b21e2d  server/index.js
+ea20b1ed7f9ae9f9308dae4ba1ad1b77  server/logsources.js
+e5026b02da4360e40962bfbb9e92711f  server/metricsstore.js
+1b27b753ad93d88c0e623ecf3c3c0c4c  server/ops/alerting.js
+ce561819e713ad0b1a2e0ee163498e30  server/ops/disk.js
+5dcae9eb247d33c0446d3dc1c0e5ad18  server/ops/exec.js
+c1ce1d594aa5e277b4e08e4953d67854  server/ops/files.js
+21e6cfccc144d82e2fb48e4e892e3117  server/ops/hosts.js
+5f30fdc098ab8aff085d514297f3b111  server/ops/index.js
+a9043c58905ad69603b59e554ca48100  server/ops/notify.js
+0706a4d455e3e6f2f30ca1dc3b522328  server/ops/php/common.js
+6804986323238ff699c6730cf77244d4  server/ops/php/db.js
+a9106f6f4e9446d7f52bca616bf53453  server/ops/php/deploy.js
+f505d48cd19887fd640fd28fa2789b72  server/ops/php/env.js
+8b0cec647675b3a01f014a69511042e5  server/ops/php/index.js
+f35927fe46bdcc2817d8ff91aa30e610  server/ops/php/jobs.js
+001b931a3c556e4d8d805f264aca8b12  server/ops/php/logs.js
+f4a5f66dfa7279b2226a35c48e91bac8  server/ops/php/presets.js
+9303fca7554a7d2abeefbf7928bf3d0b  server/ops/php/site.js
+9ad8ac5bf8283bda61bf87350f9d32f3  server/ops/php/ssl.js
+71d69abb8be7032fe37f9e7ad4435ae2  server/ops/remote.js
+8e79f44b897407a6e2d4a6b5c739fe58  server/ops/secops.js
+f96de1af13248a2db9368ae287af412f  server/ops/send_mail.py
+c7f2e6397c70ebf59f0c103027d4b219  server/ops/store.js
+bc0ad00792eb8701035584819b1d3464  server/ops/uptime.js
+5387a29d869823dd2530b9fad641671b  server/ops/watchdog.js
+3b976ef2af0396681ce3828b27b6f9e4  server/page_test.js
+7ef05c08f4cefe0e65f63796034c2d19  server/paths.js
+dacb83c503ccb3481dd9457a569472da  server/pkgmgr.js
+e929b23fd158047fe9d929887af77252  server/relay.js
+fb9012ba9df0cc4b3019aa83a7b935c1  server/relaymetrics.js
+2b0dd30d8e7ced7bc737ac9188954844  server/relayops.js
+b35ab354d79131cf8ac59986de19b7cb  server/shell.js
+ca94aafcd51b05550242d13cc15a79b2  server/svc.js
+11b59bc9ad3062fd892340d8ff676888  server/util.js

@@ -10,6 +10,21 @@ runtime/
 node_modules/
 .env
 cloud-monitor.env
+# device-agent registry (per-host tokens)
+devices.json
+port_usage.json
+
+# RelayHub host state and large binaries (deploy.sh fetches frp per architecture)
+relayhub/frps
+relayhub/frps.toml
+relayhub/downloads/
+relayhub/panel/mappings.json
+relayhub/**/__pycache__/
+relayhub/**/*.pyc
+
+# Local build/verify scratch
+builddir/
+boottest/
 
 # Kotlin / Gradle client (client/)
 client/.gradle/

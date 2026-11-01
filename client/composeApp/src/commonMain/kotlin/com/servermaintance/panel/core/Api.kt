@@ -1,4 +1,5 @@
 package com.servermaintance.panel.core
+import com.servermaintance.panel.SaveHandle
 import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
 
@@ -10,13 +11,18 @@ import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.HttpTimeoutConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.onDownload
+import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.prepareGet
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsBytes
+import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
+import io.ktor.utils.io.readAvailable
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -26,6 +32,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
@@ -112,6 +119,7 @@ class PanelApi(private val config: () -> ServerConfig) {
             code = code,
             output = out?.takeIf { it.isNotBlank() },
             isAuth = code == 401,
+            fromServer = !msg.isNullOrBlank(),
         )
     }
 
@@ -208,12 +216,13 @@ class PanelApi(private val config: () -> ServerConfig) {
     }
 
     /** Raw-body POST used by `/db/upload` (up to 500 MB SQL dumps). */
-    suspend fun postRaw(path: String, bytes: ByteArray): JsonElement {
+    suspend fun postRaw(path: String, bytes: ByteArray, onProgress: (Long, Long) -> Unit = { _, _ -> }): JsonElement {
         val r: HttpResponse = try {
             http.post(urlOf(path)) {
                 auth()
                 header(HttpHeaders.ContentType, ContentType.Any)
                 setBody(bytes)
+                onUpload { sent, total -> onProgress(sent, total ?: -1L) }
             }
         } catch (e: CancellationException) {
             throw e
@@ -247,6 +256,48 @@ class PanelApi(private val config: () -> ServerConfig) {
             throw parseError(path, r.status.value, txt)
         }
         return r.bodyAsBytes()
+    }
+
+    /**
+     * 流式下载进调用方给的可写句柄：不再把整个文件读进内存
+     * （`download()` 的 bodyAsBytes 就是 86MB 的包在手机上失败的原因）。
+     * 进度取自 Ktor 的 onDownload，报的是真正写进 socket 的字节；
+     * 服务端没给 Content-Length 时 total 为 -1，界面显示「大小未知」而不是假进度。
+     */
+    suspend fun downloadTo(path: String, sink: SaveHandle, onProgress: (Long, Long) -> Unit): Long {
+        var written = 0L
+        try {
+            http.prepareGet(urlOf(path)) {
+                auth()
+                onDownload { sent, total -> onProgress(sent, total ?: -1L) }
+            }.execute { r ->
+                if (!r.status.isSuccess()) {
+                    val txt = runCatching { r.bodyAsText() }.getOrDefault("")
+                    throw parseError(path, r.status.value, txt)
+                }
+                val ch = r.bodyAsChannel()
+                val buf = ByteArray(64 * 1024)
+                while (true) {
+                    /* readAvailable 内部会挂起等下一段数据，EOF 返回 -1：
+                       不需要自己忙等，也不需要 awaitContent */
+                    val n = ch.readAvailable(buf)
+                    if (n < 0) break
+                    written += n
+                    sink.write(buf.copyOf(n))
+                }
+            }
+        } catch (e: CancellationException) {
+            runCatching { sink.close() }
+            throw e
+        } catch (e: ApiException) {
+            runCatching { sink.close() }
+            throw e
+        } catch (e: Exception) {
+            runCatching { sink.close() }
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
+        }
+        runCatching { sink.close() }
+        return written
     }
 
     /** Reachability probe used when the user edits the server address. */
@@ -293,6 +344,44 @@ class PanelApi(private val config: () -> ServerConfig) {
             token = token,
             expiresAt = (o["expiresAt"] as? kotlinx.serialization.json.JsonPrimitive)?.safeContent().orEmpty(),
         )
+    }
+
+    /**
+     * 失败回执也保留完整 JSON 的 POST。
+     *
+     * 端口池的 apply/preview 在 400/409 时才把 `errors`/`conflicts`/`rollback_pool`
+     * 放在响应体里（面板 relayhub.js 为此特意绕过 `CM.api` 直接用 fetch），走 [post]
+     * 会被压成一句 "HTTP 409"，用户看不到到底哪里冲突。401 仍然抛出，让
+     * AppState 照常把会话踢回登录页。
+     */
+    suspend fun postRetainingBody(path: String, body: JsonElement = JsonObject(emptyMap())): ApiReply {
+        val r: HttpResponse = try {
+            http.post(urlOf(path)) {
+                auth()
+                header(HttpHeaders.ContentType, ContentType.Application.Json)
+                setBody(body)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            throw ApiException(trf("网络错误_0_d319ef957f", e.message ?: e::class.simpleName ?: L["连接失败_2c056f182f"]), 0)
+        }
+        val status = r.status.value
+        val text = try {
+            r.bodyAsText()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            ""
+        }
+        if (status == 401) throw parseError(path, status, text)
+        val parsed = runCatching { Json.parseToJsonElement(text) }.getOrNull() as? JsonObject
+        return ApiReply(status, parsed ?: JsonObject(emptyMap()))
+    }
+
+    /** [postRetainingBody] 的回执：状态码 + 已解析的响应体（解析失败时为空对象）。 */
+    class ApiReply(val status: Int, val body: JsonObject) {
+        val ok: Boolean get() = status in 200..299
     }
 
     suspend fun logout() { runCatching { post("/logout") } }

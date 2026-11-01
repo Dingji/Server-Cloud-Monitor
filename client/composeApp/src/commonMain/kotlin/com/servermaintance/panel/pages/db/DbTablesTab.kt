@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -787,7 +786,7 @@ private fun rowEditor(
         var where = ""
         if (isUpdate && pkCols.size != 1) {
             val def = pkCols.joinToString(" AND ") { c ->
-                val v = row!!.cell(c)
+                val v = row.cell(c)
                 if (v == "NULL") "$c IS NULL" else "$c = '${v.replace("'", "''")}'"
             }
             val wr = Modal.prompt(
@@ -804,7 +803,7 @@ private fun rowEditor(
         val title = if (isUpdate) L["编辑行_e748f0fc90"] else L["新增行_cbc8dab8c3"]
         val values = Modal.prompt(title, form, okText = if (isUpdate) L["保存_fadf24dbc5"] else L["插入_022bf3283d"]) ?: return@launch
         if (isUpdate) {
-            val pk = if (pkCols.size == 1) jsonObjectOf("column" to pkCols[0], "value" to row!!.cell(pkCols[0])) else null
+            val pk = if (pkCols.size == 1) jsonObjectOf("column" to pkCols[0], "value" to row.cell(pkCols[0])) else null
             runDb(
                 "/db/table/update",
                 jsonObjectOf(

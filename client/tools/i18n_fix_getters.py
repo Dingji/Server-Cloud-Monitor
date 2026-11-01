@@ -19,6 +19,7 @@ PANEL_SRC = [
     ROOT / "composeApp/src/commonMain/kotlin/com/servermaintance/panel",
     ROOT / "composeApp/src/androidMain/kotlin/com/servermaintance/panel",
     ROOT / "composeApp/src/desktopMain/kotlin/com/servermaintance/panel",
+    ROOT / "composeApp/src/iosMain/kotlin/com/servermaintance/panel",
 ]
 
 VAL_RE = re.compile(

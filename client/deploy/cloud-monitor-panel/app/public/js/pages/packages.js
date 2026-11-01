@@ -42,7 +42,14 @@
 
       /* ---------------- 顶部统计 ---------------- */
       const renderStats = () => {
-        const idx = sum.index_updated ? new Date(String(sum.index_updated).replace(' ', 'T')).toLocaleString('zh-CN', { hour12: false }) : '未知';
+        /* apt 返回 '2026-10-30 02:20:44.000000000 +0800'：去掉纳秒、补冒号才能被 Date 解析 */
+        const parseAptDate = (v) => {
+          if (!v) return null;
+          const m = String(v).match(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})/);
+          return m ? new Date(m[1] + 'T' + m[2] + '+08:00') : null;
+        };
+        const idxAt = parseAptDate(sum.index_updated);
+        const idx = idxAt && !isNaN(idxAt) ? idxAt.toLocaleString('zh-CN', { hour12: false }) : '未知';
         root.querySelector('#pk-stats').innerHTML = `
           <div class="card stat"><div class="stat-label">已安装</div><div class="stat-value">${sum.installed_active}</div><div class="stat-sub">共 ${sum.installed_total} 条记录</div></div>
           <div class="card stat"><div class="stat-label">可升级</div><div class="stat-value" style="color:${sum.upgradable ? 'var(--warn)' : 'var(--ok)'}">${sum.upgradable}</div><div class="stat-sub">${sum.upgradable ? '建议尽快更新' : '已是最新'}</div></div>
@@ -575,7 +582,7 @@
           <div class="grid g2">
             <div class="card"><div class="card-title">${icon('refresh', { size: 13 })} 软件源索引</div>
               <div class="muted small mb">从镜像站拉取最新软件包列表，安装新包前建议先刷新。</div>
-              <div class="muted small mb">当前索引更新于 <b>${esc(sum.index_updated || '未知')}</b></div>
+              <div class="muted small mb">当前索引更新于 <b>${esc(idxAt && !isNaN(idxAt) ? idxAt.toLocaleString('zh-CN', { hour12: false }) : (sum.index_updated || '未知'))}</b></div>
               <button class="btn btn-sm btn-primary" id="pm-update">更新索引</button>
             </div>
             <div class="card"><div class="card-title">${icon('trash', { size: 13 })} 缓存清理</div>

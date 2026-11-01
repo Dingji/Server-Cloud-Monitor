@@ -9,7 +9,6 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
@@ -32,7 +31,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -92,10 +90,11 @@ import com.servermaintance.panel.ui.SearchField
 import com.servermaintance.panel.ui.SelectField
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -431,12 +430,18 @@ private fun TodosInner() {
         /* 快速添加编排器（同 app.js #quick-add；聚焦流光边框 + 快捷日期胶囊） */
         val qaShape = RoundedCornerShape(nbCardRadius(12.dp))
         var qaFocused by remember { mutableStateOf(false) }
+        val qaElev by animateDpAsState(
+            targetValue = if (qaFocused) 8.dp else 3.dp, nbSpringSoft(stiffness = 280f), label = "qaElev",
+        )
+        val qaBorder by animateColorAsState(
+            targetValue = if (qaFocused) AccentState.current.primary.copy(alpha = 0.4f) else Palette.border,
+            tween(220), label = "qaBorder",
+        )
         Column(
             Modifier.fillMaxWidth().padding(bottom = 12.dp)
                 .nbEnter(5)
-                .clip(qaShape)
-                .background(Palette.panel)
-                .border(1.dp, Palette.border, qaShape)
+                .nbSurface(qaShape, elevation = qaElev, bordered = false)
+                .border(1.dp, qaBorder, qaShape)
                 .nbGlowBorder(enabled = qaFocused, shape = qaShape)
                 .padding(if (platformHandheld) 10.dp else 12.dp),
         ) {
@@ -687,6 +692,7 @@ private fun TodosInner() {
                             if (h != null) {
                                 TodoGroupHeader(
                                     h, groups[h]?.size ?: 0,
+                                    groups[h]?.count { it.status == "done" } ?: 0,
                                     Modifier.animateItem(nbTodoAppear, nbTodoMove, nbTodoDisappear),
                                 )
                             } else {
@@ -807,7 +813,7 @@ private fun TodoMiniIcon(icon: String, hint: String, danger: Boolean = false, on
  * ------------------------------------------------------------------ */
 
 @Composable
-private fun TodoGroupHeader(g: String, count: Int, modifier: Modifier = Modifier) {
+private fun TodoGroupHeader(g: String, count: Int, done: Int, modifier: Modifier = Modifier) {
     val overdue = g == L["已过期_1354374f76"]
     val overduePulse by rememberInfiniteTransition(label = "overdue").animateFloat(
         initialValue = 1f,
@@ -815,29 +821,36 @@ private fun TodoGroupHeader(g: String, count: Int, modifier: Modifier = Modifier
         animationSpec = infiniteRepeatable(tween(1500, easing = LinearEasing), RepeatMode.Reverse),
         label = "overduePulse",
     )
-    Row(
-        modifier.fillMaxWidth().padding(top = 10.dp, bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            "$g · $count",
-            color = if (overdue) Palette.bad else Palette.muted,
-            fontSize = 11.sp, fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.SemiBold, letterSpacing = 0.8.sp,
-            modifier = Modifier.alpha(if (overdue) overduePulse else 1f),
-        )
-        Spacer(Modifier.size(9.dp))
-        /* 渐隐分割线（同 .group-head::after linear-gradient） */
-        Box(
-            Modifier.weight(1f).height(1.dp).background(
-                Brush.horizontalGradient(
-                    listOf(
-                        (if (overdue) Palette.bad else Palette.muted).copy(alpha = 0.4f),
-                        Color.Transparent,
+    Column(modifier.fillMaxWidth().padding(top = 10.dp, bottom = 4.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                "$g · $count",
+                color = if (overdue) Palette.bad else Palette.muted,
+                fontSize = 11.sp, fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.SemiBold, letterSpacing = 0.8.sp,
+                modifier = Modifier.alpha(if (overdue) overduePulse else 1f),
+            )
+            Spacer(Modifier.size(9.dp))
+            /* 渐隐分割线（同 .group-head::after linear-gradient） */
+            Box(
+                Modifier.weight(1f).height(1.dp).background(
+                    Brush.horizontalGradient(
+                        listOf(
+                            (if (overdue) Palette.bad else Palette.muted).copy(alpha = 0.4f),
+                            Color.Transparent,
+                        ),
                     ),
                 ),
-            ),
-        )
+            )
+            /* 组内完成度：有已完成项才出现，别给空组摆一条空的进度条 */
+            if (done > 0) {
+                Spacer(Modifier.size(8.dp))
+                NbProgressBar(
+                    fraction = if (count > 0) done.toFloat() / count else 0f,
+                    modifier = Modifier.width(52.dp),
+                )
+            }
+        }
     }
 }
 
@@ -862,19 +875,25 @@ private fun TodoRow(t: TodoRec, onToggle: () -> Unit, onEdit: () -> Unit, onDele
     }
     val rowShape = RoundedCornerShape(nbCardRadius())
 
-    /* 悬停浮起 / 按压微缩 / 表面色与描边过渡（逾期行叠加淡淡的红晕） */
+    /* 悬停浮起 / 按压微缩 / 材质染色与描边过渡（逾期行叠加淡淡的红晕） */
     val lateTint = info.late && !done
     val lift by animateFloatAsState(if (hovered && !done) -1.5f else 0f, nbSpringSoft(stiffness = 500f), label = "todoLift")
     val pressScale by animateFloatAsState(if (pressed) 0.99f else 1f, nbSpringPop(stiffness = 600f), label = "todoPress")
-    val rowBg by animateColorAsState(
+    val rowTint by animateColorAsState(
         targetValue = when {
             hovered && lateTint -> Palette.bad.copy(alpha = 0.09f)
-            hovered -> Palette.panel2
             lateTint -> Palette.bad.copy(alpha = 0.05f)
-            else -> Palette.panel
+            else -> Color.Transparent
         },
         animationSpec = tween(220),
         label = "todoBg",
+    )
+    val rowElev by animateDpAsState(
+        targetValue = when {
+            hovered && !done -> 5.dp
+            else -> 2.dp
+        },
+        nbSpringSoft(stiffness = 300f), label = "todoElev",
     )
     val rowBorder by animateColorAsState(
         targetValue = when {
@@ -898,8 +917,7 @@ private fun TodoRow(t: TodoRec, onToggle: () -> Unit, onEdit: () -> Unit, onDele
                 scaleX = pressScale
                 scaleY = pressScale
             }
-            .clip(rowShape)
-            .background(rowBg)
+            .nbSurface(rowShape, tint = rowTint.takeIf { it != Color.Transparent }, elevation = rowElev, bordered = false)
             .border(1.dp, rowBorder, rowShape)
             .clickable(interactionSource = interaction, indication = null) { onEdit() }
             .padding(start = 0.dp, end = 10.dp),
@@ -973,6 +991,7 @@ private fun TodoRow(t: TodoRec, onToggle: () -> Unit, onEdit: () -> Unit, onDele
                             color = if (info.late) Palette.bad else if (info.today) Palette.warn else Palette.muted,
                             fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
                             fontWeight = if (info.late) FontWeight.SemiBold else FontWeight.Normal,
+                            maxLines = 1, softWrap = false,
                         )
                     }
                 }
@@ -1035,6 +1054,7 @@ private fun TodoRow(t: TodoRec, onToggle: () -> Unit, onEdit: () -> Unit, onDele
                         Text(
                             repeatText(t.repeat),
                             color = Palette.muted, fontSize = 9.5.sp, fontFamily = FontFamily.Monospace,
+                            maxLines = 1, softWrap = false,
                         )
                     }
                     tags.take(2).forEach { tag ->

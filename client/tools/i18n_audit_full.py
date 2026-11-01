@@ -19,6 +19,7 @@ SRC_SETS = [
     ROOT / "composeApp/src/commonMain/kotlin/com/servermaintance/panel",
     ROOT / "composeApp/src/androidMain/kotlin/com/servermaintance/panel",
     ROOT / "composeApp/src/desktopMain/kotlin/com/servermaintance/panel",
+    ROOT / "composeApp/src/iosMain/kotlin/com/servermaintance/panel",
 ]
 ZH_PATH = ROOT / "composeApp/src/commonMain/resources/i18n/zh.json"
 I18N_DIR = ROOT / "composeApp/src/commonMain/resources/i18n"

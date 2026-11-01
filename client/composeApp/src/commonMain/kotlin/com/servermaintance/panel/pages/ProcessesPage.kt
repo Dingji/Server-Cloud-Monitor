@@ -3,15 +3,11 @@ import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.i18n.tr
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,9 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.servermaintance.panel.core.Actions
 import com.servermaintance.panel.core.AppState
 import com.servermaintance.panel.core.Fmt
@@ -36,6 +30,7 @@ import com.servermaintance.panel.core.long
 import com.servermaintance.panel.core.num
 import com.servermaintance.panel.core.obj
 import com.servermaintance.panel.core.str
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.AutoRefresh
 import com.servermaintance.panel.ui.Chip
 import com.servermaintance.panel.ui.DangerBtn
@@ -53,6 +48,7 @@ import com.servermaintance.panel.ui.SelectField
 import com.servermaintance.panel.ui.TableCol
 import com.servermaintance.panel.ui.TableText
 import com.servermaintance.panel.ui.Toggle
+import com.servermaintance.panel.ui.slotHorizontalScroll
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -163,7 +159,7 @@ fun ProcessesPage() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    modifier = Modifier.slotHorizontalScroll(),
                 ) {
                     if (counts != null) {
                         Chip(trf("运行_0_d2a28237c8", badgeCount(counts.num("running"))), tone = Level.Ok)
@@ -178,26 +174,28 @@ fun ProcessesPage() {
                 }
             },
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
+            AdaptiveRow(spacing = 10.dp) {
                 SearchField(
                     value = query,
                     onValueChange = { query = it },
                     placeholder = L["搜索_pid_用户_命令_f1c406afb9"],
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.span(1f),
                 )
-                SelectField(
-                    value = SORTS.firstOrNull { it.first == sort }?.second ?: SORTS[0].second,
-                    options = SORTS.map { it.second },
-                    onValueChange = { label ->
-                        sort = SORTS.firstOrNull { it.second == label }?.first ?: "cpu"
-                    },
-                    modifier = Modifier.width(150.dp),
-                )
-                Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
+                // 排序 + 自动刷新在手持端仍并排：这两个本身是固定宽度，叠成两行反而更空
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    SelectField(
+                        value = SORTS.firstOrNull { it.first == sort }?.second ?: SORTS[0].second,
+                        options = SORTS.map { it.second },
+                        onValueChange = { label ->
+                            sort = SORTS.firstOrNull { it.second == label }?.first ?: "cpu"
+                        },
+                        modifier = Modifier.width(150.dp),
+                    )
+                    Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
+                }
             }
 
             Spacer(Modifier.height(10.dp))

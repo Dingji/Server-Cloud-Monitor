@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenCode relay daily state backup (sqlite + keys + configs)
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/relay/backup_relay.sh
+Nice=10
+IOSchedulingClass=idle
+PrivateTmp=true
+ProtectSystem=false

@@ -20,14 +20,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.servermaintance.panel.core.AppState
 import com.servermaintance.panel.core.Fmt
 import com.servermaintance.panel.core.SecCheck
 import com.servermaintance.panel.core.SecState
-import com.servermaintance.panel.core.ToastKind
 import com.servermaintance.panel.ui.AutoRefresh
 import com.servermaintance.panel.ui.Chip
 import com.servermaintance.panel.ui.DataTable
@@ -35,7 +32,6 @@ import com.servermaintance.panel.ui.EmptyState
 import com.servermaintance.panel.ui.GhostBtn
 import com.servermaintance.panel.ui.GridLayout
 import com.servermaintance.panel.ui.Level
-import com.servermaintance.panel.ui.LineChart
 import com.servermaintance.panel.ui.LoadingState
 import com.servermaintance.panel.ui.Modal
 import com.servermaintance.panel.ui.PageScaffold

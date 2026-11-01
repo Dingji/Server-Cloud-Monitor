@@ -71,6 +71,14 @@ async function freeKb(mount) {
 async function sampleHistory() {
   const last = S.readJson(LAST_SAMPLE, { at: 0 });
   if (S.now() - last.at < 30 * 60 * 1000) return { ok: true, skipped: true };
+  if (process.platform === 'win32') {
+    const ov = await overviewWin();
+    for (const m of ov.mounts || []) {
+      S.appendLine(HISTORY, { ts: S.now(), mount: m.mount, totalKb: m.totalKb, usedKb: m.usedKb, availKb: m.availKb, usedPct: m.usedPct });
+    }
+    S.writeJson(LAST_SAMPLE, { at: S.now() });
+    return { ok: true, sampled: (ov.mounts || []).length };
+  }
   const d = await ex.run('df -Pk 2>/dev/null | tail -n +2', { timeout: 10000 });
   const seen = new Set();
   for (const line of (d.stdout || '').split('\n')) {
@@ -94,7 +102,45 @@ async function sampleHistory() {
   return { ok: true, sampled: seen.size };
 }
 
+async function overviewWin() {
+  const r = await ex.run(`
+$vols = Get-Volume | Where-Object { $_.DriveLetter } | ForEach-Object {
+  $total = [uint64]$_.Size; $free = [uint64]$_.SizeRemaining; $used = $total - $free
+  @{
+    filesystem = $_.FileSystemType; mount = ($_.DriveLetter + ':\\'); totalKb = [math]::Round($total/1KB)
+    usedKb = [math]::Round($used/1KB); availKb = [math]::Round($free/1KB)
+    usedPct = if ($total -gt 0) { [math]::Round(100*$used/$total,1) } else { 0 }
+  }
+}
+$ev = (Get-WinEvent -ListLog * -ErrorAction SilentlyContinue | Measure-Object MaximumSizeInBytes -Sum).Sum
+$logKb = [math]::Round($ev/1KB)
+@{ mounts = @($vols); varLogKb = $logKb; journalKb = $null; aptCacheKb = $null; trashKb = $null } | ConvertTo-Json -Compress -Depth 4
+`, { timeout: 30000, powershell: true });
+  let data = {};
+  try { data = JSON.parse((r.stdout || '').trim().replace(/^\uFEFF/, '')); } catch (_) {}
+  const mounts = (data.mounts || []).map((m) => ({
+    filesystem: m.filesystem || 'NTFS',
+    mount: m.mount,
+    totalKb: m.totalKb,
+    usedKb: m.usedKb,
+    availKb: m.availKb,
+    usedPct: m.usedPct,
+    inodeUsedPct: null,
+  }));
+  sampleHistory().catch(() => {});
+  return {
+    ok: true, at: S.now(), mounts,
+    journalKb: null,
+    aptCacheKb: null,
+    varLogKb: data.varLogKb || null,
+    trashKb: sizeKbOf(S.file('files_trash')),
+    schedule: getConfig(),
+    runner: ex.mode(),
+  };
+}
+
 async function overview() {
+  if (process.platform === 'win32') return overviewWin();
   const [df, idf, journal, apt, logdir] = await Promise.all([
     ex.run('df -Pk 2>/dev/null', { timeout: 10000 }),
     ex.run('df -Pi 2>/dev/null', { timeout: 10000 }),
@@ -142,7 +188,19 @@ function sizeKbOf(p) {
 async function bigFiles(q) {
   const minMb = Math.max(10, Math.min(100000, Number(q.minMb) || 100));
   const limit = Math.max(5, Math.min(200, Number(q.limit) || 60));
-  const root = String(q.path || '/');
+  const root = String(q.path || (process.platform === 'win32' ? 'C:\\' : '/'));
+  if (process.platform === 'win32') {
+    const r = await ex.run(
+      `powershell -NoProfile -Command "Get-ChildItem -LiteralPath '${root.replace(/'/g, "''")}' -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Length -gt ${minMb}MB } | Sort-Object Length -Descending | Select-Object -First ${limit} | ForEach-Object { $_.Length.ToString() + [char]9 + $_.FullName }"`,
+      { timeout: 180000, powershell: true },
+    );
+    const items = (r.stdout || '').split('\n').filter(Boolean).map((l) => {
+      const i = l.indexOf('\t');
+      if (i < 0) return null;
+      return { size: num(l.slice(0, i)) || 0, path: l.slice(i + 1) };
+    }).filter(Boolean);
+    return { ok: true, path: root, minMb, limit, items, totalSize: items.reduce((a, b) => a + b.size, 0), stderr: '' };
+  }
   const cmd = `find ${S.shq(root)} -xdev -type f -size +${minMb}M -printf '%s\\t%p\\n' 2>/dev/null | sort -rn | head -n ${limit}`;
   const r = await ex.run(cmd, { timeout: 120000 });
   const items = (r.stdout || '').split('\n').filter(Boolean).map((l) => {
@@ -153,6 +211,19 @@ async function bigFiles(q) {
 }
 
 async function topDirs(q) {
+  if (process.platform === 'win32') {
+    const dir = String(q.path || 'C:\\');
+    const limit = Math.max(5, Math.min(60, Number(q.limit) || 25));
+    const r = await ex.run(
+      `powershell -NoProfile -Command "Get-ChildItem -LiteralPath '${dir.replace(/'/g, "''")}' -Directory -ErrorAction SilentlyContinue | ForEach-Object { $s = (Get-ChildItem $_.FullName -Recurse -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum; [PSCustomObject]@{ kb = [math]::Round(($s/1KB)); path = $_.FullName } } | Sort-Object kb -Descending | Select-Object -First ${limit} | ForEach-Object { $_.kb.ToString() + [char]9 + $_.path }"`,
+      { timeout: 180000, powershell: true },
+    );
+    const items = (r.stdout || '').split('\n').filter(Boolean).map((l) => {
+      const c = l.split('\t');
+      return { kb: num(c[0]) || 0, path: c[1] || '' };
+    }).filter((x) => x.path);
+    return { ok: true, path: dir, depth: 1, items };
+  }
   const dir = String(q.path || '/');
   const depth = Math.max(1, Math.min(3, Number(q.depth) || 1));
   const limit = Math.max(5, Math.min(60, Number(q.limit) || 25));

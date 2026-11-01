@@ -5,11 +5,9 @@ import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,14 +38,11 @@ import com.servermaintance.panel.core.Actions
 import com.servermaintance.panel.core.ToastKind
 import com.servermaintance.panel.core.arr
 import com.servermaintance.panel.core.bool
-import com.servermaintance.panel.core.int
 import com.servermaintance.panel.core.jsonObjectOf
 import com.servermaintance.panel.core.long
-import com.servermaintance.panel.core.num
 import com.servermaintance.panel.core.obj
 import com.servermaintance.panel.core.str
-import com.servermaintance.panel.ui.AutoRefresh
-import com.servermaintance.panel.ui.Chip
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.CheckRow
 import com.servermaintance.panel.ui.DangerBtn
 import com.servermaintance.panel.ui.DataTable
@@ -63,11 +58,11 @@ import com.servermaintance.panel.ui.PageScaffold
 import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelCard
 import com.servermaintance.panel.ui.PrimaryBtn
-import com.servermaintance.panel.ui.SearchField
 import com.servermaintance.panel.ui.SectionTitle
 import com.servermaintance.panel.ui.SelectField
 import com.servermaintance.panel.ui.StatTile
 import com.servermaintance.panel.ui.TableCol
+import com.servermaintance.panel.ui.slotHorizontalScroll
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -355,7 +350,7 @@ fun SecurityPage() {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.horizontalScroll(rememberScrollState()),
+                            modifier = Modifier.slotHorizontalScroll(),
                         ) {
                             val active = f2b?.bool("active") == true
                             if (active) {
@@ -484,7 +479,7 @@ fun SecurityPage() {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.horizontalScroll(rememberScrollState()),
+                            modifier = Modifier.slotHorizontalScroll(),
                         ) {
                             if (r.bool("present")) LevelBadge(L["已启用_25d2843150"], Level.Ok)
                             else LevelBadge(L["未配置_63595e95b7"], Level.Bad)
@@ -492,8 +487,11 @@ fun SecurityPage() {
                         }
                     },
                 ) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                        Column(Modifier.weight(1f)) {
+                    AdaptiveRow(
+                        spacing = 14.dp,
+                        verticalAlignment = Alignment.Top,
+                    ) {
+                        Column(Modifier.span(1f)) {
                             SectionTitle(trf("限流区域_0_2073b98a9e", rateZones.size))
                             val zoneRows = rateZones + zones.filter { it.str("type") == "global" }
                             DataTable(
@@ -519,7 +517,7 @@ fun SecurityPage() {
                                 rows = zoneRows,
                             )
                         }
-                        Column(Modifier.weight(1f)) {
+                        Column(Modifier.span(1f)) {
                             SectionTitle(trf("应用位置_0_48979a348d", applied.size))
                             DataTable(
                                 columns = listOf(

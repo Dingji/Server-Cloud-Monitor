@@ -11,6 +11,17 @@ interface KeyValueStore {
     fun remove(key: String)
 }
 
+/** 一个正在写入的下载目的地：分块写、最后关一次。 */
+interface SaveHandle {
+    /** 给人看的路径（SAF 下是文档名，桌面/ iOS 下是绝对路径）。 */
+    val displayPath: String
+    fun write(chunk: ByteArray)
+    fun close()
+
+    /** 下载失败时删掉半成品——留一个截断文件比不下载更糟。 */
+    fun discard()
+}
+
 /** Where user-visible downloads land, e.g. backup archives. */
 interface FileExporter {
     /**
@@ -18,6 +29,12 @@ interface FileExporter {
      * success, or null when the user cancelled / the OS refused.
      */
     suspend fun saveFile(name: String, bytes: ByteArray): String?
+
+    /**
+     * 打开系统「保存到…」并返回可分块写入的句柄；用户取消返回 null。
+     * 与 saveFile 的差别就是不要把整个文件先读进内存——86MB 的包在手机上那么挂的。
+     */
+    suspend fun beginSave(name: String): SaveHandle?
 
     /** Absolute path of the default download folder, for display. */
     fun defaultDir(): String

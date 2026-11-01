@@ -1,0 +1,8 @@
+[Unit]
+Description=Relay database integrity guard (self-heal, fall back to newest backup)
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/relay/db_guard.sh
+Nice=10

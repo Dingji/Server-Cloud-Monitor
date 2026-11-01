@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "note": "OpenCode Go 忙时路由。工作日(北京 09:00-12:00, 14:00-18:00)把 deepseek 请求改写到 mimo-v2.6-flash；其余时间/其余线路/其余模型都不动。改这个文件不需要重启 relay-usagetap，tap 按 mtime 自动重载。临时停用用 busy_hours.py off(等价于建 /var/lib/relay/busy-hours.off)。",
+  "enabled": true,
+  "route": "go",
+  "target_model": "mimo-v2.6-flash",
+  "rewrite_prefixes": ["deepseek"],
+  "weekdays_only": true,
+  "utc_offset_minutes": 480,
+  "windows": [
+    { "start": "09:00", "end": "12:00" },
+    { "start": "14:00", "end": "18:00" }
+  ]
+}

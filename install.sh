@@ -6,6 +6,8 @@
 #   ./install.sh --port 9100 --prefix /opt/cm   # 换端口/换目录（同机跑第二实例时用）
 #   ./install.sh --direct                 # 不开 nginx，直接绑 0.0.0.0（需自己用安全组/防火墙限源）
 #   ./install.sh --nginx-standalone 8091  # 另起一个 nginx server 块，避免与站点已有 :80 冲突
+#   ./install.sh --with-php               # 顺带装「PHP 站点」运行栈（php-fpm + MariaDB + certbot + /srv/php）
+#   ./install.sh --with-relayhub          # 顺带部署内网中继（frps + RelayHub 面板），并把导航接进面板
 #   ./install.sh --dry-run                # 只打印将要做什么
 #
 # 幂等：重复执行 = 升级。config.json / keys / 数据目录都会保留。
@@ -26,6 +28,15 @@ START=1
 SMOKE=1
 DRY=0
 YES=0
+WITH_PHP=0
+PHP_BASE=/srv/php
+WITH_RELAYHUB=0
+RELAYHUB_DIR=/opt/relayhub
+RELAYHUB_PORT=8100
+FRPS_PORT=7000
+FRP_VER=0.71.1
+RELAYHUB_POOL="6000-6999"
+RELAYHUB_SYNC_UFW=1
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TS="$(date -u +%Y%m%d-%H%M%S)"
@@ -40,7 +51,7 @@ run()  { if [ "$DRY" = 1 ]; then printf '   [dry] %s\n' "$*"; else "$@"; fi; }
 cap()  { if [ "$DRY" = 1 ]; then printf '   [dry] %s\n' "$*" >&2; else eval "$@" >&2; fi; }
 
 usage() {
-  sed -n '2,20p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  awk '/^set -Eeuo/{exit} NR>1' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
   exit 0
 }
 
@@ -60,6 +71,13 @@ while [ $# -gt 0 ]; do
     --no-systemd)    SYSTEMD=0; shift ;;
     --no-start)      START=0; shift ;;
     --no-smoke)      SMOKE=0; shift ;;
+    --with-php)      WITH_PHP=1; shift ;;
+    --php-base)      WITH_PHP=1; PHP_BASE="$2"; shift 2 ;;
+    --with-relayhub) WITH_RELAYHUB=1; shift ;;
+    --relayhub-dir)  WITH_RELAYHUB=1; RELAYHUB_DIR="$2"; shift 2 ;;
+    --relayhub-port) WITH_RELAYHUB=1; RELAYHUB_PORT="$2"; shift 2 ;;
+    --relayhub-pool) WITH_RELAYHUB=1; RELAYHUB_POOL="$2"; shift 2 ;;
+    --no-relayhub-ufw) RELAYHUB_SYNC_UFW=0; shift ;;
     --dry-run)       DRY=1; shift ;;
     --yes|-y)        YES=1; shift ;;
     -h|--help)       usage ;;
@@ -76,6 +94,7 @@ ENV_FILE="/etc/${SERVICE}.env"
 UNIT_FILE="/etc/systemd/system/${SERVICE}.service"
 NGINX_SNIPPET="/etc/nginx/snippets/${SERVICE}-location.conf"
 NGINX_CONF="/etc/nginx/conf.d/${SERVICE}.conf"
+RELAYHUB_SNIPPET=/etc/nginx/snippets/relayhub-location.conf
 
 # ---------- 0. 预检 ----------
 info "预检"
@@ -151,6 +170,10 @@ info "数据目录与密钥"
 run mkdir -p "$DATA_DIR"
 run chmod 700 "$DATA_DIR"
 run mkdir -p "$PREFIX/keys" "$PREFIX/logs"
+# 内网设备硬件监控（app/server/devmetrics.js）的分层时序库；它自己会 mkdir，
+# 这里先建好是为了让权限一眼可见（0700，只 root 可读）
+run mkdir -p /var/lib/relay
+run chmod 700 /var/lib/relay
 if [ ! -f "$PREFIX/keys/pty_key" ] && command -v ssh-keygen >/dev/null 2>&1; then
   say "   生成 Web 终端用的宿主密钥 keys/pty_key"
   run ssh-keygen -q -t ed25519 -N '' -f "$PREFIX/keys/pty_key"
@@ -222,10 +245,42 @@ else
 fi
 
 # ---------- 7. nginx ----------
+# RelayHub 的 location 片段必须早于任何 nginx -t 落盘，否则独立 server 块会因
+# include 目标不存在而校验失败并回滚。
+write_relayhub_snippet() {
+  cat > "$RELAYHUB_SNIPPET" <<RHSNIP
+# 由 cloud-monitor install.sh 生成：RelayHub 面板 + frpc WebSocket 接入。
+location = /relayhub { return 301 /relayhub/; }
+location /relayhub/ {
+    proxy_pass http://127.0.0.1:${RELAYHUB_PORT}/;
+    proxy_http_version 1.1;
+    proxy_set_header Host              \$host;
+    proxy_set_header X-Real-IP         \$remote_addr;
+    proxy_set_header X-Forwarded-For   \$proxy_add_x_forwarded_for;
+    client_max_body_size 20m;
+}
+# frpc(transport=websocket) 走专用路径，经 80 端口转进本机 frps
+location = /~!frp {
+    proxy_pass http://127.0.0.1:${FRPS_PORT};
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade    \$http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host       \$host;
+    proxy_read_timeout  3600s;
+    proxy_send_timeout  3600s;
+    proxy_buffering     off;
+}
+RHSNIP
+}
+RH_INCLUDE=""
+if [ "$WITH_RELAYHUB" = 1 ]; then RH_INCLUDE="    include ${RELAYHUB_SNIPPET};"; fi
 NGINX_DONE=0
 if [ "$NGINX_MODE" != off ] && command -v nginx >/dev/null 2>&1; then
   info "nginx：$NGINX_MODE"
   run mkdir -p /etc/nginx/snippets
+  if [ "$WITH_RELAYHUB" = 1 ]; then
+    if [ "$DRY" = 1 ]; then printf '   [dry] write %s\n' "$RELAYHUB_SNIPPET"; else write_relayhub_snippet; fi
+  fi
   if [ "$DRY" = 1 ]; then
     printf '   [dry] write %s（location %s/ 反代片段）\n' "$NGINX_SNIPPET" "$BASE_PATH"
     [ "$NGINX_MODE" = standalone ] && printf '   [dry] write %s（listen %s 独立 server 块）\n' "$NGINX_CONF" "$NGINX_PORT"
@@ -261,6 +316,7 @@ server {
     server_name _;
     set \$connection_upgrade \$connection_upgrade_${SERVICE};
     include ${NGINX_SNIPPET};
+${RH_INCLUDE}
 }
 CONF
     fi
@@ -282,6 +338,130 @@ CONF
   fi
 elif [ "$NGINX_MODE" != off ]; then
   warn "本机没有 nginx —— 用直连模式（面板监听 $BIND:$PORT）或装 nginx 后重跑"
+fi
+
+# ---------- 7.5 PHP 站点运行栈（--with-php，默认不装） ----------
+# 面板的「PHP 站点」模块（app/server/ops/php/）只是编排器：真正跑站点的是一次
+# php-fpm 池 + nginx server 块 + MariaDB。这些属于外部状态，所以只在显式要求时安装。
+pick_php_ver() {
+  local v=""
+  v=$(php-fpm -v 2>/dev/null | sed -n 's/^PHP \([0-9]*\.[0-9]*\).*/\1/p' | head -1) || true
+  [ -n "$v" ] || v=$(ls -d /etc/php/*/fpm 2>/dev/null | sed 's|.*/||' | sort -V | tail -1) || true
+  [ -n "$v" ] || v=$(apt-cache search --names-only '^php[0-9][0-9.]*-fpm$' 2>/dev/null \
+                      | sed -n 's/^php\([0-9][0-9.]*\)-fpm.*/\1/p' | sort -V | tail -1) || true
+  printf '%s' "$v"
+  return 0
+}
+if [ "$WITH_PHP" = 1 ]; then
+  PHP_VER_DETECTED="${CM_PHP_VERSION:-$(pick_php_ver)}"
+  [ -n "$PHP_VER_DETECTED" ] || die "--with-php 但找不到 php*-fpm 包名；先配好 apt 源，或用 CM_PHP_VERSION=8.3 ./install.sh --with-php"
+  info "PHP 站点栈：PHP ${PHP_VER_DETECTED} + MariaDB + certbot"
+  if [ "$OS_ID" != ubuntu ] && [ "$OS_ID" != debian ]; then
+    die "--with-php 目前只支持 ubuntu/debian（apt 包名按发行版不同）；其余系统请手工装 php-fpm/MariaDB/certbot"
+  fi
+  PHP_REQUIRED=("php${PHP_VER_DETECTED}-fpm" "php${PHP_VER_DETECTED}-cli" "php${PHP_VER_DETECTED}-common"
+                "php${PHP_VER_DETECTED}-curl" "php${PHP_VER_DETECTED}-mbstring" "php${PHP_VER_DETECTED}-xml"
+                "php${PHP_VER_DETECTED}-zip" "php${PHP_VER_DETECTED}-mysql"
+                composer certbot python3-certbot-nginx mariadb-server)
+  PHP_OPTIONAL=("php${PHP_VER_DETECTED}-gd" "php${PHP_VER_DETECTED}-intl" "php${PHP_VER_DETECTED}-bcmath"
+                "php${PHP_VER_DETECTED}-sqlite3" "php${PHP_VER_DETECTED}-redis" "php${PHP_VER_DETECTED}-apcu"
+                "php${PHP_VER_DETECTED}-gmp" "php${PHP_VER_DETECTED}-sodium" "php${PHP_VER_DETECTED}-xsl"
+                unzip rsync)
+  run apt-get update -qq
+  # 必需包一次性事务：少一个功能就残缺；可选包逐个装：包名不存在不能连坐
+  cap "DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get install -y ${PHP_REQUIRED[*]}"
+  for p in "${PHP_OPTIONAL[@]}"; do
+    cap "DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get install -y $p" || warn "   可选包 $p 未装上（对应框架扩展不可用，不影响其余功能）"
+  done
+  # 整机内存可能很小（面板自己只占 400M），MariaDB 用保守参数起步
+  if [ "$DRY" != 1 ]; then
+    mkdir -p /etc/mysql/mariadb.conf.d
+    cat > /etc/mysql/mariadb.conf.d/99-cloud-monitor.cnf <<'MYCNF'
+# 由 cloud-monitor install.sh 生成：面板建库走 MariaDB，按小内存机器起步
+[mysqld]
+innodb_buffer_pool_size = 64M
+innodb_log_buffer_size  = 8M
+key_buffer_size         = 16M
+performance_schema      = OFF
+max_connections         = 40
+MYCNF
+    mkdir -p "/etc/php/${PHP_VER_DETECTED}/fpm/conf.d"
+    cat > "/etc/php/${PHP_VER_DETECTED}/fpm/conf.d/99-cloud-monitor.ini" <<'PFINI'
+; 由 cloud-monitor install.sh 生成。
+; 注意：面板为每个站点单独生成 www-<slug>.conf 池，不要改共享 [www] 段。
+upload_max_filesize = 128M
+post_max_size = 136M
+max_execution_time = 300
+memory_limit = 256M
+PFINI
+  fi
+  run mkdir -p "$PHP_BASE/uploads"
+  run chmod 0775 "$PHP_BASE/uploads"
+  for svc in "php${PHP_VER_DETECTED}-fpm" mariadb; do
+    run systemctl enable --now "$svc" >/dev/null 2>&1 || warn "   $svc 启动失败，稍后手工检查：systemctl status $svc"
+  done
+  say "   PHP 站点根 ${PHP_BASE}（面板读 CM_PHP_BASE，改路径要写进 $ENV_FILE 并重启服务）"
+  say "   注意：cloud-monitor.service 带 PrivateTmp=true，站点压缩包请上传到 ${PHP_BASE}/uploads，放宿主机 /tmp 面板看不见"
+fi
+
+# ---------- 7.6 RelayHub 内网中继（--with-relayhub，默认不装） ----------
+# 面板的「内网中继监控」页把请求代理到 127.0.0.1:8100 的 RelayHub 服务；
+# 没装时 /relayhub/available 返回 ok:false，导航项自动隐藏，面板其余功能不受影响。
+if [ "$WITH_RELAYHUB" = 1 ]; then
+  info "RelayHub 内网中继：$RELAYHUB_DIR"
+  [ -d "$HERE/relayhub/panel" ] || die "找不到 $HERE/relayhub/panel —— 请在仓库根目录执行本脚本"
+  command -v python3 >/dev/null || die "RelayHub 面板是 Python3 标准库服务，需要 python3"
+  run mkdir -p "$RELAYHUB_DIR/panel" "$RELAYHUB_DIR/downloads"
+  run cp -a "$HERE/relayhub/panel/." "$RELAYHUB_DIR/panel/"
+  run cp -a "$HERE/relayhub/deploy.sh" "$HERE/relayhub/relayhub-nginx.py" "$RELAYHUB_DIR/"
+  run chmod 0755 "$RELAYHUB_DIR/deploy.sh"
+  # frps 二进制不入库（20MB），按架构现取
+  RH_ARCH=$(uname -m); case "$RH_ARCH" in
+    x86_64) RH_ARCH=amd64 ;; aarch64|arm64) RH_ARCH=arm64 ;; riscv64) RH_ARCH=riscv64 ;;
+    *) die "RelayHub：不支持的架构 $RH_ARCH" ;;
+  esac
+  RH_TGZ="frp_${FRP_VER}_linux_${RH_ARCH}.tar.gz"
+  if [ "$DRY" = 1 ]; then
+    printf '   [dry] 缺 %s 时从 GitHub 下载 frp %s (%s)\n' "$RH_TGZ" "$FRP_VER" "$RH_ARCH"
+  elif [ ! -f "$RELAYHUB_DIR/downloads/$RH_TGZ" ]; then
+    say "   下载 frp ${FRP_VER} (${RH_ARCH})"
+    curl -fsSL -m 300 -o "$RELAYHUB_DIR/downloads/$RH_TGZ" \
+      "https://github.com/fatedier/frp/releases/download/v${FRP_VER}/${RH_TGZ}" \
+      || die "frp 下载失败：请手工放好 $RELAYHUB_DIR/downloads/$RH_TGZ 后重跑"
+  fi
+  # deploy.sh 会建 frps.toml（随机 token）、两个 systemd 单元、端口池与防火墙放行。
+  # 它的 nginx 步骤默认改 OpenCode 中继那个站点文件，新机器上没有 —— 交给本脚本写片段。
+  if [ "$DRY" = 1 ]; then
+    printf '   [dry] RELAYHUB_SKIP_NGINX=1 bash %s/deploy.sh --port-range %s\n' \
+      "$RELAYHUB_DIR" "$RELAYHUB_POOL"
+  else
+    cap "cd $RELAYHUB_DIR && RELAYHUB_SKIP_NGINX=1 RELAYHUB_PANEL_PORT=$RELAYHUB_PORT RELAYHUB_FRP_VER=$FRP_VER bash deploy.sh --port-range $RELAYHUB_POOL$( [ "$RELAYHUB_SYNC_UFW" = 1 ] || echo ' --no-ufw' )"
+    if [ "$NGINX_MODE" = standalone ] && [ -f "$NGINX_CONF" ]; then
+      # 片段在 nginx 段就已 include 进独立 server 块，这里只需 reload
+      if nginx -t >/dev/null 2>&1; then systemctl reload nginx || nginx -s reload; say "   /relayhub/ 与 /~!frp 已并入 $NGINX_CONF 并 reload"; \
+      else warn "   nginx -t 未通过，未 reload —— 片段仍在 $RELAYHUB_SNIPPET"; fi
+    elif [ "$NGINX_MODE" != off ]; then
+      say "   片段已写到 $RELAYHUB_SNIPPET，请在站点 server{} 里加： include ${RELAYHUB_SNIPPET};"
+    else
+      warn "   直连模式：RelayHub 面板只在 http://127.0.0.1:${RELAYHUB_PORT}/ 可达，frps ${FRPS_PORT} 需自己在安全组放行"
+    fi
+    # 面板 → RelayHub 的内部密钥：两边共用同一个 X-RelayHub-Key（面板直接读这个 config.json）
+    RH_KEY=$(python3 - "$RELAYHUB_DIR/panel/config.json" <<'PYEOF' 2>/dev/null || echo ''
+import json, pathlib, secrets, sys
+p = pathlib.Path(sys.argv[1]); cfg = json.loads(p.read_text("utf-8"))
+if not cfg.get("internal_key"):
+    cfg["internal_key"] = secrets.token_hex(24)
+    p.write_text(json.dumps(cfg, indent=2, ensure_ascii=False), "utf-8"); p.chmod(0o600)
+print(cfg["internal_key"])
+PYEOF
+)
+    [ -n "$RH_KEY" ] || warn "   没拿到 internal_key —— 面板的 /relayhub/* 会 401，请检查 $RELAYHUB_DIR/panel/config.json"
+    if [ "$DRY" != 1 ] && [ -n "$RH_KEY" ]; then
+      systemctl restart relayhub-panel >/dev/null 2>&1 || true
+      systemctl restart "$SERVICE" >/dev/null 2>&1 || true
+    fi
+    say "   设备接入一行命令：curl -fsSL http://<服务器IP>/relayhub/install.sh | bash -s -- --name 设备名 --token <在 RelayHub 面板生成>"
+  fi
 fi
 
 # ---------- 8. 启动 ----------
@@ -314,6 +494,23 @@ smoke() {
     say "   ops 模块 OK（拨测/规则/渠道/文件/巡检/磁盘/看护/远程 已挂载）"
   else
     warn "ops/overview 无响应 —— ops 模块可能没挂上：journalctl -u $SERVICE | grep 'ops modules'"
+  fi
+  # 每个模块单独探一次：挂载是 try/catch 的，缺依赖只会静默降级，不报错
+  probe_mod() {
+    local name="$1" path="$2" want="$3" note="$4" out
+    out=$(curl -fs -H "Authorization: Bearer $tok" "$url$path" 2>/dev/null || echo '')
+    if printf '%s' "$out" | grep -q "$want"; then
+      say "   $name OK"
+    else
+      warn "   $name 未响应（$path）—— $note"
+    fi
+  }
+  probe_mod "内网设备硬件监控" "/devices" '"ok":true' "agent 上报入口在 /agent/push；时序库 /var/lib/relay/devmetrics.db"
+  if [ "$WITH_PHP" = 1 ]; then
+    probe_mod "PHP 站点" "/php/sites" '"ok"\|"sites"' "php-fpm/MariaDB 未就绪：systemctl status php${PHP_VER_DETECTED:-?}-fpm mariadb"
+  fi
+  if [ "$WITH_RELAYHUB" = 1 ]; then
+    probe_mod "内网中继 RelayHub" "/relayhub/available" '"ok":true' "relayhub-panel 未起或 internal_key 不一致：systemctl status relayhub-panel"
   fi
   curl -fs -o /dev/null "http://127.0.0.1:${PORT}${BASE_PATH}/public/index.html" \
     && say "   Web 壳 OK（静态页可取）" || warn "静态页取不到：public/index.html 缺失？"

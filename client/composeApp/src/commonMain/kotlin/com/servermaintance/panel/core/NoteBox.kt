@@ -23,6 +23,7 @@ import io.ktor.http.encodeURLParameter
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.IO
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
@@ -72,7 +73,7 @@ object NoteBoxStore {
     private const val K_PASSWORD = "notebox_password"
 
     /** 与面板同主机、独立端口（nginx 未反代，NoteBox 直接监听 13345）。 */
-    const val DEFAULT_URL = "http://8.153.153.176:13345"
+    const val DEFAULT_URL = "http://127.0.0.1:9000/panel/notebox"
 
     fun load(): NoteBoxConfig = NoteBoxConfig(
         url = platformStore.get(K_URL) ?: DEFAULT_URL,

@@ -1,4 +1,4 @@
-# md5 of the panel source as pulled from 8.153.153.176 2026-10-23T09:20:44+08:00
+# md5 of the panel source as pulled from 8.153.153.176 2026-10-31T09:24:51+08:00
  f1373355575c43e831ef7abba1f1fbb0  server/actions.js
  3347097782a785e3a0735f589406b3bb  server/agent.js
  65c4b2cc050384da521e902859c47ac6  server/auth.js
@@ -6,26 +6,29 @@
  ee2a4e4214f288bf2de8f1ce177d88e7  server/config.js
  d1a88358ef18e61ba8e4cbee4f564504  server/dbadmin.js
  98f338546de7f9ee78b8e3aaf5db0ee0  server/dbmulti.js
+ 39aa76b25741510ff84e005801e7fad0  server/devmetrics.js
  cb64d4249f22c883e1dad437e6bd0bbd  server/distro.js
- 510cc8289ded998720f09b299ae4e453  server/hub.js
- 3c7c944a889076961964fef35e448466  server/index.js
+ a629b4f7174e0de83b032cee80690834  server/hub.js
+ bca43e2bc9c28b75d51f875a900035e2  server/index.js
  ea20b1ed7f9ae9f9308dae4ba1ad1b77  server/logsources.js
  e5026b02da4360e40962bfbb9e92711f  server/metricsstore.js
- c8e25e711db6a3360d261c3e1cb77a69  server/page_test.js
+ 27887473a7e2030933e3077ba326e59f  server/notebox.js
+ 3b976ef2af0396681ce3828b27b6f9e4  server/page_test.js
  7ef05c08f4cefe0e65f63796034c2d19  server/paths.js
  dacb83c503ccb3481dd9457a569472da  server/pkgmgr.js
- e929b23fd158047fe9d929887af77252  server/relay.js
+ 9319d4b43e6cf864931b5c1fcc071b70  server/relayhubmon.js
+ 92c2befa8df9e3830bbe7ca47a325db0  server/relay.js
  fb9012ba9df0cc4b3019aa83a7b935c1  server/relaymetrics.js
  2b0dd30d8e7ced7bc737ac9188954844  server/relayops.js
  b35ab354d79131cf8ac59986de19b7cb  server/shell.js
  ca94aafcd51b05550242d13cc15a79b2  server/svc.js
  11b59bc9ad3062fd892340d8ff676888  server/util.js
- 1b27b753ad93d88c0e623ecf3c3c0c4c  server/ops/alerting.js
+ faea99a6e468b83d911c434b00ce4910  server/ops/alerting.js
  ce561819e713ad0b1a2e0ee163498e30  server/ops/disk.js
  5dcae9eb247d33c0446d3dc1c0e5ad18  server/ops/exec.js
- c1ce1d594aa5e277b4e08e4953d67854  server/ops/files.js
+ fdaaaab2a4cd9a118ee6bb3b8bc24388  server/ops/files.js
  21e6cfccc144d82e2fb48e4e892e3117  server/ops/hosts.js
- a0f171d819dfa46c398ae392c8be0823  server/ops/index.js
+ 5f30fdc098ab8aff085d514297f3b111  server/ops/index.js
  a9043c58905ad69603b59e554ca48100  server/ops/notify.js
  71d69abb8be7032fe37f9e7ad4435ae2  server/ops/remote.js
  8e79f44b897407a6e2d4a6b5c739fe58  server/ops/secops.js

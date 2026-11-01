@@ -3,7 +3,9 @@ import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.i18n.tr
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,17 +31,25 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.servermaintance.panel.core.ArchiveEntry
 import com.servermaintance.panel.core.AppState
 import com.servermaintance.panel.core.FileEntry
+import com.servermaintance.panel.core.FilePreview
+import com.servermaintance.panel.core.fileKindOf
 import com.servermaintance.panel.core.FileStore
 import com.servermaintance.panel.core.Fmt
+import com.servermaintance.panel.core.Transfer
+import com.servermaintance.panel.core.Transfers
 import com.servermaintance.panel.core.SearchHit
 import com.servermaintance.panel.core.ToastKind
 import com.servermaintance.panel.core.TrashItem
+import com.servermaintance.panel.decodeImageBitmap
 import com.servermaintance.panel.nowEpochMillis
 import com.servermaintance.panel.platformExporter
 import com.servermaintance.panel.pickBinaryFiles
@@ -78,6 +90,7 @@ fun OpsFilesPage() {
     val usage by FileStore.usage.collectAsState()
     val busy by FileStore.busy.collectAsState()
     val unsupported by FileStore.unsupported.collectAsState()
+    val lastError by FileStore.lastError.collectAsState()
 
     var pathInput by remember { mutableStateOf(FileStore.dir.value) }
     var query by remember { mutableStateOf("") }
@@ -150,9 +163,26 @@ fun OpsFilesPage() {
             OpsUnsupported()
             return@PageScaffold
         }
+        /* 传输队列放在目录读取状态之前：正在下载大文件时列表可能正在刷新，
+           进度条不能被 loading 分支挡掉 */
+        TransfersCard()
+
         val l = listing
         if (l == null) {
-            LoadingState(L["读取目录_5bfbf3e6d6"])
+            /* 首次读取失败（比如手输的路径不存在）给出可恢复的错误卡，而不是永远转圈 */
+            val err = lastError
+            if (err != null) {
+                PanelCard(title = L["读取目录_5bfbf3e6d6"], cardKey = "files-loaderr", collapsible = false) {
+                    Text(text = err, color = Palette.bad, fontSize = 12.sp)
+                    Spacer(Modifier.size(8.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        PrimaryBtn(text = L["回到_etc_默认目录_a1b2c3d4e5"], onClick = { go(FileStore.ROOT_DEFAULT) }, icon = "folder")
+                        GhostBtn(text = L["刷新_38108eaa1d"], onClick = { scope.launch { FileStore.refresh() } }, icon = "refresh")
+                    }
+                }
+            } else {
+                LoadingState(L["读取目录_5bfbf3e6d6"])
+            }
             return@PageScaffold
         }
 
@@ -288,9 +318,10 @@ fun OpsFilesPage() {
         }
 
         preview?.let { p -> if (editing == null) {
-            PanelCard(title = trf("预览_0_322425d855", p.path), cardKey = "files-preview", right = {
-                GhostBtn(text = L["关闭_6c14bd7f6f"], onClick = { FileStore.preview.value = null }, icon = "close")
-                if (!p.binary && !p.tooLarge) {
+            val kind = p.kind.ifBlank { fileKindOf(p.path.substringAfterLast('/')) }
+            PanelCard(title = trf("预览_0_322425d855", p.path.substringAfterLast('/')), cardKey = "files-preview", right = {
+                GhostBtn(text = L["关闭_6c14bd7f6f"], onClick = { FileStore.closePreview() }, icon = "close")
+                if (kind == "other" && !p.binary && !p.tooLarge) {
                     GhostBtn(text = L["编辑此文件_17388d0bda"], onClick = {
                         scope.launch {
                             val err = FileStore.startEdit(p.path)
@@ -299,23 +330,25 @@ fun OpsFilesPage() {
                     }, icon = "edit")
                 }
             }) {
-                when {
-                    p.binary -> Text(text = trf("二进制文件_0_不做预览_可下载后用本地编_f52fe7aaa7", Fmt.bytes(p.size)), color = Palette.muted, fontSize = 12.sp)
-                    p.tooLarge -> Text(text = trf("文件_0_超过预览上限_1_请下载或用_62cd65cbf5", Fmt.bytes(p.size), Fmt.bytes(p.limit)), color = Palette.warn, fontSize = 12.sp)
-                    else -> {
-                        Column(
-                            Modifier.fillMaxWidth().height(320.dp).verticalScroll(rememberScrollState())
-                                .background(Palette.codeBlock, RoundedCornerShape(3.dp)).padding(10.dp),
-                        ) {
-                            Text(
-                                text = p.text.take(20000) + if (p.truncated) trf("预览截断_共_0_5ac60ccca7", Fmt.bytes(p.size)) else "",
-                                color = Palette.text,
-                                fontSize = 11.5.sp,
-                                fontFamily = FontFamily.Monospace,
-                            )
-                        }
-                        Text(text = trf("0_1_行_扩展名_2_fca39b9bd8", Fmt.dateTime(p.mtimeMs), p.lines, p.ext.ifBlank { L["无_72077749f7"] }), color = Palette.muted, fontSize = 11.sp)
+                when (kind) {
+                    "image" -> ImagePreviewBody(p)
+                    "archive" -> ArchivePreviewBody(p, scope)
+                    "video", "audio", "pdf" -> {
+                        Text(
+                            text = L["此类型暂不支持在线预览_请下载后查看_01a32bc7d6"],
+                            color = Palette.muted, fontSize = 12.sp,
+                        )
+                        Spacer(Modifier.size(6.dp))
+                        Text(
+                            text = Fmt.bytes(p.size) + " · " + p.mime.ifBlank { p.ext },
+                            color = Palette.muted, fontSize = 11.sp, fontFamily = FontFamily.Monospace,
+                        )
+                        Spacer(Modifier.size(8.dp))
+                        GhostBtn(text = L["下载_2b9d013177"], onClick = {
+                            scope.launch { downloadWithToast(p.path, p.path.substringAfterLast('/')) }
+                        }, icon = "download")
                     }
+                    else -> TextPreviewBody(p)
                 }
             }
         } }
@@ -464,15 +497,7 @@ fun OpsFilesPage() {
                                         }
                                     }, icon = "edit")
                                     GhostBtn(text = L["下载_2b9d013177"], onClick = {
-                                        scope.launch {
-                                            val (bytes, err) = FileStore.download(e.path)
-                                            if (err != null) {
-                                                AppState.toast(err, ToastKind.Err, ms = 7000)
-                                                return@launch
-                                            }
-                                            val saved = platformExporter.saveFile(e.name, bytes ?: ByteArray(0))
-                                            AppState.toast(if (saved == null) tr("已取消保存_1f0e8fda6a") else tr("已保存_saved_36d870566a"), ToastKind.Ok)
-                                        }
+                                        scope.launch { downloadWithToast(e.path, e.name) }
                                     }, icon = "download")
                                     if (e.name.endsWith(".tar.gz") || e.name.endsWith(".tgz") || e.name.endsWith(".zip")) {
                                         GhostBtn(text = L["解压_809c04fbd9"], onClick = {
@@ -513,6 +538,286 @@ fun OpsFilesPage() {
                 color = Palette.muted,
                 fontSize = 11.5.sp,
             )
+        }
+    }
+}
+
+/** 下载并按结果 toast：行内「下载」按钮与预览卡共用（取消不算失败）。 */
+private suspend fun downloadWithToast(path: String, name: String) {
+    val out = FileStore.downloadTo(path, name)
+    downloadOutcomeToast(out)
+}
+
+private fun downloadOutcomeToast(out: com.servermaintance.panel.core.DownloadOutcome) {
+    when {
+        out.cancelled -> AppState.toast(tr("已取消保存_1f0e8fda6a"), ToastKind.Ok)
+        out.error != null -> AppState.toast(out.error!!, ToastKind.Err, ms = 7000)
+        else -> AppState.toast(
+            trf("已保存到_0_1_06aa73d49a", out.path ?: "", Fmt.bytes(out.bytes)),
+            ToastKind.Ok, ms = 6000,
+        )
+    }
+}
+
+/** 文本/二进制/超大文件的预览体（kind=other 的兜底分支）。 */
+@Composable
+private fun TextPreviewBody(p: FilePreview) {
+    when {
+        p.binary -> Text(
+            text = trf("二进制文件_0_不做预览_可下载后用本地编_f52fe7aaa7", Fmt.bytes(p.size)),
+            color = Palette.muted, fontSize = 12.sp,
+        )
+        p.tooLarge -> Text(
+            text = trf("文件_0_超过预览上限_1_请下载或用_62cd65cbf5", Fmt.bytes(p.size), Fmt.bytes(p.limit)),
+            color = Palette.warn, fontSize = 12.sp,
+        )
+        else -> {
+            Column(
+                Modifier.fillMaxWidth().height(320.dp).verticalScroll(rememberScrollState())
+                    .background(Palette.codeBlock, RoundedCornerShape(3.dp)).padding(10.dp),
+            ) {
+                Text(
+                    text = p.text.take(20000) + if (p.truncated) trf("预览截断_共_0_5ac60ccca7", Fmt.bytes(p.size)) else "",
+                    color = Palette.text,
+                    fontSize = 11.5.sp,
+                    fontFamily = FontFamily.Monospace,
+                )
+            }
+            Text(
+                text = trf("0_1_行_扩展名_2_fca39b9bd8", Fmt.dateTime(p.mtimeMs), p.lines, p.ext.ifBlank { L["无_72077749f7"] }),
+                color = Palette.muted, fontSize = 11.sp,
+            )
+        }
+    }
+}
+
+/** 图片预览体：服务端 raw 字节 → decodeImageBitmap。 */
+@Composable
+private fun ImagePreviewBody(p: FilePreview) {
+    val bmpState by FileStore.previewBitmap.collectAsState()
+    val errState by FileStore.previewBitmapError.collectAsState()
+    val bmp = bmpState?.takeIf { it.first == p.path }?.second
+    val err = errState?.takeIf { it.first == p.path }?.second
+    when {
+        bmp != null -> {
+            Box(
+                Modifier.fillMaxWidth().height(320.dp)
+                    .background(Palette.codeBlock, RoundedCornerShape(3.dp)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Image(
+                    bitmap = bmp,
+                    contentDescription = p.path.substringAfterLast('/'),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    contentScale = ContentScale.Fit,
+                )
+            }
+            Text(
+                text = Fmt.bytes(p.size) + " · " + p.mime.ifBlank { p.ext },
+                color = Palette.muted, fontSize = 11.sp,
+            )
+        }
+        err != null -> Text(text = err, color = Palette.bad, fontSize = 12.sp)
+        else -> LoadingState(L["加载中_ce56f617e4"])
+    }
+}
+
+/** 压缩包内部浏览体：清单 + 内部面包屑 + 进入/预览/下载 + 全部解压。 */
+@OptIn(kotlin.io.encoding.ExperimentalEncodingApi::class)
+@Composable
+private fun ArchivePreviewBody(p: FilePreview, scope: kotlinx.coroutines.CoroutineScope) {
+    val listing by FileStore.archive.collectAsState()
+    val prefix by FileStore.archivePrefix.collectAsState()
+    val l = listing
+    if (l == null) {
+        LoadingState(L["加载中_ce56f617e4"])
+        return
+    }
+    var innerImage by remember { mutableStateOf<Pair<String, ImageBitmap>?>(null) }
+
+    /* 内部面包屑 */
+    val segs = prefix.split('/').filter(String::isNotEmpty)
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        GhostBtn(text = p.path.substringAfterLast('/'), onClick = { scope.launch { FileStore.loadArchive(l.path, "") } }, icon = "archive")
+        segs.forEachIndexed { i, seg ->
+            Text(text = "/", color = Palette.muted, fontSize = 12.sp)
+            GhostBtn(text = seg, onClick = { scope.launch { FileStore.loadArchive(l.path, segs.take(i + 1).joinToString("/") + "/") } }, icon = "folder")
+        }
+    }
+    Spacer(Modifier.size(6.dp))
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = trf("共_0_个条目_76e00f027d", l.count) + (if (l.truncated) " · …" else ""),
+            color = Palette.muted, fontSize = 11.sp,
+        )
+        GhostBtn(
+            text = L["全部解压到所在目录_b1826153a5"],
+            onClick = {
+                scope.launch {
+                    if (Modal.confirm(
+                            L["解压_809c04fbd9"],
+                            l.path + "\n" + trf("已解压到_0_51e4ef2361", l.path.substringBeforeLast('/').ifBlank { "/" }),
+                            okText = L["解压_809c04fbd9"],
+                        )
+                    ) {
+                        val err = FileStore.extract(l.path, l.path.substringBeforeLast('/').ifBlank { "/" })
+                        if (err == null) AppState.toast(trf("已解压到_0_51e4ef2361", l.path.substringBeforeLast('/').ifBlank { "/" }), ToastKind.Ok)
+                        else AppState.toast(err, ToastKind.Err, ms = 7000)
+                    }
+                }
+            },
+            icon = "box",
+        )
+    }
+    Spacer(Modifier.size(6.dp))
+
+    /* 只列 prefix 的直接子项（目录在前），与服务端清单的扁平名字对齐 */
+    val dirs = LinkedHashMap<String, Boolean>()
+    val files = mutableListOf<ArchiveEntry>()
+    l.entries.forEach { raw ->
+        var n = raw.name
+        if (n.startsWith("./")) n = n.substring(2)
+        if (prefix.isNotEmpty() && !n.startsWith(prefix)) return@forEach
+        var rest = n.substring(prefix.length)
+        if (rest.startsWith("/")) rest = rest.substring(1)
+        if (rest.isEmpty()) return@forEach
+        val slash = rest.indexOf('/')
+        if (slash >= 0) dirs.putIfAbsent(rest.substring(0, slash + 1), true)
+        else files.add(raw.copy(name = rest))
+    }
+    val rows = dirs.keys.map { ArchiveEntry(it.trimEnd('/'), isDir = true, isLink = false, size = 0, mtimeMs = 0) } + files.sortedBy { it.name }
+
+    if (rows.isEmpty()) {
+        EmptyState(L["空目录_e878e3c87b"], icon = "folder")
+    } else {
+        DataTable(
+            columns = listOf(
+                TableCol<ArchiveEntry>(L["名称_1be7ae4fc2"], weight = 2.4f) { e ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        PanelIcon(if (e.isDir) "folder" else "fileDown", 12.dp, if (e.isDir) Palette.info else Palette.muted)
+                        Spacer(Modifier.size(6.dp))
+                        TableText(e.name + (if (e.isLink) " →" else ""))
+                    }
+                },
+                TableCol<ArchiveEntry>(L["大小_fd20702c73"], weight = 0.9f, align = TextAlign.End, mono = true) { e ->
+                    TableText(if (e.isDir) "—" else Fmt.bytes(e.size), textAlign = TextAlign.End, mono = true)
+                },
+                TableCol<ArchiveEntry>(L["操作_f3ea6d345e"], weight = 1.6f) { e ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        if (e.isDir) {
+                            GhostBtn(text = L["进入_0e25578e8f"], onClick = {
+                                scope.launch { FileStore.loadArchive(l.path, prefix + e.name + "/") }
+                            }, icon = "chevronRight")
+                        } else {
+                            GhostBtn(text = L["预览_de61aa8e1c"], onClick = {
+                                scope.launch {
+                                    val entry = prefix + e.name
+                                    val isImage = fileKindOf(e.name) == "image"
+                                    val ep = FileStore.previewArchiveEntry(l.path, entry, wantB64 = isImage) ?: return@launch
+                                    when {
+                                        isImage && ep.base64.isNotBlank() -> {
+                                            val bmp = runCatching { decodeImageBitmap(kotlin.io.encoding.Base64.decode(ep.base64)) }.getOrNull()
+                                            if (bmp != null) innerImage = entry to bmp
+                                            else AppState.toast(L["图片解码失败_c30b2ee789"], ToastKind.Warn, ms = 7000)
+                                        }
+                                        ep.binary -> Modal.output(
+                                            trf("预览_0_322425d855", entry),
+                                            trf("二进制文件_0_不做预览_可下载后用本地编_f52fe7aaa7", Fmt.bytes(ep.size)),
+                                        )
+                                        else -> Modal.output(
+                                            trf("预览_0_322425d855", entry),
+                                            ep.text.take(20000) + if (ep.truncated) "\n…" + trf("预览截断_共_0_5ac60ccca7", Fmt.bytes(ep.size)) else "",
+                                        )
+                                    }
+                                }
+                            }, icon = "eye")
+                            GhostBtn(text = L["下载_2b9d013177"], onClick = {
+                                scope.launch {
+                                    downloadOutcomeToast(FileStore.archiveDownloadTo(l.path, prefix + e.name))
+                                }
+                            }, icon = "download")
+                        }
+                    }
+                },
+            ),
+            rows = rows,
+            rowKey = { prefix + it.name },
+            maxRows = 200,
+        )
+    }
+
+    innerImage?.let { (name, bmp) ->
+        Spacer(Modifier.size(8.dp))
+        Text(text = name, color = Palette.muted, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        Box(
+            Modifier.fillMaxWidth().height(260.dp)
+                .background(Palette.codeBlock, RoundedCornerShape(3.dp)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(
+                bitmap = bmp,
+                contentDescription = name,
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                contentScale = ContentScale.Fit,
+            )
+        }
+    }
+}
+
+/**
+ * 传输队列。进度来自 Ktor 的 onDownload/onUpload（报的是真正进出 socket 的字节），
+ * 不是客户端按块自己累加——后者在压缩与分块下会偏。
+ * 未知总长时不画假进度条，只报已传字节。
+ */
+@Composable
+private fun TransfersCard() {    val items = Transfers.items
+    if (items.isEmpty()) return
+    PanelCard(
+        title = L["传输_14b6b3a266"],
+        cardKey = "files-transfers",
+        collapsible = false,
+        right = {
+            if (items.any { it.finished }) {
+                GhostBtn(text = L["清除已完成_de4ca16286"], icon = "close", onClick = { Transfers.clearFinished() })
+            }
+        },
+    ) {
+        items.forEach { t ->
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = t.name,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Palette.text,
+                )
+                Text(
+                    text = Fmt.bytes(t.sent) +
+                        (if (t.total > 0L) " / " + Fmt.bytes(t.total) else L["大小未知_4cdd9c30fc"]) +
+                        " · " + (if (t.kind == Transfer.Kind.Download) L["下载_2b9d013177"] else L["上传_a977650db1"]),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Palette.muted,
+                )
+            }
+            Spacer(Modifier.height(4.dp))
+            when {
+                t.error != null -> Text(
+                    text = t.error!!, color = Palette.bad, style = MaterialTheme.typography.labelSmall,
+                )
+                t.done -> Text(
+                    text = trf("已完成_0_b30b29b63b", t.path ?: ""),
+                    color = Palette.ok,
+                    style = MaterialTheme.typography.labelSmall,
+                )
+                else -> LinearProgressIndicator(
+                    progress = { t.fraction },
+                    modifier = Modifier.fillMaxWidth().height(5.dp),
+                )
+            }
+            Spacer(Modifier.height(10.dp))
         }
     }
 }

@@ -8,12 +8,12 @@
 - **原生控件，禁止 WebView 包装**（不得用 WebView 嵌套网页替代）。图表用 Canvas 手绘，终端用自研 ANSI 终端控件。
 - 必须能 **配置服务器连接地址**（默认 `http://8.153.153.176/panel`，可改）。
 - **所有功能都要有，一个不能少** —— 哪怕页面只是读取展示，也要复刻。
-- 目标平台：**Android + Desktop (JVM)**（用户已确认，不做 iOS/Wasm）。
+- 目标平台：**Android + Desktop (JVM) + iOS**（iOS 于 2026-10-26 由用户追加确认加入；
+  **iOS 只能在 macOS 上编译**，日常开发机是 Windows；仍不做 Wasm/JS）。
 
 ## 服务器访问（调研/测试角色用）
 
 - 面板：`http://8.153.153.176/panel`，API 在 `http://8.153.153.176/panel/api`
-- 面板访问密码（登录接口）：`Ladridibiciclette!`
 - SSH：`root@8.153.153.176`，**服务器禁用了密码登录（only publickey）**，必须用本机已有的密钥：
   `ssh -i "$env:USERPROFILE\.ssh\oc_relay_ed25519" root@8.153.153.176`
 - 现成辅助脚本（都在 `tools/`，用 `python tools\xxx.py` 调用）：
@@ -137,7 +137,7 @@ ServerMaintance/
 | 角色 | 昵称 | 承担成员 | 职责 |
 |---|---|---|---|
 | 调研 | **探针** | `research` | API 契约、每页字段级文档、`docs/api/**`、功能矩阵、连服务器核实事实 |
-| 工具安装 | **扳手** | `tooling` | Gradle/版本目录/wrapper/`build.ps1`、双平台构建链路、依赖落表 |
+| 工具安装 | **扳手** | `tooling` | Gradle/版本目录/wrapper/`build.ps1`、三平台构建链路（iOS 的 klib 检查用 `tests/ios-gate.ps1`，打包仅 macOS）、依赖落表 |
 | 代码编写 | **匠人** | `ui-core`（共享控件）、`shell`（外壳+导航+数据库页）、`pages-monitor`、`pages-relay` | 按 `UI-CONTRACT` 实现 `ui/**`、`nav/**`、`screens/**`、`pages/**` |
 | 测试 | **关隘** | `testing` | API 契约测试、构建门禁、**功能对账 `tests/parity.md`**、真实服务器冒烟 |
 | 文档输出 | **书记官** | `pages-relay`（兼） | `README.md`、`docs/guide/**`、功能→实现位置对照 |

@@ -6,7 +6,8 @@ import paramiko
 HOST = os.environ.get("SM_HOST", "8.153.153.176")
 PORT = int(os.environ.get("SM_PORT", "22"))
 USER = os.environ.get("SM_USER", "root")
-PASS = os.environ.get("SM_PASS", "Ladridibiciclette!")
+PASS = os.environ.get("SM_PASS", "")
+
 KEY = os.environ.get("SM_KEY", os.path.expanduser("~/.ssh/oc_relay_ed25519"))
 
 def run(cmd, timeout=180):
@@ -17,6 +18,8 @@ def run(cmd, timeout=180):
                   timeout=25, banner_timeout=25, auth_timeout=25,
                   look_for_keys=False, allow_agent=False)
     except paramiko.ssh_exception.SSHException:
+        if not PASS:
+            raise SystemExit("密钥登录失败且未设置 SM_PASS：口令只从环境变量给，不留默认值")
         c.connect(HOST, port=PORT, username=USER, password=PASS,
                   timeout=25, banner_timeout=25, auth_timeout=25,
                   look_for_keys=False, allow_agent=False)

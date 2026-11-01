@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenCode relay disk hygiene (logs, journal, database, backups)
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/relay/disk_hygiene.sh
+Nice=15
+IOSchedulingClass=idle

@@ -24,6 +24,13 @@
 
   /* ---------------- helpers ---------------- */
 
+  function nbPath(path) {
+    if (!path || path[0] !== "/") return path;
+    const meta = document.querySelector('meta[name="notebox-base"]');
+    const base = meta ? String(meta.getAttribute("content") || "").replace(/\/$/, "") : "";
+    return base + path;
+  }
+
   async function api(path, opts = {}) {
     const init = Object.assign({ credentials: "same-origin" }, opts);
     init.headers = Object.assign({}, init.headers);
@@ -35,7 +42,7 @@
     } else if (typeof init.body === "string") {
       init.headers["Content-Type"] = "application/json";
     }
-    const res = await fetch(path, init);
+    const res = await fetch(nbPath(path), init);
     const ct = res.headers.get("content-type") || "";
     const data = ct.includes("application/json") ? await res.json() : null;
     if (res.status === 401 && path !== "/api/login") {

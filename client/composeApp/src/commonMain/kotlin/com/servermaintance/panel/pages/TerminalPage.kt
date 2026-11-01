@@ -67,6 +67,7 @@ import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
+import kotlin.random.Random
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -88,7 +89,7 @@ private fun randomSessionClientId(): String {
     val hex = "0123456789abcdef"
     return buildString {
         append('t')
-        repeat(31) { append(hex[(Math.random() * 16).toInt()]) }
+        repeat(31) { append(hex[Random.nextInt(16)]) }
     }
 }
 

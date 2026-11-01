@@ -9,6 +9,7 @@
     ['overview', '概览'], ['traffic', '流量分析'], ['quality', '质量分析'],
     ['hitrate', '套餐命中率'], ['tokenhit', 'Token 命中率'],
     ['clients', '客户端与会话'], ['tokens', 'Token'], ['keys', '密钥池'],
+    ['distkeys', '分发 Key'], ['policy', '忙时 / 闲时'],
   ];
   const REFRESH_MS = 10000;
   /* 命中率类页签走实时刷新：主定时器按 1 秒滴答，各页签按自己的节奏拉取 */
@@ -47,14 +48,16 @@
   });
 
   const FETCH = {
+    policy: ['busy-hours'],
     overview: ['summary', 'health', 'selfheal', 'quota', 'providers', 'hourly', 'daily'],
     traffic: ['summary', 'hourly', 'daily', 'models', 'models-daily', 'status', 'routes', 'endpoints', 'methods'],
     quality: ['summary', 'latency', 'ttfb', 'streaming', 'sizes', 'failover', 'errors', 'model-status', 'weekday'],
     hitrate: [],
     tokenhit: [],
-    clients: ['sessions', 'session-memory', 'useragents', 'recent', 'summary'],
+    clients: ['sessions', 'session-memory', 'useragents', 'recent', 'summary', 'clients-usage?days=7'],
     tokens: [],
     keys: ['providers'],
+    distkeys: ['client-keys'],
   };
 
   async function load(names) {
@@ -95,6 +98,8 @@
       else if (S.tab === 'clients') S.upd[S.tab] = tabClients(box, d);
       else if (S.tab === 'tokens') S.upd[S.tab] = tabTokens(box, d);
       else if (S.tab === 'keys') S.upd[S.tab] = await tabKeys(box, d);
+      else if (S.tab === 'distkeys') S.upd[S.tab] = tabDistKeys(box, d);
+      else if (S.tab === 'policy') S.upd[S.tab] = tabPolicy(box, d);
       /* 首次填充：用刚拉到的数据执行一次原地更新 */
       if (S.upd[S.tab]) await S.upd[S.tab](d);
     } catch (e) {
@@ -495,7 +500,8 @@
       '</div>' +
       section('Top 会话', '<div id="rl-c-top"></div>') +
       section('会话上下文明细（内存视图）', '<div id="rl-c-mem"></div>') +
-      section('客户端软件构成', '<div id="rl-c-ua"></div>') +
+      section('客户端用量（Token · 按来源区分） <span class="muted small">客户端 = 分发 Key + 来源 IP + User-Agent；改标签用 /api/device-label</span>', '<div id="rl-c-usage"></div>') +
+            section('客户端软件构成', '<div id="rl-c-ua"></div>') +
       section('实时活动（最近请求）', '<div id="rl-c-recent"></div>');
 
     const R = {};
@@ -532,6 +538,27 @@
         ['cache_read', '缓存读', 'num'], ['max_ctx', '最大上下文', 'num'], ['_chr', '均上下文', 'num'], ['latest_context', '最近上下文', 'num'],
         ['_cache', '缓存命中', 'num'], ['archived_turns', '已归档', 'num'], ['max_msgs', '最大消息', 'num'],
       ], smRows, 'max-height:32vh'), sigOf(sm.sessions));
+      const cu = nd['clients-usage?days=7'] || {};
+      const cuRows = (cu.clients || []).map((c) => Object.assign({}, c, {
+        _client: (c.label ? c.label : '') || c.ip,
+        _ip: c.ip,
+        _ua: c.ua_family,
+        _in: num(c.input_tokens), _out: num(c.output_tokens),
+        _cache: num(c.cache_tokens), _total: num(c.total_tokens),
+        _share: pct1(c.token_share),
+        _first: tm(c.first_seen), _last: tm(c.last_seen),
+        _models: String(c.model_list || '').split(',').slice(0, 3).join(','),
+        _unknown: c.ip === '(unknown)',
+      }));
+      slot(box, 'rl-c-usage', T([
+        ['_client', '客户端', 'mono', (v, r) => (r._unknown ? '<span class="muted">' + fmt.esc(v) + '（旧数据无身份）</span>' : fmt.esc(v))],
+        ['_ip', '来源 IP', 'mono small', (v, r) => r._unknown ? '' : fmt.esc(v)],
+        ['_ua', 'UA 族', 'mono'], ['requests', '请求', 'num'], ['ok', '成功', 'num'],
+        ['_in', '输入Token', 'num'], ['_out', '输出Token', 'num'], ['_cache', '缓存Token', 'num'],
+        ['_total', '总Token', 'num'], ['_share', '占比', 'num'],
+        ['sessions', '会话', 'num'], ['active_days', '活跃天', 'num'],
+        ['_models', '模型', 'mono small', (v) => fmt.esc(v)], ['_first', '首次'], ['_last', '最近'],
+      ], cuRows, 'max-height:36vh'), sigOf(cu.clients));
       slot(box, 'rl-c-ua', T([
         ['family', 'UA 族', 'mono'], ['requests', '请求', 'num'], ['bytes_out', '出站', 'num', (v) => fmt.bytes(v)], ['bytes_in', '入站', 'num', (v) => fmt.bytes(v)],
         ['sessions', '会话', 'num'], ['clients', '客户端', 'num'], ['_sr', '成功率', 'num'], ['_samples', '样本', 'mono small', (v) => fmt.esc(v)], ['_last', '最近'],
@@ -712,6 +739,168 @@
       }));
     };
 
+    return paint;
+  }
+
+  /* ============ 6b. 分发 Key（发给客户端的内部 key） ============ */
+  /* 客户端只持有这一类 key：官方 key 由中继在请求途中替换，从不出服务器。
+     时/周/月上限按 key 统计，数据就是 tap 自己写的用量表（usage_events），
+     所以「用了多少」与「拦不拦」是同一个口径。停用在名单重新下发后生效；
+     上限调整则是下一个请求就咬。 */
+  const DK_W = ['hour', 'week', 'month'];
+  const DK_LABEL = { hour: '近 1 小时', week: '本周', month: '本月' };
+  const DK_HINT = { hour: '滚动窗口', week: '周一 00:00 重置', month: '1 号 00:00 重置' };
+  const DK_DEFAULT = { hour: 20000000, week: 200000000, month: 600000000 };
+
+  function dkBar(win, key) {
+    if (!win) return '';
+    const label = '<span>' + DK_LABEL[key] + '</span>';
+    if (!win.limit) {
+      return '<div class="rl-win">' + label +
+        '<div class="bar"><div style="width:0"></div></div><span class="muted">不限</span></div>';
+    }
+    const used = Number(win.used || 0), pct = Math.min(100, Math.round((used / win.limit) * 100));
+    const cls = pct >= 90 ? 'bad' : pct >= 70 ? 'warn' : 'ok';
+    return '<div class="rl-win">' + label +
+      '<div class="bar ' + cls + '"><div style="width:' + pct + '%"></div></div>' +
+      '<span class="mono">' + num(used) + ' / ' + num(win.limit) + (win.over ? ' 已超' : '') + '</span></div>';
+  }
+
+  function dkQuotaFields(rec) {
+    const q = (rec && rec.quota) || {};
+    return DK_W.map((w) => ({
+      name: w,
+      label: DK_LABEL[w] + '上限（token，0=不限 · ' + DK_HINT[w] + '）',
+      value: String(q[w] != null ? q[w] : (DK_DEFAULT[w] || '')),
+      mono: true,
+    }));
+  }
+  const dkParse = (o) => {
+    const quota = {};
+    DK_W.forEach((w) => {
+      const v = parseInt(String((o[w] || '0').replace(/[, ]/g, '')), 10);
+      quota[w] = isNaN(v) || v < 0 ? 0 : v;
+    });
+    return quota;
+  };
+
+  async function createDistKey() {
+    const r = await modal.prompt('新建分发 Key —— 给谁用', [
+      { name: 'label', label: '用途 / 使用人', placeholder: '例：张三的笔记本' },
+    ].concat(dkQuotaFields(null), [{ name: 'note', label: '备注', placeholder: '可选' }]), { okText: '生成' });
+    if (!r || !String(r.label || '').trim()) return;
+    try {
+      const out = await CM.api.post('/relay/action', {
+        name: 'client-keys/create',
+        payload: { label: r.label, note: r.note, quota: dkParse(r) },
+      });
+      modal.output('这枚 key 只显示这一次，请立刻复制分发', out.key);
+      window.toast(out.detail, out.applied ? 'ok' : 'err');
+      refreshNow();
+    } catch (e) { window.toast(e.message, 'err'); }
+  }
+
+  async function editDistKey(rec) {
+    const r = await modal.prompt('调整额度 - ' + (rec.label || rec.id),
+      [{ name: 'label', label: '用途 / 使用人', value: rec.label || '' }]
+        .concat(dkQuotaFields(rec), [{ name: 'note', label: '备注', value: rec.note || '' }]),
+      { okText: '保存' });
+    if (!r) return;
+    await dkAct('client-keys/update', { id: rec.id, label: r.label, note: r.note, quota: dkParse(r) });
+  }
+
+  /* 列表里只有掩码；错过一次性弹窗时靠这个把完整 key 取回来（面板审计会记下这次读取）。 */
+  async function dkCopy(rec, btn) {
+    if (btn) ui.busy(btn, true);
+    try {
+      const out = await CM.api.post('/relay/action', { name: 'client-keys/reveal', payload: { id: rec.id } });
+      if (await ui.copy(out.key || '')) window.toast('完整 key 已复制到剪贴板', 'ok');
+      else modal.output('这枚 key 的完整值（浏览器不让脚本复制，请手动选中）', out.key || '');
+    } catch (e) { window.toast(e.message, 'err'); }
+    if (btn) ui.busy(btn, false);
+  }
+
+  async function dkAct(name, payload, btn) {
+    if (name === 'client-keys/delete') {
+      const okc = await modal.confirm('删除 key',
+        '删除后这枚 key 立刻不可用，且无法恢复（历史用量仍保留）。确认删除？',
+        { danger: true, okText: '删除' });
+      if (!okc) return;
+    }
+    if (btn) ui.busy(btn, true);
+    try {
+      const out = await CM.api.post('/relay/action', { name, payload });
+      window.toast(out.detail, out.applied === false ? 'err' : 'ok');
+      refreshNow();
+    } catch (e) { window.toast(e.message, 'err'); }
+    if (btn) ui.busy(btn, false);
+  }
+
+  function tabDistKeys(box, d) {
+    box.innerHTML = '<div id="rl-dk"></div>';
+    const host = box.querySelector('#rl-dk');
+    const paint = (dd) => {
+      const data = (dd || {})['client-keys'] || dd || {};
+      if (data.error) { host.innerHTML = '<div class="card"><div class="muted small">' + fmt.esc(data.error) + '</div></div>'; host.dataset.sig = ''; return; }
+      const keys = data.keys || [];
+      /* 这页每 10 秒被定时器重画一次。整块 innerHTML 重建会把按钮换成新节点，
+         正在点的那一下就会落在游离节点上（表现为"点了没反应"），选中状态也会丢。
+         签名只取真正显示出来的字段：windows.<w>.since 是滚动窗口的起点，每次拉取都不同，
+         把它算进去等于永远重建。 */
+      const sig = sigOf(keys.map((k) => [k.id, k.label, k.note, k.masked, k.enabled, k.internal,
+        k.quota, k.created_at,
+        DK_W.map((w) => { const e = (k.windows || {})[w] || {}; return [e.limit, e.used, !!e.over]; })]));
+      if (host.dataset.sig === sig) return;
+      host.dataset.sig = sig;
+      const enabled = keys.filter((k) => k.enabled).length;
+      const totals = data.totals || {};
+      host.innerHTML =
+        '<div class="grid g4 mb">' +
+        stat('启用中', enabled + ' / ' + keys.length, '客户端持有的内部 key') +
+        DK_W.map((w) => stat(DK_LABEL[w] + '已用', num((totals[w] || {}).used || 0),
+          (totals[w] || {}).limit ? '上限合计 ' + num(totals[w].limit) : '均未设上限')).join('') +
+        '</div>' +
+        '<div class="card mb"><div class="card-title">分发 Key' +
+        '<div class="right"><button class="btn btn-sm" id="dk-apply">' + icon('refresh', { size: 12 }) + ' 重新下发名单</button>' +
+        '<button class="btn btn-sm btn-ok" id="dk-new">' + icon('plus', { size: 12 }) + ' 新建 key</button></div></div>' +
+        '<div class="muted small" style="padding:0 16px 10px">客户端把 <code>OPENCODE_RELAY_KEY</code> 填成这里的 key 即可；' +
+        '官方 key 由中继替换，不落客户端。额度口径：时=滚动 1 小时，周=本自然周（周一起），月=本自然月（1 号起），0 为不限。' +
+        '名单文件 <span class="mono">' + fmt.esc(data.store || '') + '</span>，仓库更新 ' + tmFull(data.updated_at) + '。</div>' +
+        '<div id="dk-list"></div></div>';
+      const list = host.querySelector('#dk-list');
+      list.innerHTML = keys.length ? keys.map((k) => {
+        const over = DK_W.filter((w) => (k.windows || {})[w] && (k.windows || {})[w].over);
+        return '<div class="rl-key">' +
+          '<div class="rl-key-head"><span class="mono">' + fmt.esc(k.masked) + '</span>' +
+          '<b>' + fmt.esc(k.label || '（未命名）') + '</b>' +
+          (k.enabled ? '<span class="badge ok">启用</span>' : '<span class="badge gray">已停用</span>') +
+          (k.internal ? '<span class="badge info">主令牌 · 不受额度限制</span>' : '') +
+          (over.length ? '<span class="badge bad">' + over.map((w) => DK_LABEL[w]).join('/') + '超额</span>' : '') +
+          '<span class="chip">' + fmt.esc(k.id) + '</span>' +
+          (k.note ? '<span class="muted small">' + fmt.esc(k.note) + '</span>' : '') + '</div>' +
+          '<div class="rl-wins">' + DK_W.map((w) => dkBar((k.windows || {})[w], w)).join('') + '</div>' +
+          '<div class="row" style="gap:6px">' +
+          (k.internal ? '' :
+            '<button class="btn btn-sm" data-dk="copy" data-id="' + fmt.esc(k.id) + '">' + icon('copy', { size: 12 }) + ' 复制完整 key</button>' +
+            '<button class="btn btn-sm" data-dk="edit" data-id="' + fmt.esc(k.id) + '">改额度 / 标签</button>' +
+            '<button class="btn btn-sm" data-dk="toggle" data-id="' + fmt.esc(k.id) + '" data-en="' + (!k.enabled) + '">' + (k.enabled ? '停用' : '启用') + '</button>' +
+            '<button class="btn btn-sm btn-danger" data-dk="delete" data-id="' + fmt.esc(k.id) + '">删除</button>') +
+          '<span style="flex:1"></span><span class="muted small">创建于 ' + tmFull(k.created_at) + '</span></div>' +
+          '</div>';
+      }).join('') : '<div class="muted small" style="padding:12px">还没有分发 key，点右上「新建 key」生成第一枚。</div>';
+
+      host.querySelector('#dk-new').onclick = createDistKey;
+      host.querySelector('#dk-apply').onclick = () => dkAct('client-keys/apply', {});
+      list.querySelectorAll('[data-dk]').forEach((b) => {
+        const rec = keys.find((x) => x.id === b.dataset.id) || {};
+        b.onclick = () => {
+          if (b.dataset.dk === 'copy') dkCopy(rec, b);
+          else if (b.dataset.dk === 'edit') editDistKey(rec);
+          else if (b.dataset.dk === 'toggle') dkAct('client-keys/enable', { id: rec.id, enabled: b.dataset.en === 'true' }, b);
+          else dkAct('client-keys/delete', { id: rec.id }, b);
+        };
+      });
+    };
     return paint;
   }
 
@@ -1016,4 +1205,193 @@
   function refreshNow() {
     render();
   }
+/* ============ 9. policy（忙时 / 闲时改写） ============
+   编辑器只改配置文件；改不改写由请求路径上的 tap 决定。判定不在客户端复刻第二份：
+   现在是什么相位、试算某时刻会不会改写，都交给 GET /relay/busy-hours（服务端调 tap 本人的函数）。 */
+function tabPolicy(box, d) {
+  d = (d && (d['busy-hours'] || d)) || {};
+  if (d['busy-hours']) d = d['busy-hours'];
+  box.innerHTML =
+    '<div id="pl-phase" class="mb"></div>' +
+    '<div class="grid g2 mb">' +
+      section('策略状态', '<div id="pl-state"></div>') +
+      section('试算（选一个时刻看会不会改写）',
+        '<div style="display:flex;gap:8px;align-items:center;padding:0 16px 12px">' +
+        '<input class="inp mono" id="pl-at" style="width:200px" placeholder="HH:MM 或 YYYY-MM-DD HH:MM">' +
+        '<button class="btn btn-sm btn-primary" id="pl-probe">试算</button></div>' +
+        '<div id="pl-probe-out"></div>') +
+    '</div>' +
+    '<div class="card mb">' +
+      '<div class="card-title">忙时改写（deepseek 容量退化的时段）' +
+        '<div class="right"><button class="btn btn-sm btn-primary" id="pl-busy-save">保存忙时</button></div>' +
+      '</div>' +
+      '<div id="pl-busy-form" style="padding:4px 16px 12px"></div>' +
+    '</div>' +
+    '<div class="card mb">' +
+      '<div class="card-title">闲时改写（其余全部时间 · 全部模型 → 目标模型）' +
+        '<div class="right"><button class="btn btn-sm btn-primary" id="pl-idle-save">保存闲时</button></div>' +
+      '</div>' +
+      '<div id="pl-idle-form" style="padding:4px 16px 12px"></div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="card-title">策略文件与执行' +
+        '<div class="right">' +
+          '<button class="btn btn-sm" id="pl-refresh">刷新</button>' +
+          '<button class="btn btn-sm btn-danger" id="pl-switch">临时停用</button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="pl-meta" class="small muted" style="padding:0 16px 12px"></div>' +
+    '</div>';
+
+  const cfg = d.config || {}, ph = d.phase || {}, probe = d.probe || {}, tap = d.tap || {};
+  const allowed = d.go_allowlist || [];
+  const routes = d.policy_routes || ['go', 'zen', 'glm', 'mimo'];
+  const sel = (name, value, options) =>
+    `<select class="inp" data-f="${name}">${options.map((o) => `<option value="${fmt.esc(o)}" ${o === value ? 'selected' : ''}>${fmt.esc(o)}</option>`).join('')}</select>`;
+
+  /* ── 相位横幅 ── */
+  const pState = ph.state || 'unknown';
+  const pInEffect = ph.in_effect === true;
+  document.getElementById('pl-phase').innerHTML = `<div class="card" style="border-left:3px solid ${pState === 'busy' ? '#c79209' : pInEffect ? '#2fa84f' : '#5d7089'}">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="badge ${pState === 'busy' ? 'warn' : pInEffect ? 'ok' : ''}" style="font-size:13px">${fmt.esc(ph.label || '未知')}</span>
+      <span class="small muted">${fmt.esc(ph.reason || '')}</span>
+      ${d.at ? `<span class="small muted mono" style="margin-left:auto">${fmt.esc(d.at)}</span>` : ''}
+    </div></div>`;
+
+  /* ── 状态卡 ── */
+  const idleCfg = cfg.idle || {};
+  document.getElementById('pl-state').innerHTML = ui.table([
+    { k: 'k', label: '', cls: 'mono' },
+    { k: 'v', label: '' },
+  ], [
+    { k: '忙时', v: cfg.enabled ? `${(cfg.rewrite_prefixes || []).join('/')} → ${cfg.target_model || '—'}` : '已停用' },
+    { k: '忙时窗口', v: (cfg.windows || []).map((w) => `${w.start}-${w.end}`).join(' · ') || '未配置' },
+    { k: '闲时', v: idleCfg.enabled ? `全部 → ${idleCfg.target_model || '—'}` : '已停用' },
+    { k: '闲时窗口', v: (idleCfg.windows || []).length ? (idleCfg.windows || []).map((w) => `${w.start}-${w.end}`).join(' · ') : '忙时窗口的补集' },
+    { k: '累计改写', v: `${tap.rewrites != null ? tap.rewrites : '—'}（最近：${tap.last_rewrite ? (tap.last_rewrite.from + '→' + tap.last_rewrite.to) : '—'}）` },
+    { k: '执行路径', v: tap.in_request_path ? '流量经过 tap ✓' : 'tap 被旁路（改写不执行）' },
+  ], { hint: false });
+
+  /* ── 试算 ── */
+  document.getElementById('pl-probe-out').innerHTML = probe.model
+    ? `<div class="small" style="padding:0 16px 12px">试算 <b class="mono">${fmt.esc(probe.model)}</b> → <b class="mono">${fmt.esc(probe.would_rewrite_to || '不改写')}</b> <span class="muted">（${fmt.esc(probe.reason || '')}）</span></div>`
+    : '';
+  document.getElementById('pl-probe').onclick = async () => {
+    const at = document.getElementById('pl-at').value.trim();
+    if (!at) { window.toast('请填时刻（HH:MM）', 'warn'); return; }
+    try {
+      const r = await CM.api.get('/relay/busy-hours?at=' + encodeURIComponent(at), 0);
+      const p2 = r.probe || {}, pp = r.phase || {};
+      document.getElementById('pl-probe-out').innerHTML =
+        `<div class="small" style="padding:0 16px 12px">${fmt.esc(r.at || at)}：<span class="badge ${pp.state === 'busy' ? 'warn' : pp.in_effect ? 'ok' : ''}">${fmt.esc(pp.label || '')}</span> 试算 <b class="mono">${fmt.esc((p2.model || '') + ' → ' + (p2.would_rewrite_to || '不改写'))}</b> <span class="muted">${fmt.esc(p2.reason || '')}</span></div>`;
+    } catch (e) { window.toast('试算失败：' + e.message, 'err'); }
+  };
+
+  /* ── 窗口行编辑器 ── */
+  const winRows = (rows, mountId, key) => {
+    const box = document.getElementById(mountId);
+    const draw = () => {
+      box.innerHTML = rows.map((w, i) =>
+        `<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+          <input class="inp mono" style="width:110px" data-w="${key}" data-i="${i}" data-k="start" value="${fmt.esc(w.start)}" placeholder="09:00"> –
+          <input class="inp mono" style="width:110px" data-w="${key}" data-i="${i}" data-k="end" value="${fmt.esc(w.end)}" placeholder="18:00">
+          <button class="btn btn-sm btn-danger" data-wdel="${key}" data-i="${i}">删除</button>
+        </div>`).join('') +
+        `<button class="btn btn-sm" data-wadd="${key}">${icon('plus', { size: 12 })} 添加窗口</button>` +
+        (key === 'idle' ? '<div class="small muted" style="margin-top:6px">留空 = 忙时窗口的补集：晚间、午休、周末与节假日整天都算闲时</div>' : '');
+      box.querySelectorAll('[data-w]').forEach((inp) => {
+        inp.onchange = () => { rows[Number(inp.dataset.i)][inp.dataset.k] = inp.value.trim(); };
+      });
+      box.querySelectorAll('[data-wdel]').forEach((b) => {
+        b.onclick = () => { rows.splice(Number(b.dataset.i), 1); draw(); };
+      });
+      box.querySelectorAll('[data-wadd]').forEach((b) => {
+        b.onclick = () => { rows.push({ start: '', end: '' }); draw(); };
+      });
+    };
+    draw();
+    return rows;
+  };
+  const busyRows = (cfg.windows || []).map((w) => ({ start: w.start, end: w.end }));
+  const idleRows = (idleCfg.windows || []).map((w) => ({ start: w.start, end: w.end }));
+  winRows(busyRows, 'pl-busy-form', 'busy');
+  winRows(idleRows, 'pl-idle-form', 'idle');
+
+  const busyForm = document.getElementById('pl-busy-form');
+  busyForm.insertAdjacentHTML('afterbegin',
+    `<div class="grid g3" style="gap:10px;margin-bottom:10px">
+      <label class="fld">启用${sel('enabled', String(cfg.enabled !== false), ['true', 'false'])}</label>
+      <label class="fld">仅工作日（节假日自动跳过）${sel('weekdays_only', String(cfg.weekdays_only !== false), ['true', 'false'])}</label>
+      <label class="fld">作用线路${sel('route', cfg.route || 'go', routes)}</label>
+      <label class="fld">目标模型${sel('target_model', cfg.target_model || '', allowed)}</label>
+      <label class="fld" style="grid-column:span 2">命中前缀（逗号分隔，模型以这些开头才被改写）<input class="inp mono" data-f="rewrite_prefixes" value="${fmt.esc((cfg.rewrite_prefixes || []).join(','))}"></label>
+    </div>`);
+
+  const idleForm = document.getElementById('pl-idle-form');
+  idleForm.insertAdjacentHTML('afterbegin',
+    `<div class="grid g3" style="gap:10px;margin-bottom:10px">
+      <label class="fld">启用${sel('idle.enabled', String(idleCfg.enabled !== false), ['true', 'false'])}</label>
+      <label class="fld">目标模型${sel('idle.target_model', idleCfg.target_model || '', allowed)}</label>
+      <label class="fld">窗口仅工作日${sel('idle.weekdays_only', String(idleCfg.weekdays_only === true), ['false', 'true'])}</label>
+    </div>`);
+
+  const collect = () => {
+    const get = (name) => {
+      const el = box.querySelector(`[data-f="${name}"]`);
+      return el ? el.value : '';
+    };
+    return {
+      enabled: get('enabled') === 'true',
+      weekdays_only: get('weekdays_only') === 'true',
+      route: get('route'),
+      target_model: get('target_model'),
+      rewrite_prefixes: get('rewrite_prefixes').split(/[\s,，]+/).filter(Boolean),
+      windows: busyRows,
+      idle: {
+        enabled: get('idle.enabled') === 'true',
+        target_model: get('idle.target_model'),
+        weekdays_only: get('idle.weekdays_only') === 'true',
+        windows: idleRows,
+      },
+    };
+  };
+
+  const save = async (which) => {
+    const payload = collect();
+    if (!payload.target_model) { window.toast('请选择忙时目标模型', 'warn'); return; }
+    if (payload.idle.enabled && !payload.idle.target_model) { window.toast('请选择闲时目标模型', 'warn'); return; }
+    const whichTxt = which === 'both' ? '忙时+闲时' : (which === 'busy' ? '忙时' : '闲时');
+    if (!await modal.confirm('保存' + whichTxt + '策略',
+      `写入策略文件并立即生效（tap 按文件变更自动重载）。这会改变生产环境的路由行为：<br>
+       <b>忙时</b>：${(payload.rewrite_prefixes || []).join('/')} → ${payload.target_model}（${payload.windows.map((w) => w.start + '-' + w.end).join('、') || '无窗口'}，${payload.weekdays_only ? '仅工作日' : '每天'}）<br>
+       <b>闲时</b>：${payload.idle.enabled ? '全部 → ' + payload.idle.target_model + '（' + (payload.idle.windows.length ? payload.idle.windows.map((w) => w.start + '-' + w.end).join('、') : '忙时窗口的补集') + '）' : '停用'}`,
+      { okText: '保存并生效', danger: true })) return;
+    try {
+      const out = await CM.api.post('/relay/action', { name: 'busy-hours/save', payload });
+      window.toast(out.detail || '策略已保存并生效', 'ok');
+      refreshNow();
+    } catch (e) { window.toast('保存失败：' + e.message, 'err'); }
+  };
+  document.getElementById('pl-busy-save').onclick = () => save('both');
+  document.getElementById('pl-idle-save').onclick = () => save('both');
+
+  const sw = document.getElementById('pl-switch');
+  sw.textContent = d.switch_off ? '恢复改写' : '临时停用';
+  sw.onclick = async () => {
+    const off = !d.switch_off;
+    if (!await modal.confirm(off ? '临时停用改写' : '恢复改写',
+      off ? '创建停用标记：忙时与闲时改写都暂停（不改配置文件，恢复用同按钮）。' : '删除停用标记，恢复按策略改写。',
+      { danger: off, okText: '确认' })) return;
+    try {
+      const out = await CM.api.post('/relay/action', { name: 'busy-hours/switch', payload: { off } });
+      window.toast(out.detail || '已切换', 'ok');
+      refreshNow();
+    } catch (e) { window.toast('失败：' + e.message, 'err'); }
+  };
+  document.getElementById('pl-refresh').onclick = () => refreshNow();
+  document.getElementById('pl-meta').innerHTML =
+    `配置文件 <span class="mono">${fmt.esc(d.config_path || '')}</span> · 保存自动备份 · 白名单 ${((d.go_allowlist || []).join(' / ')) || '—'}` +
+    (d.config_file_invalid ? ' · <span style="color:#c79209">策略文件上次解析失败，tap 沿用上一次成功读取的内容</span>' : '');
+}
 })();

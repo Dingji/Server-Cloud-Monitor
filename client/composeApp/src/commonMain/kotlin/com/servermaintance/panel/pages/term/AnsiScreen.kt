@@ -149,7 +149,7 @@ class AnsiScreen(
         val n = text.length
         while (i < n) {
             val ch = text[i]
-            val cp = text.codePointAt(i)
+            val cp = utf16CodePointAt(text, i)
             val wide = cp > 0xFFFF
             val clen = if (wide) 2 else 1
             i += clen
@@ -253,7 +253,7 @@ class AnsiScreen(
 
     private fun printCp(cp: Int, clen: Int, src: String, next: Int) {
         val glyph = if (clen == 2 && next <= src.length) src.substring(next - clen, next)
-        else String(Character.toChars(cp))
+        else codePointToUtf16(cp)
 
         if (pendingWrap) { pendingWrap = false; cursorCol = 0; lineFeed() }
 
@@ -561,7 +561,7 @@ class AnsiScreen(
 
     private fun repeatLast(n: Int) {
         val g = lastPrinted ?: return
-        val cp = g.codePointAt(0)
+        val cp = utf16CodePointAt(g, 0)
         val clen = if (cp > 0xFFFF) 2 else 1
         repeat(n) { if (cp >= 0x20) printCp(cp, clen, g, clen) }
     }
@@ -621,5 +621,25 @@ class AnsiScreen(
             }
             else -> at + 1
         }
+    }
+}
+
+/** `java.lang.String.codePointAt` 的 common 等价实现（UTF-16 代理对合成码点）。 */
+private fun utf16CodePointAt(s: String, i: Int): Int {
+    val hi = s[i].code
+    if (hi in 0xD800..0xDBFF && i + 1 < s.length) {
+        val lo = s[i + 1].code
+        if (lo in 0xDC00..0xDFFF) return 0x10000 + ((hi - 0xD800) shl 10) + (lo - 0xDC00)
+    }
+    return hi
+}
+
+/** `java.lang.Character.toChars` 的 common 等价实现（码点 → 1 或 2 个 UTF-16 单元）。 */
+private fun codePointToUtf16(cp: Int): String {
+    if (cp < 0x10000) return cp.toChar().toString()
+    val v = cp - 0x10000
+    return buildString(2) {
+        append((0xD800 + (v shr 10)).toChar())
+        append((0xDC00 + (v and 0x3FF)).toChar())
     }
 }

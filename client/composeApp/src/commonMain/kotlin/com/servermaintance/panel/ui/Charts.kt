@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -225,9 +224,10 @@ fun MultiLineChart(
     yMin: Float? = null,
     yMax: Float? = null,
     yFormat: (Float) -> String = { it.toInt().toString() },
+    chartHeight: Dp? = null,
 ) {
     val hasData = series.any { s -> s.second.any { it.isFinite() } }
-    Column(modifier.fillMaxWidth().height(if (platformHandheld) 168.dp else 200.dp)) {
+    Column(modifier.fillMaxWidth().height(chartHeight ?: if (platformHandheld) 168.dp else 200.dp)) {
         if (legend && series.isNotEmpty()) {
             Row(
                 Modifier.fillMaxWidth().padding(bottom = 6.dp)

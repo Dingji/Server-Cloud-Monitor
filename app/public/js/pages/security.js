@@ -6,6 +6,7 @@
     id: 'security',
     title: '安全管理',
     async mount(root) {
+      root.innerHTML = '<div class="grid g4 mb">' + Array(4).fill('<div class="card">' + ui.skeleton(3) + '</div>').join('') + '</div><div class="card">' + ui.skeleton(8) + '</div>';
       const [d, rl] = await Promise.all([
         CM.api.get('/security'),
         CM.api.get('/relayops/ratelimit').catch(() => null),

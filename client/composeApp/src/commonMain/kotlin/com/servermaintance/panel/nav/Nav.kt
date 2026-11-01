@@ -23,17 +23,18 @@ import com.servermaintance.panel.ui.Palette
  * 监控 / 服务器 / 应用 / 工具 / 系统。
  */
 enum class PageId {
-    Dashboard, HealthAlerts, SLO, OpsUptime, OpsRules, OpsChannels, Relay,
+    Dashboard, HealthAlerts, SLO, OpsUptime, OpsRules, OpsChannels, Relay, RelayHub,
     Processes, Disks, Memory, Network, Security, Services, Packages,
-    Databases, Docker, Web, Cron, Backups, Logs, Audit,
+    Databases, Docker, Web, PhpSites, Cron, Backups, Logs, Audit,
     OpsFiles, OpsHosts, OpsSec, OpsDisk, OpsWatch, OpsRemote,
     Notes, Todos, NoteTransfer, NoteMail, NoteSettings, NoteUsers,
-    Terminal, Settings,
+    WinTools, Terminal, Settings,
 }
 
 /**
  * 一条导航项。[section] 为分组标签（同一分组的条目在 NAV 中连续出现）。
- * [optional] 为 true 的条目只有在探测成功后才会显示（目前仅 relay）。
+ * [probe] 非空时是可选模块的探测端点：`GET <probe>` 返回 `ok` 才显示
+ * （目前 relay = `/relay/available`、relayhub = `/relayhub/available`）。
  */
 data class NavEntry(
     val id: PageId,
@@ -41,9 +42,14 @@ data class NavEntry(
     val labelKey: String,
     val icon: String,
     val sectionKey: String,
-    val optional: Boolean = false,
+    /** 可选模块探测端点；null = 常驻项。 */
+    val probe: String? = null,
     /** 仅 NoteBox 管理员可见（用户管理/邮件通知）；非 admin 时隐藏。 */
     val adminOnly: Boolean = false,
+    /** 仅连接 Windows 面板（env.family=windows）时显示。 */
+    val windowsOnly: Boolean = false,
+    /** 仅连接 Linux 面板时显示（Windows .NET 面板没有对应实现）。 */
+    val linuxOnly: Boolean = false,
 )
 
 /** 面板路由用的小写 id，与 app.js 的 `n.id` / `CM.lazyPages` 的 key 一致。 */
@@ -56,6 +62,7 @@ val PageId.route: String
         PageId.OpsRules -> "opsrules"
         PageId.OpsChannels -> "opschannels"
         PageId.Relay -> "relay"
+        PageId.RelayHub -> "relayhub"
         PageId.Processes -> "processes"
         PageId.Disks -> "disks"
         PageId.Memory -> "memory"
@@ -66,6 +73,7 @@ val PageId.route: String
         PageId.Databases -> "databases"
         PageId.Docker -> "docker"
         PageId.Web -> "web"
+        PageId.PhpSites -> "php"
         PageId.Cron -> "cron"
         PageId.Backups -> "backups"
         PageId.Logs -> "logs"
@@ -82,19 +90,22 @@ val PageId.route: String
         PageId.NoteMail -> "notemail"
         PageId.NoteSettings -> "notesettings"
         PageId.NoteUsers -> "noteusers"
+        PageId.WinTools -> "wintools"
         PageId.Terminal -> "terminal"
         PageId.Settings -> "settings"
     }
 
-/** 面板导航（含可选的 relay 项，紧随 dashboard 之后，同 app.js 注释位置）。 */
+/** 面板导航（含可选的 relay 项，紧随 dashboard 之后，同 app.js 注释位置）。
+ *  Linux/Windows 双平台：linuxOnly 条目只在 Linux 面板显示，windowsOnly 反之。 */
 val NAV: List<NavEntry> = listOf(
     NavEntry(PageId.Dashboard, "nav.dashboard", "dashboard", "nav.section.monitor"),
-    NavEntry(PageId.HealthAlerts, "nav.health_alerts", "shieldAlert", "nav.section.monitor"),
-    NavEntry(PageId.SLO, "nav.slo", "gauge", "nav.section.monitor"),
-    NavEntry(PageId.OpsUptime, "nav.ops_uptime", "activity", "nav.section.monitor"),
-    NavEntry(PageId.OpsRules, "nav.ops_rules", "bell", "nav.section.monitor"),
-    NavEntry(PageId.OpsChannels, "nav.ops_channels", "mail", "nav.section.monitor"),
-    NavEntry(PageId.Relay, "nav.relay", "satellite", "nav.section.monitor", optional = true),
+    NavEntry(PageId.HealthAlerts, "nav.health_alerts", "shieldAlert", "nav.section.monitor", linuxOnly = true),
+    NavEntry(PageId.SLO, "nav.slo", "gauge", "nav.section.monitor", linuxOnly = true),
+    NavEntry(PageId.OpsUptime, "nav.ops_uptime", "activity", "nav.section.monitor", linuxOnly = true),
+    NavEntry(PageId.OpsRules, "nav.ops_rules", "bell", "nav.section.monitor", linuxOnly = true),
+    NavEntry(PageId.OpsChannels, "nav.ops_channels", "mail", "nav.section.monitor", linuxOnly = true),
+    NavEntry(PageId.Relay, "nav.relay", "satellite", "nav.section.monitor", probe = "/relay/available"),
+    NavEntry(PageId.RelayHub, "nav.relayhub", "wlan", "nav.section.monitor", probe = "/relayhub/available"),
     NavEntry(PageId.Processes, "nav.processes", "process", "nav.section.server"),
     NavEntry(PageId.Disks, "nav.disks", "disk", "nav.section.server"),
     NavEntry(PageId.Memory, "nav.memory", "memory", "nav.section.server"),
@@ -105,22 +116,24 @@ val NAV: List<NavEntry> = listOf(
     NavEntry(PageId.Databases, "nav.databases", "database", "nav.section.app"),
     NavEntry(PageId.Docker, "nav.docker", "docker", "nav.section.app"),
     NavEntry(PageId.Web, "nav.web", "browser", "nav.section.app"),
+    NavEntry(PageId.PhpSites, "nav.php_sites", "code2", "nav.section.app"),
     NavEntry(PageId.Cron, "nav.cron", "clock", "nav.section.app"),
     NavEntry(PageId.Backups, "nav.backups", "archive", "nav.section.app"),
     NavEntry(PageId.Logs, "nav.logs", "logs", "nav.section.app"),
     NavEntry(PageId.Audit, "nav.audit", "list", "nav.section.app"),
-    NavEntry(PageId.OpsFiles, "nav.ops_files", "folder", "nav.section.server"),
-    NavEntry(PageId.OpsHosts, "nav.ops_hosts", "server", "nav.section.server"),
-    NavEntry(PageId.OpsSec, "nav.ops_sec", "shieldAlert", "nav.section.server"),
-    NavEntry(PageId.OpsDisk, "nav.ops_disk", "disk", "nav.section.server"),
-    NavEntry(PageId.OpsWatch, "nav.ops_watch", "shield", "nav.section.server"),
-    NavEntry(PageId.OpsRemote, "nav.ops_remote", "cloud", "nav.section.server"),
+    NavEntry(PageId.OpsFiles, "nav.ops_files", "folder", "nav.section.server", linuxOnly = true),
+    NavEntry(PageId.OpsHosts, "nav.ops_hosts", "server", "nav.section.server", linuxOnly = true),
+    NavEntry(PageId.OpsSec, "nav.ops_sec", "shieldAlert", "nav.section.server", linuxOnly = true),
+    NavEntry(PageId.OpsDisk, "nav.ops_disk", "disk", "nav.section.server", linuxOnly = true),
+    NavEntry(PageId.OpsWatch, "nav.ops_watch", "shield", "nav.section.server", linuxOnly = true),
+    NavEntry(PageId.OpsRemote, "nav.ops_remote", "cloud", "nav.section.server", linuxOnly = true),
     NavEntry(PageId.Notes, "nav.notes", "note", "nav.section.notes"),
     NavEntry(PageId.Todos, "nav.todos", "checkSquare", "nav.section.notes"),
     NavEntry(PageId.NoteTransfer, "nav.note_transfer", "import", "nav.section.notes"),
     NavEntry(PageId.NoteMail, "nav.note_mail", "mail", "nav.section.notes", adminOnly = true),
     NavEntry(PageId.NoteSettings, "nav.note_settings", "sliders", "nav.section.notes"),
     NavEntry(PageId.NoteUsers, "nav.note_users", "user", "nav.section.notes", adminOnly = true),
+    NavEntry(PageId.WinTools, "nav.wintools", "gear", "nav.section.tools", windowsOnly = true),
     NavEntry(PageId.Terminal, "nav.terminal", "terminal", "nav.section.tools"),
     NavEntry(PageId.Settings, "nav.settings", "sliders", "nav.section.system"),
 )
@@ -147,19 +160,31 @@ fun pageIdOf(route: String?): PageId? =
     NAV.firstOrNull { it.id.route == (route ?: "").trim().lowercase() }?.id
 
 /**
- * 按可选模块探测结果 + NoteBox 角色过滤后的可见导航，顺序与面板一致：
- * relay 探测（`GET /relay/available` → `ok`）成功才插在 dashboard 之后；
- * [isAdmin] 为 false 时隐藏 NoteBox 管理员专属项（用户管理/邮件通知）。
+ * 按可选模块探测结果 + NoteBox 角色 + 服务器平台过滤后的可见导航，顺序与面板一致：
+ * relay / relayhub 等探测项只有 `GET <probe>` 成功（[availableProbes] 含该端点）才插入，
+ * 与面板 `OPTIONAL_NAV` 的 `probe` 语义一致；[isAdmin] 为 false 时隐藏 NoteBox 管理员专属项；
+ * [isWindows] 为 true 时隐藏 Linux 专属页（健康告警/SLO/运维增强 9 页），显示 Windows 工具。
  */
-fun visibleNav(relayAvailable: Boolean, isAdmin: Boolean = true): List<NavEntry> =
-    NAV.filter { (!it.optional || relayAvailable) && (!it.adminOnly || isAdmin) }
+fun visibleNav(availableProbes: Set<String>, isAdmin: Boolean = true, isWindows: Boolean = false): List<NavEntry> =
+    NAV.filter {
+        (it.probe == null || it.probe in availableProbes) &&
+            (!it.adminOnly || isAdmin) &&
+            (!it.linuxOnly || !isWindows) &&
+            (!it.windowsOnly || isWindows)
+    }
 
 /** 按分组整理（只含可见项），侧栏按此顺序渲染分组标题与条目。 */
-fun groupedNav(relayAvailable: Boolean, isAdmin: Boolean = true): List<Pair<String, List<NavEntry>>> =
+fun groupedNav(availableProbes: Set<String>, isAdmin: Boolean = true, isWindows: Boolean = false): List<Pair<String, List<NavEntry>>> =
     NAV_SECTIONS.mapNotNull { sec ->
-        visibleNav(relayAvailable, isAdmin).filter { it.sectionKey == sec }
+        visibleNav(availableProbes, isAdmin, isWindows).filter { it.sectionKey == sec }
             .takeIf { it.isNotEmpty() }?.let { sec to it }
     }
+
+/** 探测端点常量（shell 层探测后汇总成 [availableProbes]）。 */
+object NavProbes {
+    const val RELAY = "/relay/available"
+    const val RELAYHUB = "/relayhub/available"
+}
 
 /**
  * 每个页面的渲染入口 —— pages 角色各自实现 `pages/XxxPage()`，
@@ -175,6 +200,7 @@ fun PageContent(id: PageId) {
         PageId.OpsRules -> OpsRulesPage()
         PageId.OpsChannels -> OpsChannelsPage()
         PageId.Relay -> RelayPage()
+        PageId.RelayHub -> RelayHubPage()
         PageId.Processes -> ProcessesPage()
         PageId.Disks -> DisksPage()
         PageId.Memory -> MemoryPage()
@@ -185,6 +211,7 @@ fun PageContent(id: PageId) {
         PageId.Databases -> DatabasesPage()
         PageId.Docker -> DockerPage()
         PageId.Web -> WebPage()
+        PageId.PhpSites -> PhpSitesPage()
         PageId.Cron -> CronPage()
         PageId.Backups -> BackupsPage()
         PageId.Logs -> LogsPage()
@@ -201,6 +228,7 @@ fun PageContent(id: PageId) {
         PageId.OpsDisk -> OpsDiskPage()
         PageId.OpsWatch -> OpsWatchPage()
         PageId.OpsRemote -> OpsRemotePage()
+        PageId.WinTools -> WinToolsPage()
         PageId.Terminal -> TerminalPage()
         PageId.Settings -> SettingsPage()
     }

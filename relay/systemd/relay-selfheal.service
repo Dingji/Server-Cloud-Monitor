@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenCode relay self-healing watchdog (checks + auto-repair)
+After=network-online.target nginx.service relay-stats.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/relay/selfheal.py
+# The script owns /var/log/relay-selfheal.log; journald keeps the same lines for `journalctl -u`.
+Nice=5

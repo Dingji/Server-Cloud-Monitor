@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenCode relay model catalog (single source of truth for client configs)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/relay/modelcatalog.py
+Environment=PROBE_BUDGET=420
+Nice=10
+IOSchedulingClass=idle

@@ -2,7 +2,12 @@ package com.servermaintance.panel.core
 import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.i18n.trf
 
+import com.servermaintance.panel.platformExporter
+import androidx.compose.ui.graphics.ImageBitmap
+import com.servermaintance.panel.decodeImageBitmap
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -16,6 +21,14 @@ import kotlinx.serialization.json.JsonPrimitive
  */
 
 data class FileCrumb(val label: String, val path: String)
+
+/** 下载结果：error 非空是失败，cancelled 是用户在选择器里取消（不该报错误弹窗）。 */
+data class DownloadOutcome(
+    val error: String? = null,
+    val path: String? = null,
+    val bytes: Long = 0L,
+    val cancelled: Boolean = false,
+)
 
 data class FileEntry(
     val name: String,
@@ -65,6 +78,8 @@ data class FilePreview(
     val ext: String,
     val lines: Int,
     val limit: Long,
+    val kind: String = "",
+    val mime: String = "",
 )
 
 data class TrashItem(val id: String, val original: String, val name: String, val size: Long, val isDir: Boolean, val at: Long)
@@ -72,6 +87,42 @@ data class TrashItem(val id: String, val original: String, val name: String, val
 data class SearchHit(val path: String, val type: String, val size: Long, val mtimeText: String)
 
 data class UsageItem(val path: String, val kb: Long)
+
+/** 压缩包内部条目（/ops/files/archive/list）。 */
+data class ArchiveEntry(val name: String, val isDir: Boolean, val isLink: Boolean, val size: Long, val mtimeMs: Long)
+
+data class ArchiveListing(
+    val path: String,
+    val kind: String,
+    val entries: List<ArchiveEntry>,
+    val count: Int,
+    val truncated: Boolean,
+)
+
+/** 压缩包内条目预览（/ops/files/archive/entry）：文本给 text，图片等二进制在 base64=1 时给 base64。 */
+data class ArchiveEntryPreview(
+    val archive: String,
+    val entry: String,
+    val size: Long,
+    val binary: Boolean,
+    val truncated: Boolean,
+    val text: String,
+    val mime: String,
+    val base64: String,
+)
+
+/** 前端分类型判定（与服务端 kindOf 对齐）：archive/image/video/audio/pdf/other。 */
+fun fileKindOf(name: String): String {
+    val lower = name.lowercase()
+    return when {
+        Regex("\\.(zip|tar|tar\\.gz|tgz|tar\\.bz2|tbz2|tar\\.xz|txz)$").containsMatchIn(lower) -> "archive"
+        Regex("\\.(png|jpe?g|gif|webp|svg|bmp|ico|avif)$").containsMatchIn(lower) -> "image"
+        Regex("\\.(mp4|webm|mov|m4v|mkv|avi)$").containsMatchIn(lower) -> "video"
+        Regex("\\.(mp3|wav|ogg|oga|m4a|flac|aac|opus)$").containsMatchIn(lower) -> "audio"
+        lower.endsWith(".pdf") -> "pdf"
+        else -> "other"
+    }
+}
 
 object FileStore {
 
@@ -82,6 +133,13 @@ object FileStore {
     val listing = MutableStateFlow<FileListing?>(null)
     val preview = MutableStateFlow<FilePreview?>(null)
     val editing = MutableStateFlow<String?>(null)
+    /** 图片类预览的解码结果；path 用于确认展示的是当前预览目标。 */
+    val previewBitmap = MutableStateFlow<Pair<String, ImageBitmap>?>(null)
+    /** 图片解码失败标记（path），用于在预览卡里给可读错误。 */
+    val previewBitmapError = MutableStateFlow<Pair<String, String>?>(null)
+    /** 压缩包内部浏览：清单与当前进入的内部前缀（以 / 结尾；空串=根）。 */
+    val archive = MutableStateFlow<ArchiveListing?>(null)
+    val archivePrefix = MutableStateFlow("")
     val trash = MutableStateFlow<List<TrashItem>>(emptyList())
     val trashDays = MutableStateFlow(30)
     val hits = MutableStateFlow<List<SearchHit>>(emptyList())
@@ -102,7 +160,9 @@ object FileStore {
     )
 
     private fun noteFailure(path: String, e: Exception) {
-        if (e is ApiException && e.code == 404) {
+        /* 只有「路由不存在」（HTML 404，非面板 JSON 错误）才算模块未部署；
+           面板业务 404（如目录不存在）是普通可读错误，不能把整页打成不支持。 */
+        if (e is ApiException && e.code == 404 && !e.fromServer) {
             unsupported.value = true
             lastError.value = null
             return
@@ -118,7 +178,7 @@ object FileStore {
         after?.invoke()
         null
     } catch (e: ApiException) {
-        if (e.code == 404) unsupported.value = true else lastError.value = e.message
+        if (e.code == 404 && !e.fromServer) unsupported.value = true else lastError.value = e.message
         e.message ?: L["操作失败_09e424b5e8"]
     } catch (e: Exception) {
         lastError.value = e.message
@@ -129,7 +189,7 @@ object FileStore {
 
     suspend fun open(target: String = dir.value) {
         dir.value = target
-        preview.value = null
+        closePreview()
         editing.value = null
         try {
             val o = api.get("/ops/files/list?dir=${urlEncode(target)}", 0)
@@ -174,13 +234,99 @@ object FileStore {
                 FilePreview(
                     it.str("path"), it.long("size"), it.long("mtimeMs"), it.bool("binary"), it.bool("tooLarge"),
                     it.bool("truncated"), it.str("text"), it.str("ext"), it.int("lines"), it.long("limit"),
+                    kind = it.str("kind").ifBlank { fileKindOf(path.substringAfterLast('/')) },
+                    mime = it.str("mime"),
                 )
+            }
+            archive.value = null
+            archivePrefix.value = ""
+            previewBitmap.value = null
+            previewBitmapError.value = null
+            when (preview.value?.kind) {
+                "image" -> loadPreviewImage(path)
+                "archive" -> loadArchive(path)
             }
         } catch (e: Exception) {
             preview.value = null
             noteFailure("ops/files/preview", e)
         }
     }
+
+    /** 关闭预览卡时一并清掉压缩包浏览与图片状态。 */
+    fun closePreview() {
+        preview.value = null
+        archive.value = null
+        archivePrefix.value = ""
+        previewBitmap.value = null
+        previewBitmapError.value = null
+    }
+
+    /** 拉取并解码图片类文件（≤20MB 由服务端 maxMB 保证，默认就够）。 */
+    private suspend fun loadPreviewImage(path: String) {
+        try {
+            val bytes = api.download("/ops/files/raw?path=${urlEncode(path)}")
+            val bmp = decodeImageBitmap(bytes)
+            if (bmp != null) previewBitmap.value = path to bmp
+            else previewBitmapError.value = path to L["图片解码失败_c30b2ee789"]
+        } catch (e: Exception) {
+            previewBitmapError.value = path to (e.message ?: L["请求失败_8fdc4112a4"])
+        }
+    }
+
+    /** 读取压缩包内部清单；prefix 以 / 结尾（空串=根）。 */
+    suspend fun loadArchive(path: String, prefix: String = "") {
+        try {
+            val o = api.get("/ops/files/archive/list?path=${urlEncode(path)}", 0)
+            archive.value = ArchiveListing(
+                path = o.str("path").ifBlank { path },
+                kind = o.str("kind"),
+                entries = o.arr("entries").mapNotNull { it as? JsonObject }.map {
+                    ArchiveEntry(it.str("name"), it.bool("isDir"), it.bool("isLink"), it.long("size"), it.long("mtimeMs"))
+                },
+                count = o.int("count"),
+                truncated = o.bool("truncated"),
+            )
+            archivePrefix.value = prefix
+            lastError.value = null
+        } catch (e: Exception) {
+            noteFailure("ops/files/archive/list", e)
+        }
+    }
+
+    /**
+     * 压缩包内条目预览。文本条目返回后由界面展示（Modal.output 或内嵌视图）；
+     * 图片条目在 wantB64 时带 base64，由调用方解码成 ImageBitmap。
+     */
+    suspend fun previewArchiveEntry(archivePath: String, entry: String, wantB64: Boolean): ArchiveEntryPreview? = try {
+        val o = api.get(
+            "/ops/files/archive/entry?path=${urlEncode(archivePath)}&entry=${urlEncode(entry)}" +
+                (if (wantB64) "&base64=1" else ""), 0,
+        )
+        ArchiveEntryPreview(
+            archive = o.str("path").ifBlank { archivePath },
+            entry = entry,
+            size = o.long("size"),
+            binary = o.bool("binary"),
+            truncated = o.bool("truncated"),
+            text = o.str("text"),
+            mime = o.str("mime"),
+            base64 = o.str("base64"),
+        )
+    } catch (e: Exception) {
+        noteFailure("ops/files/archive/entry", e)
+        null
+    }
+
+    /** 流式下载压缩包内条目（与整体下载同一套「另存为 + 进度」链路）。 */
+    suspend fun archiveDownloadTo(archivePath: String, entry: String): DownloadOutcome =
+        downloadToUrl(
+            "/ops/files/archive/download?path=${urlEncode(archivePath)}&entry=${urlEncode(entry)}",
+            entry.substringAfterLast('/').ifBlank { "entry.bin" },
+        )
+
+    /** 拉取字节的通用入口（图片预览用）；失败抛 ApiException，由调用方兜底。 */
+    suspend fun rawBytes(path: String, maxMB: Int = 20): ByteArray =
+        api.download("/ops/files/raw?path=${urlEncode(path)}&maxMB=$maxMB")
 
     suspend fun startEdit(path: String): String? {
         previewFile(path)
@@ -233,26 +379,61 @@ object FileStore {
     suspend fun chown(paths: List<String>, owner: String, recursive: Boolean): String? =
         call("/ops/files/chown", jsonObjectOf("paths" to paths.toJsonArray(), "owner" to owner, "recursive" to recursive)) { refresh() }
 
-    suspend fun upload(name: String, bytes: ByteArray, overwrite: Boolean = false): String? = try {
-        busy.value = true
-        api.postRaw("/ops/files/upload?dir=${urlEncode(dir.value)}&name=${urlEncode(name)}" +
-            (if (overwrite) "&overwrite=1" else ""), bytes)
-        lastError.value = null
-        refresh()
-        null
-    } catch (e: ApiException) {
-        if (e.code == 404) unsupported.value = true else lastError.value = e.message
-        e.message ?: L["上传失败_a6f805694b"]
-    } catch (e: Exception) {
-        e.message ?: L["上传失败_a6f805694b"]
-    } finally { busy.value = false }
+    suspend fun upload(name: String, bytes: ByteArray, overwrite: Boolean = false): String? {
+        val t = Transfers.start(Transfer.Kind.Upload, name, bytes.size.toLong())
+        return try {
+            busy.value = true
+            api.postRaw(
+                "/ops/files/upload?dir=${urlEncode(dir.value)}&name=${urlEncode(name)}" +
+                    (if (overwrite) "&overwrite=1" else ""), bytes,
+            ) { sent, total ->
+                if (total > 0L) t.total = total
+                Transfers.progress(t, sent)
+            }
+            lastError.value = null
+            Transfers.succeed(t, dir.value.trimEnd('/') + "/" + name)
+            refresh()
+            null
+        } catch (e: ApiException) {
+            Transfers.fail(t, e.message)
+            if (e.code == 404 && !e.fromServer) unsupported.value = true else lastError.value = e.message
+            e.message ?: L["上传失败_a6f805694b"]
+        } catch (e: Exception) {
+            Transfers.fail(t, e.message)
+            e.message ?: L["上传失败_a6f805694b"]
+        } finally {
+            busy.value = false
+        }
+    }
 
-    suspend fun download(path: String): Pair<ByteArray?, String?> = try {
-        api.download("/ops/files/download?path=${urlEncode(path)}") to null
-    } catch (e: ApiException) {
-        null to (e.message ?: L["下载失败_e0dab22b1a"])
-    } catch (e: Exception) {
-        null to (e.message ?: L["下载失败_e0dab22b1a"])
+    /**
+     * 流式下载：先弹系统「另存为」让用户挑地方，再分块写盘。
+     * 旧实现是 bodyAsBytes 一次读进内存 —— 86MB 的包在手机上就是这么失败的。
+     */
+    suspend fun downloadTo(path: String, name: String): DownloadOutcome =
+        downloadToUrl("/ops/files/download?path=${urlEncode(path)}", name)
+
+    /** 下载的通用实现：urlPath 是完整的 API 路径（整体下载与压缩包内条目下载共用）。 */
+    suspend fun downloadToUrl(urlPath: String, name: String): DownloadOutcome {
+        val handle = withContext(Dispatchers.Main) {
+            runCatching { platformExporter.beginSave(name) }
+                .onFailure { lastError.value = it.message }
+                .getOrNull()
+        } ?: return DownloadOutcome(cancelled = true)
+        val t = Transfers.start(Transfer.Kind.Download, name, 0L)
+        return try {
+            val written = api.downloadTo(urlPath, handle) { sent, total ->
+                if (total > 0L) t.total = total
+                Transfers.progress(t, sent)
+            }
+            Transfers.succeed(t, handle.displayPath)
+            DownloadOutcome(path = handle.displayPath, bytes = written)
+        } catch (e: Exception) {
+            // 半途失败就删掉截断文件：留一个看着像成功的坏文件比不下载更糟
+            runCatching { handle.discard() }
+            Transfers.fail(t, e.message)
+            DownloadOutcome(error = e.message ?: L["下载失败_e0dab22b1a"])
+        }
     }
 
     suspend fun search(q: String, depth: Int = 4) {
@@ -279,18 +460,6 @@ object FileStore {
 
     suspend fun extract(path: String, to: String): String? =
         call("/ops/files/extract", jsonObjectOf("path" to path, "to" to to)) { refresh() }
-
-    fun isTextish(e: FileEntry): Boolean = !e.isDir && (
-        e.typeLabel != com.servermaintance.panel.i18n.apiTag("符号链接_bcf783908a") && (
-            e.name.endsWith(".conf") || e.name.endsWith(".cfg") || e.name.endsWith(".sh") ||
-                e.name.endsWith(".py") || e.name.endsWith(".js") || e.name.endsWith(".ts") ||
-                e.name.endsWith(".kt") || e.name.endsWith(".json") || e.name.endsWith(".yaml") ||
-                e.name.endsWith(".yml") || e.name.endsWith(".md") || e.name.endsWith(".txt") ||
-                e.name.endsWith(".log") || e.name.endsWith(".env") || e.name.endsWith(".service") ||
-                e.name.endsWith(".xml") || e.name.endsWith(".ini") || e.name.endsWith(".properties") ||
-                !e.name.contains('.') || e.ext().length > 3
-            )
-        )
 
     private fun FileEntry.ext(): String = name.substringAfterLast('.', "")
 }

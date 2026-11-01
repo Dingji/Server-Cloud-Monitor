@@ -1,0 +1,11 @@
+# relayhub/ tree as pulled from 8.153.153.176:/opt/relayhub 2026-10-29T09:21:50+0800
+# frps binary, downloads/, config.json, mappings.json, frps.toml are host state and not bundled
+3b5d15dce10938303116bde7db4b0b69  cm-integrate.py
+89d2ffaf40a5e973d594e955e34af9b2  deploy.sh
+ef3496de595fc5c7cc0c4abcaeed5002  panel/app.py
+ccd5c66d6a8fbaade98dec3f0d22e523  panel/install.sh
+cb1c2113823b376eb7af3ce3140eafb6  panel/static/app.js
+ef12c5c63df2acdf59f8a86cf0317711  panel/static/echarts.min.js
+da23ac48161c0f09e106360bb27378cd  panel/static/index.html
+0147ea44dd3dbe51640ce59c8e6ec382  panel/static/style.css
+1765d87c046d6f1d6362c8a6c1d79734  relayhub-nginx.py

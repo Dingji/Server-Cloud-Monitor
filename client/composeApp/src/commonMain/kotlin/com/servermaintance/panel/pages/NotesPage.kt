@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package com.servermaintance.panel.pages
 import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
@@ -21,8 +23,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +36,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -42,6 +46,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -69,6 +74,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.isMetaPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -77,10 +89,12 @@ import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -95,7 +109,6 @@ import com.servermaintance.panel.platformClipboard
 import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.DangerBtn
-import com.servermaintance.panel.ui.EmptyState
 import com.servermaintance.panel.ui.ErrorState
 import com.servermaintance.panel.ui.Field
 import com.servermaintance.panel.ui.FormField
@@ -111,6 +124,7 @@ import com.servermaintance.panel.ui.SearchField
 import com.servermaintance.panel.ui.SelectField
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -167,7 +181,13 @@ private fun NotesInner() {
     var folderSel by remember { mutableStateOf("all") } // all | unfiled | shared | trash | f:<id>
     var sort by remember { mutableStateOf("") } // ""=更新/标题/创建
     var currentId by remember { mutableStateOf<Int?>(null) }
-    var preview by remember { mutableStateOf(false) }
+    var mode by remember { mutableStateOf(NoteViewMode.EDIT) }
+    /* 分栏同步：两侧滚动状态与真实排版结果都提到这一层，编辑器与预览共用。
+       放页面级而不是编辑器级，切笔记/切模式都不会把滚动位置抹掉。 */
+    var syncOn by remember { mutableStateOf(true) }
+    val edScroll = rememberScrollState()
+    val pvScroll = rememberScrollState()
+    val syncKit = remember(edScroll, pvScroll) { NoteSyncKit(edScroll, pvScroll) }
     var saveState by remember { mutableStateOf("") } // "" | saving | saved | err
 
     /* 编辑缓冲（标题 / 内容[含选区] / 标签 / 置顶） */
@@ -234,14 +254,42 @@ private fun NotesInner() {
     LaunchedEffect(Unit) { load() }
     LaunchedEffect(q, tag, folderSel, sort) { delay(260); load() }
 
-    fun selectNote(id: Int) {
+    /** 与服务器内容的比较基准：缓冲是换行归一后的，直接比原始串会一直「脏」。 */
+    fun baseContent(n: NoteRec) = mdNormalizeNewlines(n.content)
+    fun dirtyOf(n: NoteRec) = eTitle != n.title || eContent.text != baseContent(n) || eTags != n.tags
+    val dirtyNow = current?.let { dirtyOf(it) } ?: false
+
+    /** 真正发 PUT。自动保存与 Ctrl+S 共用这一份，免得两条路径写歪。 */
+    suspend fun persist(): Boolean {
+        val id = loadedId ?: return false
+        val n = notes.firstOrNull { it.id == id } ?: return false
+        if (!noteAccess(n.myPermission).canEdit) return false
+        if (!dirtyOf(n)) return true
+        saveState = "saving"
+        val updated = try {
+            withContext(Dispatchers.IO) { NoteBoxState.api.updateNote(id, eTitle, eContent.text, eTags, ePinned) }
+        } catch (e: CancellationException) {
+            saveState = "err"
+            throw e
+        } catch (e: Exception) {
+            saveState = "err"
+            NoteBoxState.toast(tr("保存失败_b12163000c") + (e.message ?: ""), ToastKind.Err)
+            return false
+        }
+        notes = notes.map { if (it.id == id) NoteRec(updated) else it }
+        saveState = "saved"
+        return true
+    }
+
+    fun openNote(id: Int) {
         currentId = id
-        preview = false
+        mode = NoteViewMode.EDIT
         sharePanelOpen = false
         shares = emptyList()
         val n = notes.firstOrNull { it.id == id } ?: return
         eTitle = n.title
-        eContent = TextFieldValue(n.content)
+        // 缓冲用归一后的文本：块偏移、排版、光标都在同一坐标系里
+        eContent = TextFieldValue(mdNormalizeNewlines(n.content))
         eTags = n.tags
         ePinned = n.pinned
         loadedId = id
@@ -251,27 +299,112 @@ private fun NotesInner() {
         }
     }
 
-    /* 自动保存（防抖 900ms；只读共享不保存） */
-    LaunchedEffect(eContent.text, eTitle, eTags) {
-        val id = loadedId ?: return@LaunchedEffect
-        val n = notes.firstOrNull { it.id == id } ?: return@LaunchedEffect
-        if (!noteAccess(n.myPermission).canEdit) return@LaunchedEffect
-        if (eTitle == n.title && eContent.text == n.content && eTags == n.tags) return@LaunchedEffect
-        delay(900)
-        saveState = "saving"
-        try {
-            val updated = withContext(Dispatchers.IO) {
-                NoteBoxState.api.updateNote(id, eTitle, eContent.text, eTags, ePinned)
+    /** 正文缓冲不接受回车符：块偏移、排版、光标必须都落在同一份文本上。 */
+    fun setContent(v: TextFieldValue) { eContent = normalizeCrlf(v) }
+
+    /* 切走 / 关掉之前先把防抖里没落盘的改动写完：自动保存有 900ms 空窗，
+       快速连点两条笔记会丢最后那次编辑。 */
+    fun dirtyPending() = loadedId?.let { id ->
+        notes.firstOrNull { it.id == id }
+    }?.let { dirtyOf(it) && noteAccess(it.myPermission).canEdit } ?: false
+
+    fun selectNote(id: Int) {
+        if (id == currentId) return
+        if (dirtyPending()) {
+            scope.launch {
+                persist()
+                openNote(id)
             }
-            val rec = NoteRec(updated)
-            notes = notes.map { if (it.id == id) rec else it }
-            saveState = "saved"
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            saveState = "err"
-            NoteBoxState.toast(tr("保存失败_b12163000c") + (e.message ?: ""), ToastKind.Err)
+        } else {
+            openNote(id)
         }
+    }
+
+    fun leaveEditor() {
+        if (dirtyPending()) {
+            scope.launch {
+                persist()
+                currentId = null
+                loadedId = null
+            }
+        } else {
+            currentId = null
+            loadedId = null
+        }
+    }
+
+    /* 自动保存（防抖 900ms；只读共享在 persist 里被挡掉） */
+    LaunchedEffect(eContent.text, eTitle, eTags) {
+        if (loadedId == null) return@LaunchedEffect
+        delay(900)
+        persist()
+    }
+
+    /* ---------------- 分栏滚动同步：正文 ↔ 预览 ----------------
+     * 两侧的像素位置都来自真实排版（正文问 TextLayoutResult，预览问
+     * onGloballyPositioned），按块起点拼成锚点后分段线性换算。 */
+    val mdStarts = remember(eContent.text, mode, syncOn) {
+        if (mode == NoteViewMode.EDIT || !syncOn) emptyList()
+        else parseMdBlocks(eContent.text).map { it.start }
+    }
+
+    fun anchors(): List<ScrollAnchor>? {
+        val layout = syncKit.edLayout ?: return null
+        if (mdStarts.size < 2) return null
+        return buildAnchors(
+            mdStarts,
+            mdStarts.map { caretTop(layout, it) },
+            syncKit.anchors.topsFor(mdStarts),
+            srcEnd = edScroll.maxValue + edScroll.viewportSize,
+            prevEnd = pvScroll.maxValue + pvScroll.viewportSize,
+        ).takeIf { it.size >= 2 }
+    }
+
+    LaunchedEffect(mode) { syncKit.owner = null }
+
+    /* 正文滚动 → 预览 */
+    LaunchedEffect(edScroll.value, mdStarts, syncOn, mode) {
+        if (!syncOn || mode != NoteViewMode.SPLIT) return@LaunchedEffect
+        if (syncKit.owner == "pv") { syncKit.owner = null; return@LaunchedEffect }
+        val a = anchors() ?: return@LaunchedEffect
+        val t = srcToPrev(a, edScroll.value).coerceIn(0, pvScroll.maxValue)
+        if (kotlin.math.abs(t - pvScroll.value) > 2) {
+            syncKit.owner = "ed"
+            pvScroll.scrollTo(t)
+        }
+    }
+
+    /* 预览滚动 → 正文（用户正在正文里打字时不抢他的滚动） */
+    LaunchedEffect(pvScroll.value, mdStarts, syncOn, mode) {
+        if (!syncOn || mode != NoteViewMode.SPLIT) return@LaunchedEffect
+        if (syncKit.owner == "ed") { syncKit.owner = null; return@LaunchedEffect }
+        val a = anchors() ?: return@LaunchedEffect
+        val t = prevToSrc(a, pvScroll.value).coerceIn(0, edScroll.maxValue)
+        if (kotlin.math.abs(t - edScroll.value) > 2) {
+            syncKit.owner = "pv"
+            edScroll.scrollTo(t)
+        }
+    }
+
+    /* 光标：先把正文滚到光标处（正文自己不再自动滚），再让预览跟上对应段落 */
+    LaunchedEffect(eContent.selection, mode) {
+        val layout = syncKit.edLayout ?: return@LaunchedEffect
+        val y = caretTop(layout, eContent.selection.start)
+        if (y < edScroll.value + 6) edScroll.scrollTo((y - 24).coerceAtLeast(0))
+        else if (y > edScroll.value + edScroll.viewportSize - 30) {
+            edScroll.scrollTo((y - edScroll.viewportSize + 48).coerceAtLeast(0))
+        }
+        if (!syncOn || mode == NoteViewMode.EDIT) return@LaunchedEffect
+        val a = anchors() ?: return@LaunchedEffect
+        val move = followScroll(srcToPrev(a, y), pvScroll.value, pvScroll.viewportSize) ?: return@LaunchedEffect
+        syncKit.owner = "ed"
+        pvScroll.scrollTo(move.coerceIn(0, pvScroll.maxValue))
+    }
+
+    /* 双击预览的某一段 → 光标回到那一段的源码起点。
+       正文那一侧的滚动不用在这里做：下面 selection 一变，光标跟随那条 effect 就会把它滚进视野。 */
+    fun jumpToBlock(start: Int) {
+        eContent = eContent.copy(selection = TextRange(start.coerceIn(0, eContent.text.length)))
     }
 
     /* 工具栏：包裹选区（加粗/斜体/删除线/行内码/链接）。 */
@@ -718,7 +851,7 @@ private fun NotesInner() {
                                 access = if (inTrash) NoteAccess(cur.myPermission, canEdit = false, canManage = false)
                                 else noteAccess(cur.myPermission),
                                 title = eTitle, onTitle = { eTitle = it },
-                                content = eContent, onContent = { eContent = it },
+                                content = eContent, onContent = ::setContent,
                                 tags = eTags, onTags = { eTags = it },
                                 pinned = ePinned,
                                 onPin = {
@@ -736,10 +869,14 @@ private fun NotesInner() {
                                         }
                                     }
                                 },
-                                preview = preview, onPreviewToggle = { preview = !preview },
+                                mode = mode, onMode = { mode = it },
+                                syncOn = syncOn, onSyncToggle = { syncOn = !syncOn },
+                                kit = syncKit, dirty = dirtyNow,
+                                onSaveNow = { scope.launch { persist() } },
+                                onJumpToBlock = ::jumpToBlock,
                                 saveState = saveState,
                                 onDelete = { if (inTrash) purgeNote(cur) else trashNote(cur) },
-                                onBack = { currentId = null; loadedId = null },
+                                onBack = ::leaveEditor,
                                 onToolbar = { cmd -> handleToolbar(cmd, ::wrapSel, ::togglePrefix, ::insertAt) },
                                 onPickMedia = { mime, multiple -> pickMedia(mime, multiple, ::uploadFiles) },
                                 sharePanelOpen = sharePanelOpen,
@@ -808,7 +945,7 @@ private fun NotesInner() {
                                         access = if (inTrash) NoteAccess(current.myPermission, canEdit = false, canManage = false)
                                         else access,
                                         title = eTitle, onTitle = { eTitle = it },
-                                        content = eContent, onContent = { eContent = it },
+                                        content = eContent, onContent = ::setContent,
                                         tags = eTags, onTags = { eTags = it },
                                         pinned = ePinned,
                                         onPin = {
@@ -826,7 +963,11 @@ private fun NotesInner() {
                                                 }
                                             }
                                         },
-                                        preview = preview, onPreviewToggle = { preview = !preview },
+                                        mode = mode, onMode = { mode = it },
+                                        syncOn = syncOn, onSyncToggle = { syncOn = !syncOn },
+                                        kit = syncKit, dirty = dirtyNow,
+                                        onSaveNow = { scope.launch { persist() } },
+                                        onJumpToBlock = ::jumpToBlock,
                                         saveState = saveState,
                                         onDelete = { if (inTrash) purgeNote(current) else trashNote(current) },
                                         onBack = null,
@@ -992,15 +1133,8 @@ private fun NoteList(
                     fontWeight = FontWeight.SemiBold, letterSpacing = 0.7.sp,
                 )
                 Spacer(Modifier.weight(1f))
-                Text(
-                    trf("0_条_1932375aa5", nbCountUp(notes.size)),
-                    color = Palette.muted, fontSize = 10.sp, fontFamily = FontFamily.Monospace,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(Palette.inset)
-                        .border(1.dp, Palette.border2, RoundedCornerShape(50))
-                        .padding(horizontal = 8.dp, vertical = 1.5.dp),
-                )
+                /* 数量变化时弹一下（nbCountUp 的逐帧跳字会和这个叠加，二选一） */
+                NbCountPill(notes.size, tone = Palette.muted)
             }
             if (notes.isEmpty()) {
                 NbEmptyGlow(
@@ -1013,8 +1147,8 @@ private fun NoteList(
                 key(viewKey) {
                     Box(Modifier.fillMaxSize()) {
                         LazyColumn(
-                            Modifier.fillMaxSize().nbFadingEdges(top = 10.dp, bottom = 10.dp)
-                                .padding(horizontal = 6.dp, vertical = 6.dp),
+                            Modifier.fillMaxSize().nbFadingEdges(top = 10.dp, bottom = 10.dp),
+                            contentPadding = PaddingValues(horizontal = 6.dp, vertical = 6.dp),
                             verticalArrangement = Arrangement.spacedBy(5.dp),
                         ) {
                             itemsIndexed(notes, key = { _, n -> n.id }) { idx, n ->
@@ -1062,7 +1196,9 @@ private fun androidx.compose.foundation.layout.BoxScope.NoteSelectionBar(
     val a by animateFloatAsState(if (b != null) 1f else 0f, tween(200), label = "selBarA")
     Box(
         Modifier
-            .align(Alignment.CenterStart)
+            /* 必须从顶边起算：CenterStart 会先把条放到整张列表盒子的垂直中心，
+               再叠加下面的 offset —— 于是选中第一条时指示条会掉到第二条身上。 */
+            .align(Alignment.TopStart)
             .offset(x = 3.dp, y = y)
             .width(3.dp).height(h)
             .alpha(a)
@@ -1085,26 +1221,45 @@ private fun NoteCard(
     val acc = noteAccess(n.myPermission)
     val shape = RoundedCornerShape(9.dp)
 
-    /* 选中/悬停的表面色、描边过渡 + 浮起/按压微动效（置顶卡淡染主题色） */
-    val cardBg by animateColorAsState(
+    /* 选中/悬停：整张卡换材质（染色 + 抬升 + 描边过渡），左侧色条同时长出来 */
+    val dot = noteColorOf(n.color)
+    val surfaceTint by animateColorAsState(
         targetValue = when {
-            selected -> AccentState.current.primary.copy(alpha = 0.10f)
-            hovered -> Palette.panel2
-            n.pinned -> AccentState.current.primary.copy(alpha = 0.05f)
+            selected -> AccentState.current.primary
+            n.pinned -> AccentState.current.primary
             else -> Color.Transparent
         },
         animationSpec = tween(190),
-        label = "noteCardBg",
+        label = "noteCardTint",
     )
     val cardBorder by animateColorAsState(
         targetValue = when {
             selected -> AccentState.current.primary.copy(alpha = 0.35f)
             hovered -> Palette.border2
             n.pinned -> AccentState.current.primary.copy(alpha = 0.18f)
-            else -> Color.Transparent
+            else -> Palette.border
         },
         animationSpec = tween(190),
         label = "noteCardBorder",
+    )
+    val elev by animateDpAsState(
+        targetValue = when {
+            selected -> 7.dp
+            hovered -> 5.dp
+            else -> 2.dp
+        },
+        nbSpringSoft(stiffness = 300f), label = "noteCardElev",
+    )
+    /* 色条：笔记自己标了颜色就用那个色，没标的在选中时亮主题色 */
+    val railColor = if (dot != Color.Transparent) dot else AccentState.current.primary
+    val railGrow by animateFloatAsState(
+        targetValue = when {
+            selected -> 1f
+            hovered -> 0.5f
+            dot != Color.Transparent -> 0.32f
+            else -> 0f
+        },
+        nbSpringSoft(stiffness = 320f), label = "noteRailGrow",
     )
     val lift by animateFloatAsState(if (hovered && !selected) -1f else 0f, nbSpringSoft(stiffness = 500f), label = "noteLift")
     val press by animateFloatAsState(if (pressed) 0.985f else 1f, nbSpringPop(stiffness = 600f), label = "notePress")
@@ -1129,14 +1284,18 @@ private fun NoteCard(
                 scaleX = press
                 scaleY = press
             }
-            .clip(shape)
-            .background(cardBg)
+            .nbSurface(
+                shape,
+                tint = surfaceTint.takeIf { it != Color.Transparent },
+                elevation = elev,
+                bordered = false,
+            )
             .border(1.dp, cardBorder, shape)
             .clickable(interactionSource = interaction, indication = null) { onSelect() },
     ) {
-        Column(Modifier.padding(horizontal = 10.dp, vertical = 9.dp)) {
+        NbLeftRail(railColor, railGrow)
+        Column(Modifier.padding(start = 13.dp, end = 10.dp, top = 9.dp, bottom = 9.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                val dot = noteColorOf(n.color)
                 if (dot != Color.Transparent) {
                     Box(
                         Modifier.size(7.dp).clip(RoundedCornerShape(50)).background(dot),
@@ -1156,6 +1315,13 @@ private fun NoteCard(
                     maxLines = 1, overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                 )
+                /* 时间放在标题行右侧：底部那排胶囊在窄列里挤不下时会把它逐字折行，
+                   把整张卡撑出一段假空白（实测截图）。标题自己会省略，这里永不折行。 */
+                Text(
+                    fmtRelTime(n.updatedAt),
+                    color = Palette.muted, fontSize = 10.sp, fontFamily = FontFamily.Monospace,
+                    maxLines = 1, softWrap = false,
+                )
                 if (!n.isOwner) {
                     Spacer(Modifier.size(6.dp))
                     LevelBadge(permText(acc.perm), permTone(acc.perm))
@@ -1168,7 +1334,11 @@ private fun NoteCard(
                 maxLines = 2, overflow = TextOverflow.Ellipsis,
             )
             Spacer(Modifier.size(5.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            /* 标签/清单胶囊行：窄列放不下就换行，而不是把同行的时间挤成竖排 */
+            FlowRow(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+            ) {
                 if (n.folderName.isNotEmpty()) {
                     Row(
                         Modifier.widthIn(max = 110.dp)
@@ -1200,7 +1370,8 @@ private fun NoteCard(
                     )
                     Spacer(Modifier.size(6.dp))
                 }
-                n.tags.split(",").map { it.trim() }.filter { it.isNotEmpty() }.take(3).forEach { t ->
+                val cardTags = n.tags.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+                cardTags.take(3).forEach { t ->
                     Box(
                         Modifier.padding(end = 4.dp)
                             .clip(RoundedCornerShape(50))
@@ -1220,11 +1391,14 @@ private fun NoteCard(
                         )
                     }
                 }
-                Spacer(Modifier.weight(1f))
-                Text(
-                    fmtRelTime(n.updatedAt),
-                    color = Palette.muted, fontSize = 10.sp, fontFamily = FontFamily.Monospace,
-                )
+                /* 第 4 个以后的标签以前被静默丢掉，现在收进一个 +N */
+                if (cardTags.size > 3) {
+                    Text(
+                        trf(L["0_个标签_51e24f49b7"], cardTags.size - 3),
+                        color = Palette.muted, fontSize = 9.5.sp,
+                        fontFamily = FontFamily.Monospace, maxLines = 1,
+                    )
+                }
             }
         }
         /* 选中光晕：从左向右的主题色薄雾（淡入淡出跟随选中） */
@@ -1262,7 +1436,10 @@ private fun NoteEditor(
     content: TextFieldValue, onContent: (TextFieldValue) -> Unit,
     tags: String, onTags: (String) -> Unit,
     pinned: Boolean, onPin: () -> Unit,
-    preview: Boolean, onPreviewToggle: () -> Unit,
+    mode: NoteViewMode, onMode: (NoteViewMode) -> Unit,
+    syncOn: Boolean, onSyncToggle: () -> Unit,
+    kit: NoteSyncKit, dirty: Boolean, onSaveNow: () -> Unit,
+    onJumpToBlock: (Int) -> Unit,
     saveState: String,
     onDelete: () -> Unit,
     onBack: (() -> Unit)?,
@@ -1281,7 +1458,16 @@ private fun NoteEditor(
     onDuplicate: (() -> Unit)? = null,
     onRestore: (() -> Unit)? = null,
 ) {
-    Column(Modifier.fillMaxSize().padding(start = 12.dp, end = 12.dp)) {
+    Column(
+        Modifier.fillMaxSize().padding(start = 12.dp, end = 12.dp)
+            /* Ctrl+S（macOS 上 Cmd+S）立刻落盘：自动保存是 900ms 防抖，
+               但人按保存键时想要的是「现在就写进去了」这个确定感。 */
+            .onPreviewKeyEvent { ev ->
+                val held = ev.isCtrlPressed || ev.isMetaPressed
+                if (held && ev.type == KeyEventType.KeyDown && ev.key == Key.S) { onSaveNow(); true }
+                else false
+            },
+    ) {
         /* 顶行：返回 + 动作组（标题移到下一行做成文档式大标题） */
         Row(
             Modifier.fillMaxWidth().padding(bottom = 4.dp)
@@ -1304,7 +1490,7 @@ private fun NoteEditor(
 
             Spacer(Modifier.weight(1f))
 
-            SaveIndicator(saveState, readonly = !access.canEdit)
+            SaveIndicator(saveState, dirty = dirty, readonly = !access.canEdit)
 
             /* 字数统计（桌面显示；手持端优先保证动作可见） */
             if (content.text.isNotEmpty() && !platformHandheld) {
@@ -1316,8 +1502,11 @@ private fun NoteEditor(
                 )
             }
 
-            /* 编辑 / 预览 分段切换 */
-            PreviewToggle(preview = preview, onToggle = onPreviewToggle)
+            /* 编辑 / 分栏 / 预览 三段切换；分栏时才有同步可开关 */
+            ModeToggle(mode = mode, onMode = onMode)
+            if (mode == NoteViewMode.SPLIT && access.canEdit) {
+                SyncToggle(on = syncOn, onToggle = onSyncToggle)
+            }
 
             if (inTrash) {
                 if (onRestore != null) IconActionBtn("refresh", onClick = onRestore)
@@ -1432,48 +1621,113 @@ private fun NoteEditor(
             Field(tags, { if (access.canEdit) onTags(it) }, Modifier.weight(1f), hint = L["逗号分隔标签_如_运维_周报_8871ad8a3f"], singleLine = true, enabled = access.canEdit)
         }
 
-        /* 工具栏（只读时不显示，同 app.js） */
-        if (!preview && access.canEdit) {
+        /* 工具栏（只读时不显示，同 app.js；预览态没有可操作的对象） */
+        if (mode != NoteViewMode.PREVIEW && access.canEdit) {
             EditorToolbar(onToolbar = onToolbar, onPickMedia = onPickMedia)
             Spacer(Modifier.size(6.dp))
         }
 
-        /* 正文 / 预览（淡入 + 轻微上移切换） */
+        /* 正文 / 分栏 / 预览（淡入 + 轻微上移切换） */
         Box(Modifier.weight(1f).fillMaxWidth()) {
             AnimatedContent(
-                targetState = preview,
+                targetState = mode,
                 transitionSpec = {
                     (fadeIn(tween(240)) + slideInVertically(tween(260, easing = FastOutSlowInEasing)) { it / 22 }) togetherWith
                         fadeOut(tween(140))
                 },
-                label = "notePreview",
-            ) { pv ->
-                if (pv) {
-                    /* 预览：纸张卡片质感（柔和投影 + 圆角面板） */
-                    val pvShape = RoundedCornerShape(nbCardRadius(10.dp))
-                    Box(
-                        Modifier.fillMaxSize()
-                            .shadow(elevation = 5.dp, shape = pvShape, clip = false)
-                            .clip(pvShape)
-                            .background(Palette.panel)
-                            .border(1.dp, Palette.border, pvShape)
-                            .padding(horizontal = 20.dp, vertical = 16.dp),
-                    ) {
-                        if (content.text.isBlank()) {
-                            Text(L["空笔记_185f0fabc6"], color = Palette.muted, fontSize = 12.5.sp)
+                label = "noteViewMode",
+            ) { m ->
+                when (m) {
+                    NoteViewMode.EDIT -> EditorPane(
+                        content = content, onContent = onContent, enabled = access.canEdit, kit = kit,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                    NoteViewMode.PREVIEW -> PreviewPane(
+                        content = content, kit = kit, split = false, onBlockDouble = null,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                    NoteViewMode.SPLIT -> {
+                        /* 分栏：桌面左右并排，手持端上下叠放（360dp 宽并排每栏只剩 160dp，
+                           正文一行都放不下，同步反而毫无意义）。 */
+                        val gap = 10.dp
+                        if (platformHandheld) {
+                            Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(gap)) {
+                                EditorPane(
+                                    content = content, onContent = onContent, enabled = access.canEdit, kit = kit,
+                                    modifier = Modifier.weight(1f).fillMaxWidth(),
+                                )
+                                PreviewPane(
+                                    content = content, kit = kit, split = true,
+                                    onBlockDouble = { onJumpToBlock(it) },
+                                    modifier = Modifier.weight(1f).fillMaxWidth(),
+                                )
+                            }
                         } else {
-                            NoteMarkdown(content.text, Modifier.fillMaxSize(), fontSize = 14)
+                            Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(gap)) {
+                                EditorPane(
+                                    content = content, onContent = onContent, enabled = access.canEdit, kit = kit,
+                                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                                )
+                                PreviewPane(
+                                    content = content, kit = kit, split = true,
+                                    onBlockDouble = { onJumpToBlock(it) },
+                                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                                )
+                            }
                         }
                     }
-                } else {
-                    NoteContentField(
-                        value = content, onValueChange = { if (access.canEdit) onContent(it) },
-                        modifier = Modifier.fillMaxSize(),
-                        hint = L["开始写_支持_markdown_标题_加_333c0c0d41"],
-                        enabled = access.canEdit,
-                    )
                 }
             }
+        }
+    }
+}
+
+/** 正文面板：滚动状态与真实排版结果都交给 kit，同步逻辑才有得可用。 */
+@Composable
+private fun EditorPane(
+    content: TextFieldValue,
+    onContent: (TextFieldValue) -> Unit,
+    enabled: Boolean,
+    kit: NoteSyncKit,
+    modifier: Modifier = Modifier,
+) {
+    NoteContentField(
+        value = content,
+        onValueChange = { if (enabled) onContent(it) },
+        modifier = modifier,
+        hint = L["开始写_支持_markdown_标题_加_333c0c0d41"],
+        enabled = enabled,
+        scroll = kit.edScroll,
+        onLayout = { kit.edLayout = it },
+    )
+}
+
+/** 预览面板：纸张卡片质感（柔和投影 + 圆角面板），分栏时上报块位置并接收双击。 */
+@Composable
+private fun PreviewPane(
+    content: TextFieldValue,
+    kit: NoteSyncKit,
+    split: Boolean,
+    onBlockDouble: ((Int) -> Unit)?,
+    modifier: Modifier = Modifier,
+) {
+    val pvShape = RoundedCornerShape(nbCardRadius(10.dp))
+    Box(
+        modifier
+            .nbSurface(pvShape, elevation = 6.dp)
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+    ) {
+        if (content.text.isBlank()) {
+            Text(L["空笔记_185f0fabc6"], color = Palette.muted, fontSize = 12.5.sp)
+        } else {
+            NoteMarkdown(
+                content.text,
+                Modifier.fillMaxSize(),
+                fontSize = 14,
+                scroll = kit.pvScroll,
+                anchors = if (split) kit.anchors else null,
+                onBlockDouble = onBlockDouble,
+            )
         }
     }
 }
@@ -1519,15 +1773,40 @@ private fun TitleInput(value: String, onValueChange: (String) -> Unit, enabled: 
     }
 }
 
-/** 编辑 / 预览 分段切换（滑动胶囊指示器）。 */
+/** 编辑 / 分栏 / 预览 三段切换（滑动胶囊指示器）。 */
 @Composable
-private fun PreviewToggle(preview: Boolean, onToggle: () -> Unit) {
+private fun ModeToggle(mode: NoteViewMode, onMode: (NoteViewMode) -> Unit) {
     NbSegmented(
-        options = listOf(L["编辑_a7f814c0a4"], L["预览_de61aa8e1c"]),
-        selected = if (preview) 1 else 0,
-        onSelect = { onToggle() },
+        options = listOf(L["编辑_a7f814c0a4"], L["分栏_d195fd0f16"], L["预览_de61aa8e1c"]),
+        selected = when (mode) {
+            NoteViewMode.EDIT -> 0
+            NoteViewMode.SPLIT -> 1
+            NoteViewMode.PREVIEW -> 2
+        },
+        onSelect = { onMode(NoteViewMode.entries[it]) },
         compact = true,
     )
+}
+
+/** 滚动同步开关：只在分栏时出现，关掉之后两侧各自滚各自的。 */
+@Composable
+private fun SyncToggle(on: Boolean, onToggle: () -> Unit) {
+    val interaction = remember { MutableInteractionSource() }
+    val shape = RoundedCornerShape(50)
+    val tint = if (on) AccentState.current.secondary else Palette.muted
+    Row(
+        Modifier
+            .clip(shape)
+            .background(if (on) AccentState.current.primary.copy(alpha = 0.14f) else Palette.inset)
+            .border(1.dp, if (on) AccentState.current.primary.copy(alpha = 0.4f) else Palette.border, shape)
+            .clickable(interactionSource = interaction, indication = null) { onToggle() }
+            .padding(horizontal = 9.dp, vertical = 3.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        PanelIcon("link", 11.dp, tint)
+        Spacer(Modifier.size(5.dp))
+        Text(L["滚动同步_c4f6f6710e"], color = tint, fontSize = 11.sp, maxLines = 1)
+    }
 }
 
 @Composable
@@ -1537,44 +1816,13 @@ private fun IconActionBtn(
     danger: Boolean = false,
     onClick: () -> Unit,
 ) {
-    val interaction = remember { MutableInteractionSource() }
-    val hovered by interaction.collectIsHoveredAsState()
-    val pressed by interaction.collectIsPressedAsState()
-    val tint = when {
-        danger && hovered -> Palette.bad
-        active -> AccentState.current.secondary
-        hovered -> Palette.text
-        else -> Palette.muted
-    }
-    val bg = when {
-        active -> AccentState.current.primary.copy(alpha = 0.16f)
-        danger && hovered -> Palette.bad.copy(alpha = 0.12f)
-        hovered -> Palette.inset
-        else -> Color.Transparent
-    }
-    /* 悬停轻微放大、按下回缩，弹簧过渡 */
-    val scale by animateFloatAsState(
-        targetValue = when {
-            pressed -> 0.9f
-            hovered -> 1.08f
-            else -> 1f
-        },
-        animationSpec = nbSpringPop(stiffness = 500f),
-        label = "iconActScale",
-    )
-    Box(
-        Modifier.size(30.dp).graphicsLayer { scaleX = scale; scaleY = scale }
-            .clip(RoundedCornerShape(6.dp)).background(bg)
-            .clickable(interactionSource = interaction, indication = null) { onClick() },
-        contentAlignment = Alignment.Center,
-    ) {
-        PanelIcon(icon, 15.dp, tint)
-    }
+    /* 共用 NbIconBtn 的底圈生长 + 按下回弹 + 激活小圆点 */
+    NbIconBtn(icon, onClick, active = active, danger = danger)
 }
 
 /** 保存状态徽标（保存中圆点呼吸脉冲；保存完成回弹一下；颜色平滑过渡）。 */
 @Composable
-private fun SaveIndicator(saveState: String, readonly: Boolean) {
+private fun SaveIndicator(saveState: String, dirty: Boolean, readonly: Boolean) {
     /* 保存中：无限呼吸脉冲 */
     val pulse = rememberInfiniteTransition(label = "savePulse")
     val pulseV by pulse.animateFloat(
@@ -1594,6 +1842,8 @@ private fun SaveIndicator(saveState: String, readonly: Boolean) {
     val (text, baseColor) = when {
         readonly -> L["只读_ffc1d065fb"] to Palette.muted
         saveState == "saving" -> L["保存中_6644f06197"] to Palette.warn
+        /* 防抖还没落盘的那 900ms 也要说实话，否则看起来像已经存好了 */
+        dirty -> L["未保存_4123f1faaa"] to Palette.warn
         saveState == "saved" -> L["已保存_cdfab96f75"] to Palette.ok
         saveState == "err" -> L["保存失败_40525a7328"] to Palette.bad
         else -> L["已保存_cdfab96f75"] to Palette.muted
@@ -1637,33 +1887,50 @@ private fun EditorToolbar(onToolbar: (String) -> Unit, onPickMedia: (List<String
     Row(
         Modifier.fillMaxWidth()
             .horizontalScroll(rememberScrollState())
-            .clip(shape)
-            .background(Palette.panel)
-            .border(1.dp, Palette.border, shape)
+            .nbSurface(shape, elevation = 2.dp)
             .padding(horizontal = 4.dp, vertical = 3.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(1.dp),
     ) {
         items.forEachIndexed { ti, item ->
             if (item.sep) {
+                /* 两端淡出的分隔线：比一根实线轻，不会把工具栏切成一格一格 */
                 Box(
                     Modifier.padding(horizontal = 3.dp)
-                        .width(1.dp).height(16.dp).background(Palette.border2),
+                        .width(1.dp).height(16.dp)
+                        .background(
+                            Brush.verticalGradient(
+                                listOf(Color.Transparent, Palette.border2, Color.Transparent),
+                            ),
+                        ),
                 )
             } else {
                 val interaction = remember { MutableInteractionSource() }
                 val hovered by interaction.collectIsHoveredAsState()
-                /* 悬停轻微放大 + 按入场序号淡入 */
+                val pressed by interaction.collectIsPressedAsState()
+                /* 悬停放大、按下回缩（弹簧），并按入场序号淡入 */
                 val itemScale by animateFloatAsState(
-                    targetValue = if (hovered) 1.06f else 1f,
+                    targetValue = when {
+                        pressed -> 0.93f
+                        hovered -> 1.07f
+                        else -> 1f
+                    },
                     animationSpec = nbSpringPop(stiffness = 500f),
                     label = "tbScale",
+                )
+                val tbBg by animateColorAsState(
+                    targetValue = when {
+                        pressed -> AccentState.current.primary.copy(alpha = 0.26f)
+                        hovered -> Palette.panel3
+                        else -> Color.Transparent
+                    },
+                    tween(150), label = "tbBg",
                 )
                 Row(
                     Modifier.nbEnter((ti / 2).coerceAtMost(10))
                         .graphicsLayer { scaleX = itemScale; scaleY = itemScale }
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(if (hovered) Palette.panel3 else Color.Transparent)
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(tbBg)
                         .clickable(interactionSource = interaction, indication = null) {
                             when (item.cmd) {
                                 "image" -> onPickMedia(listOf("image/"), true)
@@ -1685,13 +1952,24 @@ private fun EditorToolbar(onToolbar: (String) -> Unit, onPickMedia: (List<String
                             )
                         }
                     } else {
+                        /* 让按钮长它插入的东西的样子：H1>H2>H3，B 加粗、I 斜体、S 划线 */
+                        val glyphSize = when (item.cmd) {
+                            "h1" -> 15.sp
+                            "h2" -> 13.5.sp
+                            "h3" -> 12.2.sp
+                            else -> 11.5.sp
+                        }
                         Text(
                             item.label,
                             color = if (hovered) AccentState.current.secondary else Palette.text,
-                            fontSize = 11.5.sp,
+                            fontSize = glyphSize,
                             fontFamily = if (item.label.length <= 3) FontFamily.Monospace else FontFamily.Default,
-                            fontWeight = if (item.cmd == "bold") FontWeight.Bold else FontWeight.Normal,
+                            fontWeight = when (item.cmd) {
+                                "bold", "h1", "h2", "h3" -> FontWeight.Bold
+                                else -> FontWeight.Normal
+                            },
                             fontStyle = if (item.cmd == "italic") androidx.compose.ui.text.font.FontStyle.Italic else null,
+                            textDecoration = if (item.cmd == "strike") TextDecoration.LineThrough else null,
                         )
                     }
                 }
@@ -1711,33 +1989,47 @@ private fun NoteContentField(
     modifier: Modifier = Modifier,
     hint: String,
     enabled: Boolean = true,
+    /* 滚动状态与真实排版结果都由外面持有：同步逻辑要能把正文滚到任意位置，
+       还要问「第 N 个字符的像素顶在哪」——软换行让行号×行高不再成立。 */
+    scroll: ScrollState = rememberScrollState(),
+    onLayout: (TextLayoutResult) -> Unit = {},
 ) {
     var focused by remember { mutableStateOf(false) }
     val border = if (focused) AccentState.current.primary else Palette.border2
     val borderColor by animateColorAsState(targetValue = border, label = "editorBorder")
     val fieldShape = RoundedCornerShape(nbCardRadius(8.dp))
-    Box(
+    /* BoxWithConstraints 而不是 Box：正文至少要铺满可视区，短笔记时
+       「点空白处也能把光标放进去」才不会被弄丢；长了再交给 verticalScroll。 */
+    val fieldElev by animateDpAsState(
+        targetValue = if (focused) 9.dp else 4.dp, nbSpringSoft(stiffness = 280f), label = "fieldElev",
+    )
+    BoxWithConstraints(
         modifier
-            .clip(fieldShape)
-            .background(Palette.panel)
+            .nbSurface(fieldShape, elevation = fieldElev, bordered = false)
             .border(1.dp, borderColor, fieldShape)
             .nbGlowBorder(enabled = focused, shape = fieldShape)
             .padding(horizontal = 16.dp, vertical = 14.dp),
     ) {
+        val fieldMinHeight = if (constraints.hasBoundedHeight) maxHeight else 0.dp
         if (value.text.isEmpty() && hint.isNotEmpty()) {
             Text(hint, color = Palette.muted.copy(alpha = 0.65f), fontSize = 13.sp)
         }
-        BasicTextField(
-            value = value,
-            onValueChange = onValueChange,
-            enabled = enabled,
-            textStyle = TextStyle(
-                color = Palette.text, fontSize = 13.5.sp,
-                fontFamily = FontFamily.Monospace, lineHeight = 22.sp,
-            ),
-            cursorBrush = SolidColor(AccentState.current.primary),
-            modifier = Modifier.fillMaxSize().onFocusEvent { focused = it.isFocused },
-        )
+        Column(Modifier.fillMaxSize().verticalScroll(scroll)) {
+            BasicTextField(
+                value = value,
+                onValueChange = onValueChange,
+                enabled = enabled,
+                textStyle = TextStyle(
+                    color = Palette.text, fontSize = 13.5.sp,
+                    fontFamily = FontFamily.Monospace, lineHeight = 22.sp,
+                ),
+                cursorBrush = SolidColor(AccentState.current.primary),
+                onTextLayout = onLayout,
+                modifier = Modifier
+                    .fillMaxWidth().heightIn(min = fieldMinHeight)
+                    .onFocusEvent { focused = it.isFocused },
+            )
+        }
     }
 }
 

@@ -1,8 +1,10 @@
 package com.servermaintance.panel.pages
 import com.servermaintance.panel.i18n.L
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,17 +33,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.boundsInParent
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.servermaintance.panel.platformClipboard
-import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.Palette
-import com.servermaintance.panel.ui.PanelIcon
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 
 /* ==================================================================== *
@@ -52,42 +55,96 @@ import kotlinx.coroutines.launch
  * ==================================================================== */
 
 @Composable
-fun NoteMarkdown(
+internal fun NoteMarkdown(
     text: String,
     modifier: Modifier = Modifier,
     fontSize: Int = 14,
+    /* 下面三个只在「编辑器分栏同步」时用：不传就是原来的自滚渲染，行为不变。 */
+    scroll: ScrollState = rememberScrollState(),
+    anchors: MdAnchorStore? = null,
+    onBlockDouble: ((Int) -> Unit)? = null,
 ) {
-    val nodes = remember(text) { parseMdNodes(text) }
-    Column(modifier.verticalScroll(rememberScrollState())) {
-        RenderNodes(nodes, fontSize)
+    val blocks = remember(text) { parseMdBlocks(text) }
+    Column(modifier.verticalScroll(scroll)) {
+        RenderBlocks(blocks, fontSize, scroll, anchors, onBlockDouble)
         Spacer(Modifier.height(8.dp))
     }
 }
 
 @Composable
-internal fun RenderNodes(nodes: List<MdNode>, fontSize: Int) {
+internal fun RenderBlocks(
+    blocks: List<MdBlock>,
+    fontSize: Int,
+    scroll: ScrollState,
+    anchors: MdAnchorStore?,
+    onBlockDouble: ((Int) -> Unit)?,
+) {
     var i = 0
-    while (i < nodes.size) {
-        when (val node = nodes[i]) {
-            is MdNode.Heading -> MdHeading(node, fontSize)
-            is MdNode.Code -> MdCodeBlock(node, fontSize)
-            is MdNode.Quote -> MdQuote(node, fontSize)
-            is MdNode.Hr -> MdHr()
-            is MdNode.Table -> MdTable(node, fontSize)
-            is MdNode.Media -> MdMedia(node, fontSize)
-            is MdNode.Para -> MdPara(node, fontSize)
-            is MdNode.ListItem -> {
-                // 收集连续列表项
-                val group = ArrayList<MdNode.ListItem>()
-                while (i < nodes.size && nodes[i] is MdNode.ListItem) {
-                    group += nodes[i] as MdNode.ListItem
-                    i++
-                }
-                MdList(group, fontSize)
-                continue
+    while (i < blocks.size) {
+        val block = blocks[i]
+        if (block.node is MdNode.ListItem) {
+            // 连续列表项合成一个 <ul>（同 md.js），锚点取组内第一项的源码起点
+            val group = ArrayList<MdNode.ListItem>()
+            while (i < blocks.size && blocks[i].node is MdNode.ListItem) {
+                group += blocks[i].node as MdNode.ListItem
+                i++
             }
+            LocatedBlock(block.start, scroll, anchors, onBlockDouble) { MdList(group, fontSize) }
+            continue
         }
+        LocatedBlock(block.start, scroll, anchors, onBlockDouble) { RenderNode(block.node, fontSize) }
         i++
+    }
+}
+
+/**
+ * 给一个渲染块挂两件事：① 上报它在预览内容里的像素顶（滚动同步要用），
+ * ② 双击时把它的源码起点交回去（点预览跳回正文）。
+ * 位置用「父坐标 + 当前滚动量」换算成内容坐标：verticalScroll 是把子项
+ * 往回偏移放置的，直接读 positionInParent 会得到视口坐标，滚一下就不对了。
+ */
+@Composable
+private fun LocatedBlock(
+    start: Int,
+    scroll: ScrollState,
+    anchors: MdAnchorStore?,
+    onBlockDouble: ((Int) -> Unit)?,
+    content: @Composable () -> Unit,
+) {
+    val interaction = remember { MutableInteractionSource() }
+    Box(
+        Modifier.fillMaxWidth()
+            .then(
+                if (anchors != null) {
+                    Modifier.onGloballyPositioned { coords ->
+                        anchors.set(start, (coords.boundsInParent().top + scroll.value).roundToInt())
+                    }
+                } else Modifier,
+            )
+            .then(
+                if (onBlockDouble != null) {
+                    Modifier.combinedClickable(
+                        interactionSource = interaction,
+                        indication = null,
+                        onClick = {},
+                        onDoubleClick = { onBlockDouble(start) },
+                    )
+                } else Modifier,
+            ),
+    ) { content() }
+}
+
+@Composable
+private fun RenderNode(node: MdNode, fontSize: Int) {
+    when (node) {
+        is MdNode.Heading -> MdHeading(node, fontSize)
+        is MdNode.Code -> MdCodeBlock(node, fontSize)
+        is MdNode.Quote -> MdQuote(node, fontSize)
+        is MdNode.Hr -> MdHr()
+        is MdNode.Table -> MdTable(node, fontSize)
+        is MdNode.Media -> MdMedia(node, fontSize)
+        is MdNode.Para -> MdPara(node, fontSize)
+        is MdNode.ListItem -> MdList(listOf(node), fontSize)   // 单独出现时（正常走 RenderBlocks 成组）
     }
 }
 

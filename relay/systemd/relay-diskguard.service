@@ -1,0 +1,9 @@
+[Unit]
+Description=Disk watermark guard (auto cleanup at 90%, escalate at 95%)
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/relay/disk_guard.sh
+Nice=15
+IOSchedulingClass=idle

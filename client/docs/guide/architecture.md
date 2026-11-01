@@ -37,22 +37,28 @@
 
 ### `Platform.kt` — 平台抽象（expect/actual）
 
-| 符号 | 作用 | Android actual | Desktop actual |
-|---|---|---|---|
-| `KeyValueStore` | 配置/token 持久化 | `SharedPreferences`（`cm_panel`） | `java.util.prefs.Preferences` |
-| `FileExporter` | 备份/SQL 导出落盘 | 应用私有 Download 目录（免运行时权限） | 系统 `~/Downloads`（不存在则用户目录） |
-| `Clip` | 复制到剪贴板 | `ClipboardManager` | `Toolkit.getSystemClipboard()` |
-| `openUrl` | 打开外链 | `Intent.ACTION_VIEW` | `Desktop.browse` |
-| `platformName` | 平台名（诊断/文案） | `"Android"` | `"Desktop"` |
+| 符号 | 作用 | Android actual | Desktop actual | iOS actual |
+|---|---|---|---|---|
+| `KeyValueStore` | 配置/token 持久化 | `SharedPreferences`（`cm_panel`） | `java.util.prefs.Preferences` | `NSUserDefaults.standardUserDefaults` |
+| `FileExporter` | 备份/SQL 导出落盘 | 应用私有 Download 目录（免运行时权限） | 系统 `~/Downloads`（不存在则用户目录） | 沙盒 `Documents`（靠 `UIFileSharingEnabled` 在「文件」App 可见） |
+| `Clip` | 复制到剪贴板 | `ClipboardManager` | `Toolkit.getSystemClipboard()` | `UIPasteboard`（`public.utf8-plain-text`） |
+| `openUrl` | 打开外链 | `Intent.ACTION_VIEW` | `Desktop.browse` | `UIApplication.openURL` |
+| `pickTextFiles` / `pickBinaryFiles` | 系统文件选择 | SAF（`AndroidPickerBridge`） | Swing `JFileChooser` | `UIDocumentPickerViewController`（`IosPickerHost` 持根 VC 与 delegate） |
+| `decodeImageBitmap` | 图片解码 | `BitmapFactory`（超大图降采样） | Skia `makeFromEncoded` | Skia `makeFromEncoded`（与 Desktop 同源） |
+| `platformName` | 平台名（诊断/文案） | `"Android"` | `"Desktop"` | `"iOS"` |
+| `platformHandheld` | 紧凑布局开关 | `true` | `false` | `true`（同 Android） |
+| `createEngine` | HTTP/WS 引擎 | CIO | CIO | **Darwin**（NSURLSession） |
+| `readBundledText` | i18n JSON 读取 | classloader | classloader | `NSBundle.mainBundle.resourcePath` + 文件夹引用 |
 
-`AppContextHolder` 让 Android 侧在 `CloudMonitorApp.onCreate()` 注入 `Application`。
+`AppContextHolder` 让 Android 侧在 `CloudMonitorApp.onCreate()` 注入 `Application`；
+iOS 不需要（UserDefaults / UIApplication 都是全局单例），保持未使用。
 
 ### `core/` — 与服务器打交道的唯一入口
 
 | 文件 | 职责 |
 |---|---|
 | `Config.kt` | `ServerConfig(url, token, rememberPassword, password)`；`normalizedUrl()/apiBase()/wsBase()`；`ConfigStore` 持久化与 `DEFAULT_URL` |
-| `Api.kt` | `PanelApi`：`get(path, cacheMs)`（TTL 缓存 + in-flight 去重）、`post`、`postRaw`、`download`、`health`、`login`、`logout`；`expect fun createEngine()`（Android=OkHttp / Desktop=CIO）；装了 `ContentNegotiation`、`WebSockets`、`HttpRequestRetry` |
+| `Api.kt` | `PanelApi`：`get(path, cacheMs)`（TTL 缓存 + in-flight 去重）、`post`、`postRaw`、`download`、`health`、`login`、`logout`；`expect fun createEngine()`（Android / Desktop = CIO；iOS = Darwin，原因见 §6）；装了 `ContentNegotiation`、`WebSockets`、`HttpRequestRetry` |
 | `Hub.kt` | 单条 `WS /ws` 连接复用：`state`、`metrics`、`history`、`alerts`、`unread`、`alertFeed`、`logs`、`refreshMs`；`subscribeLogs/unsubscribeLogs/setRefreshInterval`；指数退避重连（1s→15s）；401 → `onAuthLost` |
 | `AppState.kt` | 全局单例状态：`storeReady`、`session(Boot/Login/Ready)`、`api`、`hub`、`me`、`conn`、`alerts`、`alertConfig`、`unread`、`toasts`、`banner`；`bootstrap/login/logout/expireSession/reconfigure/testConnection/loadAlerts/toast`、`meRefreshMs()` |
 | `Json.kt` | `Json` 实例 + 取值扩展 `str/num/long/int/bool/obj/arr/key`、`jsonObjectOf`（面板响应是动态 JSON，所以按 `JsonElement` 处理，不强行建 DTO） |
@@ -182,15 +188,22 @@
 
 ## 6. 平台差异一览
 
-| 关注点 | commonMain | Android | Desktop |
-|---|---|---|---|
-| HTTP/WS 引擎 | `expect fun createEngine()` | OkHttp（`core/Api.android.kt`） | CIO（`core/Api.desktop.kt`） |
-| 入口 | `App()` | `MainActivity` + `CloudMonitorApp`（注入 Application） | `Main.kt` 的 `application { Window { … } }` |
-| 导出文件 | `platformExporter.saveFile()` | 应用私有 Download 目录 | `~/Downloads` |
-| 清单/资源 | — | `src/androidMain/AndroidManifest.xml`、`res/` | `compose.desktop.nativeDistributions` |
+| 关注点 | commonMain | Android | Desktop | iOS |
+|---|---|---|---|---|
+| HTTP/WS 引擎 | `expect fun createEngine()` | CIO（`core/Api.android.kt`） | CIO（`core/Api.desktop.kt`） | **Darwin/NSURLSession**（`core/Api.ios.kt`） |
+| 入口 | `App()` | `MainActivity` + `CloudMonitorApp`（注入 Application） | `Main.kt` 的 `application { Window { … } }` | `MainViewController.kt` 的 `ComposeUIViewController`（Xcode 壳用 Swift 调） |
+| 导出文件 | `platformExporter.saveFile()` | 应用私有 Download 目录 | `~/Downloads` | 沙盒 `Documents` + `UIFileSharingEnabled` |
+| 清单/资源 | — | `src/androidMain/AndroidManifest.xml`、`res/` | `compose.desktop.nativeDistributions` | `iosApp/iosApp/Info.plist`（ATS 放行 http、本地网络用途声明、i18n 文件夹引用） |
+| 窗口/输入 | `captionButtonHovered`、`platformTerminalChar` | 无 hover / 无 keyChar（返回 false / null） | hover + AWT `keyChar` | 与 Android 同（触屏无 hover、无 keyChar） |
 
-两端**共享同一套页面与控件代码**，平台差异只允许出现在 `androidMain` / `desktopMain`
+三端**共享同一套页面与控件代码**，平台差异只允许出现在 `androidMain` / `desktopMain` / `iosMain`
 与 `Platform`/`createEngine` 的 actual 中。
+
+> iOS 用 Darwin 而不是继续用 CIO，是有意偏离「三端同引擎」的唯一一处：
+> K/N 上 CIO 走 ktor 自实现的 TLS，证书链支持面明显窄于系统 Secure Transport，
+> 一旦某台面板服务器握手不通就是「完全连不上」且最难排查。
+> 代价是 WS 时序可能与 CIO 不同（Android 曾因换 OkHttp 出现 `/ws`、`/term` 反复重连），
+> 所以 iOS 真机回归必须盯自动重连。
 
 ---
 

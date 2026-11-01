@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +43,6 @@ import com.servermaintance.panel.ui.DataTable
 import com.servermaintance.panel.ui.ErrorState
 import com.servermaintance.panel.ui.GhostBtn
 import com.servermaintance.panel.ui.GridLayout
-import com.servermaintance.panel.ui.Level
 import com.servermaintance.panel.ui.LoadingState
 import com.servermaintance.panel.ui.Modal
 import com.servermaintance.panel.ui.PageScaffold
@@ -54,6 +51,7 @@ import com.servermaintance.panel.ui.PanelCard
 import com.servermaintance.panel.ui.PctBar
 import com.servermaintance.panel.ui.StatTile
 import com.servermaintance.panel.ui.TableCol
+import com.servermaintance.panel.ui.slotHorizontalScroll
 import com.servermaintance.panel.ui.Toggle
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -84,7 +82,7 @@ import kotlinx.serialization.json.JsonObject
 
 private data class DiskAction(val id: String, val label: String, val danger: Boolean, val desc: String)
 
-private val DISK_ACTIONS  get() = listOf(
+private val DISK_ACTIONS_LINUX get() = listOf(
     DiskAction("apt-clean", L["清理_apt_缓存_55c020f574"], false, L["删除_var_cache_apt_archiv_4cd0531496"]),
     DiskAction("apt-autoremove", L["自动卸载无用包_38e506d175"], true, L["卸载不再被任何软件包依赖的软件包_8ed32b0b41"]),
     DiskAction("journal-vacuum", L["裁剪系统日志_519fd2b507"], false, L["将_journald_日志体积限制到_200mb_88b7b48940"]),
@@ -92,6 +90,16 @@ private val DISK_ACTIONS  get() = listOf(
     DiskAction("drop-caches", L["释放内存缓存_f951d508c6"], true, L["写入_drop_caches_3_清空页缓存_目_545feeaf1e"]),
     DiskAction("docker-prune", L["docker_清理_795b9faf02"], true, L["docker_system_prune_af_ead57cbf4c"]),
     DiskAction("analyze", L["磁盘占用分析_e0dcb52688"], false, L["扫描根目录一级_二级目录及大于_100mb_的文_60e4bd3b99"]),
+)
+
+/** Windows 面板：同名 action id 由服务端分发为对应实现（缓存/组件清理/TRIM/工作集/Docker/占用分析）。 */
+private val DISK_ACTIONS_WINDOWS get() = listOf(
+    DiskAction("apt-clean", L["wintools.disk.cleancache"], false, L["wintools.disk.cleancache.desc"]),
+    DiskAction("journal-vacuum", L["wintools.disk.component"], false, L["wintools.disk.component.desc"]),
+    DiskAction("fstrim", L["wintools.disk.trim"], false, L["wintools.disk.trim.desc"]),
+    DiskAction("drop-caches", L["wintools.disk.workingset"], true, L["wintools.disk.workingset.desc"]),
+    DiskAction("docker-prune", L["docker_清理_795b9faf02"], true, L["wintools.disk.docker.desc"]),
+    DiskAction("analyze", L["磁盘占用分析_e0dcb52688"], false, L["wintools.disk.analyze.desc"]),
 )
 
 @Composable
@@ -184,7 +192,7 @@ fun DisksPage() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    modifier = Modifier.slotHorizontalScroll(),
                 ) {
                     Toggle(checked = auto, onCheckedChange = { auto = it }, label = L["自动刷新_297a7ec438"])
                     ChipText(monitorRefreshLabel(AppState.meRefreshMs()))
@@ -297,7 +305,7 @@ fun DisksPage() {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             ) {
-                DISK_ACTIONS.forEach { a ->
+                (if (AppState.isWindowsServer) DISK_ACTIONS_WINDOWS else DISK_ACTIONS_LINUX).forEach { a ->
                     if (a.danger) {
                         DangerBtn(
                             text = a.label,

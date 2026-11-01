@@ -58,10 +58,13 @@ const TTL = {
 const cache = new Map(); // path?query -> { exp, payload }
 
 function raw(pathQ, method, body, headers) {
+  const hdrs = Object.assign({ Accept: 'application/json' }, headers || {});
+  /* 不设 Content-Length 时 Node 走 chunked，而 collector 按 Content-Length 读体 —— 会读到空 */
+  if (body) hdrs['Content-Length'] = Buffer.byteLength(body);
   return new Promise((resolve, reject) => {
     const req = http.request({
       host: RELAY_HOST, port: RELAY_PORT, path: pathQ, method: method || 'GET',
-      headers: Object.assign({ Accept: 'application/json' }, headers || {}),
+      headers: hdrs,
     }, (res) => {
       const chunks = [];
       res.on('data', (c) => chunks.push(c));

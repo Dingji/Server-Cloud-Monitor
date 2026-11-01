@@ -1,0 +1,15 @@
+[Unit]
+Description=OpenCode relay stats collector and dashboard API
+After=network-online.target nginx.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/relay/collector.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/relay-stats.log
+StandardError=append:/var/log/relay-stats.log
+
+[Install]
+WantedBy=multi-user.target

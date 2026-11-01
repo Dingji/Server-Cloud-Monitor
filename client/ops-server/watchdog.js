@@ -73,9 +73,25 @@ function portOpen(host, port, timeoutMs) {
 async function probe(e) {
   if (e.kind === 'port') return portOpen(e.host, e.port, e.opts.timeoutMs);
   if (e.kind === 'systemd') {
+    if (process.platform === 'win32') {
+      const unit = String(e.unit || '').replace(/\.service$/i, '');
+      const r = await ex.run(`sc query ${S.shq(unit)}`, { timeout: e.opts.timeoutMs });
+      const out = (r.stdout || '').trim();
+      const ok = /STATE\s*:\s*\d+\s+RUNNING/i.test(out);
+      return { ok, error: ok ? '' : '服务未运行', status: ok ? 'RUNNING' : (out.split('\n')[3] || 'unknown').trim() };
+    }
     const r = await ex.run(`systemctl is-active ${S.shq(e.unit)} 2>&1 | head -1`, { timeout: e.opts.timeoutMs });
     const out = (r.stdout || '').trim();
     return { ok: out === 'active', error: out ? '' : '读不到状态', status: out || 'unknown' };
+  }
+  if (process.platform === 'win32') {
+    const m = String(e.match || '').replace(/'/g, "''");
+    const r = await ex.run(
+      `powershell -NoProfile -Command "(Get-CimInstance Win32_Process -Filter \\"Name LIKE '%${m}%'\\" -ErrorAction SilentlyContinue).Count"`,
+      { timeout: e.opts.timeoutMs },
+    );
+    const n = Number((r.stdout || '0').trim()) || 0;
+    return { ok: n > 0, pids: n, error: n ? '' : `没有匹配「${e.match}」的进程` };
   }
   const r = await ex.run(`pgrep -fc ${S.shq(e.match)} 2>/dev/null || echo 0`, { timeout: e.opts.timeoutMs });
   const n = Number((r.stdout || '0').trim().split('\n').pop()) || 0;
@@ -84,6 +100,10 @@ async function probe(e) {
 
 async function restartCmd(e) {
   if (e.kind === 'systemd') {
+    if (process.platform === 'win32') {
+      const unit = String(e.unit || '').replace(/\.service$/i, '');
+      return `net stop ${S.shq(unit)} & timeout /t 2 /nobreak >nul & net start ${S.shq(unit)}`;
+    }
     let cmd = `systemctl restart ${S.shq(e.unit)} 2>&1 | tail -5`;
     if (svc && typeof svc.svcCmd === 'function') {
       try { const m = await svc.detect(); if (!m.systemd && m.serviceBin) cmd = `${svc.svcCmd('restart', e.unit)} 2>&1 | tail -5`; } catch (_) {}

@@ -38,10 +38,10 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.servermaintance.panel.nav.NAV
 import com.servermaintance.panel.nav.Navigator
 import com.servermaintance.panel.nav.PageId
 import com.servermaintance.panel.nav.Workspace
+import com.servermaintance.panel.nav.visibleNav
 import com.servermaintance.panel.i18n.L
 import com.servermaintance.panel.nav.entryOf
 import com.servermaintance.panel.ui.AccentState
@@ -58,7 +58,7 @@ private data class PaletteCmd(val label: String, val hint: String, val icon: Str
  * Ctrl/Cmd+K 命令面板（复刻 core.js registerCommand + app.js registerPaletteCommands）。
  */
 @Composable
-fun CommandPaletteHost(relayAvailable: Boolean, isAdmin: Boolean = true, content: @Composable () -> Unit) {
+fun CommandPaletteHost(availableProbes: Set<String>, isAdmin: Boolean = true, isWindows: Boolean = false, content: @Composable () -> Unit) {
     var open by remember { mutableStateOf(false) }
     Box(
         Modifier.fillMaxSize().onPreviewKeyEvent { e ->
@@ -78,8 +78,9 @@ fun CommandPaletteHost(relayAvailable: Boolean, isAdmin: Boolean = true, content
         content()
         if (open) {
             PaletteOverlay(
-                relayAvailable = relayAvailable,
+                availableProbes = availableProbes,
                 isAdmin = isAdmin,
+                isWindows = isWindows,
                 onDismiss = { open = false },
             )
         }
@@ -87,12 +88,12 @@ fun CommandPaletteHost(relayAvailable: Boolean, isAdmin: Boolean = true, content
 }
 
 @Composable
-private fun PaletteOverlay(relayAvailable: Boolean, isAdmin: Boolean, onDismiss: () -> Unit) {
+private fun PaletteOverlay(availableProbes: Set<String>, isAdmin: Boolean, isWindows: Boolean, onDismiss: () -> Unit) {
     var q by remember { mutableStateOf("") }
     var hi by remember { mutableIntStateOf(0) }
     val current by Navigator.current.collectAsState()
     val pinned by Workspace.pinned.collectAsState()
-    val cmds = paletteCommands(relayAvailable, isAdmin, current, pinned)
+    val cmds = paletteCommands(availableProbes, isAdmin, isWindows, current, pinned)
     val filtered = run {
         val n = q.trim()
         if (n.isEmpty()) cmds else cmds.filter { it.label.contains(n, true) || it.hint.contains(n, true) }
@@ -164,13 +165,13 @@ private fun PaletteOverlay(relayAvailable: Boolean, isAdmin: Boolean, onDismiss:
 
 @Composable
 private fun paletteCommands(
-    relayAvailable: Boolean,
+    availableProbes: Set<String>,
     isAdmin: Boolean,
+    isWindows: Boolean,
     current: PageId,
     pinned: List<PageId>,
 ): List<PaletteCmd> {
-    val pages = NAV
-        .filter { (!it.optional || relayAvailable) && (!it.adminOnly || isAdmin) }
+    val pages = visibleNav(availableProbes, isAdmin, isWindows)
         .sortedByDescending { it.id in pinned }
         .map { e ->
             val suffix = when {

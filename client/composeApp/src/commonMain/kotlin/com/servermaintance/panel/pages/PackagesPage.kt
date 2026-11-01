@@ -56,6 +56,7 @@ import com.servermaintance.panel.core.obj
 import com.servermaintance.panel.core.str
 import com.servermaintance.panel.nowEpochMillis
 import com.servermaintance.panel.ui.AccentState
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.DangerBtn
 import com.servermaintance.panel.ui.DataTable
 import com.servermaintance.panel.ui.EmptyState
@@ -715,15 +716,11 @@ fun PackagesPage() {
     @Composable
     fun SearchTab() {
         PanelCard(title = L["搜索软件包_a162c7cf8d"]) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            AdaptiveRow(spacing = 8.dp) {
                 SearchField(
                     value = q,
                     onValueChange = { q = it },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.span(1f),
                     placeholder = L["搜索软件包_名称或描述_如_nginx_ht_320fde8b40"],
                 )
                 val options = listOf(L["全部源_全局搜索_252f184452"]) + srcList.map { srcDisplay(it.uri) }
@@ -733,7 +730,7 @@ fun PackagesPage() {
                     onValueChange = { v ->
                         srcUri = if (v == L["全部源_全局搜索_252f184452"]) "" else srcList.firstOrNull { srcDisplay(it.uri) == v }?.uri ?: ""
                     },
-                    modifier = Modifier.width(280.dp),
+                    modifier = Modifier.spanFixed(280.dp),
                 )
                 PrimaryBtn(text = L["搜索_f04090805c"], icon = "search", onClick = { scope.launch { doSearchNow() } })
             }
@@ -839,35 +836,34 @@ fun PackagesPage() {
         val dirLabels = listOf(L["升序_c0276ec9a7"] to "asc", L["降序_a4c38f3ce2"] to "desc")
         val sections = instRes?.arr("sections").orEmpty().mapNotNull { (it as? JsonPrimitive)?.content }
         PanelCard(title = L["过滤与排序_77a35ebb60"], collapsible = false) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            AdaptiveRow(spacing = 8.dp) {
                 SearchField(
                     value = iq,
                     onValueChange = { iq = it },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.span(1f),
                     placeholder = L["过滤已安装包_名称或分组_7ecdc6b62e"],
                 )
-                SelectField(
-                    value = iSection,
-                    options = listOf(L["全部分组_eb8d23fedf"]) + sections,
-                    onValueChange = { iSection = if (it == L["全部分组_eb8d23fedf"]) "" else it; iPage = 0 },
-                    modifier = Modifier.width(170.dp),
-                )
-                SelectField(
-                    value = sortLabels.firstOrNull { it.second == iSort }?.first ?: L["按名称_0ea96767da"],
-                    options = sortLabels.map { it.first },
-                    onValueChange = { v -> iSort = sortLabels.firstOrNull { it.first == v }?.second ?: "name"; iPage = 0 },
-                    modifier = Modifier.width(120.dp),
-                )
-                SelectField(
-                    value = dirLabels.firstOrNull { it.second == iDir }?.first ?: L["升序_c0276ec9a7"],
-                    options = dirLabels.map { it.first },
-                    onValueChange = { v -> iDir = dirLabels.firstOrNull { it.first == v }?.second ?: "asc" },
-                    modifier = Modifier.width(100.dp),
-                )
+                // 三个下拉：桌面并排（170/120/100dp 一行放得下），手持端叠成三行整宽
+                AdaptiveRow(spacing = 8.dp) {
+                    SelectField(
+                        value = iSection,
+                        options = listOf(L["全部分组_eb8d23fedf"]) + sections,
+                        onValueChange = { iSection = if (it == L["全部分组_eb8d23fedf"]) "" else it; iPage = 0 },
+                        modifier = Modifier.spanFixed(170.dp),
+                    )
+                    SelectField(
+                        value = sortLabels.firstOrNull { it.second == iSort }?.first ?: L["按名称_0ea96767da"],
+                        options = sortLabels.map { it.first },
+                        onValueChange = { v -> iSort = sortLabels.firstOrNull { it.first == v }?.second ?: "name"; iPage = 0 },
+                        modifier = Modifier.spanFixed(120.dp),
+                    )
+                    SelectField(
+                        value = dirLabels.firstOrNull { it.second == iDir }?.first ?: L["升序_c0276ec9a7"],
+                        options = dirLabels.map { it.first },
+                        onValueChange = { v -> iDir = dirLabels.firstOrNull { it.first == v }?.second ?: "asc" },
+                        modifier = Modifier.spanFixed(100.dp),
+                    )
+                }
             }
         }
         when {
@@ -1572,13 +1568,9 @@ fun PackagesPage() {
 
                     /* —— 页签条（JS L28-L36） —— */
                     PanelCard(title = L["页签_46c7c1c3b1"], collapsible = false) {
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
+                        AdaptiveRow(spacing = 8.dp) {
                             Row(
-                                Modifier.horizontalScroll(rememberScrollState()),
+                                Modifier.span(1f).horizontalScroll(rememberScrollState()),
                                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                             ) {
                                 val tabs = listOf(

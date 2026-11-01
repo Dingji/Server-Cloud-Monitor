@@ -20,7 +20,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.servermaintance.panel.core.arr
@@ -32,7 +31,6 @@ import com.servermaintance.panel.ui.LevelBadge
 import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelCard
 import com.servermaintance.panel.ui.TableCol
-import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive

@@ -8,8 +8,6 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 
 /** Shared JSON handling: panel responses are dynamic, so we work on JsonElement. */
@@ -22,12 +20,15 @@ val Json: kotlinx.serialization.json.Json by lazy {
     }
 }
 
-/** Thrown for HTTP errors; mirrors the panel's `{error, output}` contract. */
+/** Thrown for HTTP errors; mirrors the panel's `{error, output}` contract.
+ *  fromServer=true 表示响应体是面板的 JSON `{error}`（业务错误，如「目录不存在」）；
+ *  false 通常是网关/路由层的 HTML 404（ops 模块未部署）——两者语义不同。 */
 class ApiException(
     message: String,
     val code: Int = 0,
     val output: String? = null,
     val isAuth: Boolean = false,
+    val fromServer: Boolean = false,
 ) : Exception(message)
 
 /* ------------------------------------------------------------------ *
@@ -87,7 +88,7 @@ fun jsonObjectOf(vararg pairs: Pair<String, Any?>): JsonObject = buildJsonObject
             is String -> put(k, JsonPrimitive(v))
             is Boolean -> put(k, JsonPrimitive(v))
             is Int -> put(k, JsonPrimitive(v))
-            is Long -> put(k, JsonPrimitive(v.toDouble()))
+            is Long -> put(k, JsonPrimitive(v))
             is Double -> put(k, JsonPrimitive(v))
             is Float -> put(k, JsonPrimitive(v.toDouble()))
             is JsonElement -> put(k, v)
@@ -104,7 +105,7 @@ fun List<Pair<String, Any?>>.toJsonObject(): JsonObject = buildJsonObject {
             is String -> put(k, JsonPrimitive(v))
             is Boolean -> put(k, JsonPrimitive(v))
             is Int -> put(k, JsonPrimitive(v))
-            is Long -> put(k, JsonPrimitive(v.toDouble()))
+            is Long -> put(k, JsonPrimitive(v))
             is Double -> put(k, JsonPrimitive(v))
             is JsonElement -> put(k, v)
             else -> put(k, JsonPrimitive(v.toString()))

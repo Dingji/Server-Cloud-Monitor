@@ -105,6 +105,30 @@
 
     badge(text, kind) { return `<span class="badge ${kind}">${fmt.esc(text)}</span>`; },
 
+    /* 复制到剪贴板。面板跑在 http 上，非安全上下文里 navigator.clipboard 直接是
+       undefined（不是 reject），所以只写 try/await 的"复制"按钮必然只弹"复制失败"。
+       这里补上 execCommand 兜底，返回是否真的进了剪贴板。 */
+    async copy(text) {
+      text = String(text == null ? '' : text);
+      if (!text) return false;
+      if (navigator.clipboard && window.isSecureContext) {
+        try { await navigator.clipboard.writeText(text); return true; } catch (_) {}
+      }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:-1px;left:-1px;opacity:0;height:12px';
+      document.body.appendChild(ta);
+      let ok = false;
+      try {
+        ta.focus();                       // execCommand 只认当前有焦点的选区
+        ta.setSelectionRange(0, text.length);
+        ok = document.execCommand('copy');
+      } catch (_) {}
+      document.body.removeChild(ta);
+      return ok;
+    },
+
     /* skeleton placeholder block */
     skeleton(rows) {
       rows = rows || 3;

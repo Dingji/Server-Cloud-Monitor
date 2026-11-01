@@ -7,7 +7,6 @@ import com.servermaintance.panel.i18n.tr
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -41,7 +39,6 @@ import com.servermaintance.panel.ui.DataTable
 import com.servermaintance.panel.ui.FormField
 import com.servermaintance.panel.ui.GridLayout
 import com.servermaintance.panel.ui.Modal
-import com.servermaintance.panel.ui.Palette
 import com.servermaintance.panel.ui.PanelCard
 import com.servermaintance.panel.ui.SearchField
 import com.servermaintance.panel.ui.StatTile
@@ -277,7 +274,7 @@ private fun runMaintenance(scope: CoroutineScope, st: DbState, dbs: List<JsonObj
                     okText = L["继续_1fc1afc5c5"],
                 ) ?: return@launch
                 database = r["database"]?.takeIf { it.isNotEmpty() } ?: return@launch
-                val target = database ?: return@launch
+                val target = database
                 val tl = runCatching {
                     AppState.api.get("/db/tables?engine=$engineId&database=${q(target)}")
                 }.getOrNull() as? JsonArray

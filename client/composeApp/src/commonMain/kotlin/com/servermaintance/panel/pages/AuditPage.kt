@@ -3,9 +3,7 @@ import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -33,6 +30,7 @@ import com.servermaintance.panel.core.key
 import com.servermaintance.panel.core.num
 import com.servermaintance.panel.core.obj
 import com.servermaintance.panel.core.str
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.DataTable
 import com.servermaintance.panel.ui.EmptyState
 import com.servermaintance.panel.ui.ErrorState
@@ -237,11 +235,7 @@ private fun AuditBody(
     val displayIndex = keyValues.indexOf(keyState).let { if (it < 0) 0 else it }
 
     PanelCard(title = L["筛选_dcce9a144a"], right = { PanelIcon("filter", size = 14.dp) }) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        AdaptiveRow(spacing = 12.dp) {
             SelectField(
                 value = AUDIT_RANGES.firstOrNull { it.first == rangeState }?.second ?: L["最近_24_小时_eb9f889d6a"],
                 options = AUDIT_RANGES.map { it.second },
@@ -250,7 +244,7 @@ private fun AuditBody(
                     onQuery(v, keyState, limitState)
                 },
                 label = L["时间范围_2be9040878"],
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.span(1f),
             )
             SelectField(
                 value = keyOptions.getOrElse(displayIndex) { keyOptions.first() },
@@ -260,14 +254,14 @@ private fun AuditBody(
                     onQuery(rangeState, keyValues.getOrElse(idx) { "" }, limitState)
                 },
                 label = L["审计规则_bc6a3d7a3f"],
-                modifier = Modifier.weight(1.4f),
+                modifier = Modifier.span(1.4f),
             )
             SelectField(
                 value = limitState,
                 options = AUDIT_LIMITS,
                 onValueChange = { onQuery(rangeState, keyState, it) },
                 label = L["返回条数_5ab4faa584"],
-                modifier = Modifier.weight(0.7f),
+                modifier = Modifier.span(0.7f),
             )
             PrimaryBtn(text = L["查询_711363c424"], onClick = { onQuery(rangeState, keyState, limitState) })
         }

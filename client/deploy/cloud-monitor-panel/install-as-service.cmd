@@ -1,0 +1,3 @@
+@echo off
+echo Requesting Administrator to install Cloud Monitor Windows service...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process powershell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File ""%~dp0install.ps1"" -Prefix D:\CloudMonitor'"

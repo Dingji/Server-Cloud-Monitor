@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -19,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +29,7 @@ import com.servermaintance.panel.core.Fmt
 import com.servermaintance.panel.core.RemoteHost
 import com.servermaintance.panel.core.RemoteState
 import com.servermaintance.panel.core.ToastKind
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.AutoRefresh
 import com.servermaintance.panel.ui.Chip
 import com.servermaintance.panel.ui.DataTable
@@ -202,8 +203,8 @@ fun OpsRemotePage() {
             PanelCard(title = trf("明细_0_24c4208e51", h.label), cardKey = "remote-detail", collapsible = false, right = {
                 GhostBtn(text = L["收起_5d5815647c"], onClick = { picked = null }, icon = "close")
             }) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                    Column(Modifier.weight(1f)) {
+                AdaptiveRow(spacing = 20.dp, verticalAlignment = Alignment.Top) {
+                    Column(Modifier.span(1f)) {
                         RemoteRow(L["nav.section.system"], h.os.ifBlank { "—" })
                         RemoteRow(L["运行_0c3acd446f"], h.uptimeLine.ifBlank { "—" })
                         RemoteRow(L["cpu_核数_2a5bc46dd3"], "${h.cores}")
@@ -211,7 +212,7 @@ fun OpsRemotePage() {
                         RemoteRow(L["磁盘最高使用_b4b83284b5"], "${h.diskMaxPct}%")
                         RemoteRow(L["认证方式_e9492d44ee"], if (h.hasKey) L["私钥_d452099943"] else "" + if (h.hasPassword) L["密码_c839a8ff17"] else L["未配置_63595e95b7"])
                     }
-                    Column(Modifier.weight(1.3f)) {
+                    Column(Modifier.span(1.3f)) {
                         RemoteRow(L["对外端口_fe3302e0a7"], if (h.ports.isEmpty()) "—" else h.ports.joinToString(L["s_d3bc9a378d"]))
                         RemoteRow(L["top_进程_17603f0ba3"], if (h.top.isEmpty()) "—" else h.top.joinToString(L["s_d3dacf895c"]))
                     }

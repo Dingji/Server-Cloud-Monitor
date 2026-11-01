@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-17T11:40:00+08:00",
+  "note": "OpenCode Go 套餐允许使用的模型。两个指定主力模型 + Go 线路上的免费模型。其他模型一律在推理入口拒绝（403 model_not_allowed），客户端配置也只列出这些。",
+  "models": [
+    "mimo-v2.6-flash",
+    "deepseek-v4.1-flash",
+    "longcat-2.5-preview-free"
+  ]
+}

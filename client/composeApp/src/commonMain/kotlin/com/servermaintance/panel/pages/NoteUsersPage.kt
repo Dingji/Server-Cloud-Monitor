@@ -49,6 +49,7 @@ import com.servermaintance.panel.core.long
 import com.servermaintance.panel.core.str
 import com.servermaintance.panel.platformHandheld
 import com.servermaintance.panel.ui.AccentState
+import com.servermaintance.panel.ui.AdaptiveRow
 import com.servermaintance.panel.ui.CheckRow
 import com.servermaintance.panel.ui.Chip
 import com.servermaintance.panel.ui.DangerBtn
@@ -67,6 +68,7 @@ import com.servermaintance.panel.ui.SearchField
 import com.servermaintance.panel.ui.SelectField
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonElement
@@ -186,20 +188,19 @@ private fun UsersInner() {
 
         /* 工具行：搜索 + 角色/状态过滤 + 新建（卡片容器） */
         val barShape = RoundedCornerShape(6.dp)
-        Row(
-            Modifier.fillMaxWidth().padding(bottom = 10.dp)
+        AdaptiveRow(
+            spacing = 8.dp,
+            modifier = Modifier.padding(bottom = 10.dp)
                 .clip(barShape)
                 .background(Palette.panel)
                 .border(1.dp, Palette.border, barShape)
                 .padding(horizontal = 8.dp, vertical = 7.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            SearchField(q, { q = it }, Modifier.weight(1f), placeholder = L["搜索邮箱_8dad475e2f"])
-            Box(Modifier.widthIn(max = 130.dp)) {
+            SearchField(q, { q = it }, Modifier.span(1f), placeholder = L["搜索邮箱_8dad475e2f"])
+            Box(Modifier.spanFixed(130.dp)) {
                 SelectField(roleFilter, listOf(L["全部角色_9adaf88c6d"], L["管理员_ef84e765e0"], L["普通用户_bd8d896aad"]), { roleFilter = it }, placeholder = L["全部角色_9adaf88c6d"])
             }
-            Box(Modifier.widthIn(max = 140.dp)) {
+            Box(Modifier.spanFixed(140.dp)) {
                 SelectField(statusFilter, listOf(L["全部状态_1a4c26d92d"], L["已启用_25d2843150"], L["待邮箱验证_bada0c2e46"], L["已停用_6c7dcbb73a"]), { statusFilter = it }, placeholder = L["全部状态_1a4c26d92d"])
             }
             PrimaryBtn(text = L["新建用户_30416407e5"], icon = "plus", onClick = { dialog = UserDialogTarget(null) })
@@ -527,7 +528,7 @@ private fun UserEditDialog(
                     )
                     Spacer(Modifier.size(1.dp))
                     Text(
-                        if (creating) L["创建_notebox_账号并分配角色_2911541ceb"] else user?.str("email").orEmpty(),
+                        if (creating) L["创建_notebox_账号并分配角色_2911541ceb"] else user.str("email").orEmpty(),
                         color = Palette.muted, fontSize = 11.sp,
                         fontFamily = if (creating) FontFamily.Default else FontFamily.Monospace,
                         maxLines = 1, overflow = TextOverflow.Ellipsis,

@@ -2,7 +2,6 @@ package com.servermaintance.panel.pages.db
 import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.trfn
 import com.servermaintance.panel.i18n.L
-import com.servermaintance.panel.i18n.tr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,7 +44,6 @@ import com.servermaintance.panel.core.jsonObjectOf
 import com.servermaintance.panel.core.str
 import com.servermaintance.panel.ui.AccentState
 import com.servermaintance.panel.ui.EmptyState
-import com.servermaintance.panel.ui.FormField
 import com.servermaintance.panel.ui.Level
 import com.servermaintance.panel.ui.LevelBadge
 import com.servermaintance.panel.ui.LoadingState

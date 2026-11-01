@@ -4,6 +4,7 @@ import com.servermaintance.panel.i18n.L
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -257,4 +258,11 @@ object AppState {
         val v = _me.value?.int("refreshMs") ?: 0
         return if (v >= 500) v.toLong() else 2000L
     }
+
+    /**
+     * 当前连接的服务器平台：`/me.env.family == "windows"` 即 Windows 面板
+     * （.NET 版），否则按 Linux 面板处理。导航与页面按此分化显示。
+     */
+    val isWindowsServer: Boolean
+        get() = _me.value?.obj("env")?.stringOr("family") == "windows"
 }

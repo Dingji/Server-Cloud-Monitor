@@ -2,9 +2,9 @@ package com.servermaintance.panel.core
 import com.servermaintance.panel.i18n.trf
 import com.servermaintance.panel.i18n.L
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import com.servermaintance.panel.nowEpochMillis
 
@@ -105,7 +105,7 @@ object Fmt {
         val ms = t?.toLong() ?: 0L
         if (ms <= 0L) return "--"
         val ldt = Instant.fromEpochMilliseconds(ms).toLocalDateTime(TimeZone.currentSystemDefault())
-        return "${ldt.year}-${two(ldt.monthNumber)}-${two(ldt.dayOfMonth)} " +
+        return "${ldt.year}-${two(ldt.month.number)}-${two(ldt.day)} " +
             two(ldt.hour) + ":" + two(ldt.minute) + ":" + two(ldt.second)
     }
 
