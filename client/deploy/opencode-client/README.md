@@ -1,92 +1,113 @@
-# 给别的机器接上这台 AI 中继 —— 两步
+# Point another machine at this AI relay — two steps
 
-配套文件：[`opencode.json`](opencode.json)。它是从已验证可用的本机配置里**筛出来**的，
-只保留中继的两条线路，并且把当前**必然失败**的模型预先 `disabled`（Zen 线路未开通，逐模型 402）。
+Companion file: [`opencode.json`](opencode.json). It was **filtered out** of a local
+configuration that is known to work: only the relay's two routes are kept, and the
+models that are **guaranteed to fail** today are pre-`disabled` (the Zen route is not
+provisioned; it answers `402` per model).
 
-> 完整排障手册见 [docs/guide/opencode-relay-client.md](../../docs/guide/opencode-relay-client.md)。
-> 那份是"交给 AI 直接执行"的版本；这里只讲最小安装。
+> The full troubleshooting manual is
+> [docs/guide/opencode-relay-client.md](../../docs/guide/opencode-relay-client.md) —
+> written to be executed by an AI agent. This page is only the minimal install.
 
 ---
 
-## 1. 放配置文件
+## 1. Put the config file in place
 
-路径规则 Windows 与 Linux/macOS 相同：
+The path is the same on Windows and on Linux/macOS:
 
 ```
 ~/.config/opencode/opencode.json
 ```
 
-**如果目标机器上这个文件已经存在且有别人写的设置，不要整文件覆盖** —— 只把
-`providers.relay-go` / `providers.relay-zen` 两段合并进去，并保留
-`"disabled_providers": ["opencode-go"]` 与 `"model": "relay-go/mimo-v2.6-flash"`。
+**If that file already exists on the target machine with someone else's settings, do not
+overwrite it wholesale** — merge only the `providers.relay-go` and `providers.relay-zen`
+blocks, and keep `"disabled_providers": ["opencode-go"]` and
+`"model": "relay-go/mimo-v2.6-flash"`.
 
-## 2. 设分发 key（每台一枚，别共用）
+## 2. Set the distributed key (one per machine, never shared)
 
-key 由发放人在面板 **OpenCode 中继 → 分发 Key** 里生成，明文只在生成那一次显示。
-**key 不写进配置文件，也不入库、不进 shell 历史之外的地方。**
+The issuer generates keys in the panel under **OpenCode relay → Distributed keys**; the
+plaintext is shown exactly once, at creation. **The key does not go into the config file,
+into the repository, or anywhere beyond your shell history.**
 
-Windows（PowerShell，只影响当前用户，不需要管理员）：
+Windows (PowerShell; current user only, no administrator required):
 
 ```powershell
 [Environment]::SetEnvironmentVariable('OPENCODE_RELAY_KEY','rk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx','User')
 ```
 
-Linux / macOS（写进 shell 配置，别只在当前 shell `export`）：
+Linux / macOS (write it to your shell profile; a bare `export` in the current shell is
+not enough):
 
 ```bash
 printf '\nexport OPENCODE_RELAY_KEY=%q\n' 'rk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' >> ~/.bashrc
 ```
 
-环境变量只对**新开的进程**生效。但"关掉 opencode 窗口"不等于退干净 —— Windows 上
-`opencode.exe` 的后台进程会残留并继续拿着旧 key 出门（2026-10-31 实测：窗口关了，
-两个 daemon 还活着，换 key 后所有流量照旧记在旧 key 名下）。设完 key 先确认进程清零：
+Environment variables only reach **newly started processes** — and closing the opencode
+window is not the same as quitting. On Windows `opencode.exe` background processes survive
+and keep sending the old key (measured 2026-10-31: window closed, two daemons still alive,
+every request after the key change still billed to the old key). After setting the key,
+confirm no process is left:
 
 ```powershell
-tasklist | findstr /i opencode    # 必须为空；不为空就 taskkill /F /IM opencode.exe
+tasklist | findstr /i opencode    # must be empty; if not: taskkill /F /IM opencode.exe
 ```
 
-Linux / macOS：`pkill -f opencode`。
+On Linux / macOS: `pkill -f opencode`.
 
-## 3. 验证（四条都过才算装好）
+## 3. Verify (all four must pass)
 
 ```bash
-opencode --version                                   # 期望 v2.1.4（中继按这个版本验证过）
-opencode models | grep -E '^relay-(go|zen)/'          # 期望只有 relay-go 两行可选
+opencode --version                                   # expect v2.1.4 (the relay is validated against this version)
+opencode models | grep -E '^relay-(go|zen)/'          # expect only the two relay-go lines to be selectable
 curl -s -o /dev/null -w '%{http_code}\n' \
   -X POST http://8.153.153.176/v1/chat/completions \
   -H "Authorization: Bearer $OPENCODE_RELAY_KEY" -H 'Content-Type: application/json' \
   -d '{"model":"mimo-v2.6-flash","messages":[{"role":"user","content":"say ok"}],"max_tokens":8}'
 ```
 
-最后让使用方在 opencode 里选 `relay-go/mimo-v2.6-flash` 发一句话，看到回答后**还要做第 4 条**。
+Finally have the user send one message in opencode with `relay-go/mimo-v2.6-flash`
+selected — and after the answer appears, **still do step 4**.
 
-**4. 记账归属核验（最关键，前三条都抓不住它）**：发放人在面板 **分发 Key** 里确认
-这枚 key 的用量在涨。原因：旧的全局令牌（`ck_master`）不限额且一直有效 —— 哪怕
-opencode 实际还在用旧 key，curl 探测、模型列表、正常回答三条也全是绿的。唯一能
-暴露"账记在谁头上"的就是面板里的用量数字（实测：三绿，但一周 2700 万 token 全记在
-master 名下）。用量不动时按这个顺序找残留：后台进程（上面第 2 步）→
-opencode 的凭据库 `~/.local/share/opencode/opencode.db` 的 `credential` 表
-（integration `opencode-go`，存过 `opencode auth login` 的机器会压着一枚旧 key）。
+**4. Confirm which key the traffic is billed to (the most important check; none of the
+first three can catch this).** The issuer looks at the panel's **Distributed keys** page
+and confirms this key's usage is climbing. The reason: the old global token
+(`ck_master`) is unlimited and still valid — so even when opencode is actually sending
+the old key, the curl probe, the model list and a normal answer are all green. Only the
+usage numbers expose whose account is being spent (measured: all three green, while
+27 million tokens in one week were recorded under master). If the numbers do not move,
+look for leftovers in this order: background processes (step 2 above) → opencode's
+credential store, the `credential` table in `~/.local/share/opencode/opencode.db`
+(integration `opencode-go` — a machine that ever ran `opencode auth login` has an old key
+sitting there as a fallback).
 
-状态码含义：`200` 正常；`401` 这枚 key 不存在或已被停用；`403` 模型不在 Go 套餐白名单；
-`429` 这枚 key 的时/周/月额度到顶（响应体的 `error.message` 会写哪个窗口、何时恢复，
-**这不是故障，别去改客户端配置**）；`503` 上游套餐 key 全部超额，要找发放人补 key。
+Status codes: `200` fine; `401` this key does not exist or has been revoked; `403` the
+model is not on the Go plan's allowlist; `429` this key hit its hour/week/month ceiling
+(`error.message` in the body names the window and when it resets — **this is not a fault,
+do not go changing client configuration**); `503` every upstream plan key is exhausted,
+ask the issuer to add keys.
 
-> 注意：`ck_master`（内部兜底令牌）在面板里永远显示不出用量 —— 不限额的 key 压根不查
-> `used`，这是设计行为，不是显示坏了。看到"有流量但面板没数字"，先查客户端是不是还在用 master。
+> Note: `ck_master` (the internal fallback token) can never show usage in the panel —
+> a key with no limit is not even queried for `used`. That is by design, not a display
+> bug. If you see traffic but no numbers, first check whether the client is still on master.
 
 ---
 
-## 装完之后会看到的两个现象（都是正常的）
+## Two things you will notice after installing (both are normal)
 
-1. **忙时/闲时会自动换模型。** 工作日北京时间 09:00–12:00、14:00–18:00 把 deepseek 请求改到
-   mimo；其余时间这条线路的请求改到 deepseek-v4.1-flash。客户端界面显示的仍是用户选的模型，
-   改写发生在服务端。要确认就看响应头 `X-Relay-Rewritten-From / -To / -Policy`。
-2. **额度按 key 计 token**，时=滚动 1 小时、周=本周（周一 00:00 起）、月=本月（1 号 00:00 起），
-   命中缓存的输入不计。发放人在面板里能实时看到每枚 key 用了多少。
+1. **Models switch automatically between busy and idle hours.** On weekdays, Beijing time
+   09:00–12:00 and 14:00–18:00, deepseek requests are rewritten to mimo; outside those
+   windows this route's requests go to deepseek-v4.1-flash. The client UI still shows the
+   model the user picked — the rewrite happens server-side. To confirm, look at the
+   response headers `X-Relay-Rewritten-From / -To / -Policy`.
+2. **Quotas count tokens per key**: hour = rolling 60 minutes, week = this calendar week
+   (from Monday 00:00), month = this calendar month (from the 1st, 00:00). Input served
+   from cache is not counted. The issuer sees each key's consumption live in the panel.
 
-## 要接 Zen / GLM / MiMo 线路时
+## When you want the Zen / GLM / MiMo routes
 
-`relay-zen` 的 6 个模型已在配置里，只是全部 `disabled`（上游逐模型返回 `402`，账户未开通）。
-套餐开通后把 `"disabled": true` 去掉即可，`canonical: "opencode"` 必须保留。
-GLM 与 MiMo 两条线路（`/glm/v1`、`/mimo/v1`）当前上游配额耗尽，需要时再按手册 §4 的写法加 provider。
+The six `relay-zen` models are already in the config, all `disabled` (the upstream answers
+`402` per model because the account is not provisioned). Once the plan is enabled, just
+remove `"disabled": true` — `canonical: "opencode"` must stay. The GLM and MiMo routes
+(`/glm/v1`, `/mimo/v1`) currently have no upstream quota left; add providers for them per
+§4 of the manual when you need them.

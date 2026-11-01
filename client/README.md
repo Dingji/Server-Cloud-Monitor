@@ -1,294 +1,343 @@
-# Cloud Monitor — 服务器监控面板 KMP 客户端
+# Cloud Monitor — server monitoring panel, KMP client
 
-用 **Kotlin Multiplatform + Compose Multiplatform** 复刻公网 Ubuntu 服务器上的
-**Cloud Monitor 监控面板**（`/opt/cloud-monitor`，Node/Express，约 19.6k 行），
-**原生控件**渲染，不套 WebView。客户端连接同一个面板 API，服务器地址可配置。
+A **Kotlin Multiplatform + Compose Multiplatform** replica of the **Cloud Monitor**
+panel running on a public Ubuntu server (`/opt/cloud-monitor`, Node/Express, roughly
+19.6k lines). Everything is rendered with **native controls** — no WebView wrapper. The
+client talks to the same panel API, and the server address is configurable.
 
-- 目标平台：**Android + Desktop (JVM)**
-- 默认服务器：`http://8.153.153.176/panel`
-- 当前状态：见 [`docs/status/STATUS.md`](docs/status/STATUS.md)
+- Target platforms: **Android + Desktop (JVM)**
+- Default server: `http://8.153.153.176/panel`
+- Current status: see [`docs/status/STATUS.md`](docs/status/STATUS.md)
 
 ---
 
-## 这是什么
+## What this is
 
-原面板是一个跑在服务器本机（`127.0.0.1:9000`，由 nginx `/panel/` 反代）的 Web 控制台。
-本项目把它 **20 个页面的全部功能**做成一个原生客户端（并额外做了 9 个运维增强页）：
+The original panel is a web console running on the server itself
+(`127.0.0.1:9000`, reverse-proxied by nginx under `/panel/`). This project implements
+**every feature of all 20 pages** as a native client, plus 9 additional ops pages:
 
-| 分组 | 页面（20 + NoteBox 6 + 运维增强 9） |
+| Group | Pages (20 + 6 NoteBox + 9 ops) |
 |---|---|
-| 监控 | 仪表盘 · 健康告警 · SLO 与用量 · **可用性拨测 · 告警规则 · 通知渠道** · OpenCode 中继（可选，探测到采集器才显示） |
-| 服务器 | 进程管理 · 磁盘管理 · 内存管理 · 网络管理 · 安全管理 · 系统服务 · 软件包管理 · **文件管理 · 纳管主机 · 安全基线巡检 · 磁盘治理 · 服务看护 · 远程主机指标** |
-| 应用 | 数据库 · Docker 容器 · 网站 / Nginx · 定时任务 · 备份中心 · 日志中心 · 审计日志 |
-| **笔记** | **笔记 · 待办清单 · 导入/导出 · 邮件通知 · NoteBox 设置 · 用户管理**（服务器新功能，独立端口 `13345`、独立多用户登录） |
-| 工具 | Web 终端 |
-| 系统 | 面板设置 |
+| Monitoring | Dashboard · Health alerts · SLO & usage · **Uptime probes · Alert rules · Notification channels** · OpenCode relay (optional; shown only when the collector answers the probe) |
+| Server | Process management · Disk management · Memory management · Network management · Security management · System services · Package management · **File management · Managed hosts · Security baseline · Disk governance · Service watchdog · Remote host metrics** |
+| Apps | Databases · Docker containers · Websites / Nginx · Scheduled tasks · Backup center · Log center · Audit log |
+| **Notes** | **Notes · Todo list · Import/Export · Email notifications · NoteBox settings · User management** (a separate server feature: its own port `13345` and its own multi-user login) |
+| Tools | Web terminal |
+| System | Panel settings |
 
-逐页功能清单与实现位置见 [`docs/guide/features.md`](docs/guide/features.md)，
-功能基准矩阵见 [`docs/api/feature-matrix.md`](docs/api/feature-matrix.md)。
-
----
-
-## 2026-10-30 全量功能审计与补齐（服务端 + 网页端 + KMP 客户端）
-
-对三端做了逐功能对账（机器化对账：`tests/parity.py` 228 项 + `tests/endpoint_inventory.py`），
-把缺口全部补齐并部署到生产。本目录新增三个镜像目录，让服务端与前端代码入库：
-`panel-server/`（面板 Node 服务端）、`panel-web/`（网页前端：shell + 页面）、
-`relay-server/`（OpenCode 中继采集/改写服务）。**部署源以这三个目录为准**，
-`upstream/` 仍是生产机的参考镜像（不入库）。
-
-### 网页端（`panel-web/`）
-
-- **文件管理**（新页面）：浏览/分类型预览（文本可编辑、图片、音视频、PDF、压缩包内部浏览 +
-  子文件下载）/上传下载/回收站/权限属主/打包解压
-- **运维分组 8 个新页面**：可用性拨测 · 告警规则 · 通知渠道 · 纳管主机 · 安全巡检 ·
-  磁盘治理 · 服务看护 · 远程主机——与 KMP 同源端点、同一套字段
-- **OpenCode 中继新增「忙时 / 闲时」页签**：相位横幅（闲时改写生效中/忙时）、双向编辑
-  （忙时 deepseek→mimo；闲时全部模型→deepseek-v4.1-flash，窗口留空=忙时窗口补集）、
-  任意时刻试算、临时停用/恢复；保存走面板审计并自动备份策略文件
-- **客户端用量**：中继按 来源IP+UA+令牌哈希 统计每个客户端的 Token 用量（clients 页签）
-- 移动端：全部页面沿用面板响应式断点（1150/860/480px），窄屏单列 + 表格横滚
-
-### 服务端（`ops-server/`、`relay-server/`、`panel-server/`）
-
-- `ops/files.js` + `archive_tool.py`：分类型预览（kind/mime）、`/raw` 内联流、
-  压缩包内部清单/条目预览/条目流式下载（zip-slip 免疫）、tar 解压修复、zip 打包 python 回退
-- `relay-server/usagetap.py`：闲时改写策略（补集语义）、客户端身份列（usage_events 迁移）、
-  `X-Relay-Rewritten-Policy` 头
-- `relay-server/collector.py`：`/api/clients-usage` 聚合、busy-hours 策略 API 升级 v2
-  （校验并保留 idle 子块）、闲时/忙时相位判定
-- `panel-server/relay.js`：修复 relay.action 丢 payload 的 Content-Length bug（影响所有带参
-  中继管理操作）；`index.js`：RELAY_GET 增补 clients/clients-usage 等
-
-### KMP 客户端（`composeApp/`）
-
-- 文件管理页分类型预览（图片内嵌解码/压缩包内部浏览器/信息卡降级）
-- 中继「客户端与会话」页签新增客户端用量表；「忙时/闲时」页签新增闲时编辑区
-- 修复路径 404 被误判为模块未部署（`ApiException.fromServer`）
-- 18 语 i18n 全量补齐；`compileKotlinDesktop` 通过，parity 228 项 0 缺失
-
-### 验证
-
-- `node tools/ops_test.js`：130 PASS（本地契约测试）
-- `python tools/relay_policy_test.py`：20 PASS（忙/闲时策略单测）
-- `python tools/deploy_files_preview.py --smoke-only`：18/18（生产冒烟）
-- 浏览器逐页扫描 30 页 + 全部新页面写路径交互测试 + 390px 移动端抽检
+The per-page feature inventory with implementation locations is in
+[`docs/guide/features.md`](docs/guide/features.md); the baseline feature matrix is in
+[`docs/api/feature-matrix.md`](docs/api/feature-matrix.md).
 
 ---
 
+## 2026-10-30 full feature audit and gap closure (server + web + KMP client)
 
-## 构建与运行
+All three tiers were reconciled feature by feature (mechanically: `tests/parity.py` with
+228 checks plus `tests/endpoint_inventory.py`); every gap found was closed and deployed to
+production. Three mirror directories were added so the server and web front-end code is
+versioned here too: `panel-server/` (the panel's Node server), `panel-web/` (the browser
+front end: shell + pages), `relay-server/` (the OpenCode relay collector/rewriter).
+**Deployment is sourced from these three directories**; `upstream/` remains a read-only
+reference mirror of the production host and is not committed.
 
-完整步骤、工具链版本表与故障排查见 **[`docs/guide/build.md`](docs/guide/build.md)**。常用命令：
+### Web front end (`panel-web/`)
+
+- **File manager** (new page): browse, preview by type (editable text, images, audio/video,
+  PDF, archive contents with per-entry download), upload/download, trash, permissions and
+  ownership, pack and extract
+- **8 new ops pages under one group**: uptime probes · alert rules · notification channels ·
+  managed hosts · security baseline · disk governance · service watchdog · remote hosts —
+  same endpoints and same fields as the KMP client
+- **A new "busy / idle hours" tab on the OpenCode relay page**: phase banner (idle rewrite in
+  effect / busy), two-way editing (busy maps deepseek→mimo; idle maps every model→
+  deepseek-v4.1-flash, an empty window means the complement of the busy window), trial
+  evaluation at any instant, temporary pause and resume; saving goes through the panel audit
+  log and backs up the policy file automatically
+- **Client usage**: the relay attributes token usage per client by
+  source IP + user agent + credential hash (the clients tab)
+- Mobile: every page follows the panel's responsive breakpoints (1150/860/480px) — single
+  column on narrow screens, tables scroll horizontally
+
+### Server (`ops-server/`, `relay-server/`, `panel-server/`)
+
+- `ops/files.js` + `archive_tool.py`: preview by type (kind/mime), inline `/raw` stream,
+  archive listing / entry preview / streaming entry download (zip-slip immune), tar
+  extraction repair, python fallback for zip packing
+- `relay-server/usagetap.py`: idle-hours rewrite policy (complement semantics), client
+  identity columns (an `usage_events` migration), the `X-Relay-Rewritten-Policy` header
+- `relay-server/collector.py`: the `/api/clients-usage` aggregation, busy-hours policy API
+  upgraded to v2 (validates and preserves the `idle` sub-block), idle/busy phase decision
+- `panel-server/relay.js`: fixed a Content-Length bug where relay.action dropped its payload
+  (it affected every parameterised relay admin operation); `index.js`: `RELAY_GET` extended
+  with clients / clients-usage and friends
+
+### KMP client (`composeApp/`)
+
+- Type-aware preview in the file manager page (inline image decode / archive browser /
+  information-card fallback)
+- A client usage table added to the relay's "clients and sessions" tab; an idle-hours editor
+  added to the "busy / idle" tab
+- Fixed HTTP 404 being misread as "module not deployed" (`ApiException.fromServer`)
+- All 18 locales completed; `compileKotlinDesktop` passes; parity 228 checks, 0 missing
+
+### Verification
+
+- `node tools/ops_test.js`: 130 PASS (local contract tests)
+- `python tools/relay_policy_test.py`: 20 PASS (busy/idle policy unit tests)
+- `python tools/deploy_files_preview.py --smoke-only`: 18/18 (production smoke)
+- Page-by-page browser sweep of 30 pages, interaction tests on every write path of the new
+  pages, and a spot check at 390px width
+
+---
+
+## Building and running
+
+Full steps, the toolchain version table and troubleshooting are in
+**[`docs/guide/build.md`](docs/guide/build.md)**. Common commands:
 
 ```powershell
-# 快速编译检查（改完代码先跑这个）
+# quick compile check (run this first after editing)
 .\build.ps1 :composeApp:compileKotlinDesktop
 
-# Android 调试包
+# Android debug package
 .\build.ps1 :composeApp:assembleDebug
 
-# 桌面安装包（当前 OS 对应格式）
+# desktop installer for the current OS
 .\build.ps1 :composeApp:packageDistributionForCurrentOS
 
-# 直接跑桌面程序（不打安装包）
+# run the desktop app directly (no installer)
 .\build.ps1 :composeApp:run
 
-# 列出全部任务
+# list every task
 .\build.ps1 tasks --all
 
-# iOS：在本机（Windows）做 klib 级类型检查 —— 不链接、不出包，但能提前抓到
-# expect/actual 不匹配与 UIKit 调用写错（详见 docs/guide/build.md 3.1）
+# iOS: type-check at klib level on this machine (Windows) — no linking, no packaging,
+# but it catches expect/actual mismatches and wrong UIKit calls early
+# (see docs/guide/build.md §3.1)
 pwsh tests\ios-gate.ps1
 ```
 
-**产物路径**（构建成功后生成）：
+**Artifact paths** (produced on a successful build):
 
-| 产物 | 路径 |
+| Artifact | Path |
 |---|---|
 | Android APK | `composeApp\build\outputs\apk\debug\composeApp-debug.apk` |
-| Windows 安装包 | `composeApp\build\compose\binaries\main\msi\CloudMonitor-1.0.0.msi` |
-| Linux 安装包 | `composeApp\build\compose\binaries\main\deb\cloudmonitor_1.0.0-1_amd64.deb` |
-| macOS 安装包 | `composeApp\build\compose\binaries\main\dmg\CloudMonitor-1.0.0.dmg` |
-| iOS framework / App | **仅 macOS**：Xcode 打开 `iosApp\iosApp.xcodeproj` 运行（`import ComposeApp`） |
+| Windows installer | `composeApp\build\compose\binaries\main\msi\CloudMonitor-1.0.0.msi` |
+| Linux installer | `composeApp\build\compose\binaries\main\deb\cloudmonitor_1.0.0-1_amd64.deb` |
+| macOS installer | `composeApp\build\compose\binaries\main\dmg\CloudMonitor-1.0.0.dmg` |
+| iOS framework / app | **macOS only**: open `iosApp\iosApp.xcodeproj` in Xcode and run (`import ComposeApp`) |
 
-> `build.ps1` 会自动设好 `JAVA_HOME`（Android Studio 自带 JBR 25）与 `ANDROID_HOME`；
-> `.toolchain/` 不存在时会自动回退到仓库里的 `gradlew.bat`。
+> `build.ps1` sets `JAVA_HOME` (the JBR 25 bundled with Android Studio) and `ANDROID_HOME`
+> for you; when `.toolchain/` is absent it falls back to the `gradlew.bat` in the repository.
 
 ---
 
-## 配置服务器地址
+## Configuring the server address
 
-面板地址**必须包含应用上下文路径**，形如 `http://<主机>[:端口]/panel`：
-REST 在其后拼 `/api`，WebSocket 拼 `/ws`、`/term`。
+The panel address **must include the application context path**, in the form
+`http://<host>[:port]/panel`: REST appends `/api`, WebSocket appends `/ws` and `/term`.
 
-**两处可改：**
+**Two places to change it:**
 
-1. **登录页** —— 「服务器连接」区域：填地址 → 「测试连接」（调 `GET /panel/api/health`）
-   → 成功后填访问密码登录。改地址会丢弃旧 token，需要重新登录。
-2. **面板设置页** —— 已登录状态下修改并保存（`settings` → 服务器连接）。
+1. **The login screen** — the "server connection" area: enter the address → "test
+   connection" (calls `GET /panel/api/health`) → on success enter the access password.
+   Changing the address discards the old token, so you must log in again.
+2. **Panel settings** — change and save it while logged in (settings → server connection).
 
-**改错了怎么办：**
+**When it is wrong:**
 
-| 症状 | 原因 / 处置 |
+| Symptom | Cause / fix |
 |---|---|
-| 「无法连接服务器: 网络错误 / 连接被拒」 | 地址写错、端口没开、没带 `/panel` 后缀。补上下文路径，例如 `http://8.153.153.176/panel` 而不是 `http://8.153.153.176` |
-| 「服务不可达 (HTTP 404/502)」 | 路径不对（应为 `/panel`）或服务器 nginx 没起 |
-| 「会话已过期，请重新登录」 | token 失效，重新登录即可；地址改过也会走到这里 |
-| 一直显示「重连中…」 | 能登录但 WebSocket 被挡，检查是否有 HTTPS/代理改写了 `ws://` |
+| "Cannot reach the server: network error / connection refused" | Wrong address, port not open, or the `/panel` suffix is missing. Add the context path: `http://8.153.153.176/panel`, not `http://8.153.153.176` |
+| "Service unreachable (HTTP 404/502)" | Wrong path (it should be `/panel`), or nginx is not running on the server |
+| "Session expired, please log in again" | The token is no longer valid — just log in again. Editing the address lands here too |
+| Stuck showing "reconnecting…" | Login works but the WebSocket is blocked; check whether HTTPS/a proxy rewrote `ws://` |
 
-配置持久化在本机：Android 是 `SharedPreferences`（`cm_panel`），Desktop 是
-`java.util.prefs`；键为 `server_url` / `server_token` / `remember_password` / `password`。
-
----
-
-## 登录
-
-- 使用**面板访问密码**（`POST /panel/api/login`），**不是** SSH 密码。
-- 勾选「记住密码」后下次自动登录。
-- 登录成功换回 64 位 token，默认有效期 **168 小时**；任意请求 401 会清 token 回登录页。
-
-> 该服务器 **SSH 禁用了密码登录（only publickey）**，与面板密码无关。
-> 本机可用密钥：`ssh -i "$env:USERPROFILE\.ssh\oc_relay_ed25519" root@8.153.153.176`
+Configuration is persisted locally: `SharedPreferences` (`cm_panel`) on Android,
+`java.util.prefs` on desktop, under the keys `server_url` / `server_token` /
+`remember_password` / `password`.
 
 ---
 
-## 笔记 / 待办（NoteBox）
+## Login
 
-服务器上另有一个 **NoteBox** 服务（笔记 + 待办清单，Flask + SQLite，`/opt/notebox`），
-客户端侧栏「笔记」分组的 6 个页面对接它。**它与面板是两套独立的服务与登录**：
+- Uses the **panel access password** (`POST /panel/api/login`) — **not** the SSH password.
+- Tick "remember password" to log in automatically next time.
+- A successful login returns a 64-character token with a default lifetime of **168 hours**;
+  any request answering 401 clears the token and returns to the login screen.
 
-| 项 | 面板（20 页） | NoteBox（笔记分组） |
+> On this server **SSH has password authentication disabled (publickey only)**, which has
+> nothing to do with the panel password. A working key on this machine:
+> `ssh -i "$env:USERPROFILE\.ssh\oc_relay_ed25519" root@8.153.153.176`
+
+---
+
+## Notes / todos (NoteBox)
+
+The server also runs a separate **NoteBox** service (notes plus todos, Flask + SQLite,
+`/opt/notebox`); the client's six pages under the "Notes" sidebar group talk to it.
+**It is a second service with a second login, independent of the panel:**
+
+| | Panel (20 pages) | NoteBox (Notes group) |
 |---|---|---|
-| 地址 | `http://<主机>/panel` | `http://<主机>:13345`（默认 `http://8.153.153.176:13345`） |
-| 认证 | Bearer token（`POST /panel/api/login`） | **session cookie**（`POST /api/login {email,password}`） |
-| 账号 | 只需访问密码 | **邮箱 + 密码**（多用户；`admin` 为管理员，可邮箱注册 + 验证激活） |
-| 入口 | 登录页 | 侧栏任一「笔记」页面 → 未登录时显示 NoteBox 登录卡（登录 ⇄ 注册 ⇄ 注册完成三态） |
+| Address | `http://<host>/panel` | `http://<host>:13345` (default `http://8.153.153.176:13345`) |
+| Auth | Bearer token (`POST /panel/api/login`) | **session cookie** (`POST /api/login {email,password}`) |
+| Account | Access password only | **email + password** (multi-user; `admin` is the administrator, with email registration and verification/activation) |
+| Entry point | Login screen | Any page in the "Notes" sidebar group — when logged out it shows a NoteBox login card (login ⇄ register  registration-done, three states) |
 
-- 首次点开「笔记」分组任一页会先要 NoteBox 登录；勾「记住密码」后下次自动登录。
-- **多用户**：笔记可共享给其他注册用户（只读 / 可编辑 / 管理三档权限），并可开启公开链接（`/s/<code>`）。
-  待办按用户隔离。管理员（`role=admin`）额外可见「用户管理」「邮件通知」两页，非管理员侧栏自动隐藏。
-- 地址、邮箱、密码、会话、角色都持久化在本机（Android `SharedPreferences`，Desktop `java.util.prefs`，
-  键前缀 `notebox_`）。改地址后需重新登录。
-- 笔记编辑器带工具栏（标题/加粗/列表/表格/代码块/图片/视频…），图片/视频走上传接口插入 Markdown。
-- 功能与端点清单见 [`docs/guide/features.md`](docs/guide/features.md) 的 **W 章节**。
+- Opening any page in the "Notes" group for the first time asks for a NoteBox login; ticking
+  "remember password" logs you in automatically afterwards.
+- **Multi-user**: notes can be shared with other registered users at three permission levels
+  (read-only / can edit / admin), and a public link (`/s/<code>`) can be enabled. Todos are
+  isolated per user. Administrators (`role=admin`) additionally see the "User management" and
+  "Email notifications" pages; those are hidden from the sidebar for everyone else.
+- Address, email, password, session and role are all persisted locally (Android
+  `SharedPreferences`, desktop `java.util.prefs`, keys prefixed `notebox_`). Changing the
+  address requires logging in again.
+- The note editor has a toolbar (headings/bold/lists/tables/code blocks/images/video…) and
+  media goes through the upload endpoint and is inserted as Markdown.
+- Features and endpoints are listed in the **W section** of
+  [`docs/guide/features.md`](docs/guide/features.md).
 
+## Ops extensions (probes · alert rules · channels · file manager · baseline · disk · watchdog · remote)
 
-## 运维增强（拨测 · 告警规则 · 通知渠道 · 文件管理 · 巡检 · 磁盘 · 看护 · 远程）
+Capabilities comparable to commercial ops products (1Panel / BaoTa / PRTG / Datadog),
+implemented as `server/ops/` modules on the panel:
 
-对标同类商业运维软件（1Panel / 宝塔 / PRTG / Datadog）的能力，落在面板的 `server/ops/` 模块：
+- **Uptime probes**: HTTP(S) status code plus response keyword checks, TLS certificate days
+  remaining, TCP port, ICMP, DNS. A target counts as unavailable only after consecutive
+  failures (debouncing); availability (SLA) is aggregated per day and kept for up to 120 days.
+- **Alert rule engine**: 14 composable metrics + threshold + duration + severity + per-rule
+  cooldown + recovery notification, replacing the four hard-coded thresholds the panel used
+  to have. A firing rule both lands in the panel bell (pushed over WebSocket) and is sent to
+  notification channels.
+- **Notification channels**: webhook (HMAC signed), WeCom, DingTalk (signed), Feishu (signed
+  cards), Telegram (optional proxy address), SMTP mail; failures retry three times with
+  30s/2min/5min backoff and every attempt is logged.
+- **Silence and maintenance windows**: scoped by rule or by metric, one-off time ranges or
+  daily recurring windows (crossing midnight supported), so backups and releases stop
+  flooding the feed.
+- **Credential hygiene**: channel passwords, secrets and bot webhook keys are masked in every
+  API response, and posting the placeholder back does not overwrite a stored credential.
+- **File manager**: tree and breadcrumbs, common directories, online editing (up to 2MB),
+  upload/download, create/rename/move/copy, chmod/chown, tar.gz and zip pack/extract, search
+  by name, du ranking; deletion goes to a **trash with 30-day restore** first, and across
+  filesystems (`/tmp` is tmpfs) it automatically switches to copy-then-delete.
+- **Security baseline**: 23 read-only checks (SSH policy, fail2ban, ufw, database ports
+  exposed, UID 0, empty passwords, authorized_keys permissions, world-writable /etc, unusual
+  SUID, /tmp noexec, certificate expiry, clock sync, pending updates…), scored 0–100 with an
+  A–E grade by weight. Remediation is a **whitelisted server action**: an SSH fix writes a
+  drop-in, validates with `sshd -t` and rolls back if it fails; a ufw fix allows the current
+  SSH port before enabling the firewall.
+- **Disk governance**: capacity and inodes (ignoring small volumes such as `/boot/efi`),
+  journal/APT/`/var/log`/trash usage, big files and directory ranking, rotated-log detection
+  with a reclaimable estimate, five cleanup jobs (each measuring the free-space delta to
+  report the **space actually reclaimed**), an optional daily maintenance schedule, and log
+  truncation restricted to plain files inside whitelisted directories.
+- **Service watchdog with self-healing**: three liveness styles (systemd unit / process
+  keyword / TCP port); when unavailable it restarts the service up to a bounded number of
+  times per window, and past that limit it stops the restart loop and escalates to a manual
+  alert. Leaving `startCmd` empty means alert-only, no self-healing.
+- **Remote host metrics**: a fixed set of read-only commands against managed hosts (load,
+  memory, disks, top processes, listening ports, system info, key units). SSH credentials
+  accept a private key path on the server or a password (masked in responses; an empty
+  submission does not overwrite).
 
-- **可用性拨测**：HTTP(S) 状态码 + 响应关键字、TLS 证书剩余天数、TCP 端口、ICMP、DNS；
-  连续失败到阈值才算不可用（防抖），可用率（SLA）按日聚合，最多留 120 天。
-- **告警规则引擎**：14 个可编排指标 + 阈值 + 持续时长 + 级别 + 每规则冷却 + 恢复通知，
-  替代原来写死的 4 条阈值；触发后既进面板铃铛（WebSocket 实时推送），也推送通知渠道。
-- **通知渠道**：Webhook（HMAC 签名）、企业微信、钉钉（加签）、飞书（加签卡片）、
-  Telegram（可填代理地址）、邮件 SMTP；失败按 30s/2min/5min 退避重试 3 次并留发送记录。
-- **静默与维护窗口**：按规则或按指标作用域，单次时间段或每日固定时段（支持跨零点），
-  备份/发布期间不再刷屏。
-- **凭据安全**：渠道密码、secret、机器人 webhook 的 key 在接口回显时全部脱敏，
-  把占位符提交回来也不会覆盖已存凭据。
-- **文件管理器**：目录树与面包屑、常用目录、在线编辑（2MB 内）、上传/下载、新建/重命名/移动/复制、
-  chmod/chown、tar.gz 与 zip 打包解压、按名搜索、du 占用排行；删除先进**回收站（30 天可还原）**，
-  跨文件系统（`/tmp` 是 tmpfs）自动改走复制+删除。
-- **安全基线巡检**：23 项只读检查（SSH 策略、fail2ban、ufw、数据库端口对外暴露、UID 0、空密码、
-  authorized_keys 权限、/etc 世界可写、异常 SUID、/tmp noexec、证书到期、时钟同步、待更新…），
-  按权重扣分给出 0–100 分与 A–E 等级；修复是**服务器白名单动作**，SSH 修复写 drop-in 后先 `sshd -t`
-  校验、不通过就回滚，ufw 修复先放行当前 SSH 端口再启用。
-- **磁盘治理**：容量与 inode（忽略 `/boot/efi` 等小卷）、journal/APT/`/var/log`/回收站占用、
-  大文件与目录占用、轮转日志识别与可回收估算、五类清理（每次测空闲差回报**真实释放量**）、
-  可选每日自动维护计划、只允许白名单目录内普通文件的日志清空。
-- **服务看护自愈**：systemd 单元 / 进程关键字 / TCP 端口三种探活，不可用即按窗口限次自动拉起，
-  超过上限停止无限重启并升级为人工介入告警；`startCmd` 留空则只告警不自愈。
-- **远程主机指标**：对纳管主机执行一组固定只读命令（负载、内存、磁盘、Top 进程、对外端口、系统、
-  关键单元），SSH 凭据支持服务器上的私钥路径或密码（回显脱敏，空提交不覆盖）。
-
-| 事项 | 位置 |
+| Item | Location |
 |---|---|
-| 服务端模块 | `ops-server/` → 部署为 `/opt/cloud-monitor/server/ops/` |
-| 端点与指标表 | [`docs/api/ops.md`](docs/api/ops.md) |
-| 客户端状态层 | `…/core/Ops.kt`、`Files.kt`、`Hosts.kt`、`SecOps.kt`、`DiskOps.kt`、`GuardOps.kt`（复用面板 Bearer token） |
-| 客户端页面 | `…/pages/ops/` 九页：可用性拨测 / 告警规则 / 通知渠道 / 文件管理 / 纳管主机 / 安全基线 / 磁盘治理 / 服务看护 / 远程指标 |
-| 文件管理器 | `ops-server/files.js`：目录树、上传下载、在线编辑、权限属主、打包解压、搜索、回收站（30 天可还原） |
-| 纳管主机 | `ops-server/hosts.js`：用途/环境/负责人/标签台账 + SSH 端口可达性与 banner 探测（无配额、无计费） |
-| 巡检与治理 | `ops-server/secops.js`（23 项只读检查 + 5 条修复白名单）、`ops-server/disk.js`（容量/大文件/日志/清理器/定时计划） |
-| 看护与远程 | `ops-server/watchdog.js`（三种探活 + 有界自愈）、`ops-server/remote.js`（固定只读命令束 over ssh2）、`ops-server/exec.js`（共用执行层，可注入桩） |
-| 契约测试 | `node tools/ops_test.js`（181 项：假 fetch + 注入执行器，覆盖解析、守卫、修复回滚、清理回报） |
-| 部署与自检 | `python tools/deploy_ops.py` / `python tools/ops_smoke.py [live|files|newops|removed]` |
-| 整机移植 | `deploy/cloud-monitor-panel/`（面板 + ops 的离线安装包，含 `install.sh`）；重建包用 `python tools/build_panel_package.py`，自测 `python tools/test_panel_package.py` |
+| Server modules | `ops-server/` → deployed as `/opt/cloud-monitor/server/ops/` |
+| Endpoints and metric table | [`docs/api/ops.md`](docs/api/ops.md) |
+| Client state layer | `…/core/Ops.kt`, `Files.kt`, `Hosts.kt`, `SecOps.kt`, `DiskOps.kt`, `GuardOps.kt` (reuses the panel Bearer token) |
+| Client pages | nine pages under `…/pages/ops/`: uptime probes / alert rules / notification channels / file management / managed hosts / security baseline / disk governance / service watchdog / remote metrics |
+| File manager | `ops-server/files.js`: tree, upload/download, online editing, permissions and ownership, pack/extract, search, trash with 30-day restore |
+| Managed hosts | `ops-server/hosts.js`: purpose/environment/owner/tags inventory + SSH port reachability and banner probe (no quotas, no billing) |
+| Baseline and governance | `ops-server/secops.js` (23 read-only checks + 5 whitelisted fixes), `ops-server/disk.js` (capacity / big files / logs / cleaners / schedules) |
+| Watchdog and remote | `ops-server/watchdog.js` (three probes + bounded self-healing), `ops-server/remote.js` (fixed read-only command bundle over ssh2), `ops-server/exec.js` (shared executor with an injectable stub) |
+| Contract tests | `node tools/ops_test.js` (181 checks: fake fetch + injected executor, covering parsing, guards, remediation rollback, cleanup reporting) |
+| Deploy and self-check | `python tools/deploy_ops.py` / `python tools/ops_smoke.py [live|files|newops|removed]` |
+| Whole-machine portability | `deploy/cloud-monitor-panel/` (offline installer for the panel plus ops, including `install.sh`); rebuild with `python tools/build_panel_package.py`, self-test with `python tools/test_panel_package.py` |
 
 ```powershell
-python tools/ops_smoke.py live   # 建一条必然触发的规则，验证引擎评估 + 面板铃铛命中
+python tools/ops_smoke.py live   # create a rule that must fire, proving evaluation + the panel bell
 ```
 
 ---
 
-## 把整套面板部署到别的服务器
+## Deploying the whole panel to another server
 
-`deploy/cloud-monitor-panel/` 是一个**自包含离线安装包**：面板服务端代码 + Web 壳 + 9 个 ops
-运维模块 + `node_modules`（已剔除机器相关的原生加速件，ssh2 走纯 JS）+ `install.sh`/`uninstall.sh`/
-`deploy-remote.sh` + systemd 与 nginx 生成逻辑。到目标机三条命令即可：
+`deploy/cloud-monitor-panel/` is a **self-contained offline installer**: panel server code +
+web shell + the 9 ops modules + `node_modules` (machine-specific native addons stripped, so
+ssh2 runs on its pure-JS path) + `install.sh` / `uninstall.sh` / `deploy-remote.sh` + the
+systemd and nginx generation logic. Three commands on the target:
 
 ```powershell
-# 本机推送（密钥登录）
+# push from this machine (key-based login)
 cd deploy/cloud-monitor-panel
-./deploy-remote.sh root@新服务器IP
+./deploy-remote.sh root@<new-server-ip>
 ```
 
-有意**不进包**的东西：`config.json`（口令哈希与 SSH/数据库口令）、`keys/pty_key`、备份与审计日志、
-`runtime/`、数据目录 `/var/lib/cloud-panel`。所以新机是干净面板，首次启动自动生成口令哈希。
-部署方法、参数表、迁移配置、升级回滚与排查见
-[`deploy/cloud-monitor-panel/README.md`](deploy/cloud-monitor-panel/README.md)。
+Deliberately **not in the package**: `config.json` (password hashes, SSH and database
+passwords), `keys/pty_key`, backups and audit logs, `runtime/`, and the data directory
+`/var/lib/cloud-panel`. A new machine therefore starts as a clean panel that generates its
+own password hash on first start. Deployment steps, the parameter table, config migration,
+upgrade/rollback and troubleshooting are in
+[`deploy/cloud-monitor-panel/README.md`](deploy/cloud-monitor-panel/README.md).
 
-## 仓库结构
+## Repository structure
 
 ```
 ServerMaintance/
-├── build.ps1                 # 构建包装器（设 JAVA_HOME/ANDROID_HOME）
-├── gradlew.bat               # Gradle wrapper（.toolchain 缺失时的回退）
+├── build.ps1                 # build wrapper (sets JAVA_HOME/ANDROID_HOME)
+├── gradlew.bat               # Gradle wrapper (fallback when .toolchain is absent)
 ├── composeApp/src/
 │   ├── commonMain/kotlin/com/servermaintance/panel/
-│   │   ├── Platform.kt       # expect：KeyValueStore / FileExporter / Clip / openUrl / pickTextFiles / pickBinaryFiles
-│   │   ├── App.kt            # 根 Composable，按会话状态分发
-│   │   ├── core/             # 配置、REST、WS、全局状态、Fmt、Actions、NoteBox(笔记/待办)
-│   │   ├── ui/               # 共享控件（Icons/Widgets/Charts/Dialogs/Refresh）
-│   │   ├── nav/              # 26 页注册表与路由分发（含「笔记」分组 6 页）
-│   │   ├── screens/          # 外壳：登录、Root、Toast/Modal 宿主
-│   │   └── pages/            # 页面（含 relay/、term/、db/ 子模块与 NoteXxx 笔记页）
-│   ├── androidMain/          # Android actual（Platform.android.kt、MainActivity）
-│   ├── desktopMain/          # Desktop actual（Platform.desktop.kt、Main.kt）
-│   └── iosMain/              # iOS actual（Platform.ios.kt、Api.ios.kt=Darwin、MainViewController.kt）
-├── iosApp/                   # iOS 壳工程（Xcode + Swift；只能在 macOS 上打包）
-│   └── iosApp.xcodeproj      # 「Compile Kotlin Framework」阶段调 embedAndSignAppleFrameworkForXcode
-├── ops-server/               # 面板内运维模块源码（九模块）→ 部署为 /opt/cloud-monitor/server/ops/
-├── deploy/cloud-monitor-panel/  # 整机离线安装包（app + vendor + install/uninstall/deploy-remote）
-├── upstream/                 # 只读参考：面板原版 JS 前后端
-├── api-dump/                 # 只读：真实 API 响应样本（字段权威依据）
+│   │   ├── Platform.kt       # expect: KeyValueStore / FileExporter / Clip / openUrl / pickTextFiles / pickBinaryFiles
+│   │   ├── App.kt            # root composable, dispatches on session state
+│   │   ├── core/             # config, REST, WS, global state, Fmt, Actions, NoteBox (notes/todos)
+│   │   ├── ui/               # shared controls (Icons/Widgets/Charts/Dialogs/Refresh)
+│   │   ├── nav/              # registry and routing for 26 pages (including the 6 Notes pages)
+│   │   ├── screens/          # shell: login, Root, Toast/Modal hosts
+│   │   └── pages/            # pages (with relay/, term/, db/ sub-modules and the NoteXxx note pages)
+│   ├── androidMain/          # Android actuals (Platform.android.kt, MainActivity)
+│   ├── desktopMain/          # Desktop actuals (Platform.desktop.kt, Main.kt)
+│   └── iosMain/              # iOS actuals (Platform.ios.kt, Api.ios.kt=Darwin, MainViewController.kt)
+├── iosApp/                   # iOS shell (Xcode + Swift; can only be packaged on macOS)
+│   └── iosApp.xcodeproj      # the "Compile Kotlin Framework" phase calls embedAndSignAppleFrameworkForXcode
+├── panel-server/             # panel Node server (mirrors production)
+├── panel-web/                # panel browser front end: shell + pages (mirrors production)
+├── relay-server/             # OpenCode relay collector / rewriter (mirrors /opt/relay)
+├── ops-server/               # ops module sources (nine modules) → deployed as /opt/cloud-monitor/server/ops/
+├── deploy/cloud-monitor-panel/  # offline installer (app + vendor + install/uninstall/deploy-remote)
+├── upstream/                 # read-only reference mirror of the production host (not committed)
+├── api-dump/                 # read-only real API response samples (the authoritative field reference; not committed)
 ├── docs/                     # BRIEF / UI-CONTRACT / api / guide / status / testing
-└── tools/                    # 远程与调研辅助脚本（组包 build_panel_package.py、自测 test_panel_package.py）
+└── tools/                    # remote and research helpers (build_panel_package.py, test_panel_package.py)
 ```
 
 ---
 
-## 硬约束
+## Hard constraints
 
-1. **禁止 WebView 包装**——图表由 `ui/Charts.kt` 与页面专属可视化用 **Canvas 手绘**，
-   终端是自研 ANSI 渲染（`pages/term/AnsiScreen.kt` + `pages/term/TerminalView.kt`）。
-2. **服务器地址可配置**，默认 `http://8.153.153.176/panel`。
-3. **所有功能都要有，一个不能少**——对账基准是 `docs/api/feature-matrix.md`，
-   对账记录见 `docs/testing/`。
+1. **No WebView wrapper** — charts are **hand-drawn on Canvas** in `ui/Charts.kt` and in
+   page-specific visualisations, and the terminal is a custom ANSI renderer
+   (`pages/term/AnsiScreen.kt` + `pages/term/TerminalView.kt`).
+2. **The server address is configurable**, default `http://8.153.153.176/panel`.
+3. **Every feature must be present — not one missing.** The reconciliation baseline is
+   `docs/api/feature-matrix.md`; the reconciliation records are in `docs/testing/`.
 
 ---
 
-## 相关文档
+## Related documents
 
-| 文档 | 内容 |
+| Document | Contents |
 |---|---|
-| [`docs/guide/build.md`](docs/guide/build.md) | 三平台构建步骤（iOS 仅 macOS）、工具链版本、故障排查 |
-| [`docs/guide/architecture.md`](docs/guide/architecture.md) | 分层架构、写入边界、原生约束 |
-| [`docs/guide/features.md`](docs/guide/features.md) | 功能 → Kotlin 实现位置对照表 |
-| [`docs/BRIEF.md`](docs/BRIEF.md) | 项目目标、服务器访问、协作规则 |
-| [`docs/UI-CONTRACT.md`](docs/UI-CONTRACT.md) | 共享控件 API 契约 |
-| [`docs/api/README.md`](docs/api/README.md) | 面板 API 端点总表 |
-| [`docs/api/ops.md`](docs/api/ops.md) | 运维增强：拨测、告警规则引擎、通知渠道、主机台账、文件管理、巡检、磁盘、看护、远程采集 |
-| [`docs/status/STATUS.md`](docs/status/STATUS.md) | 当前进度与风险 |
+| [`docs/guide/build.md`](docs/guide/build.md) | Build steps for all three platforms (iOS on macOS only), toolchain versions, troubleshooting |
+| [`docs/guide/architecture.md`](docs/guide/architecture.md) | Layered architecture, write boundaries, native constraints |
+| [`docs/guide/features.md`](docs/guide/features.md) | Feature → Kotlin implementation map |
+| [`docs/BRIEF.md`](docs/BRIEF.md) | Project goals, server access, collaboration rules |
+| [`docs/UI-CONTRACT.md`](docs/UI-CONTRACT.md) | Shared control API contract |
+| [`docs/api/README.md`](docs/api/README.md) | Panel API endpoint reference |
+| [`docs/api/ops.md`](docs/api/ops.md) | Ops extensions: probes, alert engine, channels, host inventory, file manager, baseline, disk, watchdog, remote collection |
+| [`docs/status/STATUS.md`](docs/status/STATUS.md) | Current progress and risks |

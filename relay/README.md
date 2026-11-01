@@ -1,71 +1,99 @@
-# OpenCode 中继服务端
+# OpenCode relay server
 
-`/opt/relay` 与 `/etc/relay` 上那套中继服务的全部承重文件，此前只存在于运行中的服务器上。
-这里收的是**能跑的那一份**：字节与线上一致（逐文件 md5 比对过），不是重写或简化版。
+Every load-bearing file of the relay service that lives under `/opt/relay` and
+`/etc/relay`. Before this directory existed, those files were only on the running
+host. What is checked in here is **the copy that actually works** — verified
+file-by-file against the live host by md5, not a rewrite or a simplification.
 
-面板的 *OpenCode 中继* 页、`relay.js` 的忙时策略页签和 Compose 客户端读到的
-`phase` / `calendar` 字段，都由 `server/collector.py` 产出。
+The panel's *OpenCode relay* page, the busy-hours tab behind `relay.js`, and the
+`phase` / `calendar` fields the Compose client reads are all produced by
+`server/collector.py`.
 
-## 目录与部署位置
+## Paths and where they deploy
 
-| 仓库路径 | 部署到 | 说明 |
+| Repository path | Installed to | Notes |
 | --- | --- | --- |
-| `server/usagetap.py` | `/opt/relay/usagetap.py` | `relay-usagetap.service`，:8790。**在请求链路上**：改写与白名单在这里发生 |
-| `server/collector.py` | `/opt/relay/collector.py` | `relay-stats.service`，:8787。统计 API + 忙时策略读写 |
-| `server/keystore.py` | `/opt/relay/keystore.py` | collector 的硬依赖（多密钥、配额感知选键） |
-| `server/relay_guard.py` | `/opt/relay/relay_guard.py` | `relay-guard.service`，完整性与流式金丝雀自检 |
+| `server/usagetap.py` | `/opt/relay/usagetap.py` | `relay-usagetap.service`, :8790. **On the request path**: rewriting and the allowlist happen here |
+| `server/collector.py` | `/opt/relay/collector.py` | `relay-stats.service`, :8787. Stats API plus busy-hours policy read/write |
+| `server/keystore.py` | `/opt/relay/keystore.py` | Hard dependency of the collector (multiple keys, quota-aware key choice) |
+| `server/clientkeys.py` | `/opt/relay/clientkeys.py` | The distributed client keys: store, per-window quotas, the gate the tap calls, and the generated credential list |
+| `server/busy_hours.py` | `/opt/relay/busy_hours.py` | Busy-hours policy editor and the on/off marker used by the panel and timers |
+| `server/relay_guard.py` | `/opt/relay/relay_guard.py` | `relay-guard.service`, integrity and streaming-canary self check |
 | `server/selfheal.py` | `/opt/relay/selfheal.py` | `relay-selfheal.service` |
-| `server/modelcatalog.py` `modelcheck.py` `daily_report.py` `relay_alert.py` | `/opt/relay/` | 各自的 timer 驱动 |
-| `server/{db,disk}_guard.sh` `disk_hygiene.sh` `backup_relay.sh` `backup_verify.sh` | `/opt/relay/` | 备份与水位守护 |
-| `nginx/opencode-relay` | `/etc/nginx/sites-available/opencode-relay` | 以 nginx 实际生效的那份为准（**不是** `/opt/relay/opencode-relay`，那份是 222 行的陈旧副本） |
-| `nginx/{opencode,glm,mimo}-upstream.conf` | `/opt/relay/` | 上游定义 |
-| `systemd/relay-*.service` `relay-*.timer` | `/etc/systemd/system/` | 13 个服务 + 11 个 timer |
-| `config/busy-hours.json` | `/etc/relay/busy-hours.json` | 忙时策略；tap 按 mtime 自动重载，改它不需要重启 |
-| `config/go-allowlist.json` | `/etc/relay/go-allowlist.json` | Go 套餐可用模型白名单，缺失即 fail-closed 403 |
+| `server/modelcatalog.py` `modelcheck.py` `daily_report.py` `relay_alert.py` | `/opt/relay/` | Each driven by its own timer |
+| `server/{db,disk}_guard.sh` `disk_hygiene.sh` `backup_relay.sh` `backup_verify.sh` | `/opt/relay/` | Backup and watermark guards |
+| `nginx/opencode-relay` | `/etc/nginx/sites-available/opencode-relay` | The site nginx actually runs (**not** `/opt/relay/opencode-relay`, which is a stale 222-line copy) |
+| `nginx/{opencode,glm,mimo}-upstream.conf` | `/opt/relay/` | Upstream definitions |
+| `systemd/relay-*.service` `relay-*.timer` | `/etc/systemd/system/` | 13 services plus 11 timers |
+| `config/busy-hours.json` | `/etc/relay/busy-hours.json` | Busy-hours policy; the tap reloads it by mtime, so editing it needs no restart |
+| `config/go-allowlist.json` | `/etc/relay/go-allowlist.json` | Models the Go plan may use; missing means fail-closed 403 |
 
-## 这里刻意没有的东西
+## What is deliberately not here
 
-**`/etc/relay/upstream-auth.conf` 不入库。** 它被 nginx `include` 三次，内容是
-`proxy_set_header ... "Bearer <真 token>"` —— 上游凭据。新机器必须自己创建它，否则
-nginx 起不来。同理不入库的还有 `/etc/nginx/.htpasswd-relay`（`/stats/` 的 basic auth）。
+**`/etc/relay/upstream-auth.conf` is never committed.** nginx `include`s it in three
+places and its content is `proxy_set_header ... "Bearer <real token>"` — the upstream
+credentials themselves. A new host must create it, or nginx will not start. The same
+applies to `/etc/nginx/.htpasswd-relay` (basic auth for `/stats/`).
 
-`install_tap*.sh`、`install_timer_and_verify.sh`、`retention_tune.py`、`patch_*.py`
-这些一次性迁移与验证脚本也不入库：它们的 curl 行里嵌着真 token，且只对当次变更有意义。
+Also excluded: `install_tap*.sh`, `install_timer_and_verify.sh`, `retention_tune.py`,
+`patch_*.py`. Those are one-off migration and verification scripts whose curl lines
+embed real tokens, and they only make sense for the single change they were written for.
 
-## golden 与守护
+Generated runtime state is not committed either: `/etc/relay/relay-auth.conf` (the
+client-key list rendered from `client-keys.json`), `/etc/relay/client-keys.json`, and
+`/etc/relay/client-labels.json`.
 
-`relay_guard.py` 会在检测到篡改时复原 `/opt/relay/golden/` 下的
-`usagetap.py`、`opencode-relay.nginx`、`go-allowlist.json` 三份，用
-`/opt/relay/update_golden.sh` 刷新基准。**改 `usagetap.py` 或 nginx 站点后必须刷 golden**，
-否则 180 秒的 `recently_edited` 保护窗口一过就被复原；`collector.py` 不在守护名单内。
+## Golden files and the guard
 
-## 忙时策略的判定归属
+When `relay_guard.py` detects tampering it restores `usagetap.py`,
+`opencode-relay.nginx` and `go-allowlist.json` from `/opt/relay/golden/`, and
+`/opt/relay/update_golden.sh` refreshes that baseline. **After changing `usagetap.py`
+or the nginx site you must refresh the golden copy**, otherwise the edit is reverted
+once the 180-second `recently_edited` grace window expires. `collector.py` is not on
+the guard's list.
 
-窗口是否生效只有一处答案：`usagetap.py` 的 `busy_window_active()`。「仅工作日」走
-`chinese_calendar.is_workday()`，因此认得法定节假日与周末调休补班；库覆盖 2004–2026，
-超出范围的年份回落成周一到周五（会把该年法定假日当工作日）。
+## Who decides the busy window
 
-`collector.py` 的 `busy_state()` 把同一份判定连同 `calendar`（与周一到周五不一致的日子）
-和 `phase`（忙时/闲时及原因）一起下发，网页与客户端只渲染、**不各自再判一遍**。
-临时停用是标记文件 `/var/lib/relay/busy-hours.off`，不动配置本身。
+There is exactly one answer to "is the window active right now": `busy_window_active()`
+in `usagetap.py`. The "weekdays only" rule calls `chinese_calendar.is_workday()`, so it
+knows official holidays and make-up workdays. That library covers 2004–2026; years
+outside the range fall back to plain Monday–Friday and will treat that year's public
+holidays as workdays.
 
-## 客户端来源与设备标签
+`busy_state()` in `collector.py` publishes the same verdict together with `calendar`
+(the days that disagree with Monday–Friday) and `phase` (busy or idle, and why), so the
+web page and the client only render it — **neither decides the window again on its own**.
+Pausing the policy temporarily writes the marker file `/var/lib/relay/busy-hours.off`
+instead of editing the configuration.
 
-`nginx/opencode-relay` 的 `relay_json` 第 19 个字段是 `$http_x_forwarded_for`，collector 把它与
-`$remote_addr` 一起折进 `client_src` 侧表（**不动** `requests` 那张热点表：它的 INSERT 写死了 22 列）。
-该字段放在最后一位是有意的——客户端往 XFF 里塞 `|` 只能在末尾追加垃圾，无法移动前 18 个字段。
+## Client origins and device labels
 
-- `GET /api/client-origins` 返回每个来源的 `ip` / `class` / `xff` / `ua` / `hits` / 首次与最近时间 / `label`。
-- 写标签走 action 通道：`POST /api/clients/label`，body `{"ip":…,"label":…}`（留空即清除）。
-  标签存 `/etc/relay/client-labels.json`——是文件而不是数据库列，这样流量历史被裁剪时设备名不会跟着消失。
-- `class` 由 collector 判定（只有它看得到真实对端），客户端只做本地化显示。
+Field 19 of `relay_json` in `nginx/opencode-relay` is `$http_x_forwarded_for`, and the
+collector folds it together with `$remote_addr` into a `client_src` side table. The hot
+`requests` table is left alone: its INSERT statement hard-codes 22 columns. Putting the
+new field last is deliberate — a client that stuffs `|` into XFF can only append junk at
+the end, never shift the first 18 fields.
 
-**为什么没有 MAC 列**：本机唯一网卡是阿里云 VPC 地址，`ip neigh` 里所有邻居都解析为 vRouter 的合成
-MAC `ee:ff:ff:ff:ff:ff`，而二层帧根本不跨路由——写进去的只会是假数据。同理没有 TTL/系统指纹：
-客户端 socket 由 nginx 终结，nginx 不暴露 TTL，而 tap 看到的对端永远是 `127.0.0.1`。
-能稳定区分同 NAT 后不同设备的路子只有对客户端 API key 取哈希，那需要改请求链路上的 tap。
+- `GET /api/client-origins` returns, per origin: `ip` / `class` / `xff` / `ua` / `hits` /
+  first and last seen / `label`.
+- Labels are written through the action channel: `POST /api/clients/label` with body
+  `{"ip":…,"label":…}` (empty clears it). Labels live in `/etc/relay/client-labels.json`
+  — a file rather than a database column — so pruning traffic history does not take the
+  device names with it.
+- `class` is decided by the collector (it is the only component that sees the real peer);
+  clients only localise the display.
 
-## 还差一步
+**Why there is no MAC column**: this host's only interface is an Aliyun VPC address, every
+neighbour in `ip neigh` resolves to the vRouter's synthetic MAC `ee:ff:ff:ff:ff:ff`, and
+layer-2 frames do not cross a router anyway — anything stored would be fake. Same reason
+there is no TTL or OS fingerprint: the client socket is terminated by nginx, nginx does not
+expose TTL, and the peer the tap sees is always `127.0.0.1`. The only reliable way to tell
+different devices behind one NAT apart would be hashing each client's API key, which means
+touching the tap that sits on the request path.
 
-`install.sh` 目前覆盖面板、`--with-php`、`--with-relayhub`，**还没有 `--with-relay`**：
-新机器 clone 之后能拿到这里的全部文件，但需要照上表手工放置并 `systemctl enable --now`。
+## One step still missing
+
+`install.sh` currently covers the panel, `--with-php` and `--with-relayhub`. There is
+**no `--with-relay` yet**: a fresh host that clones this repository gets every file in
+the table above, but still has to place them by hand and run
+`systemctl enable --now` on each unit.
